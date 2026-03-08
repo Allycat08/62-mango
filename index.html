@@ -278,6 +278,11 @@
             <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
             <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
+         <div class="flex justify-end mt-12">
+    <button onclick="resetGame()" class="text-[10px] font-bold text-zinc-700 hover:text-red-500 uppercase tracking-widest transition-colors border border-zinc-900 px-4 py-2 rounded hover:border-red-900/50">
+        Terminate Empire (Reset Data)
+    </button>
+</div>
     </main>
 
     <!-- Detailed Stock View Modal -->
@@ -314,11 +319,6 @@
                 <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
                     <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Owned</p>
                     <p class="mono text-xl font-bold" id="modal-owned">0</p>
-                       <div class="flex justify-end mt-12">
-    <button onclick="resetGame()" class="text-[10px] font-bold text-zinc-700 hover:text-red-500 uppercase tracking-widest transition-colors border border-zinc-900 px-4 py-2 rounded hover:border-red-900/50">
-        Terminate Empire (Reset Data)
-    </button>
-</div>
                 </div>
             </div>
         </div>
