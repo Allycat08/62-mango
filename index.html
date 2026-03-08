@@ -134,7 +134,7 @@
         }
 
         /* Modal / Zoom styles */
-        #stock-modal {
+        #stock-modal, #reset-modal {
             display: none;
             position: fixed;
             inset: 0;
@@ -274,9 +274,17 @@
             <div id="coll-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
-        <div id="bank" class="tab-content">
+        <div id="bank" class="tab-content relative pb-24">
             <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
             <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+            
+            <!-- Reset Button Positioned Bottom Right -->
+            <div class="absolute bottom-0 right-0 flex items-center gap-4">
+                <p class="text-[9px] text-zinc-700 font-bold uppercase tracking-widest">DANGER ZONE</p>
+                <button onclick="openResetModal()" class="px-4 py-2 border border-red-900/30 bg-red-950/20 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded hover:bg-red-500 hover:text-white transition-all">
+                    Reset Empire
+                </button>
+            </div>
         </div>
     </main>
 
@@ -315,6 +323,19 @@
                     <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Owned</p>
                     <p class="mono text-xl font-bold" id="modal-owned">0</p>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirmation Modal -->
+    <div id="reset-modal">
+        <div class="w-full max-w-md glass-card p-10 text-center">
+            <h2 class="text-3xl font-black tracking-tighter mb-4 uppercase">Wipe Data
+            ?</h2>
+            <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-10 leading-relaxed">Do you really want to delete all of your assets, including your net worth and levels? This action is permanent and CANNOT be undone.</p>
+            <div class="space-y-3">
+                <button onclick="confirmReset()" class="w-full py-4 bg-red-600 text-white font-black text-xs uppercase tracking-widest rounded hover:bg-red-500 transition-colors">Oh yeah. Wipe it</button>
+                <button onclick="closeResetModal()" class="w-full py-4 bg-zinc-900 text-zinc-500 font-black text-xs uppercase tracking-widest rounded hover:text-white transition-colors">Cancel</button>
             </div>
         </div>
     </div>
@@ -413,18 +434,13 @@
 
         function mintMoney(e) {
             const tier = CARD_TIERS[state.currentTierId];
-            // Base money is 5, scales with level and card multiplier
             const amount = 5 * tier.mult * state.level;
             state.balance += amount;
-            
-            // Clicking XP scales slightly with level
             const clickXp = 3 + (state.level * 0.2); 
             state.xp += Math.min(clickXp, 15);
-            
             checkLevelUp();
             updateUI();
             saveGame();
-
             const card = document.getElementById('game-card');
             card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
             setTimeout(() => { card.style.transform = ''; }, 100);
@@ -448,7 +464,6 @@
                 const j = ASSETS.jewelry.find(i => i.id === assetId);
                 const car = ASSETS.cars.find(i => i.id === assetId);
                 const f = ASSETS.furniture.find(i => i.id === assetId);
-                
                 let item = c || re || j || car || f;
                 if (item) {
                     let val = item.price;
@@ -467,10 +482,6 @@
                 if (stock) totalValue += (stock.price * amount);
             });
             state.netWorth = totalValue;
-
-            // Optional XP scaling for progress feel
-            state.xp = Math.max(state.xp, state.netWorth * 0.03);
-            checkLevelUp();
         }
 
         function updateUI() {
@@ -498,23 +509,19 @@
             document.getElementById('nw-display').innerText = '$' + Math.floor(state.netWorth).toLocaleString();
             document.getElementById('hr-display').innerText = '+$' + Math.floor(state.revenue).toLocaleString() + '/hr';
             document.getElementById('lvl-display').innerText = state.level;
-            
             const rankIndex = Math.min(Math.floor(state.level / 5), RANKS.length - 1);
             document.getElementById('rank-display').innerText = RANKS[rankIndex];
             document.getElementById('stat-rank').innerText = RANKS[rankIndex];
             document.getElementById('stat-assets').innerText = state.ownedAssets.length;
             document.getElementById('stat-mult').innerText = CARD_TIERS[state.currentTierId].mult + '.0x';
-
             const xpReq = 200 * Math.pow(1.05, state.level - 1);
             document.getElementById('xp-val').innerText = Math.floor(state.xp);
             document.getElementById('xp-req').innerText = Math.floor(xpReq);
             document.getElementById('next-lvl-val').innerText = state.level + 1;
             document.getElementById('xp-bar').style.width = (state.xp / xpReq * 100) + '%';
-
             const tier = CARD_TIERS[state.currentTierId];
             document.getElementById('game-card').className = `debit-card p-8 flex flex-col justify-between ${tier.class}`;
             document.getElementById('card-tier-label').innerText = tier.name;
-
             renderWatchlist();
             renderGrids();
             if(activeStock) updateModalContent();
@@ -527,41 +534,31 @@
             const width = canvas.width = canvas.offsetWidth * 2; 
             const height = canvas.height = canvas.offsetHeight * 2;
             ctx.scale(2, 2);
-            
             const viewW = canvas.offsetWidth;
             const viewH = canvas.offsetHeight;
-            
             ctx.clearRect(0, 0, viewW, viewH);
-            
             const padding = 10;
             const minPrice = Math.min(...history.map(h => h.low)) * 0.98;
             const maxPrice = Math.max(...history.map(h => h.high)) * 1.02;
             const priceRange = maxPrice - minPrice;
-            
             const barWidth = (viewW - padding * 2) / history.length;
-            
             const getY = (price) => viewH - ((price - minPrice) / priceRange) * viewH;
-
             if (type === 'candlestick') {
                 history.forEach((h, i) => {
                     const isBull = h.close >= h.open;
                     ctx.strokeStyle = isBull ? '#10b981' : '#ef4444';
                     ctx.fillStyle = isBull ? '#10b981' : '#ef4444';
                     ctx.lineWidth = 1;
-                    
                     const x = padding + i * barWidth;
                     const midX = x + barWidth / 2;
-                    
                     const yHigh = getY(h.high);
                     const yLow = getY(h.low);
                     const yOpen = getY(h.open);
                     const yClose = getY(h.close);
-                    
                     ctx.beginPath();
                     ctx.moveTo(midX, yHigh);
                     ctx.lineTo(midX, yLow);
                     ctx.stroke();
-                    
                     const bodyY = Math.min(yOpen, yClose);
                     const bodyH = Math.max(Math.abs(yOpen - yClose), 1);
                     ctx.fillRect(x + (barWidth * 0.2), bodyY, barWidth * 0.6, bodyH);
@@ -577,7 +574,6 @@
                     else ctx.lineTo(x, y);
                 });
                 ctx.stroke();
-
                 if (type === 'area') {
                     ctx.lineTo(padding + (history.length-1) * barWidth + barWidth/2, viewH);
                     ctx.lineTo(padding + barWidth/2, viewH);
@@ -604,6 +600,10 @@
             document.getElementById('stock-modal').style.display = 'none';
         }
 
+        function openResetModal() { document.getElementById('reset-modal').style.display = 'flex'; }
+        function closeResetModal() { document.getElementById('reset-modal').style.display = 'none'; }
+        function confirmReset() { localStorage.removeItem('vercel_empire_v10'); window.location.reload(); }
+
         function setChartType(t) {
             chartType = t;
             if(activeStock) updateModalContent();
@@ -617,7 +617,6 @@
             const low = Math.min(...activeStock.history.map(h => h.low));
             document.getElementById('modal-high').innerText = '$' + high.toLocaleString();
             document.getElementById('modal-low').innerText = '$' + low.toLocaleString();
-            
             drawGraph('modal-chart', activeStock.history, chartType);
         }
 
@@ -631,7 +630,6 @@
                     const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
                     const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
                     const currentRev = (c.rev * Math.pow(3, tierIdx)) * outlets;
-
                     return `
                     <div class="glass-card p-6">
                         <img src="${c.img}" class="item-img mb-4">
@@ -723,14 +721,12 @@
                                     <p class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend)}%</p>
                                 </div>
                             </div>
-                            
                             <div class="chart-container" onclick="openStockModal('${s.symbol}')">
                                 <canvas id="chart-${s.symbol}" class="w-full h-full"></canvas>
                                 <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/40 transition-opacity pointer-events-none">
                                     <span class="text-[9px] font-bold uppercase tracking-widest bg-white text-black px-2 py-1 rounded">ZOOM ANALYTICS</span>
                                 </div>
                             </div>
-
                             <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900">
                                 <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
                                 <p class="text-sm font-bold mono">${owned} SHARES</p>
@@ -742,7 +738,6 @@
                             </div>
                         </div>`;
                     }).join('');
-                    
                     STOCKS.forEach(s => drawGraph(`chart-${s.symbol}`, s.history, 'candlestick'));
                 }
             }
@@ -885,13 +880,9 @@
             if(target) target.classList.add('active');
             const btn = document.getElementById('btn-' + tabId);
             if(btn) btn.classList.add('active');
-            
-            if (tabId === 'stocks') {
-                setTimeout(renderGrids, 10);
-            }
+            if (tabId === 'stocks') setTimeout(renderGrids, 10);
         }
 
-        // Main Simulation Loop
         setInterval(() => {
             state.balance += (state.revenue / 3600);
             STOCKS.forEach(s => {
@@ -899,13 +890,10 @@
                 s.trend += (Math.random() - 0.5) * 0.2;
                 s.price += (Math.random() - 0.5) * (s.price * 0.008);
                 s.price = Math.max(1, parseFloat(s.price.toFixed(2)));
-                s.trend = parseFloat(s.trend.toFixed(2));
-                
                 const open = oldPrice;
                 const close = s.price;
                 const high = Math.max(open, close) + Math.random() * (open * 0.005);
                 const low = Math.min(open, close) - Math.random() * (open * 0.005);
-                
                 s.history.push({ open, close, high, low });
                 if(s.history.length > 50) s.history.shift();
             });
@@ -915,7 +903,6 @@
         const cardContainer = document.getElementById('card-container');
         const gameCard = document.getElementById('game-card');
         const cardGlare = document.getElementById('card-glare');
-
         cardContainer.addEventListener('mousemove', (e) => {
             const rect = cardContainer.getBoundingClientRect();
             const x = e.clientX - rect.left;
@@ -926,13 +913,13 @@
             cardGlare.style.setProperty('--x', `${(x / rect.width) * 100}%`);
             cardGlare.style.setProperty('--y', `${(y / rect.height) * 100}%`);
         });
-
         cardContainer.addEventListener('mouseleave', () => gameCard.style.transform = 'rotateY(0deg) rotateX(0deg)');
-
         window.addEventListener('keydown', (e) => {
-            if(e.key === 'Escape') closeStockModal();
+            if(e.key === 'Escape') {
+                closeStockModal();
+                closeResetModal();
+            }
         });
-
         window.onload = () => {
             updateUI();
             filterCollection('jewelry');
