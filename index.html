@@ -272,6 +272,10 @@
                     <button onclick="purchaseCard('black')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-200 transition">$100,000,000</button>
                 </div>
             </div>
+            <!-- Reset Button for Testing -->
+            <div class="mt-12 text-center">
+                <button onclick="resetGame()" class="text-[10px] text-zinc-600 hover:text-red-500 transition uppercase font-bold tracking-widest">Wipe Data & Reset Empire</button>
+            </div>
         </div>
 
     </main>
@@ -333,15 +337,48 @@
             black: { price: 100000000, class: 'card-black', label: 'ENTERPRISE', xpMult: 1.5 }
         };
 
+        // --- STORAGE LOGIC ---
+        function saveGame() {
+            localStorage.setItem('vercelEmpireSave', JSON.stringify(gameState));
+        }
+
+        function loadGame() {
+            const saved = localStorage.getItem('vercelEmpireSave');
+            if (saved) {
+                try {
+                    const loaded = JSON.parse(saved);
+                    // Shallow merge top level, deep merge arrays/objects to prevent breaking structure updates
+                    Object.assign(gameState, loaded);
+                    addLog("> local session data loaded");
+                } catch(e) {
+                    console.error("Save data corrupted", e);
+                }
+            }
+        }
+
+        function resetGame() {
+            if (confirm("This will permanently delete your empire and reset your balance. Continue?")) {
+                localStorage.removeItem('vercelEmpireSave');
+                location.reload();
+            }
+        }
+
         // --- CORE LOGIC ---
         function init() {
+            loadGame(); // Load save data first
             updateUI();
+            
+            // Fast tick for smooth balance updates
             setInterval(() => {
                 const tickIncome = (gameState.incomePerHour / 3600) * 0.1;
                 gameState.balance += tickIncome;
                 gainXP(tickIncome / 15);
                 updateBalanceDisplay();
             }, 100);
+
+            // Auto-save every 5 seconds
+            setInterval(saveGame, 5000);
+            
             setInterval(updateStocks, 5000);
             setInterval(calculateStats, 2000);
         }
@@ -373,6 +410,7 @@
             
             updateBalanceDisplay();
             calculateStats();
+            saveGame(); // Save on click for responsiveness
         }
 
         function calculateStats() {
@@ -412,6 +450,7 @@
                 gameState.xpToNext *= 1.4;
                 addLog(`Deployment success: Promoted to Level ${gameState.level}`);
                 notify(`LEVEL UP! You are now Level ${gameState.level}`, 'success');
+                saveGame(); // Save on level up
             }
         }
 
@@ -424,6 +463,7 @@
                 gainXP(chain.price / 200);
                 addLog(`Deployed new instance of ${chain.name}`);
                 calculateStats();
+                saveGame();
             } else notify("Credit limit reached.", "error");
         }
 
@@ -440,6 +480,7 @@
                 chain.expansionCost *= 8;
                 addLog(`Scaling ${chain.name} to ${nextRegion.name} region`);
                 calculateStats();
+                saveGame();
             } else notify("Insufficient capital for global scaling.", "error");
         }
 
@@ -451,6 +492,7 @@
                 chain.upgrades[attr]++;
                 addLog(`Optimized ${attr} for ${chain.name}`);
                 calculateStats();
+                saveGame();
             } else notify("Upgrade rejected: low balance.", "error");
         }
 
@@ -461,6 +503,7 @@
                 prop.owned = true;
                 addLog(`Acquired asset: ${prop.name}`);
                 calculateStats();
+                saveGame();
             } else notify("Transaction failed.", "error");
         }
 
@@ -471,6 +514,7 @@
                 gameState.activeCard = tier;
                 addLog(`Plan upgraded to ${tier.toUpperCase()}`);
                 updateUI();
+                saveGame();
                 switchTab('dashboard');
             } else notify("Bank refused upgrade.", "error");
         }
@@ -483,8 +527,10 @@
             document.getElementById('legacy-level').innerText = gameState.level;
             
             const currentRegion = REGIONS.find(r => r.reqLevel <= gameState.level && (!REGIONS[REGIONS.indexOf(r)+1] || REGIONS[REGIONS.indexOf(r)+1].reqLevel > gameState.level));
-            document.getElementById('legacy-rank-text').innerText = currentRegion.rank;
-            document.getElementById('reach-display').innerText = REGIONS[Math.max(...gameState.chains.map(c => c.regionIndex))].name;
+            if(currentRegion) document.getElementById('legacy-rank-text').innerText = currentRegion.rank;
+            
+            const maxRegionIdx = Math.max(0, ...gameState.chains.map(c => c.regionIndex));
+            document.getElementById('reach-display').innerText = REGIONS[maxRegionIdx].name;
             
             const xpPct = (gameState.xp / gameState.xpToNext) * 100;
             document.getElementById('xp-fill').style.width = `${xpPct}%`;
@@ -597,6 +643,7 @@
                 stock.owned++;
                 addLog(`Stock acquisition: ${stock.id}`);
                 updateUI();
+                saveGame();
             } else notify("Limit order failed.", "error");
         }
 
@@ -607,6 +654,7 @@
                 stock.owned--;
                 addLog(`Asset liquidation: ${stock.id}`);
                 updateUI();
+                saveGame();
             }
         }
 
@@ -617,7 +665,10 @@
             gameState.chains.forEach(c => { if(c.owned > 0) activeAssets.push({n: c.name, d: `${c.owned} nodes`})});
             gameState.properties.forEach(p => { if(p.owned) activeAssets.push({n: p.name, d: 'Asset'})});
             
-            if(activeAssets.length === 0) return;
+            if(activeAssets.length === 0) {
+                container.innerHTML = '<p class="text-slate-500 italic col-span-full py-4 text-center text-xs font-mono">No active deployments.</p>';
+                return;
+            }
             container.innerHTML = '';
             activeAssets.forEach(a => {
                 const div = document.createElement('div');
@@ -645,12 +696,12 @@
             }
         }
 
+        // --- UTILS ---
         function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            const btns = Array.from(document.querySelectorAll('.btn-tab'));
-            btns.find(b => b.innerText.toLowerCase().includes(tabId.substring(0,4)))?.classList.add('active');
+            event.target.classList.add('active');
         }
 
         function formatCurrency(num) {
@@ -662,73 +713,21 @@
         function addLog(msg) {
             const list = document.getElementById('log-list');
             const li = document.createElement('li');
-            li.innerText = `> ${msg.toLowerCase()}`;
+            li.innerText = `> ${msg}`;
             list.prepend(li);
+            if(list.children.length > 20) list.lastChild.remove();
         }
 
         function notify(msg, type) {
             const box = document.getElementById('notification-box');
-            const note = document.createElement('div');
-            note.className = `${type === 'success' ? 'bg-white text-black' : 'bg-red-600 text-white'} px-6 py-3 rounded shadow-2xl mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest`;
-            note.innerHTML = `<span>${msg}</span>`;
-            box.appendChild(note);
-            setTimeout(() => note.remove(), 2500);
+            const n = document.createElement('div');
+            n.className = `p-4 mb-2 rounded-lg text-xs font-bold uppercase tracking-widest shadow-2xl animate-bounce ${type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'}`;
+            n.innerText = msg;
+            box.appendChild(n);
+            setTimeout(() => n.remove(), 3000);
         }
-
-        document.addEventListener('mousemove', (e) => {
-            const card = document.getElementById('visual-card');
-            if (!card || !gameState.activeCard) return;
-            const rect = card.getBoundingClientRect();
-            const x = e.clientX - rect.left, y = e.clientY - rect.top;
-            if (x > 0 && x < rect.width && y > 0 && y < rect.height) {
-                card.style.transform = `rotateX(${(y - rect.height / 2) / 10}deg) rotateY(${-(x - rect.width / 2) / 10}deg)`;
-            } else card.style.transform = `rotateX(0deg) rotateY(0deg)`;
-        });
 
         window.onload = init;
-    </script>
-    <script>
-    // 1. Set your starting variables
-    let cash = 0;
-    let xp = 0;
-
-    // 2. Load function (runs when the page opens)
-    function loadGame() {
-        const savedData = localStorage.getItem('vercelEmpireSave');
-        if (savedData) {
-            const data = JSON.parse(savedData);
-            cash = data.cash || 0;
-            xp = data.xp || 0;
-            updateDisplay(); // Refresh the numbers on the screen
-        }
-    }
-
-    // 3. Save function (stores numbers in the browser)
-    function saveGame() {
-        const gameState = {
-            cash: cash,
-            xp: xp
-        };
-        localStorage.setItem('vercelEmpireSave', JSON.stringify(gameState));
-    }
-
-    // 4. Update the screen
-    function updateDisplay() {
-        document.getElementById('cash-display').innerText = '$' + cash;
-        document.getElementById('xp-display').innerText = xp + ' / 1000';
-    }
-
-    // 5. Your wealth button logic
-    function generateWealth() {
-        cash += 10; // Change this to whatever your click value is
-        xp += 5;
-        updateDisplay();
-        saveGame(); // Save immediately on every click
-    }
-
-    // Initialize the game
-    loadGame();
-</script>
     </script>
 </body>
 </html>
