@@ -9,8 +9,7 @@
         :root {
             --primary: #10b981;
             --secondary: #3b82f6;
-            /* Deep Dark Blue Theme */
-            --dark: #020617; 
+            --dark: #020617; /* Deep Dark Blue */
             --light-dark: #0f172a;
             --border: #1e293b;
         }
@@ -33,65 +32,28 @@
             color: #fff;
         }
         
-        /* 3D CREDIT CARD STYLES */
-        .viewport-3d {
-            perspective: 1000px;
-            width: 100%;
-            max-width: 400px;
-            height: 250px;
-        }
+        .viewport-3d { perspective: 1000px; width: 100%; max-width: 400px; height: 250px; }
         .credit-card {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            cursor: pointer;
+            width: 100%; height: 100%; position: relative;
+            transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
             border-radius: 20px;
         }
         .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            overflow: hidden;
+            position: absolute; width: 100%; height: 100%; backface-visibility: hidden;
+            border-radius: 20px; padding: 25px; display: flex; flex-direction: column;
+            justify-content: space-between; box-shadow: 0 20px 50px rgba(0,0,0,0.5);
         }
         .card-gold { background: linear-gradient(135deg, #f59e0b 0%, #78350f 100%); }
         .card-platinum { background: linear-gradient(135deg, #94a3b8 0%, #1e293b 100%); }
         .card-black { background: linear-gradient(135deg, #111 0%, #444 100%); border: 1px solid #555; }
         
-        .chip {
-            width: 50px;
-            height: 40px;
-            background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
-            border-radius: 8px;
-        }
+        .chip { width: 50px; height: 40px; background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%); border-radius: 8px; }
 
-        .progress-bar {
-            height: 4px;
-            background: #1e293b;
-            border-radius: 2px;
-            overflow: hidden;
-        }
-        .progress-fill {
-            height: 100%;
-            background: #fff;
-            transition: width 0.3s ease;
-        }
+        .progress-bar { height: 4px; background: #1e293b; border-radius: 2px; overflow: hidden; }
+        .progress-fill { height: 100%; background: #fff; transition: width 0.3s ease; }
 
-        .click-btn {
-            transition: transform 0.1s;
-            cursor: pointer;
-            user-select: none;
-        }
+        .click-btn { transition: transform 0.1s; cursor: pointer; user-select: none; }
         .click-btn:active { transform: scale(0.98); }
-        .cooldown-active { opacity: 0.7; cursor: not-allowed !important; }
 
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
@@ -101,9 +63,7 @@
 
     <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <div class="flex items-center gap-3">
-            <svg width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
-            </svg>
+            <svg width="40" height="40" viewBox="0 0 76 65" fill="none"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
             <div>
                 <h1 class="text-3xl font-black tracking-tighter text-white">VERCEL <span class="text-blue-500">EMPIRE</span></h1>
                 <p class="text-slate-500 text-xs uppercase tracking-widest font-bold">Level <span id="legacy-level">1</span> Developer</p>
@@ -111,74 +71,47 @@
         </div>
         <div class="flex gap-4 items-center bg-slate-900/50 p-4 rounded-xl border border-slate-800 w-full md:w-auto">
             <div class="text-center px-4 border-r border-slate-800">
-                <p class="text-[10px] text-slate-500 uppercase font-bold">Available Cash</p>
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Cash</p>
                 <p id="balance-display" class="text-xl font-mono font-bold text-white">$0</p>
             </div>
             <div class="text-center px-4">
-                <p class="text-[10px] text-slate-500 uppercase font-bold">Net Revenue</p>
-                <p id="income-display" class="text-xl font-mono font-bold text-emerald-400">+$0</p>
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Net Worth</p>
+                <p id="networth-display" class="text-xl font-mono font-bold text-emerald-400">$0</p>
             </div>
         </div>
     </header>
 
-    <nav class="max-w-6xl mx-auto flex overflow-x-auto gap-4 mb-8 no-scrollbar border-b border-slate-800">
-        <button onclick="switchTab('dashboard')" class="btn-tab active pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-400">DASHBOARD</button>
-        <button onclick="switchTab('stocks')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-400">MARKETS</button>
-        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-400">BANK</button>
+    <nav class="max-w-6xl mx-auto flex gap-4 mb-8 border-b border-slate-800">
+        <button onclick="switchTab('dashboard')" class="btn-tab active pb-2 px-4 font-bold text-sm text-slate-400">DASHBOARD</button>
+        <button onclick="switchTab('stocks')" class="btn-tab pb-2 px-4 font-bold text-sm text-slate-400">MARKETS</button>
+        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 font-bold text-sm text-slate-400">UPGRADES</button>
     </nav>
 
     <main class="max-w-6xl mx-auto">
         
         <div id="dashboard" class="tab-content active space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <div class="lg:col-span-1 flex flex-col items-center justify-center space-y-4">
-                    <div id="wealth-clicker" onclick="handleManualClick()" class="click-btn card-container p-8 w-full h-[250px] flex flex-col items-center justify-center border-2 border-blue-500/20 hover:border-blue-500/50 hover:bg-blue-500/5 group">
-                        <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-2 opacity-60 group-hover:opacity-100">Click to Deploy Code</p>
-                        <p id="networth-display" class="text-4xl font-black text-white tracking-tighter mb-1">$0</p>
-                        <p class="text-xs text-slate-500 uppercase font-bold">Total Net Worth</p>
+                <div class="lg:col-span-1 flex flex-col items-center justify-center">
+                    <div id="wealth-clicker" onclick="handleManualClick()" class="click-btn card-container p-8 w-full h-[250px] flex flex-col items-center justify-center border-2 border-blue-500/20 hover:border-blue-500/50 group">
+                        <p class="text-[10px] text-blue-400 font-bold uppercase mb-2">Click to Deploy</p>
+                        <p id="click-value" class="text-4xl font-black text-white tracking-tighter">$5</p>
                         <div id="click-cooldown-ui" class="mt-4 w-24 h-1 bg-slate-800 rounded-full overflow-hidden">
-                            <div id="cooldown-progress" class="h-full bg-blue-500 w-full transition-all duration-200"></div>
-                        </div>
-                    </div>
-
-                    <div id="active-card-view" class="viewport-3d hidden">
-                        <div class="credit-card" id="visual-card">
-                            <div class="card-face" id="card-face-style">
-                                <div class="flex justify-between items-start">
-                                    <div class="chip"></div>
-                                    <div class="text-white font-bold italic text-xl" id="card-tier-label">DEBIT</div>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-white/70 uppercase tracking-widest mb-1">Liquid Funds</p>
-                                    <p id="card-balance" class="text-3xl font-mono font-bold text-white tracking-tighter">$0</p>
-                                </div>
-                                <div class="flex justify-between items-end">
-                                    <p class="text-sm font-medium tracking-widest text-white uppercase">TOP DEVELOPER</p>
-                                    <p class="text-sm font-medium text-white">2026</p>
-                                </div>
-                            </div>
+                            <div id="cooldown-progress" class="h-full bg-blue-500 w-full"></div>
                         </div>
                     </div>
                 </div>
 
                 <div class="lg:col-span-2 space-y-6">
                     <div class="card-container p-6 bg-slate-900/30">
-                        <h2 class="text-sm font-bold text-slate-500 uppercase mb-4 tracking-widest">Growth Metrics</h2>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-xs mb-2">
-                                    <span class="text-slate-400 font-bold uppercase">Experience (XP)</span>
-                                    <span id="xp-text" class="text-white font-mono">0 / 1000</span>
-                                </div>
-                                <div class="progress-bar"><div id="xp-fill" class="progress-fill" style="width: 0%"></div></div>
-                            </div>
+                        <div class="flex justify-between text-xs mb-2">
+                            <span class="text-slate-400 font-bold uppercase">Experience (XP)</span>
+                            <span id="xp-text" class="text-white font-mono">0 / 1000</span>
                         </div>
+                        <div class="progress-bar"><div id="xp-fill" class="progress-fill" style="width: 0%"></div></div>
                     </div>
-                    <div class="card-container p-4 bg-slate-900/50">
-                        <h2 class="text-[10px] font-bold text-slate-500 uppercase mb-3 px-2 tracking-widest">Market Logs</h2>
-                        <ul id="log-list" class="text-[11px] space-y-2 text-slate-400 h-24 overflow-y-auto px-2 font-mono">
-                            <li>> system initialized: deep-blue-v2.0</li>
-                        </ul>
+                    <div class="card-container p-4 bg-slate-900/50 h-32">
+                        <h2 class="text-[10px] font-bold text-slate-500 uppercase mb-2 px-2">System Logs</h2>
+                        <ul id="log-list" class="text-[11px] space-y-1 text-slate-400 overflow-y-auto font-mono"></ul>
                     </div>
                 </div>
             </div>
@@ -190,244 +123,154 @@
 
         <div id="banking" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                    <div class="h-24 w-full card-gold rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                    <h3 class="text-xl font-black mb-1">GOLD PLAN</h3>
-                    <p class="text-xs text-slate-500 mb-4 font-mono">1.1x XP Multiplier</p>
-                    <button onclick="purchaseCard('gold')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-amber-400 transition">$50,000</button>
+                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800">
+                    <div class="h-24 w-full card-gold rounded-xl mb-4"></div>
+                    <h3 class="text-xl font-black">GOLD</h3>
+                    <button onclick="purchaseCard('gold')" class="w-full mt-4 bg-white text-black py-2 rounded font-bold">$50,000</button>
                 </div>
-                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                    <div class="h-24 w-full card-platinum rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                    <h3 class="text-xl font-black mb-1">PLATINUM PRO</h3>
-                    <p class="text-xs text-slate-500 mb-4 font-mono">1.25x XP Multiplier</p>
-                    <button onclick="purchaseCard('platinum')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-300 transition">$1,000,000</button>
+                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800">
+                    <div class="h-24 w-full card-platinum rounded-xl mb-4"></div>
+                    <h3 class="text-xl font-black">PLATINUM</h3>
+                    <button onclick="purchaseCard('platinum')" class="w-full mt-4 bg-white text-black py-2 rounded font-bold">$1M</button>
                 </div>
-                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                    <div class="h-24 w-full card-black rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                    <h3 class="text-xl font-black mb-1">ENTERPRISE</h3>
-                    <p class="text-xs text-slate-500 mb-4 font-mono">1.5x XP Multiplier</p>
-                    <button onclick="purchaseCard('black')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-400 transition">$100,000,000</button>
+                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800">
+                    <div class="h-24 w-full card-black rounded-xl mb-4"></div>
+                    <h3 class="text-xl font-black">BLACK</h3>
+                    <button onclick="purchaseCard('black')" class="w-full mt-4 bg-white text-black py-2 rounded font-bold">$100M</button>
                 </div>
-            </div>
-            <div class="mt-12 text-center">
-                <button onclick="resetGame()" class="text-[10px] text-slate-600 hover:text-red-500 transition uppercase font-bold tracking-widest">Wipe Data & Reset Empire</button>
             </div>
         </div>
     </main>
 
-    <div id="notification-box" class="fixed bottom-4 right-4 z-50"></div>
-
     <script>
         let gameState = {
-            balance: 25000,
-            netWorth: 25000,
-            incomePerHour: 0,
-            activeCard: null,
+            balance: 1000,
+            netWorth: 1000,
             level: 1,
             xp: 0,
             xpToNext: 1000,
             lastClick: 0,
             stocks: [
-                { id: 'AAPL', name: 'Apple', price: 175, owned: 0, volatility: 0.02, img: 'https://logo.clearbit.com/apple.com' },
-                { id: 'NVDA', name: 'NVIDIA', price: 800, owned: 0, volatility: 0.05, img: 'https://logo.clearbit.com/nvidia.com' },
-                { id: 'GOOGL', name: 'Google', price: 140, owned: 0, volatility: 0.02, img: 'https://logo.clearbit.com/google.com' },
-                { id: 'MSFT', name: 'Microsoft', price: 400, owned: 0, volatility: 0.015, img: 'https://logo.clearbit.com/microsoft.com' },
-                { id: 'RBLX', name: 'Roblox', price: 40, owned: 0, volatility: 0.06, img: 'https://logo.clearbit.com/roblox.com' },
+                { id: 'AAPL', name: 'Apple', price: 180, owned: 0, volatility: 0.02, img: 'https://logo.clearbit.com/apple.com' },
+                { id: 'NVDA', name: 'NVIDIA', price: 850, owned: 0, volatility: 0.06, img: 'https://logo.clearbit.com/nvidia.com' },
+                { id: 'GOOGL', name: 'Google', price: 150, owned: 0, volatility: 0.02, img: 'https://logo.clearbit.com/google.com' },
+                { id: 'MSFT', name: 'Microsoft', price: 410, owned: 0, volatility: 0.015, img: 'https://logo.clearbit.com/microsoft.com' },
+                { id: 'META', name: 'Meta', price: 480, owned: 0, volatility: 0.04, img: 'https://logo.clearbit.com/meta.com' },
+                { id: 'RBLX', name: 'Roblox', price: 40, owned: 0, volatility: 0.05, img: 'https://logo.clearbit.com/roblox.com' },
                 { id: 'BBY', name: 'Best Buy', price: 80, owned: 0, volatility: 0.03, img: 'https://logo.clearbit.com/bestbuy.com' },
-                { id: 'MCD', name: 'McDonalds', price: 290, owned: 0, volatility: 0.01, img: 'https://logo.clearbit.com/mcdonalds.com' },
-                { id: 'PG', name: 'P&G', price: 160, owned: 0, volatility: 0.008, img: 'https://logo.clearbit.com/pg.com' },
-                { id: 'SMSN', name: 'Samsung', price: 60, owned: 0, volatility: 0.025, img: 'https://logo.clearbit.com/samsung.com' },
+                { id: 'MCD', name: 'McDonalds', price: 295, owned: 0, volatility: 0.01, img: 'https://logo.clearbit.com/mcdonalds.com' },
+                { id: 'PG', name: 'P&G', price: 160, owned: 0, volatility: 0.005, img: 'https://logo.clearbit.com/pg.com' },
+                { id: 'SMSN', name: 'Samsung', price: 65, owned: 0, volatility: 0.025, img: 'https://logo.clearbit.com/samsung.com' },
                 { id: 'OPEN', name: 'OpenAI', price: 500, owned: 0, volatility: 0.08, img: 'https://logo.clearbit.com/openai.com' },
-                { id: 'BDNC', name: 'ByteDance', price: 300, owned: 0, volatility: 0.07, img: 'https://logo.clearbit.com/bytedance.com' }
+                { id: 'BDNC', name: 'ByteDance', price: 320, owned: 0, volatility: 0.07, img: 'https://logo.clearbit.com/bytedance.com' }
             ]
         };
 
-        const cardData = {
-            gold: { price: 50000, class: 'card-gold', label: 'GOLD', xpMult: 1.1 },
-            platinum: { price: 1000000, class: 'card-platinum', label: 'PRO', xpMult: 1.25 },
-            black: { price: 100000000, class: 'card-black', label: 'ENTERPRISE', xpMult: 1.5 }
-        };
-
         function init() {
-            const saved = localStorage.getItem('vercelEmpireSave');
+            const saved = localStorage.getItem('empireSave');
             if (saved) Object.assign(gameState, JSON.parse(saved));
-            
             updateUI();
-            setInterval(() => {
-                const tickIncome = (gameState.incomePerHour / 3600) * 0.1;
-                gameState.balance += tickIncome;
-                gainXP(tickIncome / 15);
-                updateBalanceDisplay();
-            }, 100);
-
-            setInterval(updateStocks, 5000);
-            setInterval(saveGame, 5000);
+            setInterval(updateStocks, 4000);
         }
 
         function handleManualClick() {
             const now = Date.now();
             if (now - gameState.lastClick < 250) return;
             gameState.lastClick = now;
-            gameState.balance += 5;
-            gainXP(2);
-            
-            const progress = document.getElementById('cooldown-progress');
-            progress.style.transition = 'none';
-            progress.style.width = '0%';
-            setTimeout(() => {
-                progress.style.transition = 'width 250ms linear';
-                progress.style.width = '100%';
-            }, 10);
-
-            updateBalanceDisplay();
-            calculateStats();
-        }
-
-        function calculateStats() {
-            let assetValue = gameState.balance;
-            gameState.stocks.forEach(s => assetValue += (s.owned * s.price));
-            gameState.netWorth = assetValue;
+            gameState.balance += 10;
+            gainXP(5);
             updateUI();
         }
 
-        function updateStocks() {
-            gameState.stocks.forEach(stock => {
-                const change = 1 + (Math.random() * stock.volatility * 2 - stock.volatility);
-                stock.price *= change;
-                if (stock.price < 1) stock.price = 1;
-            });
-            renderStocks();
-            calculateStats();
-        }
-
-        function buyStock(stockId) {
-            const stock = gameState.stocks.find(s => s.id === stockId);
-            if (gameState.balance >= stock.price) {
-                gameState.balance -= stock.price;
-                stock.owned++;
-                addLog(`bought 1 share of ${stock.id}`);
-                updateUI();
-            } else notify("Insufficient cash.", "error");
-        }
-
-        function sellStock(stockId) {
-            const stock = gameState.stocks.find(s => s.id === stockId);
-            if (stock.owned > 0) {
-                gameState.balance += stock.price;
-                stock.owned--;
-                addLog(`sold 1 share of ${stock.id}`);
-                updateUI();
-            }
-        }
-
         function gainXP(amount) {
-            const mult = gameState.activeCard ? cardData[gameState.activeCard].xpMult : 1;
-            gameState.xp += amount * mult;
+            gameState.xp += amount;
             if(gameState.xp >= gameState.xpToNext) {
                 gameState.xp = 0;
                 gameState.level++;
-                gameState.xpToNext *= 1.5;
-                notify(`LEVEL UP! You are now Level ${gameState.level}`, 'success');
+                gameState.xpToNext *= 1.8;
+                addLog(`Level Up: ${gameState.level}`);
             }
-            updateXPBar();
         }
 
-        function purchaseCard(tier) {
-            const card = cardData[tier];
-            if (gameState.balance >= card.price) {
-                gameState.balance -= card.price;
-                gameState.activeCard = tier;
-                addLog(`Upgraded to ${tier.toUpperCase()}`);
+        function updateStocks() {
+            gameState.stocks.forEach(s => {
+                s.price *= (1 + (Math.random() * s.volatility * 2 - s.volatility));
+                if (s.price < 1) s.price = 1;
+            });
+            calculateNetWorth();
+            renderStocks();
+            updateUI();
+        }
+
+        function calculateNetWorth() {
+            let stockVal = 0;
+            gameState.stocks.forEach(s => stockVal += (s.owned * s.price));
+            gameState.netWorth = gameState.balance + stockVal;
+        }
+
+        function buyStock(id) {
+            const s = gameState.stocks.find(x => x.id === id);
+            if (gameState.balance >= s.price) {
+                gameState.balance -= s.price;
+                s.owned++;
+                addLog(`Bought ${s.id}`);
                 updateUI();
-            } else notify("Bank rejected transaction.", "error");
+            }
+        }
+
+        function sellStock(id) {
+            const s = gameState.stocks.find(x => x.id === id);
+            if (s.owned > 0) {
+                gameState.balance += s.price;
+                s.owned--;
+                addLog(`Sold ${s.id}`);
+                updateUI();
+            }
         }
 
         function updateUI() {
-            updateBalanceDisplay();
+            document.getElementById('balance-display').innerText = formatCurrency(gameState.balance);
             document.getElementById('networth-display').innerText = formatCurrency(gameState.netWorth);
-            document.getElementById('income-display').innerText = `+${formatCurrency(gameState.incomePerHour)}/hr`;
             document.getElementById('legacy-level').innerText = gameState.level;
-            updateXPBar();
-            renderStocks();
-            updateCardVisual();
-        }
-
-        function updateBalanceDisplay() {
-            const b = formatCurrency(gameState.balance);
-            document.getElementById('balance-display').innerText = b;
-            if(gameState.activeCard) document.getElementById('card-balance').innerText = b;
-        }
-
-        function updateXPBar() {
-            const pct = (gameState.xp / gameState.xpToNext) * 100;
-            document.getElementById('xp-fill').style.width = `${pct}%`;
             document.getElementById('xp-text').innerText = `${Math.floor(gameState.xp)} / ${Math.floor(gameState.xpToNext)}`;
+            document.getElementById('xp-fill').style.width = `${(gameState.xp / gameState.xpToNext) * 100}%`;
+            localStorage.setItem('empireSave', JSON.stringify(gameState));
         }
 
         function renderStocks() {
             const container = document.getElementById('stock-market-list');
             if(!container) return;
-            container.innerHTML = '';
-            gameState.stocks.forEach(stock => {
-                const card = document.createElement('div');
-                card.className = 'card-container p-6 bg-slate-900/50 border-slate-800';
-                card.innerHTML = `
+            container.innerHTML = gameState.stocks.map(s => `
+                <div class="card-container p-4 bg-slate-900/50">
                     <div class="flex items-center gap-3 mb-4">
-                        <img src="${stock.img}" class="w-10 h-10 rounded-lg bg-white p-1" onerror="this.src='https://via.placeholder.com/40'">
+                        <img src="${s.img}" class="w-10 h-10 rounded-lg bg-white p-1" onerror="this.src='https://via.placeholder.com/40'">
                         <div>
-                            <h3 class="font-black text-xs text-white uppercase tracking-widest">${stock.name}</h3>
-                            <span class="text-[10px] text-slate-500 font-mono">${stock.id}</span>
+                            <h3 class="font-black text-xs text-white uppercase">${s.name}</h3>
+                            <span class="text-[10px] text-slate-500 font-mono">${s.id}</span>
                         </div>
                     </div>
-                    <div class="text-2xl font-mono font-bold text-white mb-4">${formatCurrency(stock.price)}</div>
+                    <div class="text-xl font-mono font-bold text-white mb-4">${formatCurrency(s.price)}</div>
                     <div class="grid grid-cols-2 gap-2">
-                        <button onclick="buyStock('${stock.id}')" class="bg-white text-black py-2 rounded text-[10px] font-bold uppercase hover:bg-blue-400">Buy</button>
-                        <button onclick="sellStock('${stock.id}')" class="bg-slate-800 text-slate-300 py-2 rounded text-[10px] font-bold uppercase">Sell (${stock.owned})</button>
+                        <button onclick="buyStock('${s.id}')" class="bg-white text-black py-1 rounded text-[10px] font-bold uppercase hover:bg-blue-400">Buy</button>
+                        <button onclick="sellStock('${s.id}')" class="bg-slate-800 text-slate-300 py-1 rounded text-[10px] font-bold">Sell (${s.owned})</button>
                     </div>
-                `;
-                container.appendChild(card);
-            });
+                </div>
+            `).join('');
         }
 
-        function updateCardVisual() {
-            if (gameState.activeCard) {
-                document.getElementById('wealth-clicker').classList.add('hidden');
-                document.getElementById('active-card-view').classList.remove('hidden');
-                const card = cardData[gameState.activeCard];
-                document.getElementById('card-face-style').className = `card-face ${card.class}`;
-                document.getElementById('card-tier-label').innerText = card.label;
-            }
-        }
-
-        function formatCurrency(num) {
-            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
-        }
-
-        function switchTab(tabId) {
+        function formatCurrency(n) { return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n); }
+        function switchTab(id) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            document.getElementById(id).classList.add('active');
             event.currentTarget.classList.add('active');
         }
-
-        function addLog(msg) {
-            const list = document.getElementById('log-list');
-            const entry = document.createElement('li');
-            entry.innerText = `> ${msg}`;
-            list.prepend(entry);
+        function addLog(m) {
+            const l = document.getElementById('log-list');
+            const e = document.createElement('li');
+            e.innerText = `> ${m}`;
+            l.prepend(e);
         }
-
-        function notify(msg, type) {
-            const box = document.getElementById('notification-box');
-            const n = document.createElement('div');
-            n.className = `mb-2 p-4 rounded-lg text-xs font-bold border ${type === 'success' ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500' : 'bg-red-500/10 border-red-500 text-red-500'}`;
-            n.innerText = msg;
-            box.appendChild(n);
-            setTimeout(() => n.remove(), 3000);
-        }
-
-        function saveGame() { localStorage.setItem('vercelEmpireSave', JSON.stringify(gameState)); }
-        function resetGame() { if(confirm("Reset Empire?")) { localStorage.removeItem('vercelEmpireSave'); location.reload(); } }
 
         init();
     </script>
