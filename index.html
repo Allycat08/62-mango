@@ -3,14 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vercel Empire - Global Expansion</title>
+    <title>Vercel Empire - Blue Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --primary: #10b981;
             --secondary: #3b82f6;
-            --dark: #000000;
-            --light-dark: #111111;
+            /* Deep Dark Blue Theme */
+            --dark: #020617; 
+            --light-dark: #0f172a;
+            --border: #1e293b;
         }
         body {
             background-color: var(--dark);
@@ -21,7 +23,7 @@
         .card-container {
             background: var(--light-dark);
             border-radius: 12px;
-            border: 1px solid #333;
+            border: 1px solid var(--border);
             transition: all 0.2s ease;
         }
         .tab-content { display: none; }
@@ -71,17 +73,9 @@
             border-radius: 8px;
         }
 
-        .house-img {
-            width: 100%;
-            height: 140px;
-            background-size: cover;
-            background-position: center;
-            border-radius: 8px;
-        }
-
         .progress-bar {
             height: 4px;
-            background: #222;
+            background: #1e293b;
             border-radius: 2px;
             overflow: hidden;
         }
@@ -96,65 +90,54 @@
             cursor: pointer;
             user-select: none;
         }
-        .click-btn:active {
-            transform: scale(0.98);
-        }
-        .cooldown-active {
-            opacity: 0.7;
-            cursor: not-allowed !important;
-        }
+        .click-btn:active { transform: scale(0.98); }
+        .cooldown-active { opacity: 0.7; cursor: not-allowed !important; }
 
         ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- Top Bar -->
     <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <div class="flex items-center gap-3">
             <svg width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
             </svg>
             <div>
-                <h1 class="text-3xl font-black tracking-tighter text-white">VERCEL <span class="text-slate-500">EMPIRE</span></h1>
+                <h1 class="text-3xl font-black tracking-tighter text-white">VERCEL <span class="text-blue-500">EMPIRE</span></h1>
                 <p class="text-slate-500 text-xs uppercase tracking-widest font-bold">Level <span id="legacy-level">1</span> Developer</p>
             </div>
         </div>
-        <div class="flex gap-4 items-center bg-zinc-900 p-4 rounded-xl border border-zinc-800 w-full md:w-auto">
-            <div class="text-center px-4 border-r border-zinc-800">
-                <p class="text-[10px] text-slate-500 uppercase font-bold">Cash</p>
+        <div class="flex gap-4 items-center bg-slate-900/50 p-4 rounded-xl border border-slate-800 w-full md:w-auto">
+            <div class="text-center px-4 border-r border-slate-800">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Available Cash</p>
                 <p id="balance-display" class="text-xl font-mono font-bold text-white">$0</p>
             </div>
             <div class="text-center px-4">
-                <p class="text-[10px] text-slate-500 uppercase font-bold">Revenue</p>
-                <p id="income-display" class="text-xl font-mono font-bold text-emerald-500">+$0</p>
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Net Revenue</p>
+                <p id="income-display" class="text-xl font-mono font-bold text-emerald-400">+$0</p>
             </div>
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <nav class="max-w-6xl mx-auto flex overflow-x-auto gap-4 mb-8 no-scrollbar border-b border-zinc-800">
-        <button onclick="switchTab('dashboard')" class="btn-tab active pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">DASHBOARD</button>
-        <button onclick="switchTab('businesses')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">CHAINS</button>
-        <button onclick="switchTab('realestate')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">REAL ESTATE</button>
-        <button onclick="switchTab('stocks')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">MARKETS</button>
-        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">BANK</button>
+    <nav class="max-w-6xl mx-auto flex overflow-x-auto gap-4 mb-8 no-scrollbar border-b border-slate-800">
+        <button onclick="switchTab('dashboard')" class="btn-tab active pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-400">DASHBOARD</button>
+        <button onclick="switchTab('stocks')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-400">MARKETS</button>
+        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-400">BANK</button>
     </nav>
 
     <main class="max-w-6xl mx-auto">
         
-        <!-- DASHBOARD -->
         <div id="dashboard" class="tab-content active space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Clickable Wealth Generator -->
                 <div class="lg:col-span-1 flex flex-col items-center justify-center space-y-4">
-                    <div id="wealth-clicker" onclick="handleManualClick()" class="click-btn card-container p-8 w-full h-[250px] flex flex-col items-center justify-center border-2 border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/5 group">
-                        <p class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mb-2 opacity-60 group-hover:opacity-100">Click to Generate Wealth</p>
+                    <div id="wealth-clicker" onclick="handleManualClick()" class="click-btn card-container p-8 w-full h-[250px] flex flex-col items-center justify-center border-2 border-blue-500/20 hover:border-blue-500/50 hover:bg-blue-500/5 group">
+                        <p class="text-[10px] text-blue-400 font-bold uppercase tracking-widest mb-2 opacity-60 group-hover:opacity-100">Click to Deploy Code</p>
                         <p id="networth-display" class="text-4xl font-black text-white tracking-tighter mb-1">$0</p>
                         <p class="text-xs text-slate-500 uppercase font-bold">Total Net Worth</p>
-                        <div id="click-cooldown-ui" class="mt-4 w-24 h-1 bg-zinc-800 rounded-full overflow-hidden">
-                            <div id="cooldown-progress" class="h-full bg-emerald-500 w-full transition-all duration-200"></div>
+                        <div id="click-cooldown-ui" class="mt-4 w-24 h-1 bg-slate-800 rounded-full overflow-hidden">
+                            <div id="cooldown-progress" class="h-full bg-blue-500 w-full transition-all duration-200"></div>
                         </div>
                     </div>
 
@@ -166,18 +149,12 @@
                                     <div class="text-white font-bold italic text-xl" id="card-tier-label">DEBIT</div>
                                 </div>
                                 <div>
-                                    <p class="text-xs text-white/70 uppercase tracking-widest mb-1">Legacy Funds</p>
+                                    <p class="text-xs text-white/70 uppercase tracking-widest mb-1">Liquid Funds</p>
                                     <p id="card-balance" class="text-3xl font-mono font-bold text-white tracking-tighter">$0</p>
                                 </div>
                                 <div class="flex justify-between items-end">
-                                    <div>
-                                        <p class="text-[10px] text-white/50 uppercase">Vercel ID</p>
-                                        <p class="text-sm font-medium tracking-widest text-white uppercase">TOP DEVELOPER</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[10px] text-white/50 uppercase">Member</p>
-                                        <p class="text-sm font-medium text-white">2024</p>
-                                    </div>
+                                    <p class="text-sm font-medium tracking-widest text-white uppercase">TOP DEVELOPER</p>
+                                    <p class="text-sm font-medium text-white">2026</p>
                                 </div>
                             </div>
                         </div>
@@ -185,113 +162,62 @@
                 </div>
 
                 <div class="lg:col-span-2 space-y-6">
-                    <div class="card-container p-6">
-                        <h2 class="text-sm font-bold text-slate-500 uppercase mb-4 tracking-widest">Growth Progress</h2>
+                    <div class="card-container p-6 bg-slate-900/30">
+                        <h2 class="text-sm font-bold text-slate-500 uppercase mb-4 tracking-widest">Growth Metrics</h2>
                         <div class="space-y-4">
                             <div>
                                 <div class="flex justify-between text-xs mb-2">
-                                    <span class="text-slate-400 font-bold uppercase">Experience Points</span>
+                                    <span class="text-slate-400 font-bold uppercase">Experience (XP)</span>
                                     <span id="xp-text" class="text-white font-mono">0 / 1000</span>
                                 </div>
                                 <div class="progress-bar"><div id="xp-fill" class="progress-fill" style="width: 0%"></div></div>
                             </div>
-                            <div class="grid grid-cols-2 gap-4 pt-2">
-                                <div class="p-4 bg-zinc-900 rounded-lg border border-zinc-800">
-                                    <p class="text-slate-500 text-[10px] uppercase font-bold">Current Rank</p>
-                                    <p id="legacy-rank-text" class="text-lg font-bold text-white">Junior Dev</p>
-                                </div>
-                                <div class="p-4 bg-zinc-900 rounded-lg border border-zinc-800">
-                                    <p class="text-slate-500 text-[10px] uppercase font-bold">Global Reach</p>
-                                    <p id="reach-display" class="text-lg font-bold text-white">Local</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
-                    <div class="card-container p-4 bg-zinc-900/50">
-                        <h2 class="text-[10px] font-bold text-slate-500 uppercase mb-3 px-2 tracking-widest">Empire Logs</h2>
-                        <ul id="log-list" class="text-[11px] space-y-2 text-slate-500 h-20 overflow-y-auto px-2 font-mono">
-                            <li>> system initialized</li>
-                            <li>> welcome to vercel empire</li>
+                    <div class="card-container p-4 bg-slate-900/50">
+                        <h2 class="text-[10px] font-bold text-slate-500 uppercase mb-3 px-2 tracking-widest">Market Logs</h2>
+                        <ul id="log-list" class="text-[11px] space-y-2 text-slate-400 h-24 overflow-y-auto px-2 font-mono">
+                            <li>> system initialized: deep-blue-v2.0</li>
                         </ul>
                     </div>
                 </div>
             </div>
-            
-            <div class="card-container p-6">
-                <h2 class="text-sm font-bold text-slate-500 uppercase mb-4 tracking-widest">Deployment Inventory</h2>
-                <div id="inventory-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <p class="text-slate-500 italic col-span-full py-4 text-center text-xs font-mono">No active deployments.</p>
-                </div>
-            </div>
         </div>
 
-        <!-- GLOBAL CHAINS -->
-        <div id="businesses" class="tab-content space-y-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-black text-white">CHAINS</h2>
-                <p class="text-xs text-slate-500 font-mono">Expand infrastructure globally.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="business-list"></div>
-        </div>
-
-        <!-- REAL ESTATE -->
-        <div id="realestate" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="realestate-list"></div>
-        </div>
-
-        <!-- STOCKS -->
         <div id="stocks" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="stock-market-list"></div>
         </div>
 
-        <!-- BANKING -->
         <div id="banking" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full card-gold rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                        <h3 class="text-xl font-black mb-1">GOLD PLAN</h3>
-                        <p class="text-xs text-slate-500 mb-4 font-mono">1.1x XP Multiplier</p>
-                    </div>
-                    <button onclick="purchaseCard('gold')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-200 transition">$50,000</button>
+                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                    <div class="h-24 w-full card-gold rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
+                    <h3 class="text-xl font-black mb-1">GOLD PLAN</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-mono">1.1x XP Multiplier</p>
+                    <button onclick="purchaseCard('gold')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-amber-400 transition">$50,000</button>
                 </div>
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full card-platinum rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                        <h3 class="text-xl font-black mb-1">PLATINUM PRO</h3>
-                        <p class="text-xs text-slate-500 mb-4 font-mono">1.25x XP Multiplier</p>
-                    </div>
-                    <button onclick="purchaseCard('platinum')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-200 transition">$1,000,000</button>
+                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                    <div class="h-24 w-full card-platinum rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
+                    <h3 class="text-xl font-black mb-1">PLATINUM PRO</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-mono">1.25x XP Multiplier</p>
+                    <button onclick="purchaseCard('platinum')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-300 transition">$1,000,000</button>
                 </div>
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full card-black rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                        <h3 class="text-xl font-black mb-1">ENTERPRISE</h3>
-                        <p class="text-xs text-slate-500 mb-4 font-mono">1.5x XP Multiplier</p>
-                    </div>
-                    <button onclick="purchaseCard('black')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-200 transition">$100,000,000</button>
+                <div class="p-6 bg-slate-900 rounded-2xl border border-slate-800 flex flex-col justify-between">
+                    <div class="h-24 w-full card-black rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
+                    <h3 class="text-xl font-black mb-1">ENTERPRISE</h3>
+                    <p class="text-xs text-slate-500 mb-4 font-mono">1.5x XP Multiplier</p>
+                    <button onclick="purchaseCard('black')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-400 transition">$100,000,000</button>
                 </div>
             </div>
-            <!-- Reset Button for Testing -->
             <div class="mt-12 text-center">
-                <button onclick="resetGame()" class="text-[10px] text-zinc-600 hover:text-red-500 transition uppercase font-bold tracking-widest">Wipe Data & Reset Empire</button>
+                <button onclick="resetGame()" class="text-[10px] text-slate-600 hover:text-red-500 transition uppercase font-bold tracking-widest">Wipe Data & Reset Empire</button>
             </div>
         </div>
-
     </main>
 
-    <!-- Notification Container -->
     <div id="notification-box" class="fixed bottom-4 right-4 z-50"></div>
 
     <script>
-        // --- GAME DATA ---
-        const REGIONS = [
-            { id: 0, name: 'Local', multiplier: 1, reqLevel: 1, rank: 'Junior Dev' },
-            { id: 1, name: 'National', multiplier: 5, reqLevel: 5, rank: 'Senior Lead' },
-            { id: 2, name: 'International', multiplier: 25, reqLevel: 12, rank: 'VP Eng' },
-            { id: 3, name: 'Global', multiplier: 150, reqLevel: 25, rank: 'Vercel CTO' }
-        ];
-
         let gameState = {
             balance: 25000,
             netWorth: 25000,
@@ -301,33 +227,18 @@
             xp: 0,
             xpToNext: 1000,
             lastClick: 0,
-            inventory: [],
             stocks: [
-                { id: 'VRC', name: 'Vercel Inc', price: 450, owned: 0, volatility: 0.04 },
-                { id: 'RXT', name: 'React Corp', price: 120, owned: 0, volatility: 0.03 },
-                { id: 'NXT', name: 'NextJS Ltd', price: 80, owned: 0, volatility: 0.02 }
-            ],
-            properties: [
-                { id: 'p1', name: 'Server Farm', price: 120000, rent: 800, owned: false, renovated: 0, maxRenovations: 3, img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc51?w=400&q=80' },
-                { id: 'p2', name: 'Hacker House', price: 350000, rent: 2200, owned: false, renovated: 0, maxRenovations: 5, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=80' },
-                { id: 'p3', name: 'Silicon Estate', price: 1200000, rent: 7500, owned: false, renovated: 0, maxRenovations: 8, img: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=80' }
-            ],
-            chains: [
-                { 
-                    id: 'c1', name: 'SaaS Agency', price: 10000, baseIncome: 120, owned: 0, 
-                    regionIndex: 0, expansionCost: 50000, 
-                    upgrades: { design: 0, code: 0, sales: 0 }
-                },
-                { 
-                    id: 'c2', name: 'Edge Platform', price: 250000, baseIncome: 3500, owned: 0, 
-                    regionIndex: 0, expansionCost: 1000000, 
-                    upgrades: { speed: 0, security: 0, r_d: 0 }
-                },
-                { 
-                    id: 'c3', name: 'AI Infrastructure', price: 5000000, baseIncome: 85000, owned: 0, 
-                    regionIndex: 0, expansionCost: 25000000, 
-                    upgrades: { training: 0, inference: 0, chipsets: 0 }
-                }
+                { id: 'AAPL', name: 'Apple', price: 175, owned: 0, volatility: 0.02, img: 'https://logo.clearbit.com/apple.com' },
+                { id: 'NVDA', name: 'NVIDIA', price: 800, owned: 0, volatility: 0.05, img: 'https://logo.clearbit.com/nvidia.com' },
+                { id: 'GOOGL', name: 'Google', price: 140, owned: 0, volatility: 0.02, img: 'https://logo.clearbit.com/google.com' },
+                { id: 'MSFT', name: 'Microsoft', price: 400, owned: 0, volatility: 0.015, img: 'https://logo.clearbit.com/microsoft.com' },
+                { id: 'RBLX', name: 'Roblox', price: 40, owned: 0, volatility: 0.06, img: 'https://logo.clearbit.com/roblox.com' },
+                { id: 'BBY', name: 'Best Buy', price: 80, owned: 0, volatility: 0.03, img: 'https://logo.clearbit.com/bestbuy.com' },
+                { id: 'MCD', name: 'McDonalds', price: 290, owned: 0, volatility: 0.01, img: 'https://logo.clearbit.com/mcdonalds.com' },
+                { id: 'PG', name: 'P&G', price: 160, owned: 0, volatility: 0.008, img: 'https://logo.clearbit.com/pg.com' },
+                { id: 'SMSN', name: 'Samsung', price: 60, owned: 0, volatility: 0.025, img: 'https://logo.clearbit.com/samsung.com' },
+                { id: 'OPEN', name: 'OpenAI', price: 500, owned: 0, volatility: 0.08, img: 'https://logo.clearbit.com/openai.com' },
+                { id: 'BDNC', name: 'ByteDance', price: 300, owned: 0, volatility: 0.07, img: 'https://logo.clearbit.com/bytedance.com' }
             ]
         };
 
@@ -337,38 +248,11 @@
             black: { price: 100000000, class: 'card-black', label: 'ENTERPRISE', xpMult: 1.5 }
         };
 
-        // --- STORAGE LOGIC ---
-        function saveGame() {
-            localStorage.setItem('vercelEmpireSave', JSON.stringify(gameState));
-        }
-
-        function loadGame() {
-            const saved = localStorage.getItem('vercelEmpireSave');
-            if (saved) {
-                try {
-                    const loaded = JSON.parse(saved);
-                    // Shallow merge top level, deep merge arrays/objects to prevent breaking structure updates
-                    Object.assign(gameState, loaded);
-                    addLog("> local session data loaded");
-                } catch(e) {
-                    console.error("Save data corrupted", e);
-                }
-            }
-        }
-
-        function resetGame() {
-            if (confirm("This will permanently delete your empire and reset your balance. Continue?")) {
-                localStorage.removeItem('vercelEmpireSave');
-                location.reload();
-            }
-        }
-
-        // --- CORE LOGIC ---
         function init() {
-            loadGame(); // Load save data first
-            updateUI();
+            const saved = localStorage.getItem('vercelEmpireSave');
+            if (saved) Object.assign(gameState, JSON.parse(saved));
             
-            // Fast tick for smooth balance updates
+            updateUI();
             setInterval(() => {
                 const tickIncome = (gameState.incomePerHour / 3600) * 0.1;
                 gameState.balance += tickIncome;
@@ -376,135 +260,76 @@
                 updateBalanceDisplay();
             }, 100);
 
-            // Auto-save every 5 seconds
-            setInterval(saveGame, 5000);
-            
             setInterval(updateStocks, 5000);
-            setInterval(calculateStats, 2000);
+            setInterval(saveGame, 5000);
         }
 
         function handleManualClick() {
             const now = Date.now();
-            if (now - gameState.lastClick < 250) return; // 0.25s cooldown
-            
+            if (now - gameState.lastClick < 250) return;
             gameState.lastClick = now;
-            gameState.balance += 3;
-            gainXP(0.5);
+            gameState.balance += 5;
+            gainXP(2);
             
-            // Visual feedback
-            const btn = document.getElementById('wealth-clicker');
             const progress = document.getElementById('cooldown-progress');
-            
-            btn.classList.add('cooldown-active');
             progress.style.transition = 'none';
             progress.style.width = '0%';
-            
             setTimeout(() => {
                 progress.style.transition = 'width 250ms linear';
                 progress.style.width = '100%';
             }, 10);
-            
-            setTimeout(() => {
-                btn.classList.remove('cooldown-active');
-            }, 250);
-            
+
             updateBalanceDisplay();
             calculateStats();
-            saveGame(); // Save on click for responsiveness
         }
 
         function calculateStats() {
-            let totalIncome = 0;
             let assetValue = gameState.balance;
-
-            gameState.properties.forEach(p => {
-                if(p.owned) {
-                    totalIncome += p.rent * (1 + (p.renovated * 0.25));
-                    assetValue += p.price;
-                }
-            });
-
-            gameState.chains.forEach(c => {
-                if(c.owned > 0) {
-                    const regionMult = REGIONS[c.regionIndex].multiplier;
-                    const upgradeSum = Object.values(c.upgrades).reduce((a,b) => a+b, 0);
-                    const upgradeMult = 1 + (upgradeSum * 0.15);
-                    totalIncome += (c.baseIncome * c.owned * regionMult * upgradeMult);
-                    assetValue += (c.owned * c.price) + (c.regionIndex * c.expansionCost * 0.5);
-                }
-            });
-
             gameState.stocks.forEach(s => assetValue += (s.owned * s.price));
-
-            gameState.incomePerHour = totalIncome;
             gameState.netWorth = assetValue;
             updateUI();
+        }
+
+        function updateStocks() {
+            gameState.stocks.forEach(stock => {
+                const change = 1 + (Math.random() * stock.volatility * 2 - stock.volatility);
+                stock.price *= change;
+                if (stock.price < 1) stock.price = 1;
+            });
+            renderStocks();
+            calculateStats();
+        }
+
+        function buyStock(stockId) {
+            const stock = gameState.stocks.find(s => s.id === stockId);
+            if (gameState.balance >= stock.price) {
+                gameState.balance -= stock.price;
+                stock.owned++;
+                addLog(`bought 1 share of ${stock.id}`);
+                updateUI();
+            } else notify("Insufficient cash.", "error");
+        }
+
+        function sellStock(stockId) {
+            const stock = gameState.stocks.find(s => s.id === stockId);
+            if (stock.owned > 0) {
+                gameState.balance += stock.price;
+                stock.owned--;
+                addLog(`sold 1 share of ${stock.id}`);
+                updateUI();
+            }
         }
 
         function gainXP(amount) {
             const mult = gameState.activeCard ? cardData[gameState.activeCard].xpMult : 1;
             gameState.xp += amount * mult;
             if(gameState.xp >= gameState.xpToNext) {
-                gameState.xp -= gameState.xpToNext;
+                gameState.xp = 0;
                 gameState.level++;
-                gameState.xpToNext *= 1.4;
-                addLog(`Deployment success: Promoted to Level ${gameState.level}`);
+                gameState.xpToNext *= 1.5;
                 notify(`LEVEL UP! You are now Level ${gameState.level}`, 'success');
-                saveGame(); // Save on level up
             }
-        }
-
-        // --- ACTIONS ---
-        function buyChain(chainId) {
-            const chain = gameState.chains.find(c => c.id === chainId);
-            if (gameState.balance >= chain.price) {
-                gameState.balance -= chain.price;
-                chain.owned++;
-                gainXP(chain.price / 200);
-                addLog(`Deployed new instance of ${chain.name}`);
-                calculateStats();
-                saveGame();
-            } else notify("Credit limit reached.", "error");
-        }
-
-        function expandChain(chainId) {
-            const chain = gameState.chains.find(c => c.id === chainId);
-            const nextRegion = REGIONS[chain.regionIndex + 1];
-            
-            if (!nextRegion) return notify("Global saturation reached.", "error");
-            if (gameState.level < nextRegion.reqLevel) return notify(`Reach Level ${nextRegion.reqLevel} to expand.`, "error");
-            
-            if (gameState.balance >= chain.expansionCost) {
-                gameState.balance -= chain.expansionCost;
-                chain.regionIndex++;
-                chain.expansionCost *= 8;
-                addLog(`Scaling ${chain.name} to ${nextRegion.name} region`);
-                calculateStats();
-                saveGame();
-            } else notify("Insufficient capital for global scaling.", "error");
-        }
-
-        function upgradeChainAttr(chainId, attr) {
-            const chain = gameState.chains.find(c => c.id === chainId);
-            const cost = (chain.upgrades[attr] + 1) * (chain.price * 0.4);
-            if (gameState.balance >= cost) {
-                gameState.balance -= cost;
-                chain.upgrades[attr]++;
-                addLog(`Optimized ${attr} for ${chain.name}`);
-                calculateStats();
-                saveGame();
-            } else notify("Upgrade rejected: low balance.", "error");
-        }
-
-        function buyProperty(propId) {
-            const prop = gameState.properties.find(p => p.id === propId);
-            if (!prop.owned && gameState.balance >= prop.price) {
-                gameState.balance -= prop.price;
-                prop.owned = true;
-                addLog(`Acquired asset: ${prop.name}`);
-                calculateStats();
-                saveGame();
-            } else notify("Transaction failed.", "error");
+            updateXPBar();
         }
 
         function purchaseCard(tier) {
@@ -512,109 +337,31 @@
             if (gameState.balance >= card.price) {
                 gameState.balance -= card.price;
                 gameState.activeCard = tier;
-                addLog(`Plan upgraded to ${tier.toUpperCase()}`);
+                addLog(`Upgraded to ${tier.toUpperCase()}`);
                 updateUI();
-                saveGame();
-                switchTab('dashboard');
-            } else notify("Bank refused upgrade.", "error");
+            } else notify("Bank rejected transaction.", "error");
         }
 
-        // --- RENDERERS ---
         function updateUI() {
             updateBalanceDisplay();
             document.getElementById('networth-display').innerText = formatCurrency(gameState.netWorth);
             document.getElementById('income-display').innerText = `+${formatCurrency(gameState.incomePerHour)}/hr`;
             document.getElementById('legacy-level').innerText = gameState.level;
-            
-            const currentRegion = REGIONS.find(r => r.reqLevel <= gameState.level && (!REGIONS[REGIONS.indexOf(r)+1] || REGIONS[REGIONS.indexOf(r)+1].reqLevel > gameState.level));
-            if(currentRegion) document.getElementById('legacy-rank-text').innerText = currentRegion.rank;
-            
-            const maxRegionIdx = Math.max(0, ...gameState.chains.map(c => c.regionIndex));
-            document.getElementById('reach-display').innerText = REGIONS[maxRegionIdx].name;
-            
-            const xpPct = (gameState.xp / gameState.xpToNext) * 100;
-            document.getElementById('xp-fill').style.width = `${xpPct}%`;
-            document.getElementById('xp-text').innerText = `${Math.floor(gameState.xp)} / ${Math.floor(gameState.xpToNext)}`;
-
-            renderChains();
-            renderRealEstate();
+            updateXPBar();
             renderStocks();
-            renderInventory();
             updateCardVisual();
         }
 
         function updateBalanceDisplay() {
-            document.getElementById('balance-display').innerText = formatCurrency(gameState.balance);
+            const b = formatCurrency(gameState.balance);
+            document.getElementById('balance-display').innerText = b;
+            if(gameState.activeCard) document.getElementById('card-balance').innerText = b;
         }
 
-        function renderChains() {
-            const container = document.getElementById('business-list');
-            if(!container) return;
-            container.innerHTML = '';
-            gameState.chains.forEach(c => {
-                const region = REGIONS[c.regionIndex];
-                const nextRegion = REGIONS[c.regionIndex + 1];
-                const card = document.createElement('div');
-                card.className = 'card-container p-6 border-l-2 border-l-white';
-                
-                let upgradeHtml = '';
-                for(let attr in c.upgrades) {
-                    const cost = (c.upgrades[attr] + 1) * (c.price * 0.4);
-                    upgradeHtml += `
-                        <button onclick="upgradeChainAttr('${c.id}', '${attr}')" class="text-[9px] bg-zinc-900 hover:bg-zinc-800 p-2 rounded flex justify-between items-center transition border border-zinc-800">
-                            <span class="uppercase font-bold tracking-widest text-slate-500">${attr} (Lv.${c.upgrades[attr]})</span>
-                            <span class="text-white font-mono font-bold">${formatCurrency(cost)}</span>
-                        </button>
-                    `;
-                }
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-black text-lg tracking-tight">${c.name.toUpperCase()}</h3>
-                            <span class="text-[9px] px-2 py-0.5 bg-white/10 text-white rounded font-bold uppercase">${region.name} CLUSTER</span>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[9px] text-slate-500 uppercase font-bold">Nodes</p>
-                            <p class="font-bold text-white font-mono">${c.owned}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 gap-1 mb-6">
-                        ${upgradeHtml}
-                    </div>
-
-                    <div class="flex gap-2">
-                        <button onclick="buyChain('${c.id}')" class="flex-1 bg-white text-black py-3 rounded font-bold text-[10px] transition uppercase">Deploy Branch (${formatCurrency(c.price)})</button>
-                        ${nextRegion ? `
-                            <button onclick="expandChain('${c.id}')" class="flex-1 border border-zinc-700 text-slate-400 hover:text-white hover:border-white py-3 rounded font-bold text-[10px] transition uppercase">
-                                scale to ${nextRegion.name}
-                            </button>
-                        ` : ''}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function renderRealEstate() {
-            const container = document.getElementById('realestate-list');
-            if(!container) return;
-            container.innerHTML = '';
-            gameState.properties.forEach(p => {
-                const div = document.createElement('div');
-                div.className = `card-container p-4 ${p.owned ? 'border-emerald-500 bg-emerald-500/5' : ''}`;
-                div.innerHTML = `
-                    <div class="house-img mb-4 grayscale" style="background-image: url('${p.img}')"></div>
-                    <h3 class="font-bold text-sm tracking-widest uppercase">${p.name}</h3>
-                    <p class="text-slate-500 text-xs mb-4 font-mono">Value: ${formatCurrency(p.price)}</p>
-                    ${!p.owned ? 
-                        `<button onclick="buyProperty('${p.id}')" class="w-full bg-zinc-800 hover:bg-zinc-700 py-2 rounded font-bold text-[10px] uppercase">Initialize Node</button>` :
-                        `<div class="text-center py-2 text-emerald-500 font-bold text-[10px] uppercase tracking-widest">Active Yield: ${formatCurrency(p.rent)}/hr</div>`
-                    }
-                `;
-                container.appendChild(div);
-            });
+        function updateXPBar() {
+            const pct = (gameState.xp / gameState.xpToNext) * 100;
+            document.getElementById('xp-fill').style.width = `${pct}%`;
+            document.getElementById('xp-text').innerText = `${Math.floor(gameState.xp)} / ${Math.floor(gameState.xpToNext)}`;
         }
 
         function renderStocks() {
@@ -623,111 +370,66 @@
             container.innerHTML = '';
             gameState.stocks.forEach(stock => {
                 const card = document.createElement('div');
-                card.className = 'card-container p-6';
+                card.className = 'card-container p-6 bg-slate-900/50 border-slate-800';
                 card.innerHTML = `
-                    <div class="flex justify-between mb-2"><h3 class="font-black text-xs uppercase tracking-widest">${stock.name}</h3><span class="text-[10px] bg-zinc-900 border border-zinc-800 px-2 py-1 rounded text-slate-500">${stock.id}</span></div>
-                    <div class="text-2xl font-mono font-bold mb-4 tracking-tighter">${formatCurrency(stock.price)}</div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <img src="${stock.img}" class="w-10 h-10 rounded-lg bg-white p-1" onerror="this.src='https://via.placeholder.com/40'">
+                        <div>
+                            <h3 class="font-black text-xs text-white uppercase tracking-widest">${stock.name}</h3>
+                            <span class="text-[10px] text-slate-500 font-mono">${stock.id}</span>
+                        </div>
+                    </div>
+                    <div class="text-2xl font-mono font-bold text-white mb-4">${formatCurrency(stock.price)}</div>
                     <div class="grid grid-cols-2 gap-2">
-                        <button onclick="buyStock('${stock.id}')" class="bg-white text-black py-2 rounded text-[10px] font-bold uppercase">Buy</button>
-                        <button onclick="sellStock('${stock.id}')" class="bg-zinc-900 border border-zinc-800 text-slate-400 py-2 rounded text-[10px] font-bold uppercase">Sell (${stock.owned})</button>
+                        <button onclick="buyStock('${stock.id}')" class="bg-white text-black py-2 rounded text-[10px] font-bold uppercase hover:bg-blue-400">Buy</button>
+                        <button onclick="sellStock('${stock.id}')" class="bg-slate-800 text-slate-300 py-2 rounded text-[10px] font-bold uppercase">Sell (${stock.owned})</button>
                     </div>
                 `;
                 container.appendChild(card);
             });
         }
 
-        function buyStock(stockId) {
-            const stock = gameState.stocks.find(s => s.id === stockId);
-            if (gameState.balance >= stock.price) {
-                gameState.balance -= stock.price;
-                stock.owned++;
-                addLog(`Stock acquisition: ${stock.id}`);
-                updateUI();
-                saveGame();
-            } else notify("Limit order failed.", "error");
-        }
-
-        function sellStock(stockId) {
-            const stock = gameState.stocks.find(s => s.id === stockId);
-            if (stock.owned > 0) {
-                gameState.balance += stock.price;
-                stock.owned--;
-                addLog(`Asset liquidation: ${stock.id}`);
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function renderInventory() {
-            const container = document.getElementById('inventory-list');
-            if(!container) return;
-            const activeAssets = [];
-            gameState.chains.forEach(c => { if(c.owned > 0) activeAssets.push({n: c.name, d: `${c.owned} nodes`})});
-            gameState.properties.forEach(p => { if(p.owned) activeAssets.push({n: p.name, d: 'Asset'})});
-            
-            if(activeAssets.length === 0) {
-                container.innerHTML = '<p class="text-slate-500 italic col-span-full py-4 text-center text-xs font-mono">No active deployments.</p>';
-                return;
-            }
-            container.innerHTML = '';
-            activeAssets.forEach(a => {
-                const div = document.createElement('div');
-                div.className = 'bg-zinc-900 border border-zinc-800 p-3 rounded-lg text-xs font-mono';
-                div.innerHTML = `<div class="text-slate-500 uppercase text-[8px] tracking-widest">${a.d}</div><div class="text-white font-bold">${a.n.toUpperCase()}</div>`;
-                container.appendChild(div);
-            });
-        }
-
-        function updateStocks() {
-            gameState.stocks.forEach(stock => {
-                stock.price *= (1 + (Math.random() * stock.volatility * 2 - stock.volatility));
-                stock.price = Math.max(1, stock.price);
-            });
-            renderStocks();
-        }
-
         function updateCardVisual() {
             if (gameState.activeCard) {
+                document.getElementById('wealth-clicker').classList.add('hidden');
                 document.getElementById('active-card-view').classList.remove('hidden');
-                const tierInfo = cardData[gameState.activeCard];
-                document.getElementById('card-face-style').className = 'card-face ' + tierInfo.class;
-                document.getElementById('card-tier-label').innerText = tierInfo.label;
-                document.getElementById('card-balance').innerText = formatCurrency(gameState.balance);
+                const card = cardData[gameState.activeCard];
+                document.getElementById('card-face-style').className = `card-face ${card.class}`;
+                document.getElementById('card-tier-label').innerText = card.label;
             }
         }
 
-        // --- UTILS ---
+        function formatCurrency(num) {
+            return new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(num);
+        }
+
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
-        }
-
-        function formatCurrency(num) {
-            if (num >= 1000000000) return '$' + (num / 1000000000).toFixed(2) + 'B';
-            if (num >= 1000000) return '$' + (num / 1000000).toFixed(2) + 'M';
-            return '$' + Math.floor(num).toLocaleString();
+            event.currentTarget.classList.add('active');
         }
 
         function addLog(msg) {
             const list = document.getElementById('log-list');
-            const li = document.createElement('li');
-            li.innerText = `> ${msg}`;
-            list.prepend(li);
-            if(list.children.length > 20) list.lastChild.remove();
+            const entry = document.createElement('li');
+            entry.innerText = `> ${msg}`;
+            list.prepend(entry);
         }
 
         function notify(msg, type) {
             const box = document.getElementById('notification-box');
             const n = document.createElement('div');
-            n.className = `p-4 mb-2 rounded-lg text-xs font-bold uppercase tracking-widest shadow-2xl animate-bounce ${type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'}`;
+            n.className = `mb-2 p-4 rounded-lg text-xs font-bold border ${type === 'success' ? 'bg-emerald-500/10 border-emerald-500 text-emerald-500' : 'bg-red-500/10 border-red-500 text-red-500'}`;
             n.innerText = msg;
             box.appendChild(n);
             setTimeout(() => n.remove(), 3000);
         }
 
-        window.onload = init;
+        function saveGame() { localStorage.setItem('vercelEmpireSave', JSON.stringify(gameState)); }
+        function resetGame() { if(confirm("Reset Empire?")) { localStorage.removeItem('vercelEmpireSave'); location.reload(); } }
+
+        init();
     </script>
 </body>
 </html>
