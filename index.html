@@ -372,15 +372,15 @@
         ];
 
         const STOCKS = [
-            { symbol: "AAPL", name: "Apple Inc.", price: 190, trend: 1.2, history: [], type: 'stock' },
-            { symbol: "TSLA", name: "Tesla Motors", price: 175, trend: -2.4, history: [], type: 'stock' },
-            { symbol: "NVDA", name: "Nvidia Corp", price: 850, trend: 5.8, history: [], type: 'stock' },
-            { symbol: "AMZN", name: "Amazon", price: 180, trend: 1.1, history: [], type: 'stock' },
-            { symbol: "META", name: "Meta Platforms", price: 500, trend: 2.3, history: [], type: 'stock' },
-            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155, trend: 0.8, history: [], type: 'stock' },
-            { symbol: "MSFT", name: "Microsoft", price: 420, trend: 1.4, history: [], type: 'stock' },
-            { symbol: "BTC", name: "Bitcoin", price: 65000, trend: 0.5, history: [], type: 'crypto' },
-            { symbol: "ETH", name: "Ethereum", price: 3400, trend: 1.2, history: [], type: 'crypto' }
+            { symbol: "AAPL", name: "Apple Inc.", price: 190.00, trend: 1.2, history: [], type: 'stock' },
+            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history: [], type: 'stock' },
+            { symbol: "NVDA", name: "Nvidia Corp", price: 850.00, trend: 5.8, history: [], type: 'stock' },
+            { symbol: "AMZN", name: "Amazon", price: 180.00, trend: 1.1, history: [], type: 'stock' },
+            { symbol: "META", name: "Meta Platforms", price: 500.00, trend: 2.3, history: [], type: 'stock' },
+            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155.00, trend: 0.8, history: [], type: 'stock' },
+            { symbol: "MSFT", name: "Microsoft", price: 420.00, trend: 1.4, history: [], type: 'stock' },
+            { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history: [], type: 'crypto' },
+            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history: [], type: 'crypto' }
         ];
 
         const NFTS = [
@@ -394,9 +394,9 @@
             let last = s.price;
             for(let i=0; i<50; i++) {
                 const open = last;
-                const close = last + (Math.random() - 0.5) * (last * 0.05);
-                const high = Math.max(open, close) + Math.random() * (last * 0.01);
-                const low = Math.min(open, close) - Math.random() * (last * 0.01);
+                const close = parseFloat((last + (Math.random() - 0.5) * (last * 0.05)).toFixed(2));
+                const high = parseFloat((Math.max(open, close) + Math.random() * (last * 0.01)).toFixed(2));
+                const low = parseFloat((Math.min(open, close) - Math.random() * (last * 0.01)).toFixed(2));
                 s.history.push({ open, close, high, low });
                 last = close;
             }
@@ -406,7 +406,7 @@
 
         const COMPANIES = [
             { id: 'c1', name: "Corner Shop", price: 2500, rev: 80, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
-            { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400" },
+            { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400", customFleet: true },
             { id: 'c3', name: "E-Com Brand", price: 35000, rev: 1200, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400" },
             { id: 'c4', name: "Ad Agency", price: 150000, rev: 5500, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
             { id: 'c5', name: "SaaS Enterprise", price: 750000, rev: 28000, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
@@ -448,16 +448,17 @@
             renting: {}, 
             renovations: {},
             compTiers: {},
-            compOutlets: {}
+            compOutlets: {},
+            taxiFleet: { cars: 1, busses: 0, artBusses: 0 }
         };
 
         let activeStock = null;
         let chartType = 'candlestick';
 
-        const saved = localStorage.getItem('vercel_empire_v11');
+        const saved = localStorage.getItem('vercel_empire_v11_fix');
         if (saved) state = { ...state, ...JSON.parse(saved) };
 
-        function saveGame() { localStorage.setItem('vercel_empire_v11', JSON.stringify(state)); }
+        function saveGame() { localStorage.setItem('vercel_empire_v11_fix', JSON.stringify(state)); }
 
         function mintMoney(e) {
             const tier = CARD_TIERS[state.currentTierId];
@@ -500,8 +501,12 @@
                         val = item.priceEth * ethPrice;
                     } else if (c) {
                         const tier = state.compTiers[assetId] || 0;
-                        const outlets = state.compOutlets[assetId] || 1;
-                        val = item.price * Math.pow(4, tier) * outlets;
+                        if (c.customFleet) {
+                            val += (state.taxiFleet.cars * 15000) + (state.taxiFleet.busses * 120000) + (state.taxiFleet.artBusses * 350000);
+                        } else {
+                            const outlets = state.compOutlets[assetId] || 1;
+                            val = item.price * Math.pow(4, tier) * outlets;
+                        }
                     } else if (re && state.renovations[assetId]) {
                         val += (item.price * 0.2 * state.renovations[assetId]);
                     }
@@ -515,7 +520,6 @@
             state.netWorth = totalValue;
         }
 
-        // Helper to update text safely
         function setUI(id, val) {
             const el = document.getElementById(id);
             if (el) el.innerText = val;
@@ -527,9 +531,13 @@
             state.ownedAssets.forEach(id => {
                 const c = COMPANIES.find(x => x.id === id);
                 if (c) {
-                    const tierIdx = state.compTiers[id] || 0;
-                    const outlets = state.compOutlets[id] || 1;
-                    rev += (c.rev * Math.pow(3, tierIdx)) * outlets;
+                    if (c.customFleet) {
+                        rev += (state.taxiFleet.cars * 350) + (state.taxiFleet.busses * 2800) + (state.taxiFleet.artBusses * 9500);
+                    } else {
+                        const tierIdx = state.compTiers[id] || 0;
+                        const outlets = state.compOutlets[id] || 1;
+                        rev += (c.rev * Math.pow(3, tierIdx)) * outlets;
+                    }
                 }
                 const re = REAL_ESTATE.find(x => x.id === id);
                 if (re && state.renting[id]) {
@@ -551,7 +559,7 @@
             setUI('rank-display', RANKS[rankIndex]);
             setUI('stat-rank', RANKS[rankIndex]);
             setUI('stat-assets', state.ownedAssets.length);
-            setUI('stat-eth', (state.shares['ETH'] || 0).toFixed(4));
+            setUI('stat-eth', (state.shares['ETH'] || 0).toFixed(2));
             setUI('stat-mult', CARD_TIERS[state.currentTierId].mult + '.0x');
 
             const xpReq = 200 * Math.pow(1.05, state.level - 1);
@@ -657,7 +665,7 @@
             const m = document.getElementById('reset-modal');
             if (m) m.style.display = 'none'; 
         }
-        function confirmReset() { localStorage.removeItem('vercel_empire_v11'); window.location.reload(); }
+        function confirmReset() { localStorage.removeItem('vercel_empire_v11_fix'); window.location.reload(); }
 
         function setChartType(t) {
             chartType = t;
@@ -666,12 +674,12 @@
 
         function updateModalContent() {
             if(!activeStock) return;
-            setUI('modal-price', '$' + activeStock.price.toLocaleString());
-            setUI('modal-owned', state.shares[activeStock.symbol] || 0);
+            setUI('modal-price', '$' + activeStock.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+            setUI('modal-owned', (state.shares[activeStock.symbol] || 0).toFixed(2));
             const high = Math.max(...activeStock.history.map(h => h.high));
             const low = Math.min(...activeStock.history.map(h => h.low));
-            setUI('modal-high', '$' + high.toLocaleString());
-            setUI('modal-low', '$' + low.toLocaleString());
+            setUI('modal-high', '$' + high.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+            setUI('modal-low', '$' + low.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
             drawGraph('modal-chart', activeStock.history, chartType);
         }
 
@@ -681,10 +689,38 @@
                 compGrid.innerHTML = COMPANIES.map(c => {
                     const isOwned = state.ownedAssets.includes(c.id);
                     const tierIdx = state.compTiers[c.id] || 0;
+                    
+                    if (c.customFleet && isOwned) {
+                        const fleet = state.taxiFleet;
+                        return `
+                        <div class="glass-card p-6">
+                            <img src="${c.img}" class="item-img mb-4">
+                            <div class="mb-4">
+                                <h3 class="font-black uppercase text-xs tracking-tight">${c.name} Hub</h3>
+                                <p class="text-[10px] text-emerald-400 font-bold">+$${Math.floor((fleet.cars*350)+(fleet.busses*2800)+(fleet.artBusses*9500)).toLocaleString()}/HR</p>
+                            </div>
+                            <div class="space-y-2">
+                                <button onclick="buyTaxiAsset('cars', 15000)" class="btn-buy flex justify-between px-4" ${state.balance < 15000 || fleet.cars >= 70 ? 'disabled' : ''}>
+                                    <span>+1 CAR ($15K)</span>
+                                    <span class="opacity-40">${fleet.cars}/70</span>
+                                </button>
+                                <button onclick="buyTaxiAsset('busses', 120000)" class="btn-buy flex justify-between px-4" ${state.balance < 120000 || fleet.busses >= 50 ? 'disabled' : ''}>
+                                    <span>+1 BUS ($120K)</span>
+                                    <span class="opacity-40">${fleet.busses}/50</span>
+                                </button>
+                                <button onclick="buyTaxiAsset('artBusses', 350000)" class="btn-buy flex justify-between px-4" ${state.balance < 350000 || fleet.artBusses >= 40 ? 'disabled' : ''}>
+                                    <span>+1 ART. BUS ($350K)</span>
+                                    <span class="opacity-40">${fleet.artBusses}/40</span>
+                                </button>
+                            </div>
+                        </div>`;
+                    }
+
                     const outlets = state.compOutlets[c.id] || 1;
                     const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
                     const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
                     const currentRev = (c.rev * Math.pow(3, tierIdx)) * outlets;
+                    
                     return `
                     <div class="glass-card p-6">
                         <img src="${c.img}" class="item-img mb-4">
@@ -756,6 +792,8 @@
 
             const renderStockCard = (s) => {
                 const owned = state.shares[s.symbol] || 0;
+                const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                const trendAbs = Math.abs(s.trend).toFixed(2);
                 return `
                 <div class="glass-card p-6">
                     <div class="flex justify-between items-start mb-2">
@@ -764,8 +802,8 @@
                             <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
                         </div>
                         <div class="text-right">
-                            <p class="text-lg font-bold mono">$${s.price.toLocaleString()}</p>
-                            <p class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend)}%</p>
+                            <p class="text-lg font-bold mono">$${priceFormatted}</p>
+                            <p class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${trendAbs}%</p>
                         </div>
                     </div>
                     <div class="chart-container" onclick="openStockModal('${s.symbol}')">
@@ -773,7 +811,7 @@
                     </div>
                     <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900">
                         <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
-                        <p class="text-sm font-bold mono">${s.type === 'crypto' ? owned.toFixed(4) : owned} UNITS</p>
+                        <p class="text-sm font-bold mono">${owned.toFixed(2)} UNITS</p>
                     </div>
                     <div class="grid grid-cols-2 gap-2">
                         <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price ? 'disabled' : ''}>BUY</button>
@@ -839,6 +877,8 @@
                 return;
             }
             container.innerHTML = STOCKS.slice(0, 5).map(s => {
+                const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                const trendFormatted = Math.abs(s.trend).toFixed(2);
                 return `
                 <div class="flex justify-between items-center bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 cursor-pointer hover:border-zinc-400" onclick="openStockModal('${s.symbol}')">
                     <div>
@@ -846,8 +886,8 @@
                         <p class="text-[8px] text-zinc-600 font-bold uppercase">${s.type}</p>
                     </div>
                     <div class="text-right">
-                        <p class="text-[10px] mono font-bold">$${s.price.toLocaleString()}</p>
-                        <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend)}%</p>
+                        <p class="text-[10px] mono font-bold">$${priceFormatted}</p>
+                        <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${trendFormatted}%</p>
                     </div>
                 </div>`;
             }).join('') + `<button onclick="showTab('stocks')" class="w-full mt-2 text-[9px] text-zinc-500 font-bold uppercase hover:text-white transition-colors">VIEW ALL MARKETS →</button>`;
@@ -859,15 +899,14 @@
             if (isBuy) {
                 if (state.balance >= stock.price) {
                     state.balance -= stock.price;
-                    state.shares[symbol] = (state.shares[symbol] || 0) + (stock.type === 'crypto' ? 1 : 1);
-                    logToTerminal(`PURCHASED ${stock.type === 'crypto' ? '1.0' : '1'} UNIT OF ${symbol}`);
+                    state.shares[symbol] = (state.shares[symbol] || 0) + 1;
+                    logToTerminal(`PURCHASED 1 UNIT OF ${symbol} @ $${stock.price.toFixed(2)}`);
                 }
             } else {
-                if (state.shares[symbol] > 0) {
+                if (state.shares[symbol] >= 1) {
                     state.balance += stock.price;
-                    state.shares[symbol] -= (stock.type === 'crypto' ? 1 : 1);
-                    if (state.shares[symbol] < 0) state.shares[symbol] = 0;
-                    logToTerminal(`SOLD ${stock.type === 'crypto' ? '1.0' : '1'} UNIT OF ${symbol}`);
+                    state.shares[symbol] -= 1;
+                    logToTerminal(`SOLD 1 UNIT OF ${symbol} @ $${stock.price.toFixed(2)}`);
                 }
             }
             updateUI();
@@ -901,6 +940,17 @@
                 state.balance -= price;
                 state.ownedAssets.push(id);
                 logToTerminal(`ASSET ACQUIRED: ${id.toUpperCase()}`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function buyTaxiAsset(type, cost) {
+            const limits = { cars: 70, busses: 50, artBusses: 40 };
+            if (state.balance >= cost && state.taxiFleet[type] < limits[type]) {
+                state.balance -= cost;
+                state.taxiFleet[type]++;
+                logToTerminal(`TAXI HUB: ACQUIRED ${type.toUpperCase()}`);
                 updateUI();
                 saveGame();
             }
@@ -996,12 +1046,13 @@
                 const oldPrice = s.price;
                 const volt = s.type === 'crypto' ? 0.02 : 0.008;
                 s.trend += (Math.random() - 0.5) * 0.2;
-                s.price += (Math.random() - 0.5) * (s.price * volt);
-                s.price = Math.max(1, parseFloat(s.price.toFixed(2)));
+                let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
+                s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
+                
                 const open = oldPrice;
                 const close = s.price;
-                const high = Math.max(open, close) + Math.random() * (open * 0.005);
-                const low = Math.min(open, close) - Math.random() * (open * 0.005);
+                const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
+                const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
                 s.history.push({ open, close, high, low });
                 if(s.history.length > 50) s.history.shift();
             });
