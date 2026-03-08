@@ -3,731 +3,352 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vercel Empire - Global Expansion</title>
+    <title>Vercel Empire - Persistent Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
             --primary: #10b981;
-            --secondary: #3b82f6;
             --dark: #000000;
-            --light-dark: #111111;
+            --light-dark: #0a0a0a;
+            --border: #1f1f1f;
         }
         body {
             background-color: var(--dark);
             color: #f8fafc;
             font-family: 'Inter', system-ui, -apple-system, sans-serif;
             overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
         .card-container {
             background: var(--light-dark);
             border-radius: 12px;
-            border: 1px solid #333;
-            transition: all 0.2s ease;
+            border: 1px solid var(--border);
         }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .btn-tab.active {
-            border-bottom: 2px solid #fff;
-            color: #fff;
-        }
+        .btn-tab.active { border-bottom: 2px solid #fff; color: #fff; }
         
-        /* 3D CREDIT CARD STYLES */
-        .viewport-3d {
-            perspective: 1000px;
-            width: 100%;
-            max-width: 400px;
-            height: 250px;
-        }
-        .credit-card {
-            width: 100%;
-            height: 100%;
+        /* 3D Card Interaction */
+        .card-wrapper { perspective: 1000px; cursor: pointer; width: 100%; }
+        .debit-card {
+            background: linear-gradient(135deg, #111 0%, #000 100%);
+            border: 1px solid #333;
+            border-radius: 24px;
             position: relative;
-            transform-style: preserve-3d;
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
-            cursor: pointer;
-            border-radius: 20px;
-        }
-        .card-face {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            backface-visibility: hidden;
-            border-radius: 20px;
-            padding: 25px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            overflow: hidden;
+            transition: transform 0.1s ease-out;
+            transform-style: preserve-3d;
+            aspect-ratio: 1.6 / 1;
         }
-        .card-gold { background: linear-gradient(135deg, #f59e0b 0%, #78350f 100%); }
-        .card-platinum { background: linear-gradient(135deg, #94a3b8 0%, #1e293b 100%); }
-        .card-black { background: linear-gradient(135deg, #111 0%, #444 100%); border: 1px solid #555; }
-        
         .chip {
-            width: 50px;
-            height: 40px;
-            background: linear-gradient(135deg, #fbbf24 0%, #b45309 100%);
-            border-radius: 8px;
+            width: 45px; height: 35px;
+            background: linear-gradient(135deg, #d4af37 0%, #f9e29c 100%);
+            border-radius: 6px;
         }
 
-        .house-img {
-            width: 100%;
-            height: 140px;
-            background-size: cover;
-            background-position: center;
-            border-radius: 8px;
+        .mini-card {
+            height: 160px; border-radius: 16px; padding: 1.5rem;
+            display: flex; flex-direction: column; justify-content: space-between;
+            border: 1px solid rgba(255,255,255,0.1); position: relative;
         }
+        .mini-card.owned { border-color: #10b981; background: rgba(16, 185, 129, 0.05); }
 
-        .progress-bar {
-            height: 4px;
-            background: #222;
-            border-radius: 2px;
-            overflow: hidden;
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(8px);
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.2s ease;
+            z-index: 100;
         }
-        .progress-fill {
-            height: 100%;
-            background: #fff;
-            transition: width 0.3s ease;
-        }
+        .modal-overlay.active { opacity: 1; pointer-events: auto; }
 
-        .click-btn {
-            transition: transform 0.1s;
-            cursor: pointer;
-            user-select: none;
+        #save-indicator {
+            position: fixed; top: 20px; right: 20px;
+            background: #10b981; color: white;
+            padding: 6px 12px; border-radius: 6px;
+            font-size: 10px; font-weight: 800;
+            opacity: 0; transition: opacity 0.3s;
+            z-index: 1000; pointer-events: none;
         }
-        .click-btn:active {
-            transform: scale(0.98);
-        }
-        .cooldown-active {
-            opacity: 0.7;
-            cursor: not-allowed !important;
-        }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- Top Bar -->
+    <div id="save-indicator">CLOUD SYNC ACTIVE</div>
+
     <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
         <div class="flex items-center gap-3">
-            <svg width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
-            </svg>
+            <svg width="40" height="40" viewBox="0 0 76 65"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
             <div>
-                <h1 class="text-3xl font-black tracking-tighter text-white">VERCEL <span class="text-slate-500">EMPIRE</span></h1>
-                <p class="text-slate-500 text-xs uppercase tracking-widest font-bold">Level <span id="legacy-level">1</span> Developer</p>
+                <h1 class="text-3xl font-black tracking-tighter text-white uppercase">Vercel <span class="text-slate-500">Empire</span></h1>
+                <p class="text-slate-500 text-[10px] uppercase tracking-widest font-bold">Session Persistence Enabled</p>
             </div>
         </div>
         <div class="flex gap-4 items-center bg-zinc-900 p-4 rounded-xl border border-zinc-800 w-full md:w-auto">
-            <div class="text-center px-4 border-r border-zinc-800">
-                <p class="text-[10px] text-slate-500 uppercase font-bold">Cash</p>
+            <div class="text-center px-4 border-r border-zinc-800 flex-1">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Liquidity</p>
                 <p id="balance-display" class="text-xl font-mono font-bold text-white">$0</p>
             </div>
-            <div class="text-center px-4">
-                <p class="text-[10px] text-slate-500 uppercase font-bold">Revenue</p>
+            <div class="text-center px-4 flex-1">
+                <p class="text-[10px] text-slate-500 uppercase font-bold">Revenue/Hr</p>
                 <p id="income-display" class="text-xl font-mono font-bold text-emerald-500">+$0</p>
             </div>
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <nav class="max-w-6xl mx-auto flex overflow-x-auto gap-4 mb-8 no-scrollbar border-b border-zinc-800">
-        <button onclick="switchTab('dashboard')" class="btn-tab active pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">DASHBOARD</button>
-        <button onclick="switchTab('businesses')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">CHAINS</button>
-        <button onclick="switchTab('realestate')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">REAL ESTATE</button>
-        <button onclick="switchTab('stocks')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">MARKETS</button>
-        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-sm text-slate-500">BANK</button>
+    <nav class="max-w-6xl mx-auto flex overflow-x-auto gap-4 mb-8 border-b border-zinc-800">
+        <button onclick="switchTab('dashboard')" class="btn-tab active pb-2 px-4 font-bold text-sm text-slate-500 uppercase">Dashboard</button>
+        <button onclick="switchTab('stocks')" class="btn-tab pb-2 px-4 font-bold text-sm text-slate-500 uppercase">Markets</button>
+        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 font-bold text-sm text-slate-500 uppercase">Account</button>
     </nav>
 
     <main class="max-w-6xl mx-auto">
-        
-        <!-- DASHBOARD -->
         <div id="dashboard" class="tab-content active space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Clickable Wealth Generator -->
-                <div class="lg:col-span-1 flex flex-col items-center justify-center space-y-4">
-                    <div id="wealth-clicker" onclick="handleManualClick()" class="click-btn card-container p-8 w-full h-[250px] flex flex-col items-center justify-center border-2 border-emerald-500/20 hover:border-emerald-500/50 hover:bg-emerald-500/5 group">
-                        <p class="text-[10px] text-emerald-500 font-bold uppercase tracking-widest mb-2 opacity-60 group-hover:opacity-100">Click to Generate Wealth</p>
-                        <p id="networth-display" class="text-4xl font-black text-white tracking-tighter mb-1">$0</p>
-                        <p class="text-xs text-slate-500 uppercase font-bold">Total Net Worth</p>
-                        <div id="click-cooldown-ui" class="mt-4 w-24 h-1 bg-zinc-800 rounded-full overflow-hidden">
-                            <div id="cooldown-progress" class="h-full bg-emerald-500 w-full transition-all duration-200"></div>
-                        </div>
-                    </div>
-
-                    <div id="active-card-view" class="viewport-3d hidden">
-                        <div class="credit-card" id="visual-card">
-                            <div class="card-face" id="card-face-style">
-                                <div class="flex justify-between items-start">
-                                    <div class="chip"></div>
-                                    <div class="text-white font-bold italic text-xl" id="card-tier-label">DEBIT</div>
-                                </div>
-                                <div>
-                                    <p class="text-xs text-white/70 uppercase tracking-widest mb-1">Legacy Funds</p>
-                                    <p id="card-balance" class="text-3xl font-mono font-bold text-white tracking-tighter">$0</p>
-                                </div>
-                                <div class="flex justify-between items-end">
-                                    <div>
-                                        <p class="text-[10px] text-white/50 uppercase">Vercel ID</p>
-                                        <p class="text-sm font-medium tracking-widest text-white uppercase">TOP DEVELOPER</p>
-                                    </div>
-                                    <div class="text-right">
-                                        <p class="text-[10px] text-white/50 uppercase">Member</p>
-                                        <p class="text-sm font-medium text-white">2024</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="card-container p-6">
-                        <h2 class="text-sm font-bold text-slate-500 uppercase mb-4 tracking-widest">Growth Progress</h2>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-xs mb-2">
-                                    <span class="text-slate-400 font-bold uppercase">Experience Points</span>
-                                    <span id="xp-text" class="text-white font-mono">0 / 1000</span>
-                                </div>
-                                <div class="progress-bar"><div id="xp-fill" class="progress-fill" style="width: 0%"></div></div>
-                            </div>
-                            <div class="grid grid-cols-2 gap-4 pt-2">
-                                <div class="p-4 bg-zinc-900 rounded-lg border border-zinc-800">
-                                    <p class="text-slate-500 text-[10px] uppercase font-bold">Current Rank</p>
-                                    <p id="legacy-rank-text" class="text-lg font-bold text-white">Junior Dev</p>
-                                </div>
-                                <div class="p-4 bg-zinc-900 rounded-lg border border-zinc-800">
-                                    <p class="text-slate-500 text-[10px] uppercase font-bold">Global Reach</p>
-                                    <p id="reach-display" class="text-lg font-bold text-white">Local</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-container p-4 bg-zinc-900/50">
-                        <h2 class="text-[10px] font-bold text-slate-500 uppercase mb-3 px-2 tracking-widest">Empire Logs</h2>
-                        <ul id="log-list" class="text-[11px] space-y-2 text-slate-500 h-20 overflow-y-auto px-2 font-mono">
-                            <li>> system initialized</li>
-                            <li>> welcome to vercel empire</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="card-container p-6">
-                <h2 class="text-sm font-bold text-slate-500 uppercase mb-4 tracking-widest">Deployment Inventory</h2>
-                <div id="inventory-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
-                    <p class="text-slate-500 italic col-span-full py-4 text-center text-xs font-mono">No active deployments.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- GLOBAL CHAINS -->
-        <div id="businesses" class="tab-content space-y-6">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-xl font-black text-white">CHAINS</h2>
-                <p class="text-xs text-slate-500 font-mono">Expand infrastructure globally.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="business-list"></div>
-        </div>
-
-        <!-- REAL ESTATE -->
-        <div id="realestate" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="realestate-list"></div>
-        </div>
-
-        <!-- STOCKS -->
-        <div id="stocks" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="stock-market-list"></div>
-        </div>
-
-        <!-- BANKING -->
-        <div id="banking" class="tab-content space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full card-gold rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                        <h3 class="text-xl font-black mb-1">GOLD PLAN</h3>
-                        <p class="text-xs text-slate-500 mb-4 font-mono">1.1x XP Multiplier</p>
+                <div class="md:col-span-2">
+                    <div class="card-wrapper" id="card-3d-container">
+                        <div id="revenue-card" onclick="handleManualClick(event)" class="debit-card p-8 flex flex-col justify-between">
+                            <div class="flex justify-between items-start">
+                                <div class="chip"></div>
+                                <div class="text-right text-[8px] text-zinc-600 font-bold uppercase">Corporate ID: <span id="user-id-display">0000</span></div>
+                            </div>
+                            <div>
+                                <p class="text-[10px] text-zinc-500 uppercase tracking-widest mb-1">Available Funds</p>
+                                <h2 id="card-balance" class="text-4xl md:text-5xl font-mono font-bold text-white tracking-tighter">$0.00</h2>
+                            </div>
+                            <div class="flex justify-between items-end">
+                                <div><p class="text-[10px] text-zinc-500 uppercase font-bold">Level <span id="card-level">1</span> Founder</p></div>
+                                <div class="text-right"><p id="card-income" class="text-sm font-mono text-emerald-500">+$0/hr</p></div>
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="purchaseCard('gold')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-200 transition">$50,000</button>
                 </div>
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full card-platinum rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                        <h3 class="text-xl font-black mb-1">PLATINUM PRO</h3>
-                        <p class="text-xs text-slate-500 mb-4 font-mono">1.25x XP Multiplier</p>
+                <div class="card-container p-6 flex flex-col justify-center text-center">
+                    <p class="text-[10px] text-slate-500 uppercase font-bold mb-2">Net Worth</p>
+                    <p id="networth-display" class="text-4xl font-black text-white">$0</p>
+                    <div class="mt-6 space-y-2 text-left">
+                        <div class="flex justify-between text-[10px] font-bold uppercase">
+                            <span class="text-zinc-500">Experience</span>
+                            <span id="xp-text" class="text-white">0 / 200</span>
+                        </div>
+                        <div class="w-full bg-zinc-900 h-2 rounded-full overflow-hidden border border-zinc-800">
+                            <div id="xp-bar" class="bg-white h-full transition-all" style="width: 0%"></div>
+                        </div>
                     </div>
-                    <button onclick="purchaseCard('platinum')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-200 transition">$1,000,000</button>
                 </div>
-                <div class="p-6 bg-zinc-900 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full card-black rounded-xl mb-4 p-4 shadow-xl"><div class="chip w-10 h-8"></div></div>
-                        <h3 class="text-xl font-black mb-1">ENTERPRISE</h3>
-                        <p class="text-xs text-slate-500 mb-4 font-mono">1.5x XP Multiplier</p>
-                    </div>
-                    <button onclick="purchaseCard('black')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-xs hover:bg-slate-200 transition">$100,000,000</button>
-                </div>
-            </div>
-            <!-- Reset Button for Testing -->
-            <div class="mt-12 text-center">
-                <button onclick="resetGame()" class="text-[10px] text-zinc-600 hover:text-red-500 transition uppercase font-bold tracking-widest">Wipe Data & Reset Empire</button>
             </div>
         </div>
 
+        <div id="stocks" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="stock-list"></div>
+        </div>
+
+        <div id="banking" class="tab-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="card-market"></div>
+            <div class="mt-12 text-center">
+                <button onclick="confirmReset()" class="text-[10px] text-zinc-700 hover:text-red-500 font-bold uppercase tracking-widest transition">Wipe Local Database</button>
+            </div>
+        </div>
     </main>
 
-    <!-- Notification Container -->
-    <div id="notification-box" class="fixed bottom-4 right-4 z-50"></div>
+    <!-- UI Modals -->
+    <div id="reset-modal" class="modal-overlay fixed inset-0 flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-red-900/30 rounded-2xl p-8 w-full max-w-sm shadow-2xl text-center">
+            <h2 class="text-xl font-black text-white mb-2 uppercase">Erase Data?</h2>
+            <p class="text-zinc-500 text-sm mb-6">This will permanently delete your empire and reset all progress.</p>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="closeResetModal()" class="py-3 rounded-xl bg-zinc-800 text-zinc-400 font-bold text-xs uppercase">Cancel</button>
+                <button onclick="resetGame()" class="py-3 rounded-xl bg-red-600 text-white font-black text-xs uppercase">Reset</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // --- GAME DATA ---
-        const REGIONS = [
-            { id: 0, name: 'Local', multiplier: 1, reqLevel: 1, rank: 'Junior Dev' },
-            { id: 1, name: 'National', multiplier: 5, reqLevel: 5, rank: 'Senior Lead' },
-            { id: 2, name: 'International', multiplier: 25, reqLevel: 12, rank: 'VP Eng' },
-            { id: 3, name: 'Global', multiplier: 150, reqLevel: 25, rank: 'Vercel CTO' }
-        ];
-
-        let gameState = {
-            balance: 25000,
-            netWorth: 25000,
-            incomePerHour: 0,
-            activeCard: null,
-            level: 1,
-            xp: 0,
-            xpToNext: 1000,
-            lastClick: 0,
-            inventory: [],
+        const STORAGE_KEY = 'VERCEL_EMPIRE_SAVE_V1';
+        
+        let state = {
+            balance: 1000,
+            income: 0,
+            level: 1, xp: 0, xpNext: 200,
+            lastSave: Date.now(),
+            cards: [
+                { id: 'c1', name: 'Standard Grey', price: 0, mult: 1, owned: true, color: 'bg-zinc-900' },
+                { id: 'c2', name: 'Emerald Plus', price: 5000, mult: 2.5, owned: false, color: 'bg-emerald-950' },
+                { id: 'c3', name: 'Obsidian Black', price: 50000, mult: 10, owned: false, color: 'bg-black' }
+            ],
             stocks: [
-                { id: 'VRC', name: 'Vercel Inc', price: 450, owned: 0, volatility: 0.04 },
-                { id: 'RXT', name: 'React Corp', price: 120, owned: 0, volatility: 0.03 },
-                { id: 'NXT', name: 'NextJS Ltd', price: 80, owned: 0, volatility: 0.02 }
-            ],
-            properties: [
-                { id: 'p1', name: 'Server Farm', price: 120000, rent: 800, owned: false, renovated: 0, maxRenovations: 3, img: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc51?w=400&q=80' },
-                { id: 'p2', name: 'Hacker House', price: 350000, rent: 2200, owned: false, renovated: 0, maxRenovations: 5, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400&q=80' },
-                { id: 'p3', name: 'Silicon Estate', price: 1200000, rent: 7500, owned: false, renovated: 0, maxRenovations: 8, img: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400&q=80' }
-            ],
-            chains: [
-                { 
-                    id: 'c1', name: 'SaaS Agency', price: 10000, baseIncome: 120, owned: 0, 
-                    regionIndex: 0, expansionCost: 50000, 
-                    upgrades: { design: 0, code: 0, sales: 0 }
-                },
-                { 
-                    id: 'c2', name: 'Edge Platform', price: 250000, baseIncome: 3500, owned: 0, 
-                    regionIndex: 0, expansionCost: 1000000, 
-                    upgrades: { speed: 0, security: 0, r_d: 0 }
-                },
-                { 
-                    id: 'c3', name: 'AI Infrastructure', price: 5000000, baseIncome: 85000, owned: 0, 
-                    regionIndex: 0, expansionCost: 25000000, 
-                    upgrades: { training: 0, inference: 0, chipsets: 0 }
-                }
+                { id: 'VRC', name: 'Vercel Corp', price: 150, owned: 0, history: [140, 145, 150] },
+                { id: 'NDV', name: 'Node Ventures', price: 80, owned: 0, history: [85, 82, 80] },
+                { id: 'RXT', name: 'React Tech', price: 320, owned: 0, history: [310, 315, 320] }
             ]
         };
 
-        const cardData = {
-            gold: { price: 50000, class: 'card-gold', label: 'GOLD', xpMult: 1.1 },
-            platinum: { price: 1000000, class: 'card-platinum', label: 'PRO', xpMult: 1.25 },
-            black: { price: 100000000, class: 'card-black', label: 'ENTERPRISE', xpMult: 1.5 }
-        };
-
-        // --- STORAGE LOGIC ---
-        function saveGame() {
-            localStorage.setItem('vercelEmpireSave', JSON.stringify(gameState));
+        // Persistence Logic
+        function save() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+            const indicator = document.getElementById('save-indicator');
+            indicator.style.opacity = '1';
+            setTimeout(() => indicator.style.opacity = '0', 2000);
         }
 
-        function loadGame() {
-            const saved = localStorage.getItem('vercelEmpireSave');
+        function load() {
+            const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
-                try {
-                    const loaded = JSON.parse(saved);
-                    // Shallow merge top level, deep merge arrays/objects to prevent breaking structure updates
-                    Object.assign(gameState, loaded);
-                    addLog("> local session data loaded");
-                } catch(e) {
-                    console.error("Save data corrupted", e);
-                }
+                const parsed = JSON.parse(saved);
+                // Selective merge to ensure new game features aren't lost but progress is kept
+                state = { ...state, ...parsed };
+                // Ensure array lengths match in case of updates
+                state.stocks = state.stocks.map((s, i) => ({ ...state.stocks[i], ...s }));
             }
         }
 
-        function resetGame() {
-            if (confirm("This will permanently delete your empire and reset your balance. Continue?")) {
-                localStorage.removeItem('vercelEmpireSave');
-                location.reload();
-            }
-        }
+        function format(n) { return '$' + Math.floor(n).toLocaleString(); }
 
-        // --- CORE LOGIC ---
-        function init() {
-            loadGame(); // Load save data first
-            updateUI();
-            
-            // Fast tick for smooth balance updates
-            setInterval(() => {
-                const tickIncome = (gameState.incomePerHour / 3600) * 0.1;
-                gameState.balance += tickIncome;
-                gainXP(tickIncome / 15);
-                updateBalanceDisplay();
-            }, 100);
-
-            // Auto-save every 5 seconds
-            setInterval(saveGame, 5000);
-            
-            setInterval(updateStocks, 5000);
-            setInterval(calculateStats, 2000);
-        }
-
-        function handleManualClick() {
-            const now = Date.now();
-            if (now - gameState.lastClick < 250) return; // 0.25s cooldown
-            
-            gameState.lastClick = now;
-            gameState.balance += 3;
-            gainXP(0.5);
-            
-            // Visual feedback
-            const btn = document.getElementById('wealth-clicker');
-            const progress = document.getElementById('cooldown-progress');
-            
-            btn.classList.add('cooldown-active');
-            progress.style.transition = 'none';
-            progress.style.width = '0%';
-            
-            setTimeout(() => {
-                progress.style.transition = 'width 250ms linear';
-                progress.style.width = '100%';
-            }, 10);
-            
-            setTimeout(() => {
-                btn.classList.remove('cooldown-active');
-            }, 250);
-            
-            updateBalanceDisplay();
-            calculateStats();
-            saveGame(); // Save on click for responsiveness
-        }
-
-        function calculateStats() {
-            let totalIncome = 0;
-            let assetValue = gameState.balance;
-
-            gameState.properties.forEach(p => {
-                if(p.owned) {
-                    totalIncome += p.rent * (1 + (p.renovated * 0.25));
-                    assetValue += p.price;
-                }
-            });
-
-            gameState.chains.forEach(c => {
-                if(c.owned > 0) {
-                    const regionMult = REGIONS[c.regionIndex].multiplier;
-                    const upgradeSum = Object.values(c.upgrades).reduce((a,b) => a+b, 0);
-                    const upgradeMult = 1 + (upgradeSum * 0.15);
-                    totalIncome += (c.baseIncome * c.owned * regionMult * upgradeMult);
-                    assetValue += (c.owned * c.price) + (c.regionIndex * c.expansionCost * 0.5);
-                }
-            });
-
-            gameState.stocks.forEach(s => assetValue += (s.owned * s.price));
-
-            gameState.incomePerHour = totalIncome;
-            gameState.netWorth = assetValue;
-            updateUI();
-        }
-
-        function gainXP(amount) {
-            const mult = gameState.activeCard ? cardData[gameState.activeCard].xpMult : 1;
-            gameState.xp += amount * mult;
-            if(gameState.xp >= gameState.xpToNext) {
-                gameState.xp -= gameState.xpToNext;
-                gameState.level++;
-                gameState.xpToNext *= 1.4;
-                addLog(`Deployment success: Promoted to Level ${gameState.level}`);
-                notify(`LEVEL UP! You are now Level ${gameState.level}`, 'success');
-                saveGame(); // Save on level up
-            }
-        }
-
-        // --- ACTIONS ---
-        function buyChain(chainId) {
-            const chain = gameState.chains.find(c => c.id === chainId);
-            if (gameState.balance >= chain.price) {
-                gameState.balance -= chain.price;
-                chain.owned++;
-                gainXP(chain.price / 200);
-                addLog(`Deployed new instance of ${chain.name}`);
-                calculateStats();
-                saveGame();
-            } else notify("Credit limit reached.", "error");
-        }
-
-        function expandChain(chainId) {
-            const chain = gameState.chains.find(c => c.id === chainId);
-            const nextRegion = REGIONS[chain.regionIndex + 1];
-            
-            if (!nextRegion) return notify("Global saturation reached.", "error");
-            if (gameState.level < nextRegion.reqLevel) return notify(`Reach Level ${nextRegion.reqLevel} to expand.`, "error");
-            
-            if (gameState.balance >= chain.expansionCost) {
-                gameState.balance -= chain.expansionCost;
-                chain.regionIndex++;
-                chain.expansionCost *= 8;
-                addLog(`Scaling ${chain.name} to ${nextRegion.name} region`);
-                calculateStats();
-                saveGame();
-            } else notify("Insufficient capital for global scaling.", "error");
-        }
-
-        function upgradeChainAttr(chainId, attr) {
-            const chain = gameState.chains.find(c => c.id === chainId);
-            const cost = (chain.upgrades[attr] + 1) * (chain.price * 0.4);
-            if (gameState.balance >= cost) {
-                gameState.balance -= cost;
-                chain.upgrades[attr]++;
-                addLog(`Optimized ${attr} for ${chain.name}`);
-                calculateStats();
-                saveGame();
-            } else notify("Upgrade rejected: low balance.", "error");
-        }
-
-        function buyProperty(propId) {
-            const prop = gameState.properties.find(p => p.id === propId);
-            if (!prop.owned && gameState.balance >= prop.price) {
-                gameState.balance -= prop.price;
-                prop.owned = true;
-                addLog(`Acquired asset: ${prop.name}`);
-                calculateStats();
-                saveGame();
-            } else notify("Transaction failed.", "error");
-        }
-
-        function purchaseCard(tier) {
-            const card = cardData[tier];
-            if (gameState.balance >= card.price) {
-                gameState.balance -= card.price;
-                gameState.activeCard = tier;
-                addLog(`Plan upgraded to ${tier.toUpperCase()}`);
-                updateUI();
-                saveGame();
-                switchTab('dashboard');
-            } else notify("Bank refused upgrade.", "error");
-        }
-
-        // --- RENDERERS ---
         function updateUI() {
-            updateBalanceDisplay();
-            document.getElementById('networth-display').innerText = formatCurrency(gameState.netWorth);
-            document.getElementById('income-display').innerText = `+${formatCurrency(gameState.incomePerHour)}/hr`;
-            document.getElementById('legacy-level').innerText = gameState.level;
+            document.getElementById('balance-display').innerText = format(state.balance);
+            document.getElementById('card-balance').innerText = format(state.balance);
+            document.getElementById('income-display').innerText = `+${format(state.income)}/hr`;
+            document.getElementById('card-income').innerText = `+${format(state.income)}/hr`;
+            document.getElementById('card-level').innerText = state.level;
             
-            const currentRegion = REGIONS.find(r => r.reqLevel <= gameState.level && (!REGIONS[REGIONS.indexOf(r)+1] || REGIONS[REGIONS.indexOf(r)+1].reqLevel > gameState.level));
-            if(currentRegion) document.getElementById('legacy-rank-text').innerText = currentRegion.rank;
+            const xpPct = (state.xp / state.xpNext) * 100;
+            document.getElementById('xp-bar').style.width = xpPct + '%';
+            document.getElementById('xp-text').innerText = `${Math.floor(state.xp)} / ${state.xpNext}`;
             
-            const maxRegionIdx = Math.max(0, ...gameState.chains.map(c => c.regionIndex));
-            document.getElementById('reach-display').innerText = REGIONS[maxRegionIdx].name;
-            
-            const xpPct = (gameState.xp / gameState.xpToNext) * 100;
-            document.getElementById('xp-fill').style.width = `${xpPct}%`;
-            document.getElementById('xp-text').innerText = `${Math.floor(gameState.xp)} / ${Math.floor(gameState.xpToNext)}`;
+            let nw = state.balance;
+            state.stocks.forEach(s => nw += (s.owned * s.price));
+            document.getElementById('networth-display').innerText = format(nw);
 
-            renderChains();
-            renderRealEstate();
-            renderStocks();
-            renderInventory();
-            updateCardVisual();
+            if (document.getElementById('stocks').classList.contains('active')) renderStocks();
+            if (document.getElementById('banking').classList.contains('active')) renderBanking();
         }
 
-        function updateBalanceDisplay() {
-            document.getElementById('balance-display').innerText = formatCurrency(gameState.balance);
+        function switchTab(id) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            event.target.classList.add('active');
+            updateUI();
         }
 
-        function renderChains() {
-            const container = document.getElementById('business-list');
-            if(!container) return;
-            container.innerHTML = '';
-            gameState.chains.forEach(c => {
-                const region = REGIONS[c.regionIndex];
-                const nextRegion = REGIONS[c.regionIndex + 1];
-                const card = document.createElement('div');
-                card.className = 'card-container p-6 border-l-2 border-l-white';
-                
-                let upgradeHtml = '';
-                for(let attr in c.upgrades) {
-                    const cost = (c.upgrades[attr] + 1) * (c.price * 0.4);
-                    upgradeHtml += `
-                        <button onclick="upgradeChainAttr('${c.id}', '${attr}')" class="text-[9px] bg-zinc-900 hover:bg-zinc-800 p-2 rounded flex justify-between items-center transition border border-zinc-800">
-                            <span class="uppercase font-bold tracking-widest text-slate-500">${attr} (Lv.${c.upgrades[attr]})</span>
-                            <span class="text-white font-mono font-bold">${formatCurrency(cost)}</span>
-                        </button>
-                    `;
-                }
-
-                card.innerHTML = `
-                    <div class="flex justify-between items-start mb-4">
-                        <div>
-                            <h3 class="font-black text-lg tracking-tight">${c.name.toUpperCase()}</h3>
-                            <span class="text-[9px] px-2 py-0.5 bg-white/10 text-white rounded font-bold uppercase">${region.name} CLUSTER</span>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-[9px] text-slate-500 uppercase font-bold">Nodes</p>
-                            <p class="font-bold text-white font-mono">${c.owned}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 gap-1 mb-6">
-                        ${upgradeHtml}
-                    </div>
-
-                    <div class="flex gap-2">
-                        <button onclick="buyChain('${c.id}')" class="flex-1 bg-white text-black py-3 rounded font-bold text-[10px] transition uppercase">Deploy Branch (${formatCurrency(c.price)})</button>
-                        ${nextRegion ? `
-                            <button onclick="expandChain('${c.id}')" class="flex-1 border border-zinc-700 text-slate-400 hover:text-white hover:border-white py-3 rounded font-bold text-[10px] transition uppercase">
-                                scale to ${nextRegion.name}
-                            </button>
-                        ` : ''}
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        }
-
-        function renderRealEstate() {
-            const container = document.getElementById('realestate-list');
-            if(!container) return;
-            container.innerHTML = '';
-            gameState.properties.forEach(p => {
-                const div = document.createElement('div');
-                div.className = `card-container p-4 ${p.owned ? 'border-emerald-500 bg-emerald-500/5' : ''}`;
-                div.innerHTML = `
-                    <div class="house-img mb-4 grayscale" style="background-image: url('${p.img}')"></div>
-                    <h3 class="font-bold text-sm tracking-widest uppercase">${p.name}</h3>
-                    <p class="text-slate-500 text-xs mb-4 font-mono">Value: ${formatCurrency(p.price)}</p>
-                    ${!p.owned ? 
-                        `<button onclick="buyProperty('${p.id}')" class="w-full bg-zinc-800 hover:bg-zinc-700 py-2 rounded font-bold text-[10px] uppercase">Initialize Node</button>` :
-                        `<div class="text-center py-2 text-emerald-500 font-bold text-[10px] uppercase tracking-widest">Active Yield: ${formatCurrency(p.rent)}/hr</div>`
-                    }
-                `;
-                container.appendChild(div);
-            });
+        function handleManualClick(e) {
+            let mult = 1;
+            state.cards.forEach(c => { if(c.owned) mult = Math.max(mult, c.mult); });
+            
+            state.balance += (10 * state.level * mult);
+            state.xp += 2;
+            if(state.xp >= state.xpNext) {
+                state.level++;
+                state.xp = 0;
+                state.xpNext = Math.floor(state.xpNext * 1.5);
+            }
+            updateUI();
         }
 
         function renderStocks() {
-            const container = document.getElementById('stock-market-list');
-            if(!container) return;
+            const container = document.getElementById('stock-list');
             container.innerHTML = '';
-            gameState.stocks.forEach(stock => {
-                const card = document.createElement('div');
-                card.className = 'card-container p-6';
-                card.innerHTML = `
-                    <div class="flex justify-between mb-2"><h3 class="font-black text-xs uppercase tracking-widest">${stock.name}</h3><span class="text-[10px] bg-zinc-900 border border-zinc-800 px-2 py-1 rounded text-slate-500">${stock.id}</span></div>
-                    <div class="text-2xl font-mono font-bold mb-4 tracking-tighter">${formatCurrency(stock.price)}</div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="buyStock('${stock.id}')" class="bg-white text-black py-2 rounded text-[10px] font-bold uppercase">Buy</button>
-                        <button onclick="sellStock('${stock.id}')" class="bg-zinc-900 border border-zinc-800 text-slate-400 py-2 rounded text-[10px] font-bold uppercase">Sell (${stock.owned})</button>
+            state.stocks.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'card-container p-6';
+                div.innerHTML = `
+                    <div class="flex justify-between items-start mb-4">
+                        <div><h3 class="font-bold text-white">${s.name}</h3><p class="text-[10px] text-zinc-500 uppercase">${s.id}</p></div>
+                        <div class="text-right"><p class="font-mono font-bold text-white">${format(s.price)}</p></div>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="buyStock('${s.id}')" class="flex-1 bg-white text-black py-2 rounded text-[10px] font-bold uppercase">Buy 1</button>
+                        <button onclick="sellStock('${s.id}')" class="flex-1 bg-zinc-900 border border-zinc-800 text-zinc-400 py-2 rounded text-[10px] font-bold uppercase">Sell (${s.owned})</button>
                     </div>
                 `;
-                container.appendChild(card);
-            });
-        }
-
-        function buyStock(stockId) {
-            const stock = gameState.stocks.find(s => s.id === stockId);
-            if (gameState.balance >= stock.price) {
-                gameState.balance -= stock.price;
-                stock.owned++;
-                addLog(`Stock acquisition: ${stock.id}`);
-                updateUI();
-                saveGame();
-            } else notify("Limit order failed.", "error");
-        }
-
-        function sellStock(stockId) {
-            const stock = gameState.stocks.find(s => s.id === stockId);
-            if (stock.owned > 0) {
-                gameState.balance += stock.price;
-                stock.owned--;
-                addLog(`Asset liquidation: ${stock.id}`);
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function renderInventory() {
-            const container = document.getElementById('inventory-list');
-            if(!container) return;
-            const activeAssets = [];
-            gameState.chains.forEach(c => { if(c.owned > 0) activeAssets.push({n: c.name, d: `${c.owned} nodes`})});
-            gameState.properties.forEach(p => { if(p.owned) activeAssets.push({n: p.name, d: 'Asset'})});
-            
-            if(activeAssets.length === 0) {
-                container.innerHTML = '<p class="text-slate-500 italic col-span-full py-4 text-center text-xs font-mono">No active deployments.</p>';
-                return;
-            }
-            container.innerHTML = '';
-            activeAssets.forEach(a => {
-                const div = document.createElement('div');
-                div.className = 'bg-zinc-900 border border-zinc-800 p-3 rounded-lg text-xs font-mono';
-                div.innerHTML = `<div class="text-slate-500 uppercase text-[8px] tracking-widest">${a.d}</div><div class="text-white font-bold">${a.n.toUpperCase()}</div>`;
                 container.appendChild(div);
             });
         }
 
-        function updateStocks() {
-            gameState.stocks.forEach(stock => {
-                stock.price *= (1 + (Math.random() * stock.volatility * 2 - stock.volatility));
-                stock.price = Math.max(1, stock.price);
-            });
-            renderStocks();
-        }
-
-        function updateCardVisual() {
-            if (gameState.activeCard) {
-                document.getElementById('active-card-view').classList.remove('hidden');
-                const tierInfo = cardData[gameState.activeCard];
-                document.getElementById('card-face-style').className = 'card-face ' + tierInfo.class;
-                document.getElementById('card-tier-label').innerText = tierInfo.label;
-                document.getElementById('card-balance').innerText = formatCurrency(gameState.balance);
+        function buyStock(id) {
+            const s = state.stocks.find(x => x.id === id);
+            if(state.balance >= s.price) {
+                state.balance -= s.price;
+                s.owned++;
+                updateUI();
+                save();
             }
         }
 
-        // --- UTILS ---
-        function switchTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.btn-tab').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            event.target.classList.add('active');
+        function sellStock(id) {
+            const s = state.stocks.find(x => x.id === id);
+            if(s.owned > 0) {
+                state.balance += s.price;
+                s.owned--;
+                updateUI();
+                save();
+            }
         }
 
-        function formatCurrency(num) {
-            if (num >= 1000000000) return '$' + (num / 1000000000).toFixed(2) + 'B';
-            if (num >= 1000000) return '$' + (num / 1000000).toFixed(2) + 'M';
-            return '$' + Math.floor(num).toLocaleString();
+        function renderBanking() {
+            const container = document.getElementById('card-market');
+            container.innerHTML = '';
+            state.cards.forEach(c => {
+                const div = document.createElement('div');
+                div.className = `mini-card ${c.color} ${c.owned ? 'owned' : ''}`;
+                div.innerHTML = `
+                    <div class="flex justify-between"><div class="chip w-8 h-6"></div><span class="text-[8px] font-bold text-zinc-500">TIER ${c.mult}x</span></div>
+                    <div class="text-white font-bold text-sm uppercase">${c.name}</div>
+                    ${!c.owned ? `<button onclick="buyCard('${c.id}')" class="w-full bg-white text-black py-2 rounded text-[10px] font-bold">UPGRADE ${format(c.price)}</button>` : `<span class="text-[10px] text-emerald-500 font-bold text-center">CURRENTLY ACTIVE</span>`}
+                `;
+                container.appendChild(div);
+            });
         }
 
-        function addLog(msg) {
-            const list = document.getElementById('log-list');
-            const li = document.createElement('li');
-            li.innerText = `> ${msg}`;
-            list.prepend(li);
-            if(list.children.length > 20) list.lastChild.remove();
+        function buyCard(id) {
+            const c = state.cards.find(x => x.id === id);
+            if(state.balance >= c.price) {
+                state.balance -= c.price;
+                c.owned = true;
+                updateUI();
+                save();
+            }
         }
 
-        function notify(msg, type) {
-            const box = document.getElementById('notification-box');
-            const n = document.createElement('div');
-            n.className = `p-4 mb-2 rounded-lg text-xs font-bold uppercase tracking-widest shadow-2xl animate-bounce ${type === 'success' ? 'bg-emerald-500 text-white' : 'bg-red-500 text-white'}`;
-            n.innerText = msg;
-            box.appendChild(n);
-            setTimeout(() => n.remove(), 3000);
-        }
+        function confirmReset() { document.getElementById('reset-modal').classList.add('active'); }
+        function closeResetModal() { document.getElementById('reset-modal').classList.remove('active'); }
+        function resetGame() { localStorage.removeItem(STORAGE_KEY); location.reload(); }
 
-        window.onload = init;
+        // Core Loops
+        window.onload = () => {
+            load();
+            updateUI();
+
+            // 3D Card tilt
+            const card = document.getElementById('revenue-card');
+            const wrap = document.getElementById('card-3d-container');
+            wrap.onmousemove = (e) => {
+                const rect = wrap.getBoundingClientRect();
+                const x = (e.clientX - rect.left) / rect.width - 0.5;
+                const y = (e.clientY - rect.top) / rect.height - 0.5;
+                card.style.transform = `rotateY(${x * 20}deg) rotateX(${-y * 20}deg)`;
+            };
+            wrap.onmouseleave = () => card.style.transform = `rotate(0)`;
+
+            // Market fluctuation
+            setInterval(() => {
+                state.stocks.forEach(s => {
+                    s.price *= (1 + (Math.random() - 0.48) * 0.04);
+                });
+                if(document.getElementById('stocks').classList.contains('active')) renderStocks();
+            }, 5000);
+
+            // Passive Revenue
+            setInterval(() => {
+                if(state.income > 0) {
+                    state.balance += (state.income / 3600);
+                    updateUI();
+                }
+            }, 1000);
+
+            // Auto-Save every 10 seconds
+            setInterval(save, 10000);
+        };
     </script>
 </body>
 </html>
