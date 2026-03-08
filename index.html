@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vercel Empire - Liquidation Value</title>
+    <title>Vercel Empire - Global Expansion</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         :root {
@@ -61,7 +61,7 @@
         }
         .card-logo-v { font-weight: 900; letter-spacing: -1px; }
 
-        .house-img, .item-img {
+        .house-img {
             width: 100%;
             height: 140px;
             background-size: cover;
@@ -69,8 +69,19 @@
             border-radius: 8px;
         }
 
+        .item-img {
+            width: 100%;
+            height: 120px;
+            background-size: cover;
+            background-position: center;
+            border-radius: 8px;
+        }
+
         .progress-bar { height: 4px; background: #222; border-radius: 2px; overflow: hidden; }
         .progress-fill { height: 100%; background: #fff; transition: width 0.3s ease; }
+
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
         .stock-logo {
             width: 32px;
@@ -83,10 +94,8 @@
         .stock-chart-canvas {
             width: 100%;
             height: 40px;
+            filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.2));
         }
-
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
@@ -110,11 +119,11 @@
         </div>
         <div class="flex gap-4 items-center bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 w-full md:w-auto">
             <div class="text-center px-4 border-r border-zinc-800">
-                <p class="text-[10px] text-zinc-500 uppercase font-bold">Total Net Worth</p>
+                <p class="text-[10px] text-zinc-500 uppercase font-bold">Net Worth</p>
                 <p id="networth-header-display" class="text-xl font-mono font-bold text-white">$0</p>
             </div>
             <div class="text-center px-4">
-                <p class="text-[10px] text-zinc-500 uppercase font-bold">Passive Revenue</p>
+                <p class="text-[10px] text-zinc-500 uppercase font-bold">Hourly Revenue</p>
                 <p id="income-display" class="text-xl font-mono font-bold text-emerald-500">+$0</p>
             </div>
         </div>
@@ -127,7 +136,7 @@
         <button onclick="switchTab('realestate')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">REAL ESTATE</button>
         <button onclick="switchTab('stocks')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">STOCKS</button>
         <button onclick="switchTab('collection')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">COLLECTION</button>
-        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">SETTINGS</button>
+        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">BANK</button>
     </nav>
 
     <main class="max-w-6xl mx-auto">
@@ -135,6 +144,7 @@
         <!-- DASHBOARD -->
         <div id="dashboard" class="tab-content active space-y-6">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- 3D Debit Card Generator -->
                 <div class="lg:col-span-1 space-y-4">
                     <div class="viewport-3d-gen" onclick="handleManualClick()">
                         <div id="gen-card" class="debit-card-gen">
@@ -143,9 +153,9 @@
                                 <div class="card-logo-v text-white text-lg">VERCEL</div>
                             </div>
                             <div class="mt-4">
-                                <p class="text-[8px] text-zinc-500 uppercase font-bold tracking-widest mb-1">Available Cash</p>
+                                <p class="text-[8px] text-zinc-500 uppercase font-bold tracking-widest mb-1">Click to earn</p>
                                 <p id="balance-card-display" class="text-3xl font-black text-white tracking-tighter">$0</p>
-                                <p class="text-[9px] text-zinc-400 uppercase font-bold tracking-widest">Liquid Capital</p>
+                                <p class="text-[9px] text-zinc-400 uppercase font-bold">Current Balance</p>
                             </div>
                             <div class="flex justify-between items-end">
                                 <div class="text-[10px] font-mono text-zinc-400">**** **** **** 2024</div>
@@ -154,17 +164,18 @@
                         </div>
                     </div>
                     
+                    <!-- Favourites Tab on Dashboard -->
                     <div class="card-container p-6">
-                        <h2 class="text-[10px] font-bold text-zinc-500 uppercase mb-4 tracking-widest">Asset Distribution</h2>
-                        <div id="asset-breakdown" class="space-y-3 text-[10px] font-mono">
-                            <!-- JS Inject -->
+                        <h2 class="text-[10px] font-bold text-zinc-500 uppercase mb-4 tracking-widest">Market Watchlist</h2>
+                        <div id="watchlist-container" class="space-y-3">
+                            <p class="text-zinc-600 italic text-[10px]">No stocks favorited.</p>
                         </div>
                     </div>
                 </div>
 
                 <div class="lg:col-span-2 space-y-6">
                     <div class="card-container p-6">
-                        <h2 class="text-[10px] font-bold text-zinc-500 uppercase mb-4 tracking-widest">Career progression</h2>
+                        <h2 class="text-[10px] font-bold text-zinc-500 uppercase mb-4 tracking-widest">Global Status</h2>
                         <div class="space-y-4">
                             <div>
                                 <div class="flex justify-between text-[10px] mb-2 font-bold uppercase">
@@ -175,7 +186,7 @@
                             </div>
                             <div class="grid grid-cols-2 gap-4 pt-2">
                                 <div class="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
-                                    <p class="text-zinc-500 text-[9px] uppercase font-bold">Current Rank</p>
+                                    <p class="text-zinc-500 text-[9px] uppercase font-bold">Rank</p>
                                     <p id="rank-text" class="text-lg font-bold text-white tracking-tight">Junior Dev</p>
                                 </div>
                                 <div class="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
@@ -196,26 +207,26 @@
 
         <!-- COMPANIES -->
         <div id="companies" class="tab-content space-y-6">
-            <h2 class="text-xl font-black text-white uppercase tracking-tighter">Infrastructure Assets</h2>
+            <h2 class="text-xl font-black text-white uppercase tracking-tighter">Enterprise Infrastructure</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="company-list"></div>
         </div>
 
         <!-- REAL ESTATE -->
         <div id="realestate" class="tab-content space-y-6">
-            <h2 class="text-xl font-black text-white uppercase tracking-tighter">Property Portfolio</h2>
+            <h2 class="text-xl font-black text-white uppercase tracking-tighter">US Property Portfolio</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="realestate-list"></div>
         </div>
 
         <!-- STOCKS -->
         <div id="stocks" class="tab-content space-y-6">
-            <h2 class="text-xl font-black text-white uppercase tracking-tighter">Stock Portfolio</h2>
+            <h2 class="text-xl font-black text-white uppercase tracking-tighter">Global Exchanges</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="stock-market-list"></div>
         </div>
 
         <!-- COLLECTION -->
         <div id="collection" class="tab-content space-y-6">
             <div class="flex justify-between items-end">
-                <h2 class="text-xl font-black text-white uppercase tracking-tighter">The Vault</h2>
+                <h2 class="text-xl font-black text-white uppercase tracking-tighter">Luxury Collection</h2>
                 <div class="flex gap-2">
                     <button onclick="renderCollection('jewelry')" class="bg-zinc-900 px-3 py-1 rounded text-[10px] font-bold uppercase hover:bg-zinc-800 transition">Jewelry</button>
                     <button onclick="renderCollection('furniture')" class="bg-zinc-900 px-3 py-1 rounded text-[10px] font-bold uppercase hover:bg-zinc-800 transition">Furniture</button>
@@ -224,12 +235,36 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="collection-list"></div>
         </div>
 
-        <!-- BANKING (Settings/Reset) -->
+        <!-- BANKING -->
         <div id="banking" class="tab-content space-y-6">
-            <div class="card-container p-8 text-center">
-                <h3 class="text-xl font-black mb-4 uppercase">Danger Zone</h3>
-                <p class="text-zinc-500 text-sm mb-6">Wiping your data will clear your $1,000 starting capital and all assets.</p>
-                <button onclick="resetGame()" class="bg-red-900 text-white px-8 py-3 rounded-lg text-[10px] font-bold uppercase hover:bg-red-700 transition-all">Format All Data</button>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col justify-between">
+                    <div>
+                        <div class="h-24 w-full bg-gradient-to-br from-amber-400 to-amber-700 rounded-xl mb-4"></div>
+                        <h3 class="text-lg font-black mb-1 uppercase">Gold Plan</h3>
+                        <p class="text-[10px] text-zinc-500 mb-4 font-mono">1.1x XP Multiplier</p>
+                    </div>
+                    <button id="btn-card-gold" onclick="purchaseCard('gold')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase hover:bg-zinc-200 transition">$50,000</button>
+                </div>
+                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col justify-between">
+                    <div>
+                        <div class="h-24 w-full bg-gradient-to-br from-zinc-300 to-zinc-600 rounded-xl mb-4"></div>
+                        <h3 class="text-lg font-black mb-1 uppercase">Platinum Pro</h3>
+                        <p class="text-[10px] text-zinc-500 mb-4 font-mono">1.25x XP Multiplier</p>
+                    </div>
+                    <button id="btn-card-platinum" onclick="purchaseCard('platinum')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase hover:bg-zinc-200 transition">$1M</button>
+                </div>
+                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col justify-between">
+                    <div>
+                        <div class="h-24 w-full bg-zinc-950 border border-zinc-800 rounded-xl mb-4"></div>
+                        <h3 class="text-lg font-black mb-1 uppercase">Black Enterprise</h3>
+                        <p class="text-[10px] text-zinc-500 mb-4 font-mono">1.5x XP Multiplier</p>
+                    </div>
+                    <button id="btn-card-black" onclick="purchaseCard('black')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase hover:bg-zinc-200 transition">$100M</button>
+                </div>
+            </div>
+            <div class="mt-12 text-center">
+                <button onclick="resetGame()" class="text-red-900 border border-red-950 px-6 py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-red-600 hover:text-white transition-all">Clear Save Data</button>
             </div>
         </div>
 
@@ -240,131 +275,182 @@
     <script>
         // --- GAME DATA ---
         let gameState = {
-            balance: 1000, 
-            netWorth: 1000,
+            balance: 1000, // STARTING VALUE $1,000
+            netWorth: 0,
             incomePerHour: 0,
             level: 1,
             xp: 0,
             xpToNext: 200,
-            cashPerClick: 10, 
+            cashPerClick: 5, 
+            activeCard: null,
+            favorites: [],
+            shop: { level: 0, upgrades: { decor: 0, ads: 0 } },
+            taxi: { cab: 0, bus: 0, artBus: 0 },
             collection: [],
             stocks: [
                 { id: 'AAPL', name: 'Apple Inc', price: 180, owned: 0, v: 0.02, img: 'https://logo.clearbit.com/apple.com', history: [180, 182, 179, 181, 180] },
                 { id: 'NVDA', name: 'Nvidia', price: 800, owned: 0, v: 0.05, img: 'https://logo.clearbit.com/nvidia.com', history: [780, 790, 800, 810, 800] },
-                { id: 'TSLA', name: 'Tesla', price: 170, owned: 0, v: 0.04, img: 'https://logo.clearbit.com/tesla.com', history: [165, 168, 172, 170, 170] }
+                { id: 'MSFT', name: 'Microsoft', price: 400, owned: 0, v: 0.015, img: 'https://logo.clearbit.com/microsoft.com', history: [395, 398, 400, 402, 400] },
+                { id: 'GOOG', name: 'Google', price: 150, owned: 0, v: 0.02, img: 'https://logo.clearbit.com/google.com', history: [148, 149, 151, 150, 150] },
+                { id: 'MCD', name: 'McDonalds', price: 290, owned: 0, v: 0.01, img: 'https://logo.clearbit.com/mcdonalds.com', history: [285, 288, 290, 292, 290] },
+                { id: 'PG', name: 'P&G', price: 160, owned: 0, v: 0.008, img: 'https://logo.clearbit.com/pg.com', history: [159, 160, 161, 160, 160] },
+                { id: 'BBY', name: 'Best Buy', price: 80, owned: 0, v: 0.03, img: 'https://logo.clearbit.com/bestbuy.com', history: [78, 79, 81, 80, 80] },
+                { id: 'SMSN', name: 'Samsung', price: 50, owned: 0, v: 0.025, img: 'https://logo.clearbit.com/samsung.com', history: [48, 49, 51, 50, 50] },
+                { id: 'RBLX', name: 'Roblox', price: 40, owned: 0, v: 0.06, img: 'https://logo.clearbit.com/roblox.com', history: [38, 39, 41, 40, 40] },
+                { id: 'BDNC', name: 'ByteDance', price: 300, owned: 0, v: 0.045, img: 'https://logo.clearbit.com/bytedance.com', history: [290, 295, 305, 300, 300] },
+                { id: 'OAI', name: 'OpenAI', price: 1200, owned: 0, v: 0.07, img: 'https://logo.clearbit.com/openai.com', history: [1150, 1180, 1220, 1200, 1200] }
             ],
             properties: [
-                { id: 1, name: 'Small Cabin', price: 25000, rent: 150, img: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400', owned: false },
-                { id: 2, name: 'Suburban Home', price: 250000, rent: 1200, img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400', owned: false },
-                { id: 3, name: 'Downtown Loft', price: 850000, rent: 4500, img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400', owned: false }
-            ],
-            companies: {
-                taxi: { owned: 0, price: 50000, inc: 400 },
-                shipping: { owned: 0, price: 250000, inc: 1800 }
-            }
+                { id: 1, name: 'Manufactured Home, OH', price: 45000, rent: 200, img: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400' },
+                { id: 2, name: 'Studio Apt, Detroit', price: 85000, rent: 500, img: 'https://images.unsplash.com/photo-1536376074432-cd4258ae71dd?w=400' },
+                { id: 3, name: 'Townhouse, Atlanta', price: 280000, rent: 1800, img: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400' },
+                { id: 4, name: 'Suburban, Dallas', price: 420000, rent: 2800, img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400' },
+                { id: 5, name: 'Condo, Chicago', price: 550000, rent: 3500, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400' },
+                { id: 6, name: 'Colonial, VA', price: 680000, rent: 4200, img: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=400' },
+                { id: 7, name: 'Ranch, Phoenix', price: 720000, rent: 4600, img: 'https://images.unsplash.com/photo-1513584684374-8bdb7489feef?w=400' },
+                { id: 8, name: 'Loft, Brooklyn', price: 950000, rent: 6000, img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400' },
+                { id: 9, name: 'Lake House, MI', price: 1250000, rent: 8500, img: 'https://images.unsplash.com/photo-1500315331616-db4f707c24d1?w=400' },
+                { id: 10, name: 'Beachfront, FL', price: 1800000, rent: 12000, img: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400' },
+                { id: 11, name: 'Mountain Cabin, CO', price: 2200000, rent: 15000, img: 'https://images.unsplash.com/photo-1464146072230-91cabc968266?w=400' },
+                { id: 12, name: 'Modern, Seattle', price: 3100000, rent: 22000, img: 'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=400' },
+                { id: 13, name: 'Vineyard, Napa', price: 5400000, rent: 40000, img: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=400' },
+                { id: 14, name: 'Penthouse, Miami', price: 8900000, rent: 65000, img: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=400' },
+                { id: 15, name: 'Mansion, Greenwich', price: 12000000, rent: 90000, img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400' },
+                { id: 16, name: 'Estates, Hamptons', price: 25000000, rent: 180000, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400' },
+                { id: 17, name: 'Chateau, Aspen', price: 45000000, rent: 350000, img: 'https://images.unsplash.com/photo-1522444195799-478538b28823?w=400' },
+                { id: 18, name: 'Bel Air Manor', price: 85000000, rent: 600000, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400' },
+                { id: 19, name: 'Billionaire Row NY', price: 150000000, rent: 1200000, img: 'https://images.unsplash.com/photo-1534430480872-3498386e7a55?w=400' },
+                { id: 20, name: 'The One, CA', price: 250000000, rent: 2500000, img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400' }
+            ].map(p => ({ ...p, owned: false }))
         };
 
         const cosmeticData = {
             jewelry: [
                 { id: 'j1', name: 'Silver Chain', price: 500, img: 'https://images.unsplash.com/photo-1611085583191-a3b1a30a8a3a?w=400' },
-                { id: 'j2', name: 'Gold Ring', price: 2500, img: 'https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=400' }
+                { id: 'j2', name: 'Gold Signet Ring', price: 2500, img: 'https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=400' },
+                { id: 'j3', name: 'Rolex Submariner', price: 15000, img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400' },
+                { id: 'j4', name: 'Diamond Pendant', price: 45000, img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400' },
+                { id: 'j5', name: 'Patek Philippe', price: 120000, img: 'https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=400' }
             ],
             furniture: [
                 { id: 'f1', name: 'Designer Lamp', price: 800, img: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400' },
-                { id: 'f2', name: 'Suede Sofa', price: 6500, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400' }
+                { id: 'f2', name: 'Ergonomic Chair', price: 1400, img: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400' },
+                { id: 'f3', name: 'Marble Coffee Table', price: 3500, img: 'https://images.unsplash.com/photo-1538688543467-f9ef6f03d09a?w=400' },
+                { id: 'f4', name: 'Velvet Sofa Sectional', price: 8000, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400' },
+                { id: 'f5', name: 'Grand Piano', price: 50000, img: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=400' }
             ]
+        };
+
+        const taxiData = {
+            cab: { price: 30000, inc: 100, max: 70 },
+            bus: { price: 160000, inc: 600, max: 50 },
+            artBus: { price: 180000, inc: 800, max: 40 }
+        };
+
+        const cardData = {
+            gold: { price: 50000, multiplier: 1.1 },
+            platinum: { price: 1000000, multiplier: 1.25 },
+            black: { price: 100000000, multiplier: 1.5 }
         };
 
         // --- CORE LOGIC ---
         function init() {
-            const saved = localStorage.getItem('v_empire_liquidation');
+            const saved = localStorage.getItem('v_empire_v2');
             if (saved) {
-                gameState = { ...gameState, ...JSON.parse(saved) };
+                const parsed = JSON.parse(saved);
+                // Ensure starting balance logic if no balance exists or reset happened
+                gameState = { ...gameState, ...parsed };
+                if (gameState.level === 1 && gameState.xpToNext === 1000) {
+                    gameState.xpToNext = 200;
+                }
             }
             
             updateUI();
             setInterval(gameLoop, 100);
             setInterval(marketLoop, 5000);
             setInterval(saveGame, 2000);
-            renderCollection('jewelry');
+            renderCollection('jewelry'); // Default view
         }
 
         function gameLoop() {
             const income = (gameState.incomePerHour / 3600) * 0.1;
             gameState.balance += income;
-            calculateNetWorth();
+            gainXP(income / 20);
+            calculateStats();
             updateStatusDisplays();
-        }
-
-        function calculateNetWorth() {
-            let assetValue = 0;
-            let stockValue = 0;
-            let propertyValue = 0;
-            let businessValue = 0;
-            let collectionValue = 0;
-
-            // Stocks are worth current market price
-            gameState.stocks.forEach(s => { 
-                stockValue += (s.owned * s.price); 
-            });
-
-            // Properties are worth their full valuation
-            gameState.properties.forEach(p => { 
-                if(p.owned) propertyValue += p.price; 
-            });
-
-            // Companies
-            Object.values(gameState.companies).forEach(c => {
-                businessValue += (c.owned * c.price);
-            });
-
-            // Collection items are tangible assets
-            [...cosmeticData.jewelry, ...cosmeticData.furniture].forEach(item => {
-                if (gameState.collection.includes(item.id)) collectionValue += item.price;
-            });
-
-            assetValue = stockValue + propertyValue + businessValue + collectionValue;
-            gameState.netWorth = gameState.balance + assetValue;
-
-            // Update Breakdown UI
-            const breakdown = document.getElementById('asset-breakdown');
-            if (breakdown) {
-                breakdown.innerHTML = `
-                    <div class="flex justify-between"><span>CASH:</span> <span class="text-emerald-500">${format(gameState.balance)}</span></div>
-                    <div class="flex justify-between"><span>STOCKS:</span> <span class="text-zinc-400">${format(stockValue)}</span></div>
-                    <div class="flex justify-between"><span>REAL ESTATE:</span> <span class="text-zinc-400">${format(propertyValue)}</span></div>
-                    <div class="flex justify-between"><span>BUSINESSES:</span> <span class="text-zinc-400">${format(businessValue)}</span></div>
-                    <div class="flex justify-between"><span>COLLECTION:</span> <span class="text-zinc-400">${format(collectionValue)}</span></div>
-                `;
-            }
-
-            // Passive Income recalc
-            let income = 0;
-            gameState.properties.forEach(p => { if(p.owned) income += p.rent; });
-            Object.values(gameState.companies).forEach(c => { income += (c.owned * c.inc); });
-            gameState.incomePerHour = income;
         }
 
         function handleManualClick() {
             gameState.balance += gameState.cashPerClick; 
-            gainXP(1);
-            calculateNetWorth();
+            gainXP(0.5);
+            calculateStats();
             updateStatusDisplays();
             
             const card = document.getElementById('gen-card');
-            card.style.transform = `scale(0.95) rotateX(5deg)`;
-            setTimeout(() => card.style.transform = '', 50);
+            card.style.transform = `rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg) scale(0.98)`;
+            setTimeout(() => card.style.transform = '', 100);
         }
 
         function gainXP(amount) {
-            gameState.xp += amount;
-            if(gameState.xp >= gameState.xpToNext) {
+            const m = gameState.activeCard ? cardData[gameState.activeCard].multiplier : 1;
+            gameState.xp += amount * m;
+            
+            if(gameState.xp >= gameState.xpToNext && gameState.level < 30) {
                 gameState.level++;
                 gameState.xp -= gameState.xpToNext;
-                gameState.xpToNext *= 1.2; 
-                gameState.cashPerClick += 10;
-                notify(`LEVEL ${gameState.level}`, 'success');
+                gameState.xpToNext *= 1.05; 
+                gameState.cashPerClick += 5; 
+                notify(`RANK UP: LEVEL ${gameState.level}`, 'success');
             }
+        }
+
+        function purchaseCard(tier) {
+            const card = cardData[tier];
+            if (gameState.activeCard === tier) return notify("Card already active", "error");
+            if (gameState.balance >= card.price) {
+                gameState.balance -= card.price;
+                gameState.activeCard = tier;
+                updateUI();
+                notify(`${tier.toUpperCase()} status activated`, 'success');
+            } else {
+                notify("Insufficient funds", "error");
+            }
+        }
+
+        function calculateStats() {
+            let inc = 0;
+            let val = gameState.balance;
+            
+            gameState.properties.forEach(p => { 
+                if(p.owned) { 
+                    inc += p.rent; 
+                    val += p.price; 
+                }
+            });
+            
+            gameState.stocks.forEach(s => { 
+                val += (s.owned * s.price); 
+            });
+
+            // Collection adds to net worth
+            [...cosmeticData.jewelry, ...cosmeticData.furniture].forEach(item => {
+                if (gameState.collection.includes(item.id)) {
+                    val += item.price;
+                }
+            });
+
+            if (gameState.shop.level === 1) inc += 500;
+            if (gameState.shop.level === 2) inc += 2500;
+            inc += (gameState.shop.upgrades.decor * 100) + (gameState.shop.upgrades.ads * 300);
+            
+            inc += (gameState.taxi.cab * taxiData.cab.inc);
+            inc += (gameState.taxi.bus * taxiData.bus.inc);
+            inc += (gameState.taxi.artBus * taxiData.artBus.inc);
+            
+            val += (gameState.taxi.cab * taxiData.cab.price) + (gameState.taxi.bus * taxiData.bus.price) + (gameState.taxi.artBus * taxiData.artBus.price);
+            
+            gameState.incomePerHour = inc;
+            gameState.netWorth = val;
         }
 
         function buyProperty(id) {
@@ -372,20 +458,8 @@
             if(gameState.balance >= p.price) {
                 gameState.balance -= p.price;
                 p.owned = true;
-                calculateNetWorth();
                 updateUI();
-                notify(`Acquired ${p.name}`, 'success');
-            } else notify("Not enough cash", "error");
-        }
-
-        function buyCompany(key) {
-            const c = gameState.companies[key];
-            if(gameState.balance >= c.price) {
-                gameState.balance -= c.price;
-                c.owned++;
-                calculateNetWorth();
-                updateUI();
-                notify(`Business Expanded`, 'success');
+                notify(`${p.name} acquired`, 'success');
             } else notify("Insufficient funds", "error");
         }
 
@@ -394,39 +468,74 @@
             if (gameState.balance >= price) {
                 gameState.balance -= price;
                 gameState.collection.push(id);
-                calculateNetWorth();
                 updateUI();
-                notify(`${name} Purchased`, 'success');
-            } else notify("Too expensive", "error");
+                notify(`${name} added to collection`, 'success');
+            } else {
+                notify("Insufficient funds", "error");
+            }
         }
 
-        function tradeStock(id, direction) {
-            const s = gameState.stocks.find(x => x.id === id);
-            const input = document.getElementById(`qty-${id}`);
-            const qty = Math.max(1, parseInt(input.value) || 1);
-            
-            if(direction > 0) {
-                const cost = s.price * qty;
-                if(gameState.balance >= cost) {
-                    gameState.balance -= cost;
-                    s.owned += qty;
-                } else notify("Insufficient funds", "error");
+        function toggleFavorite(id) {
+            if(gameState.favorites.includes(id)) {
+                gameState.favorites = gameState.favorites.filter(x => x !== id);
             } else {
-                if(s.owned >= qty) {
-                    gameState.balance += s.price * qty;
-                    s.owned -= qty;
-                }
+                gameState.favorites.push(id);
             }
-            calculateNetWorth();
             updateUI();
         }
 
+        function buyTaxi(type, count) {
+            const data = taxiData[type];
+            const totalCost = data.price * count;
+            if(gameState.taxi[type] + count > data.max) return notify("Fleet capacity reached", "error");
+            if(gameState.balance >= totalCost) {
+                gameState.balance -= totalCost;
+                gameState.taxi[type] += count;
+                updateUI();
+            } else notify("Insufficient funds", "error");
+        }
+
+        function upgradeShop() {
+            const costs = [5000, 50000];
+            const cost = costs[gameState.shop.level];
+            if(gameState.shop.level >= 2) return;
+            if(gameState.balance >= cost) {
+                gameState.balance -= cost;
+                gameState.shop.level++;
+                updateUI();
+            }
+        }
+
         function updateUI() {
+            calculateStats();
             updateStatusDisplays();
             renderStocks();
             renderRealEstate();
             renderCompanies();
-            renderCollection('jewelry'); 
+            renderWatchlist();
+            
+            // Refresh current collection view if tab is active
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab && activeTab.id === 'collection') {
+                // We don't know if we were viewing jewelry or furniture, 
+                // but re-rendering jewelry as default is safe or we can track it.
+            }
+
+            // Update bank buttons
+            ['gold', 'platinum', 'black'].forEach(tier => {
+                const btn = document.getElementById(`btn-card-${tier}`);
+                if (btn) {
+                    if (gameState.activeCard === tier) {
+                        btn.innerText = "ACTIVE";
+                        btn.classList.add('bg-zinc-800', 'text-zinc-500');
+                        btn.classList.remove('bg-white', 'text-black');
+                    } else {
+                        btn.innerText = format(cardData[tier].price);
+                        btn.classList.remove('bg-zinc-800', 'text-zinc-500');
+                        btn.classList.add('bg-white', 'text-black');
+                    }
+                }
+            });
         }
 
         function updateStatusDisplays() {
@@ -439,26 +548,71 @@
             document.getElementById('xp-text').innerText = `${Math.floor(gameState.xp)} / ${Math.floor(gameState.xpToNext)}`;
         }
 
+        function drawChart(stock) {
+            const canvas = document.getElementById(`chart-${stock.id}`);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const width = canvas.width;
+            const height = canvas.height;
+            
+            ctx.clearRect(0, 0, width, height);
+            
+            const history = stock.history;
+            const min = Math.min(...history);
+            const max = Math.max(...history);
+            const range = max - min || 1;
+            
+            ctx.beginPath();
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = history[history.length-1] >= history[0] ? '#10b981' : '#ef4444';
+            
+            for (let i = 0; i < history.length; i++) {
+                const x = (i / (history.length - 1)) * width;
+                const y = height - ((history[i] - min) / range) * height;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            ctx.lineTo(width, height);
+            ctx.lineTo(0, height);
+            const grad = ctx.createLinearGradient(0, 0, 0, height);
+            grad.addColorStop(0, history[history.length-1] >= history[0] ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)');
+            grad.addColorStop(1, 'transparent');
+            ctx.fillStyle = grad;
+            ctx.fill();
+        }
+
         function renderStocks() {
             const container = document.getElementById('stock-market-list');
             if (!container) return;
             container.innerHTML = '';
             gameState.stocks.forEach(s => {
+                const isFav = gameState.favorites.includes(s.id);
                 const div = document.createElement('div');
-                div.className = 'card-container p-4';
+                div.className = 'card-container p-4 overflow-hidden';
                 div.innerHTML = `
-                    <div class="flex justify-between items-center mb-2">
+                    <div class="flex justify-between items-center mb-4">
                         <div class="flex items-center gap-3">
                             <div class="stock-logo" style="background-image: url('${s.img}')"></div>
-                            <span class="text-xs font-bold text-white">${s.id}</span>
+                            <div>
+                                <h4 class="text-xs font-black text-white">${s.id}</h4>
+                                <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
+                            </div>
                         </div>
-                        <span class="text-xs font-mono text-zinc-400">${format(s.price)}</span>
+                        <button onclick="toggleFavorite('${s.id}')" class="text-lg ${isFav ? 'text-amber-400' : 'text-zinc-700'}">★</button>
                     </div>
-                    <canvas id="chart-${s.id}" class="stock-chart-canvas mb-4" width="300" height="40"></canvas>
-                    <div class="flex gap-2">
-                        <input id="qty-${s.id}" type="number" value="1" class="w-12 bg-zinc-900 border border-zinc-800 rounded text-[10px] text-center text-white">
-                        <button onclick="tradeStock('${s.id}', 1)" class="flex-1 bg-white text-black rounded text-[9px] font-bold uppercase">Buy</button>
-                        <button onclick="tradeStock('${s.id}', -1)" class="flex-1 bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold uppercase">Sell (${s.owned})</button>
+                    <div class="text-xl font-mono font-bold text-white mb-2">${format(s.price)}</div>
+                    <div class="mb-4">
+                        <canvas id="chart-${s.id}" class="stock-chart-canvas" width="300" height="40"></canvas>
+                    </div>
+                    
+                    <div class="flex gap-2 mb-3">
+                        <input id="qty-${s.id}" type="number" value="1" min="1" class="w-16 bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-[10px] font-mono text-white text-center focus:outline-none focus:border-white transition-colors">
+                        <div class="flex-1 grid grid-cols-2 gap-2">
+                            <button onclick="tradeStock('${s.id}', 1)" class="bg-white text-black rounded text-[9px] font-bold uppercase hover:bg-zinc-200 transition">Buy</button>
+                            <button onclick="tradeStock('${s.id}', -1)" class="bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold uppercase hover:bg-zinc-700 transition">Sell (${s.owned})</button>
+                        </div>
                     </div>
                 `;
                 container.appendChild(div);
@@ -466,25 +620,54 @@
             });
         }
 
-        function drawChart(stock) {
-            const canvas = document.getElementById(`chart-${stock.id}`);
-            if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const history = stock.history;
-            const min = Math.min(...history);
-            const max = Math.max(...history);
-            const range = max - min || 1;
+        function tradeStock(id, direction) {
+            const s = gameState.stocks.find(x => x.id === id);
+            const input = document.getElementById(`qty-${id}`);
+            const qty = Math.max(1, parseInt(input.value) || 1);
             
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            ctx.beginPath();
-            ctx.strokeStyle = history[history.length-1] >= history[0] ? '#10b981' : '#ef4444';
-            ctx.lineWidth = 2;
-            history.forEach((h, i) => {
-                const x = (i / (history.length - 1)) * canvas.width;
-                const y = canvas.height - ((h - min) / range) * canvas.height;
-                if(i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            if(direction > 0) {
+                const totalCost = s.price * qty;
+                if(gameState.balance >= totalCost) {
+                    gameState.balance -= totalCost;
+                    s.owned += qty;
+                    notify(`Purchased ${qty} shares of ${s.id}`, 'success');
+                } else {
+                    notify("Insufficient funds", "error");
+                }
+            } else {
+                const sellQty = Math.min(s.owned, qty);
+                if(sellQty > 0) {
+                    gameState.balance += s.price * sellQty;
+                    s.owned -= sellQty;
+                    notify(`Sold ${sellQty} shares of ${s.id}`, 'success');
+                } else {
+                    notify("No shares to sell", "error");
+                }
+            }
+            updateUI();
+        }
+
+        function renderWatchlist() {
+            const container = document.getElementById('watchlist-container');
+            if (!container) return;
+            const favs = gameState.stocks.filter(s => gameState.favorites.includes(s.id));
+            if(favs.length === 0) {
+                container.innerHTML = `<p class="text-zinc-600 italic text-[10px]">No stocks favorited.</p>`;
+                return;
+            }
+            container.innerHTML = '';
+            favs.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'flex justify-between items-center border-b border-zinc-900 pb-2';
+                div.innerHTML = `
+                    <div class="flex items-center gap-2">
+                        <div class="w-4 h-4 rounded-full bg-zinc-800" style="background-image:url('${s.img}'); background-size:contain;"></div>
+                        <span class="text-[10px] font-bold text-white">${s.id}</span>
+                    </div>
+                    <span class="text-[10px] font-mono font-bold text-zinc-400">${format(s.price)}</span>
+                `;
+                container.appendChild(div);
             });
-            ctx.stroke();
         }
 
         function renderRealEstate() {
@@ -493,12 +676,15 @@
             container.innerHTML = '';
             gameState.properties.forEach(p => {
                 const div = document.createElement('div');
-                div.className = `card-container p-3 ${p.owned ? 'border-emerald-500/50' : ''}`;
+                div.className = `card-container p-3 ${p.owned ? 'border-emerald-900/50 bg-emerald-950/10' : ''}`;
                 div.innerHTML = `
-                    <div class="house-img mb-2" style="background-image: url('${p.img}')"></div>
-                    <h4 class="text-[10px] font-bold text-white uppercase truncate">${p.name}</h4>
-                    <p class="text-[9px] text-zinc-500 mb-2">${format(p.price)}</p>
-                    ${!p.owned ? `<button onclick="buyProperty(${p.id})" class="w-full bg-white text-black py-2 rounded text-[9px] font-bold uppercase">Buy</button>` : `<p class="text-[9px] text-emerald-500 uppercase font-bold text-center">Owned</p>`}
+                    <div class="house-img mb-3" style="background-image: url('${p.img}')"></div>
+                    <h4 class="text-[10px] font-bold text-zinc-300 uppercase truncate">${p.name}</h4>
+                    <p class="text-[9px] text-zinc-500 font-mono mb-2">${format(p.price)}</p>
+                    ${!p.owned ? 
+                        `<button onclick="buyProperty(${p.id})" class="w-full bg-zinc-800 hover:bg-white hover:text-black py-2 rounded text-[9px] font-bold uppercase transition">Acquire</button>` :
+                        `<div class="text-emerald-500 text-[9px] font-bold uppercase text-center py-2">Owned Asset</div>`
+                    }
                 `;
                 container.appendChild(div);
             });
@@ -508,15 +694,19 @@
             const container = document.getElementById('collection-list');
             if (!container) return;
             container.innerHTML = '';
-            cosmeticData[category].forEach(item => {
+            const items = cosmeticData[category];
+            items.forEach(item => {
                 const owned = gameState.collection.includes(item.id);
                 const div = document.createElement('div');
-                div.className = `card-container p-3 ${owned ? 'border-amber-500/50' : ''}`;
+                div.className = `card-container p-3 ${owned ? 'border-amber-900/50 bg-amber-950/10' : ''}`;
                 div.innerHTML = `
-                    <div class="item-img mb-2" style="background-image: url('${item.img}')"></div>
-                    <h4 class="text-[10px] font-bold text-white uppercase">${item.name}</h4>
-                    <p class="text-[9px] text-zinc-500 mb-2">${format(item.price)}</p>
-                    ${!owned ? `<button onclick="buyCosmetic('${item.id}', ${item.price}, '${item.name}')" class="w-full bg-white text-black py-2 rounded text-[9px] font-bold uppercase">Purchase</button>` : `<p class="text-[9px] text-amber-500 uppercase font-bold text-center">In Vault</p>`}
+                    <div class="item-img mb-3" style="background-image: url('${item.img}')"></div>
+                    <h4 class="text-[10px] font-bold text-zinc-300 uppercase truncate">${item.name}</h4>
+                    <p class="text-[9px] text-zinc-500 font-mono mb-2">${format(item.price)}</p>
+                    ${!owned ? 
+                        `<button onclick="buyCosmetic('${item.id}', ${item.price}, '${item.name}')" class="w-full bg-zinc-800 hover:bg-white hover:text-black py-2 rounded text-[9px] font-bold uppercase transition">Buy</button>` :
+                        `<div class="text-amber-500 text-[9px] font-bold uppercase text-center py-2">In Collection</div>`
+                    }
                 `;
                 container.appendChild(div);
             });
@@ -526,20 +716,60 @@
             const container = document.getElementById('company-list');
             if (!container) return;
             container.innerHTML = '';
-            Object.keys(gameState.companies).forEach(k => {
-                const c = gameState.companies[k];
-                const div = document.createElement('div');
-                div.className = 'card-container p-6';
-                div.innerHTML = `
-                    <h3 class="text-lg font-black text-white uppercase mb-1">${k} fleet</h3>
-                    <p class="text-[10px] text-zinc-500 mb-4 font-mono">Owned: ${c.owned} | Inc: ${format(c.inc * c.owned)}/hr</p>
-                    <button onclick="buyCompany('${k}')" class="w-full bg-white text-black py-3 rounded font-bold text-[10px] uppercase">Expand (${format(c.price)})</button>
-                `;
-                container.appendChild(div);
-            });
+            const shopDiv = document.createElement('div');
+            shopDiv.className = 'card-container p-6';
+            const shopLabels = ["Unstarted", "Local Shop", "Large Outlet"];
+            shopDiv.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-lg font-black text-white">RETAIL HUB</h3>
+                    <span class="text-[10px] bg-zinc-900 px-2 py-1 rounded text-zinc-400 font-bold uppercase">${shopLabels[gameState.shop.level]}</span>
+                </div>
+                <div class="space-y-4">
+                    <button onclick="upgradeShop()" class="w-full bg-white text-black py-3 rounded font-bold text-[10px] uppercase">
+                        ${gameState.shop.level < 2 ? `Upgrade (${format(gameState.shop.level === 0 ? 5000 : 50000)})` : 'Max Level'}
+                    </button>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="buyShopUpgrade('decor')" class="bg-zinc-900 border border-zinc-800 p-2 rounded text-[9px] font-bold uppercase text-zinc-400">Interior (+100/hr)</button>
+                        <button onclick="buyShopUpgrade('ads')" class="bg-zinc-900 border border-zinc-800 p-2 rounded text-[9px] font-bold uppercase text-zinc-400">Ads (+300/hr)</button>
+                    </div>
+                </div>
+            `;
+            container.appendChild(shopDiv);
+
+            const taxiDiv = document.createElement('div');
+            taxiDiv.className = 'card-container p-6';
+            taxiDiv.innerHTML = `
+                <h3 class="text-lg font-black text-white mb-4">TRANSPORT CORP</h3>
+                <div class="space-y-4">
+                    ${['cab', 'bus', 'artBus'].map(type => `
+                        <div class="flex items-center justify-between p-2 bg-zinc-900/50 rounded border border-zinc-800">
+                            <div>
+                                <p class="text-[10px] font-bold text-white uppercase">${type === 'artBus' ? 'Articulated Bus' : type}</p>
+                                <p class="text-[9px] text-zinc-500 font-mono">${gameState.taxi[type]} / ${taxiData[type].max}</p>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="buyTaxi('${type}', 1)" class="bg-white text-black px-3 py-1 rounded text-[9px] font-bold">1</button>
+                                <button onclick="buyTaxi('${type}', 5)" class="bg-white text-black px-3 py-1 rounded text-[9px] font-bold">5</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            container.appendChild(taxiDiv);
+        }
+
+        function buyShopUpgrade(type) {
+            const cost = 2500;
+            if(gameState.shop.level === 0) return notify("Open a shop first", "error");
+            if(gameState.balance >= cost) {
+                gameState.balance -= cost;
+                gameState.shop.upgrades[type]++;
+                updateUI();
+            }
         }
 
         function format(n) {
+            if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
             if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
             return '$' + Math.floor(n).toLocaleString();
         }
@@ -551,32 +781,44 @@
                 s.history.push(s.price);
                 if (s.history.length > 20) s.history.shift();
             });
-            calculateNetWorth(); 
+            calculateStats(); 
             renderStocks();
+            renderWatchlist();
         }
 
-        function saveGame() { localStorage.setItem('v_empire_liquidation', JSON.stringify(gameState)); }
+        function saveGame() {
+            localStorage.setItem('v_empire_v2', JSON.stringify(gameState));
+        }
 
         function switchTab(id) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            const btns = document.querySelectorAll('.btn-tab');
-            btns.forEach(b => { if(b.onclick.toString().includes(id)) b.classList.add('active'); });
+            const target = document.getElementById(id);
+            if (target) target.classList.add('active');
+            
+            const btns = Array.from(document.querySelectorAll('.btn-tab'));
+            btns.forEach(b => {
+                if (b.innerText.toLowerCase().includes(id.substring(0,4))) {
+                    b.classList.add('active');
+                }
+            });
+
+            if (id === 'collection') renderCollection('jewelry');
         }
 
         function notify(msg, type) {
             const box = document.getElementById('notification-box');
+            if (!box) return;
             const n = document.createElement('div');
-            n.className = `${type === 'success' ? 'bg-white text-black' : 'bg-red-600 text-white'} px-4 py-2 rounded text-[9px] font-bold uppercase mb-2`;
+            n.className = `${type === 'success' ? 'bg-white text-black' : 'bg-red-600 text-white'} px-4 py-2 rounded text-[9px] font-bold uppercase mb-2 shadow-xl border border-zinc-200`;
             n.innerText = msg;
             box.appendChild(n);
             setTimeout(() => n.remove(), 2000);
         }
 
         function resetGame() {
-            if(confirm("Erase all data?")) {
-                localStorage.removeItem('v_empire_liquidation');
+            if(confirm("Wipe all data?")) {
+                localStorage.removeItem('v_empire_v2');
                 location.reload();
             }
         }
