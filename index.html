@@ -687,5 +687,48 @@
 
         window.onload = init;
     </script>
+    <script>
+    // 1. Set your starting variables
+    let cash = 0;
+    let xp = 0;
+
+    // 2. Load function (runs when the page opens)
+    function loadGame() {
+        const savedData = localStorage.getItem('vercelEmpireSave');
+        if (savedData) {
+            const data = JSON.parse(savedData);
+            cash = data.cash || 0;
+            xp = data.xp || 0;
+            updateDisplay(); // Refresh the numbers on the screen
+        }
+    }
+
+    // 3. Save function (stores numbers in the browser)
+    function saveGame() {
+        const gameState = {
+            cash: cash,
+            xp: xp
+        };
+        localStorage.setItem('vercelEmpireSave', JSON.stringify(gameState));
+    }
+
+    // 4. Update the screen
+    function updateDisplay() {
+        document.getElementById('cash-display').innerText = '$' + cash;
+        document.getElementById('xp-display').innerText = xp + ' / 1000';
+    }
+
+    // 5. Your wealth button logic
+    function generateWealth() {
+        cash += 10; // Change this to whatever your click value is
+        xp += 5;
+        updateDisplay();
+        saveGame(); // Save immediately on every click
+    }
+
+    // Initialize the game
+    loadGame();
+</script>
+    </script>
 </body>
 </html>
