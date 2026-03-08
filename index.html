@@ -133,7 +133,6 @@
             background: #111;
         }
 
-        /* Modal / Zoom styles */
         #stock-modal, #reset-modal {
             display: none;
             position: fixed;
@@ -178,7 +177,7 @@
         <button onclick="showTab('dashboard')" class="nav-link active" id="btn-dashboard">Dashboard</button>
         <button onclick="showTab('companies')" class="nav-link" id="btn-companies">Companies</button>
         <button onclick="showTab('real-estate')" class="nav-link" id="btn-real-estate">Real Estate</button>
-        <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Stocks</button>
+        <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Market</button>
         <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
         <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
     </nav>
@@ -223,7 +222,7 @@
                             <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
                         </div>
 
-                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                             <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">CURRENT RANK</p>
                                 <p class="text-xl font-bold uppercase tracking-tighter" id="stat-rank">Startup</p>
@@ -233,8 +232,12 @@
                                 <p class="text-xl font-bold uppercase tracking-tighter" id="stat-assets">0</p>
                             </div>
                             <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
+                                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">ETH BALANCE</p>
+                                <p class="text-xl font-bold uppercase tracking-tighter mono" id="stat-eth">0.00</p>
+                            </div>
+                            <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">MULTIPLIER</p>
-                                <p class="text-xl font-bold uppercase tracking-tighter" id="stat-mult">1.0x</p>
+                                <p class="text-xl font-bold uppercase tracking-tighter mono" id="stat-mult">1.0x</p>
                             </div>
                         </div>
                     </div>
@@ -258,8 +261,29 @@
         </div>
 
         <div id="stocks" class="tab-content">
-            <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
-            <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            <section class="mb-12">
+                <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
+                <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </section>
+
+            <section class="mb-12">
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="text-xl font-black uppercase tracking-tight">CRYPTO EXCHANGE</h2>
+                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded">24/7 TRADING</span>
+                </div>
+                <div id="crypto-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </section>
+
+            <section class="mb-12">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-xl font-black uppercase tracking-tight">DIGITAL COLLECTIBLES (NFTs)</h2>
+                        <span class="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-[10px] font-bold rounded">TRADE WITH ETH</span>
+                    </div>
+                    <div id="nft-status" class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest"></div>
+                </div>
+                <div id="nft-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
+            </section>
         </div>
 
         <div id="collection" class="tab-content">
@@ -278,7 +302,6 @@
             <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
             <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
             
-            <!-- Reset Button Positioned Bottom Right -->
             <div class="absolute bottom-0 right-0 flex items-center gap-4">
                 <p class="text-[9px] text-zinc-700 font-bold uppercase tracking-widest">DANGER ZONE</p>
                 <button onclick="openResetModal()" class="px-4 py-2 border border-red-900/30 bg-red-950/20 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded hover:bg-red-500 hover:text-white transition-all">
@@ -288,7 +311,6 @@
         </div>
     </main>
 
-    <!-- Detailed Stock View Modal -->
     <div id="stock-modal">
         <div class="w-full max-w-4xl glass-card p-8 relative">
             <button onclick="closeStockModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white font-black">CLOSE [ESC]</button>
@@ -327,11 +349,9 @@
         </div>
     </div>
 
-    <!-- Reset Confirmation Modal -->
     <div id="reset-modal">
         <div class="w-full max-w-md glass-card p-10 text-center">
-            <h2 class="text-3xl font-black tracking-tighter mb-4 uppercase">Wipe Data
-            ?</h2>
+            <h2 class="text-3xl font-black tracking-tighter mb-4 uppercase">Wipe Data?</h2>
             <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-10 leading-relaxed">Do you really want to delete all of your assets, including your net worth and levels? This action is permanent and CANNOT be undone.</p>
             <div class="space-y-3">
                 <button onclick="confirmReset()" class="w-full py-4 bg-red-600 text-white font-black text-xs uppercase tracking-widest rounded hover:bg-red-500 transition-colors">Oh yeah. Wipe it</button>
@@ -352,17 +372,24 @@
         ];
 
         const STOCKS = [
-            { symbol: "AAPL", name: "Apple Inc.", price: 190, trend: 1.2, history: [] },
-            { symbol: "TSLA", name: "Tesla Motors", price: 175, trend: -2.4, history: [] },
-            { symbol: "NVDA", name: "Nvidia Corp", price: 850, trend: 5.8, history: [] },
-            { symbol: "BTC", name: "Bitcoin", price: 65000, trend: 0.5, history: [] },
-            { symbol: "AMZN", name: "Amazon", price: 180, trend: 1.1, history: [] },
-            { symbol: "META", name: "Meta Platforms", price: 500, trend: 2.3, history: [] },
-            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155, trend: 0.8, history: [] },
-            { symbol: "MSFT", name: "Microsoft", price: 420, trend: 1.4, history: [] }
+            { symbol: "AAPL", name: "Apple Inc.", price: 190, trend: 1.2, history: [], type: 'stock' },
+            { symbol: "TSLA", name: "Tesla Motors", price: 175, trend: -2.4, history: [], type: 'stock' },
+            { symbol: "NVDA", name: "Nvidia Corp", price: 850, trend: 5.8, history: [], type: 'stock' },
+            { symbol: "AMZN", name: "Amazon", price: 180, trend: 1.1, history: [], type: 'stock' },
+            { symbol: "META", name: "Meta Platforms", price: 500, trend: 2.3, history: [], type: 'stock' },
+            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155, trend: 0.8, history: [], type: 'stock' },
+            { symbol: "MSFT", name: "Microsoft", price: 420, trend: 1.4, history: [], type: 'stock' },
+            { symbol: "BTC", name: "Bitcoin", price: 65000, trend: 0.5, history: [], type: 'crypto' },
+            { symbol: "ETH", name: "Ethereum", price: 3400, trend: 1.2, history: [], type: 'crypto' }
         ];
 
-        // Seed initial history
+        const NFTS = [
+            { id: 'nft1', name: "Bored Ape #402", priceEth: 65, img: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400", volatility: 0.15 },
+            { id: 'nft2', name: "CryptoPunk #991", priceEth: 120, img: "https://images.unsplash.com/photo-1643101809754-43a91784611a?w=400", volatility: 0.25 },
+            { id: 'nft3', name: "EtherRock #12", priceEth: 450, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400", volatility: 0.5 },
+            { id: 'nft4', name: "Vercel Genesis", priceEth: 25, img: "https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=400", volatility: 0.1 }
+        ];
+
         STOCKS.forEach(s => {
             let last = s.price;
             for(let i=0; i<50; i++) {
@@ -427,10 +454,10 @@
         let activeStock = null;
         let chartType = 'candlestick';
 
-        const saved = localStorage.getItem('vercel_empire_v10');
+        const saved = localStorage.getItem('vercel_empire_v11');
         if (saved) state = { ...state, ...JSON.parse(saved) };
 
-        function saveGame() { localStorage.setItem('vercel_empire_v10', JSON.stringify(state)); }
+        function saveGame() { localStorage.setItem('vercel_empire_v11', JSON.stringify(state)); }
 
         function mintMoney(e) {
             const tier = CARD_TIERS[state.currentTierId];
@@ -464,10 +491,14 @@
                 const j = ASSETS.jewelry.find(i => i.id === assetId);
                 const car = ASSETS.cars.find(i => i.id === assetId);
                 const f = ASSETS.furniture.find(i => i.id === assetId);
-                let item = c || re || j || car || f;
+                const nft = NFTS.find(i => i.id === assetId);
+                let item = c || re || j || car || f || nft;
                 if (item) {
-                    let val = item.price;
-                    if (c) {
+                    let val = item.price || 0;
+                    if (nft) {
+                        const ethPrice = STOCKS.find(s => s.symbol === 'ETH').price;
+                        val = item.priceEth * ethPrice;
+                    } else if (c) {
                         const tier = state.compTiers[assetId] || 0;
                         const outlets = state.compOutlets[assetId] || 1;
                         val = item.price * Math.pow(4, tier) * outlets;
@@ -482,6 +513,12 @@
                 if (stock) totalValue += (stock.price * amount);
             });
             state.netWorth = totalValue;
+        }
+
+        // Helper to update text safely
+        function setUI(id, val) {
+            const el = document.getElementById(id);
+            if (el) el.innerText = val;
         }
 
         function updateUI() {
@@ -505,23 +542,31 @@
             });
             state.revenue = rev;
 
-            document.getElementById('balance-display').innerText = '$' + Math.floor(state.balance).toLocaleString();
-            document.getElementById('nw-display').innerText = '$' + Math.floor(state.netWorth).toLocaleString();
-            document.getElementById('hr-display').innerText = '+$' + Math.floor(state.revenue).toLocaleString() + '/hr';
-            document.getElementById('lvl-display').innerText = state.level;
+            setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
+            setUI('nw-display', '$' + Math.floor(state.netWorth).toLocaleString());
+            setUI('hr-display', '+$' + Math.floor(state.revenue).toLocaleString() + '/hr');
+            setUI('lvl-display', state.level);
+            
             const rankIndex = Math.min(Math.floor(state.level / 5), RANKS.length - 1);
-            document.getElementById('rank-display').innerText = RANKS[rankIndex];
-            document.getElementById('stat-rank').innerText = RANKS[rankIndex];
-            document.getElementById('stat-assets').innerText = state.ownedAssets.length;
-            document.getElementById('stat-mult').innerText = CARD_TIERS[state.currentTierId].mult + '.0x';
+            setUI('rank-display', RANKS[rankIndex]);
+            setUI('stat-rank', RANKS[rankIndex]);
+            setUI('stat-assets', state.ownedAssets.length);
+            setUI('stat-eth', (state.shares['ETH'] || 0).toFixed(4));
+            setUI('stat-mult', CARD_TIERS[state.currentTierId].mult + '.0x');
+
             const xpReq = 200 * Math.pow(1.05, state.level - 1);
-            document.getElementById('xp-val').innerText = Math.floor(state.xp);
-            document.getElementById('xp-req').innerText = Math.floor(xpReq);
-            document.getElementById('next-lvl-val').innerText = state.level + 1;
-            document.getElementById('xp-bar').style.width = (state.xp / xpReq * 100) + '%';
+            setUI('xp-val', Math.floor(state.xp));
+            setUI('xp-req', Math.floor(xpReq));
+            setUI('next-lvl-val', state.level + 1);
+            
+            const xpBar = document.getElementById('xp-bar');
+            if(xpBar) xpBar.style.width = (state.xp / xpReq * 100) + '%';
+            
             const tier = CARD_TIERS[state.currentTierId];
-            document.getElementById('game-card').className = `debit-card p-8 flex flex-col justify-between ${tier.class}`;
-            document.getElementById('card-tier-label').innerText = tier.name;
+            const gCard = document.getElementById('game-card');
+            if(gCard) gCard.className = `debit-card p-8 flex flex-col justify-between ${tier.class}`;
+            setUI('card-tier-label', tier.name);
+
             renderWatchlist();
             renderGrids();
             if(activeStock) updateModalContent();
@@ -589,20 +634,30 @@
 
         function openStockModal(symbol) {
             activeStock = STOCKS.find(s => s.symbol === symbol);
-            document.getElementById('stock-modal').style.display = 'flex';
-            document.getElementById('modal-symbol').innerText = activeStock.symbol;
-            document.getElementById('modal-name').innerText = activeStock.name;
-            updateModalContent();
+            const modal = document.getElementById('stock-modal');
+            if (modal) {
+                modal.style.display = 'flex';
+                setUI('modal-symbol', activeStock.symbol);
+                setUI('modal-name', activeStock.name);
+                updateModalContent();
+            }
         }
 
         function closeStockModal() {
             activeStock = null;
-            document.getElementById('stock-modal').style.display = 'none';
+            const modal = document.getElementById('stock-modal');
+            if (modal) modal.style.display = 'none';
         }
 
-        function openResetModal() { document.getElementById('reset-modal').style.display = 'flex'; }
-        function closeResetModal() { document.getElementById('reset-modal').style.display = 'none'; }
-        function confirmReset() { localStorage.removeItem('vercel_empire_v10'); window.location.reload(); }
+        function openResetModal() { 
+            const m = document.getElementById('reset-modal');
+            if (m) m.style.display = 'flex'; 
+        }
+        function closeResetModal() { 
+            const m = document.getElementById('reset-modal');
+            if (m) m.style.display = 'none'; 
+        }
+        function confirmReset() { localStorage.removeItem('vercel_empire_v11'); window.location.reload(); }
 
         function setChartType(t) {
             chartType = t;
@@ -611,12 +666,12 @@
 
         function updateModalContent() {
             if(!activeStock) return;
-            document.getElementById('modal-price').innerText = '$' + activeStock.price.toLocaleString();
-            document.getElementById('modal-owned').innerText = state.shares[activeStock.symbol] || 0;
+            setUI('modal-price', '$' + activeStock.price.toLocaleString());
+            setUI('modal-owned', state.shares[activeStock.symbol] || 0);
             const high = Math.max(...activeStock.history.map(h => h.high));
             const low = Math.min(...activeStock.history.map(h => h.low));
-            document.getElementById('modal-high').innerText = '$' + high.toLocaleString();
-            document.getElementById('modal-low').innerText = '$' + low.toLocaleString();
+            setUI('modal-high', '$' + high.toLocaleString());
+            setUI('modal-low', '$' + low.toLocaleString());
             drawGraph('modal-chart', activeStock.history, chartType);
         }
 
@@ -699,58 +754,88 @@
                 }).join('');
             }
 
+            const renderStockCard = (s) => {
+                const owned = state.shares[s.symbol] || 0;
+                return `
+                <div class="glass-card p-6">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h3 class="text-xl font-black tracking-tighter">${s.symbol}</h3>
+                            <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-lg font-bold mono">$${s.price.toLocaleString()}</p>
+                            <p class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend)}%</p>
+                        </div>
+                    </div>
+                    <div class="chart-container" onclick="openStockModal('${s.symbol}')">
+                        <canvas id="chart-${s.symbol}" class="w-full h-full"></canvas>
+                    </div>
+                    <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900">
+                        <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
+                        <p class="text-sm font-bold mono">${s.type === 'crypto' ? owned.toFixed(4) : owned} UNITS</p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price ? 'disabled' : ''}>BUY</button>
+                        <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''}>SELL</button>
+                    </div>
+                </div>`;
+            };
+
             const stocksFullGrid = document.getElementById('stocks-full-grid');
-            if(stocksFullGrid) {
+            if (stocksFullGrid) {
                 if (state.level < 3) {
-                    stocksFullGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card">
-                        <p class="text-2xl font-black uppercase tracking-tighter mb-2">TRADING LOCKED</p>
-                        <p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">REACH LEVEL 3 TO ACCESS THE STOCK MARKET</p>
-                    </div>`;
+                    stocksFullGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">REACH LEVEL 3 TO UNLOCK MARKETS</p></div>`;
                 } else {
-                    stocksFullGrid.innerHTML = STOCKS.map(s => {
-                        const owned = state.shares[s.symbol] || 0;
-                        return `
-                        <div class="glass-card p-6">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <h3 class="text-xl font-black tracking-tighter">${s.symbol}</h3>
-                                    <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
-                                </div>
-                                <div class="text-right">
-                                    <p class="text-lg font-bold mono">$${s.price.toLocaleString()}</p>
-                                    <p class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend)}%</p>
-                                </div>
-                            </div>
-                            <div class="chart-container" onclick="openStockModal('${s.symbol}')">
-                                <canvas id="chart-${s.symbol}" class="w-full h-full"></canvas>
-                                <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/40 transition-opacity pointer-events-none">
-                                    <span class="text-[9px] font-bold uppercase tracking-widest bg-white text-black px-2 py-1 rounded">ZOOM ANALYTICS</span>
-                                </div>
-                            </div>
-                            <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900">
-                                <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
-                                <p class="text-sm font-bold mono">${owned} SHARES</p>
-                                <p class="text-[10px] text-zinc-600 font-bold mono">VAL: $${(owned * s.price).toLocaleString()}</p>
-                            </div>
-                            <div class="grid grid-cols-2 gap-2">
-                                <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price ? 'disabled' : ''}>BUY</button>
-                                <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''}>SELL</button>
-                            </div>
-                        </div>`;
-                    }).join('');
-                    STOCKS.forEach(s => drawGraph(`chart-${s.symbol}`, s.history, 'candlestick'));
+                    stocksFullGrid.innerHTML = STOCKS.filter(s => s.type === 'stock').map(renderStockCard).join('');
                 }
             }
+
+            const cryptoGrid = document.getElementById('crypto-grid');
+            if (cryptoGrid) {
+                if (state.level < 3) {
+                    cryptoGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">CRYPTO UNLOCKS AT LVL 3</p></div>`;
+                } else {
+                    cryptoGrid.innerHTML = STOCKS.filter(s => s.type === 'crypto').map(renderStockCard).join('');
+                }
+            }
+
+            const nftGrid = document.getElementById('nft-grid');
+            const nftStatus = document.getElementById('nft-status');
+            if (nftGrid) {
+                if (state.level < 10) {
+                    if(nftStatus) nftStatus.innerText = "LOCKED: REACH LEVEL 10";
+                    nftGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card bg-purple-950/5 border-purple-900/20"><p class="text-purple-500 font-bold uppercase text-[10px] tracking-widest">NFT MARKETPLACE UNLOCKS AT LEVEL 10</p></div>`;
+                } else {
+                    if(nftStatus) nftStatus.innerText = "OPEN FOR TRADING";
+                    nftGrid.innerHTML = NFTS.map(n => {
+                        const isOwned = state.ownedAssets.includes(n.id);
+                        const ethBalance = state.shares['ETH'] || 0;
+                        return `
+                        <div class="glass-card p-6 border-purple-900/20">
+                            <img src="${n.img}" class="item-img mb-4 border border-zinc-900">
+                            <h3 class="font-black uppercase text-xs tracking-tight mb-1">${n.name}</h3>
+                            <p class="text-[12px] font-mono text-purple-400 mb-6">${n.priceEth} ETH</p>
+                            ${isOwned ? 
+                                `<button onclick="sellNFT('${n.id}', ${n.priceEth})" class="btn-buy bg-purple-600/20 border-purple-600/50 hover:bg-purple-600">LIST FOR SALE</button>` : 
+                                `<button onclick="buyNFT('${n.id}', ${n.priceEth})" class="btn-buy" ${ethBalance < n.priceEth ? 'disabled' : ''}>MINT FOR ${n.priceEth} ETH</button>`
+                            }
+                        </div>`;
+                    }).join('');
+                }
+            }
+
+            STOCKS.forEach(s => {
+                const canvas = document.getElementById(`chart-${s.symbol}`);
+                if (canvas) drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
+            });
         }
 
         function renderWatchlist() {
             const container = document.getElementById('watchlist-container');
+            if(!container) return;
             if (state.level < 4) {
-                container.innerHTML = `
-                <div class="py-10 text-center bg-zinc-900/40 rounded-lg border border-zinc-800 border-dashed">
-                    <p class="text-[9px] text-zinc-600 font-black uppercase tracking-widest mb-1">LOCKED</p>
-                    <p class="text-[8px] text-zinc-700 font-bold uppercase tracking-widest">REACH LEVEL 4</p>
-                </div>`;
+                container.innerHTML = `<div class="py-10 text-center bg-zinc-900/40 rounded-lg border border-zinc-800 border-dashed"><p class="text-[8px] text-zinc-700 font-bold uppercase tracking-widest">REACH LEVEL 4</p></div>`;
                 return;
             }
             container.innerHTML = STOCKS.slice(0, 5).map(s => {
@@ -758,15 +843,14 @@
                 <div class="flex justify-between items-center bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 cursor-pointer hover:border-zinc-400" onclick="openStockModal('${s.symbol}')">
                     <div>
                         <p class="text-[10px] font-black">${s.symbol}</p>
-                        <p class="text-[8px] text-zinc-600 font-bold uppercase">${s.name.split(' ')[0]}</p>
+                        <p class="text-[8px] text-zinc-600 font-bold uppercase">${s.type}</p>
                     </div>
                     <div class="text-right">
                         <p class="text-[10px] mono font-bold">$${s.price.toLocaleString()}</p>
                         <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend)}%</p>
                     </div>
                 </div>`;
-            }).join('') + `
-            <button onclick="showTab('stocks')" class="w-full mt-2 text-[9px] text-zinc-500 font-bold uppercase hover:text-white transition-colors">VIEW ALL MARKETS →</button>`;
+            }).join('') + `<button onclick="showTab('stocks')" class="w-full mt-2 text-[9px] text-zinc-500 font-bold uppercase hover:text-white transition-colors">VIEW ALL MARKETS →</button>`;
         }
 
         function tradeStock(symbol, isBuy) {
@@ -775,18 +859,41 @@
             if (isBuy) {
                 if (state.balance >= stock.price) {
                     state.balance -= stock.price;
-                    state.shares[symbol] = (state.shares[symbol] || 0) + 1;
-                    logToTerminal(`PURCHASED 1 UNIT OF ${symbol}`);
+                    state.shares[symbol] = (state.shares[symbol] || 0) + (stock.type === 'crypto' ? 1 : 1);
+                    logToTerminal(`PURCHASED ${stock.type === 'crypto' ? '1.0' : '1'} UNIT OF ${symbol}`);
                 }
             } else {
                 if (state.shares[symbol] > 0) {
                     state.balance += stock.price;
-                    state.shares[symbol]--;
-                    logToTerminal(`SOLD 1 UNIT OF ${symbol}`);
+                    state.shares[symbol] -= (stock.type === 'crypto' ? 1 : 1);
+                    if (state.shares[symbol] < 0) state.shares[symbol] = 0;
+                    logToTerminal(`SOLD ${stock.type === 'crypto' ? '1.0' : '1'} UNIT OF ${symbol}`);
                 }
             }
             updateUI();
             saveGame();
+        }
+
+        function buyNFT(id, priceEth) {
+            const ethBalance = state.shares['ETH'] || 0;
+            if (ethBalance >= priceEth) {
+                state.shares['ETH'] -= priceEth;
+                state.ownedAssets.push(id);
+                logToTerminal(`NFT MINTED: ${id.toUpperCase()} FOR ${priceEth} ETH`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function sellNFT(id, priceEth) {
+            const index = state.ownedAssets.indexOf(id);
+            if (index > -1) {
+                state.ownedAssets.splice(index, 1);
+                state.shares['ETH'] = (state.shares['ETH'] || 0) + priceEth;
+                logToTerminal(`NFT SOLD: RECEIVED ${priceEth} ETH`);
+                updateUI();
+                saveGame();
+            }
         }
 
         function buyAsset(id, price) {
@@ -887,8 +994,9 @@
             state.balance += (state.revenue / 3600);
             STOCKS.forEach(s => {
                 const oldPrice = s.price;
+                const volt = s.type === 'crypto' ? 0.02 : 0.008;
                 s.trend += (Math.random() - 0.5) * 0.2;
-                s.price += (Math.random() - 0.5) * (s.price * 0.008);
+                s.price += (Math.random() - 0.5) * (s.price * volt);
                 s.price = Math.max(1, parseFloat(s.price.toFixed(2)));
                 const open = oldPrice;
                 const close = s.price;
@@ -903,17 +1011,23 @@
         const cardContainer = document.getElementById('card-container');
         const gameCard = document.getElementById('game-card');
         const cardGlare = document.getElementById('card-glare');
-        cardContainer.addEventListener('mousemove', (e) => {
-            const rect = cardContainer.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const xc = rect.width / 2;
-            const yc = rect.height / 2;
-            gameCard.style.transform = `rotateY(${(x - xc)/15}deg) rotateX(${-(y - yc)/15}deg)`;
-            cardGlare.style.setProperty('--x', `${(x / rect.width) * 100}%`);
-            cardGlare.style.setProperty('--y', `${(y / rect.height) * 100}%`);
-        });
-        cardContainer.addEventListener('mouseleave', () => gameCard.style.transform = 'rotateY(0deg) rotateX(0deg)');
+        if(cardContainer) {
+            cardContainer.addEventListener('mousemove', (e) => {
+                const rect = cardContainer.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const xc = rect.width / 2;
+                const yc = rect.height / 2;
+                if(gameCard) gameCard.style.transform = `rotateY(${(x - xc)/15}deg) rotateX(${-(y - yc)/15}deg)`;
+                if(cardGlare) {
+                    cardGlare.style.setProperty('--x', `${(x / rect.width) * 100}%`);
+                    cardGlare.style.setProperty('--y', `${(y / rect.height) * 100}%`);
+                }
+            });
+            cardContainer.addEventListener('mouseleave', () => {
+                if(gameCard) gameCard.style.transform = 'rotateY(0deg) rotateX(0deg)';
+            });
+        }
         window.addEventListener('keydown', (e) => {
             if(e.key === 'Escape') {
                 closeStockModal();
