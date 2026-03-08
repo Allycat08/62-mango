@@ -278,6 +278,18 @@
             <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
             <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
+        <div id="bank" class="tab-content">
+            <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
+            <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+
+            <div class="flex justify-end mt-12">
+                <button 
+                    onclick="if(confirm('Wipe all Data?')){localStorage.removeItem('vercel_empire_v10'); location.reload();}" 
+                    class="px-4 py-2 bg-red-950/20 border border-red-900/50 text-red-500 text-[9px] font-bold uppercase tracking-widest rounded hover:bg-red-600 hover:text-white transition-all">
+                    Reset Data
+                </button>
+            </div>
+        </div>
     </main>
 
     <!-- Detailed Stock View Modal -->
