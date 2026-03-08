@@ -3,827 +3,940 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vercel Empire - Global Expansion</title>
+    <title>Vercel Empire</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #10b981;
-            --secondary: #3b82f6;
-            --dark: #000000;
-            --light-dark: #0a0a0a;
+            --bg: #000000;
+            --card-bg: #0a0a0a;
+            --border: #1a1a1a;
+            --accent: #10b981;
+            --text-muted: #71717a;
         }
+
         body {
-            background-color: var(--dark);
-            color: #f8fafc;
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
         }
-        .card-container {
-            background: var(--light-dark);
-            border-radius: 12px;
-            border: 1px solid #222;
-            transition: all 0.2s ease;
+
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .nav-link {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            position: relative;
+            padding-bottom: 8px;
+            background: none;
+            border: none;
+            cursor: pointer;
         }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .btn-tab.active {
-            border-bottom: 2px solid #fff;
-            color: #fff;
+        .nav-link.active { color: #ffffff; }
+        .nav-link.active::after {
+            content: '';
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: #ffffff;
         }
 
-        /* 3D DEBIT CARD GENERATOR */
-        .viewport-3d-gen {
+        .card-perspective {
             perspective: 1000px;
             width: 100%;
-            height: 220px;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
         }
-        .debit-card-gen {
-            width: 100%;
-            height: 100%;
+        .debit-card {
+            background: linear-gradient(135deg, #1c1c1c 0%, #0a0a0a 100%);
+            border-radius: 20px;
+            aspect-ratio: 1.58 / 1;
             position: relative;
+            cursor: pointer;
+            transition: transform 0.1s ease-out;
             transform-style: preserve-3d;
-            transition: transform 0.1s ease;
-            border-radius: 15px;
-            background: linear-gradient(135deg, #111 0%, #333 100%);
-            border: 1px solid #444;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            pointer-events: none; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.1);
+            user-select: none;
+            font-family: 'Space Grotesk', sans-serif;
         }
-        .viewport-3d-gen:active .debit-card-gen {
-            transform: scale(0.95) rotateX(10deg);
+        .debit-card:active { transform: scale(0.95) rotateX(10deg); }
+        
+        .card-glare {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.15) 0%, transparent 60%);
+            border-radius: 20px;
+            pointer-events: none;
         }
-        .card-logo-v { font-weight: 900; letter-spacing: -1px; }
 
-        .house-img {
+        .card-chip {
+            width: 45px; height: 35px;
+            background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tier-0 { background: linear-gradient(135deg, #1c1c1c, #0a0a0a); }
+        .tier-1 { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
+        .tier-2 { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+        .tier-3 { background: linear-gradient(135deg, #db2777, #831843); }
+        .tier-4 { background: linear-gradient(135deg, #10b981, #064e3b); }
+        .tier-5 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; }
+
+        .progress-bg { background: #1a1a1a; height: 4px; border-radius: 2px; }
+        .progress-fill { background: #ffffff; height: 100%; border-radius: 2px; transition: width 0.3s; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .btn-buy {
+            background: #1a1a1a;
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 10px;
+            border-radius: 6px;
             width: 100%;
-            height: 140px;
-            background-size: cover;
-            background-position: center;
-            border-radius: 8px;
+            transition: all 0.2s;
+            border: 1px solid #333;
         }
+        .btn-buy:hover:not(:disabled) { background: #ffffff; color: #000000; }
+        .btn-buy:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        .item-img {
+        .chart-container {
             width: 100%;
             height: 120px;
-            background-size: cover;
-            background-position: center;
-            border-radius: 8px;
+            background: #000;
+            margin: 12px 0;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            cursor: zoom-in;
+            border: 1px solid #111;
         }
 
-        .progress-bar { height: 4px; background: #222; border-radius: 2px; overflow: hidden; }
-        .progress-fill { height: 100%; background: #fff; transition: width 0.3s ease; }
+        .chart-container:hover { border-color: #333; }
 
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
-
-        .stock-logo {
-            width: 32px;
-            height: 32px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+        .item-img {
+            width: 100%; aspect-ratio: 16/9;
+            object-fit: cover; border-radius: 8px;
+            background: #111;
         }
 
-        .stock-chart-canvas {
-            width: 100%;
-            height: 40px;
-            filter: drop-shadow(0 0 5px rgba(16, 185, 129, 0.2));
-        }
-
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
+        /* Modal / Zoom styles */
+        #stock-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
-<body class="p-4 md:p-8">
+<body class="p-6 max-w-[1400px] mx-auto">
 
-    <!-- Top Bar -->
-    <header class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
-        <div class="flex items-center gap-3">
+    <header class="flex justify-between items-start mb-12">
+        <div class="flex items-center gap-4">
             <svg width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
             </svg>
             <div>
-                <h1 class="text-3xl font-black tracking-tighter text-white uppercase">Vercel <span class="text-zinc-600">Empire</span></h1>
-                <p class="text-zinc-500 text-[10px] uppercase tracking-widest font-bold">Lvl <span id="legacy-level">1</span> Entrepreneur</p>
+                <h1 class="text-3xl font-black tracking-tighter leading-none">VERCEL <span class="text-zinc-500">EMPIRE</span></h1>
+                <p class="text-[10px] text-zinc-500 font-bold mt-1 uppercase tracking-widest">LVL <span id="lvl-display">1</span> <span id="rank-display">ENTREPRENEUR</span></p>
             </div>
         </div>
-        <div class="flex gap-4 items-center bg-zinc-900/50 p-4 rounded-xl border border-zinc-800 w-full md:w-auto">
-            <div class="text-center px-4 border-r border-zinc-800">
-                <p class="text-[10px] text-zinc-500 uppercase font-bold">Net Worth</p>
-                <p id="networth-header-display" class="text-xl font-mono font-bold text-white">$0</p>
-            </div>
-            <div class="text-center px-4">
-                <p class="text-[10px] text-zinc-500 uppercase font-bold">Hourly Revenue</p>
-                <p id="income-display" class="text-xl font-mono font-bold text-emerald-500">+$0</p>
+
+        <div class="flex gap-4">
+            <div class="stats-badge flex gap-8 bg-zinc-950 border border-zinc-900 rounded-xl p-4 px-8">
+                <div class="text-center">
+                    <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">NET WORTH</p>
+                    <p class="text-xl font-bold mono" id="nw-display">$0</p>
+                </div>
+                <div class="text-center border-l border-zinc-800 pl-8">
+                    <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">HOURLY REVENUE</p>
+                    <p class="text-xl font-bold mono text-emerald-400" id="hr-display">+$0/hr</p>
+                </div>
             </div>
         </div>
     </header>
 
-    <!-- Navigation Tabs -->
-    <nav class="max-w-6xl mx-auto flex overflow-x-auto gap-4 mb-8 no-scrollbar border-b border-zinc-800">
-        <button onclick="switchTab('dashboard')" class="btn-tab active pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">DASHBOARD</button>
-        <button onclick="switchTab('companies')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">COMPANIES</button>
-        <button onclick="switchTab('realestate')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">REAL ESTATE</button>
-        <button onclick="switchTab('stocks')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">STOCKS</button>
-        <button onclick="switchTab('collection')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">COLLECTION</button>
-        <button onclick="switchTab('banking')" class="btn-tab pb-2 px-4 whitespace-nowrap font-bold text-[10px] text-zinc-500 tracking-widest">BANK</button>
+    <nav class="flex gap-8 border-b border-zinc-900 mb-10 overflow-x-auto whitespace-nowrap">
+        <button onclick="showTab('dashboard')" class="nav-link active" id="btn-dashboard">Dashboard</button>
+        <button onclick="showTab('companies')" class="nav-link" id="btn-companies">Companies</button>
+        <button onclick="showTab('real-estate')" class="nav-link" id="btn-real-estate">Real Estate</button>
+        <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Stocks</button>
+        <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
+        <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
     </nav>
 
-    <main class="max-w-6xl mx-auto">
-
-        <!-- DASHBOARD -->
-        <div id="dashboard" class="tab-content active space-y-6">
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- 3D Debit Card Generator -->
-                <div class="lg:col-span-1 space-y-4">
-                    <div class="viewport-3d-gen" onclick="handleManualClick()">
-                        <div id="gen-card" class="debit-card-gen">
-                            <div class="flex justify-between items-start">
-                                <div class="w-10 h-8 bg-amber-500/80 rounded-md"></div>
-                                <div class="card-logo-v text-white text-lg">VERCEL</div>
+    <main>
+        <div id="dashboard" class="tab-content active">
+            <div class="grid grid-cols-12 gap-6">
+                <div class="col-span-12 lg:col-span-4">
+                    <div class="card-perspective" id="card-container">
+                        <div class="debit-card p-8 flex flex-col justify-between tier-0" id="game-card" onclick="mintMoney(event)">
+                            <div class="card-glare" id="card-glare"></div>
+                            <div class="flex justify-between items-start relative z-10">
+                                <div class="card-chip"></div>
+                                <svg width="50" viewBox="0 0 76 65" fill="white" class="opacity-50"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
                             </div>
-                            <div class="mt-4">
-                                <p class="text-[8px] text-zinc-500 uppercase font-bold tracking-widest mb-1">Click to earn</p>
-                                <p id="balance-card-display" class="text-3xl font-black text-white tracking-tighter">$0</p>
-                                <p class="text-[9px] text-zinc-400 uppercase font-bold">Current Balance</p>
+                            <div class="relative z-10">
+                                <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest mb-1">CURRENT BALANCE</p>
+                                <h2 class="text-4xl font-black mb-1 tracking-tighter" id="balance-display">$0</h2>
+                                <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
                             </div>
-                            <div class="flex justify-between items-end">
-                                <div class="text-[10px] font-mono text-zinc-400">**** **** **** 2024</div>
-                                <div class="text-[9px] text-zinc-500">DEBIT</div>
+                            <div class="flex justify-between items-end relative z-10">
+                                <p class="text-[11px] text-white/30 font-medium">**** **** **** 2024</p>
+                                <p class="text-[11px] text-white/30 font-bold uppercase tracking-widest">DEBIT</p>
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Favourites Tab on Dashboard -->
-                    <div class="card-container p-6">
-                        <h2 class="text-[10px] font-bold text-zinc-500 uppercase mb-4 tracking-widest">Market Watchlist</h2>
-                        <div id="watchlist-container" class="space-y-3">
-                            <p class="text-zinc-600 italic text-[10px]">No stocks favorited.</p>
-                        </div>
+
+                    <div class="glass-card mt-6 p-6">
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">QUICK WATCHLIST</p>
+                        <div id="watchlist-container" class="space-y-4"></div>
                     </div>
                 </div>
 
-                <div class="lg:col-span-2 space-y-6">
-                    <div class="card-container p-6">
-                        <h2 class="text-[10px] font-bold text-zinc-500 uppercase mb-4 tracking-widest">Global Status</h2>
-                        <div class="space-y-4">
-                            <div>
-                                <div class="flex justify-between text-[10px] mb-2 font-bold uppercase">
-                                    <span class="text-zinc-500">XP Progress</span>
-                                    <span id="xp-text" class="text-white font-mono">0 / 200</span>
-                                </div>
-                                <div class="progress-bar"><div id="xp-fill" class="progress-fill" style="width: 0%"></div></div>
+                <div class="col-span-12 lg:col-span-8 space-y-6">
+                    <div class="glass-card p-8">
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-4">EMPIRE PROGRESS</p>
+                        <div class="flex justify-between text-[10px] font-bold mb-2">
+                            <span class="text-zinc-400 uppercase tracking-widest">XP TO LVL <span id="next-lvl-val">2</span></span>
+                            <span class="mono"><span id="xp-val">0</span> / <span id="xp-req">200</span></span>
+                        </div>
+                        <div class="progress-bg mb-10">
+                            <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
+                                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">CURRENT RANK</p>
+                                <p class="text-xl font-bold uppercase tracking-tighter" id="stat-rank">Startup</p>
                             </div>
-                            <div class="grid grid-cols-2 gap-4 pt-2">
-                                <div class="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
-                                    <p class="text-zinc-500 text-[9px] uppercase font-bold">Rank</p>
-                                    <p id="rank-text" class="text-lg font-bold text-white tracking-tight">Junior Dev</p>
-                                </div>
-                                <div class="p-4 bg-zinc-900/50 rounded-lg border border-zinc-800/50">
-                                    <p class="text-zinc-500 text-[9px] uppercase font-bold">Empire Scale</p>
-                                    <p id="reach-display" class="text-lg font-bold text-white tracking-tight">Local</p>
-                                </div>
+                            <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
+                                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">ASSETS OWNED</p>
+                                <p class="text-xl font-bold uppercase tracking-tighter" id="stat-assets">0</p>
+                            </div>
+                            <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
+                                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">MULTIPLIER</p>
+                                <p class="text-xl font-bold uppercase tracking-tighter" id="stat-mult">1.0x</p>
                             </div>
                         </div>
                     </div>
-                    <div class="card-container p-4 bg-zinc-900/20">
-                        <ul id="log-list" class="text-[10px] space-y-2 text-zinc-500 h-24 overflow-y-auto px-2 font-mono">
-                            <li>> system online</li>
-                        </ul>
+
+                    <div class="glass-card p-6 h-48 overflow-y-auto font-mono text-[10px] text-zinc-600 space-y-1" id="terminal">
+                        <p class="text-zinc-400">> VERCEL OS v5.0.1 INITIALIZED...</p>
+                        <p class="text-emerald-500">> SYSTEM READY. BALANCE: $0.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- COMPANIES -->
-        <div id="companies" class="tab-content space-y-6">
-            <h2 class="text-xl font-black text-white uppercase tracking-tighter">Enterprise Infrastructure</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="company-list"></div>
+        <div id="companies" class="tab-content">
+            <h2 class="text-xl font-black uppercase tracking-tight mb-8">ENTERPRISE INFRASTRUCTURE</h2>
+            <div id="companies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
-        <!-- REAL ESTATE -->
-        <div id="realestate" class="tab-content space-y-6">
-            <h2 class="text-xl font-black text-white uppercase tracking-tighter">US Property Portfolio</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="realestate-list"></div>
+        <div id="real-estate" class="tab-content">
+            <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL PROPERTY PORTFOLIO</h2>
+            <div id="re-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
-        <!-- STOCKS -->
-        <div id="stocks" class="tab-content space-y-6">
-            <h2 class="text-xl font-black text-white uppercase tracking-tighter">Global Exchanges</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="stock-market-list"></div>
+        <div id="stocks" class="tab-content">
+            <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
+            <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
         </div>
 
-        <!-- COLLECTION -->
-        <div id="collection" class="tab-content space-y-6">
-            <div class="flex justify-between items-end">
-                <h2 class="text-xl font-black text-white uppercase tracking-tighter">Luxury Collection</h2>
+        <div id="collection" class="tab-content">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-black uppercase tracking-tight">LUXURY ASSETS</h2>
                 <div class="flex gap-2">
-                    <button onclick="renderCollection('jewelry')" class="bg-zinc-900 px-3 py-1 rounded text-[10px] font-bold uppercase hover:bg-zinc-800 transition">Jewelry</button>
-                    <button onclick="renderCollection('furniture')" class="bg-zinc-900 px-3 py-1 rounded text-[10px] font-bold uppercase hover:bg-zinc-800 transition">Furniture</button>
+                    <button onclick="filterCollection('jewelry')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active" data-cat="jewelry">Jewelry</button>
+                    <button onclick="filterCollection('cars')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900" data-cat="cars">Cars</button>
+                    <button onclick="filterCollection('furniture')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900" data-cat="furniture">Furniture</button>
                 </div>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4" id="collection-list"></div>
+            <div id="coll-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
-        <!-- BANKING -->
-        <div id="banking" class="tab-content space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full bg-gradient-to-br from-amber-400 to-amber-700 rounded-xl mb-4"></div>
-                        <h3 class="text-lg font-black mb-1 uppercase">Gold Plan</h3>
-                        <p class="text-[10px] text-zinc-500 mb-4 font-mono">1.1x XP Multiplier</p>
-                    </div>
-                    <button id="btn-card-gold" onclick="purchaseCard('gold')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase hover:bg-zinc-200 transition">$50,000</button>
-                </div>
-                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full bg-gradient-to-br from-zinc-300 to-zinc-600 rounded-xl mb-4"></div>
-                        <h3 class="text-lg font-black mb-1 uppercase">Platinum Pro</h3>
-                        <p class="text-[10px] text-zinc-500 mb-4 font-mono">1.25x XP Multiplier</p>
-                    </div>
-                    <button id="btn-card-platinum" onclick="purchaseCard('platinum')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase hover:bg-zinc-200 transition">$1M</button>
-                </div>
-                <div class="p-6 bg-zinc-900/50 rounded-2xl border border-zinc-800 flex flex-col justify-between">
-                    <div>
-                        <div class="h-24 w-full bg-zinc-950 border border-zinc-800 rounded-xl mb-4"></div>
-                        <h3 class="text-lg font-black mb-1 uppercase">Black Enterprise</h3>
-                        <p class="text-[10px] text-zinc-500 mb-4 font-mono">1.5x XP Multiplier</p>
-                    </div>
-                    <button id="btn-card-black" onclick="purchaseCard('black')" class="w-full bg-white text-black py-3 rounded-xl font-bold text-[10px] uppercase hover:bg-zinc-200 transition">$100M</button>
-                </div>
-            </div>
-            <div class="mt-12 text-center">
-                <button onclick="resetGame()" class="text-red-900 border border-red-950 px-6 py-2 rounded-lg text-[9px] font-bold uppercase hover:bg-red-600 hover:text-white transition-all">Clear Save Data</button>
-            </div>
+        <div id="bank" class="tab-content">
+            <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
+            <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
-
     </main>
 
-    <div id="notification-box" class="fixed bottom-4 right-4 z-50"></div>
+    <!-- Detailed Stock View Modal -->
+    <div id="stock-modal">
+        <div class="w-full max-w-4xl glass-card p-8 relative">
+            <button onclick="closeStockModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white font-black">CLOSE [ESC]</button>
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h2 class="text-4xl font-black tracking-tighter" id="modal-symbol">SYMB</h2>
+                    <p class="text-zinc-500 font-bold uppercase tracking-widest" id="modal-name">Company Name</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="setChartType('candlestick')" class="text-[10px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors">CANDLE</button>
+                    <button onclick="setChartType('line')" class="text-[10px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors">LINE</button>
+                    <button onclick="setChartType('area')" class="text-[10px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors">AREA</button>
+                </div>
+            </div>
+            <div class="w-full h-[400px] bg-black rounded-lg border border-zinc-900 relative">
+                <canvas id="modal-chart" class="w-full h-full"></canvas>
+            </div>
+            <div class="mt-8 grid grid-cols-4 gap-4">
+                <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
+                    <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Price</p>
+                    <p class="mono text-xl font-bold" id="modal-price">$0</p>
+                </div>
+                <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
+                    <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Daily High</p>
+                    <p class="mono text-xl font-bold text-emerald-500" id="modal-high">$0</p>
+                </div>
+                <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
+                    <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Daily Low</p>
+                    <p class="mono text-xl font-bold text-red-500" id="modal-low">$0</p>
+                </div>
+                <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
+                    <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Owned</p>
+                    <p class="mono text-xl font-bold" id="modal-owned">0</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script>
-        // --- GAME DATA ---
-        let gameState = {
-            balance: 1000, // STARTING VALUE $1,000
-            netWorth: 0,
-            incomePerHour: 0,
-            level: 1,
-            xp: 0,
-            xpToNext: 200,
-            cashPerClick: 5, 
-            activeCard: null,
-            favorites: [],
-            shop: { level: 0, upgrades: { decor: 0, ads: 0 } },
-            taxi: { cab: 0, bus: 0, artBus: 0 },
-            collection: [],
-            stocks: [
-                { id: 'AAPL', name: 'Apple Inc', price: 180, owned: 0, v: 0.02, img: 'https://logo.clearbit.com/apple.com', history: [180, 182, 179, 181, 180] },
-                { id: 'NVDA', name: 'Nvidia', price: 800, owned: 0, v: 0.05, img: 'https://logo.clearbit.com/nvidia.com', history: [780, 790, 800, 810, 800] },
-                { id: 'MSFT', name: 'Microsoft', price: 400, owned: 0, v: 0.015, img: 'https://logo.clearbit.com/microsoft.com', history: [395, 398, 400, 402, 400] },
-                { id: 'GOOG', name: 'Google', price: 150, owned: 0, v: 0.02, img: 'https://logo.clearbit.com/google.com', history: [148, 149, 151, 150, 150] },
-                { id: 'MCD', name: 'McDonalds', price: 290, owned: 0, v: 0.01, img: 'https://logo.clearbit.com/mcdonalds.com', history: [285, 288, 290, 292, 290] },
-                { id: 'PG', name: 'P&G', price: 160, owned: 0, v: 0.008, img: 'https://logo.clearbit.com/pg.com', history: [159, 160, 161, 160, 160] },
-                { id: 'BBY', name: 'Best Buy', price: 80, owned: 0, v: 0.03, img: 'https://logo.clearbit.com/bestbuy.com', history: [78, 79, 81, 80, 80] },
-                { id: 'SMSN', name: 'Samsung', price: 50, owned: 0, v: 0.025, img: 'https://logo.clearbit.com/samsung.com', history: [48, 49, 51, 50, 50] },
-                { id: 'RBLX', name: 'Roblox', price: 40, owned: 0, v: 0.06, img: 'https://logo.clearbit.com/roblox.com', history: [38, 39, 41, 40, 40] },
-                { id: 'BDNC', name: 'ByteDance', price: 300, owned: 0, v: 0.045, img: 'https://logo.clearbit.com/bytedance.com', history: [290, 295, 305, 300, 300] },
-                { id: 'OAI', name: 'OpenAI', price: 1200, owned: 0, v: 0.07, img: 'https://logo.clearbit.com/openai.com', history: [1150, 1180, 1220, 1200, 1200] }
-            ],
-            properties: [
-                { id: 1, name: 'Manufactured Home, OH', price: 45000, rent: 200, img: 'https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400' },
-                { id: 2, name: 'Studio Apt, Detroit', price: 85000, rent: 500, img: 'https://images.unsplash.com/photo-1536376074432-cd4258ae71dd?w=400' },
-                { id: 3, name: 'Townhouse, Atlanta', price: 280000, rent: 1800, img: 'https://images.unsplash.com/photo-1582268611958-ebfd161ef9cf?w=400' },
-                { id: 4, name: 'Suburban, Dallas', price: 420000, rent: 2800, img: 'https://images.unsplash.com/photo-1568605114967-8130f3a36994?w=400' },
-                { id: 5, name: 'Condo, Chicago', price: 550000, rent: 3500, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400' },
-                { id: 6, name: 'Colonial, VA', price: 680000, rent: 4200, img: 'https://images.unsplash.com/photo-1576941089067-2de3c901e126?w=400' },
-                { id: 7, name: 'Ranch, Phoenix', price: 720000, rent: 4600, img: 'https://images.unsplash.com/photo-1513584684374-8bdb7489feef?w=400' },
-                { id: 8, name: 'Loft, Brooklyn', price: 950000, rent: 6000, img: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400' },
-                { id: 9, name: 'Lake House, MI', price: 1250000, rent: 8500, img: 'https://images.unsplash.com/photo-1500315331616-db4f707c24d1?w=400' },
-                { id: 10, name: 'Beachfront, FL', price: 1800000, rent: 12000, img: 'https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?w=400' },
-                { id: 11, name: 'Mountain Cabin, CO', price: 2200000, rent: 15000, img: 'https://images.unsplash.com/photo-1464146072230-91cabc968266?w=400' },
-                { id: 12, name: 'Modern, Seattle', price: 3100000, rent: 22000, img: 'https://images.unsplash.com/photo-1480074568708-e7b720bb3f09?w=400' },
-                { id: 13, name: 'Vineyard, Napa', price: 5400000, rent: 40000, img: 'https://images.unsplash.com/photo-1523217582562-09d0def993a6?w=400' },
-                { id: 14, name: 'Penthouse, Miami', price: 8900000, rent: 65000, img: 'https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=400' },
-                { id: 15, name: 'Mansion, Greenwich', price: 12000000, rent: 90000, img: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400' },
-                { id: 16, name: 'Estates, Hamptons', price: 25000000, rent: 180000, img: 'https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400' },
-                { id: 17, name: 'Chateau, Aspen', price: 45000000, rent: 350000, img: 'https://images.unsplash.com/photo-1522444195799-478538b28823?w=400' },
-                { id: 18, name: 'Bel Air Manor', price: 85000000, rent: 600000, img: 'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?w=400' },
-                { id: 19, name: 'Billionaire Row NY', price: 150000000, rent: 1200000, img: 'https://images.unsplash.com/photo-1534430480872-3498386e7a55?w=400' },
-                { id: 20, name: 'The One, CA', price: 250000000, rent: 2500000, img: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=400' }
-            ].map(p => ({ ...p, owned: false }))
-        };
+        const RANKS = ["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign"];
+        const CARD_TIERS = [
+            { id: 0, name: "DEFAULT CARD", price: 0, mult: 1, class: "tier-0" },
+            { id: 1, name: "SAPPHIRE PREMIER", price: 50000, mult: 2, class: "tier-1" },
+            { id: 2, name: "ULTRA VIOLET", price: 250000, mult: 5, class: "tier-2" },
+            { id: 3, name: "ROSÉ EXECUTIVE", price: 1000000, mult: 10, class: "tier-3" },
+            { id: 4, name: "EMERALD PRIVATE", price: 5000000, mult: 25, class: "tier-4" },
+            { id: 5, name: "CENTURION GOLD", price: 25000000, mult: 100, class: "tier-5" }
+        ];
 
-        const cosmeticData = {
+        const STOCKS = [
+            { symbol: "AAPL", name: "Apple Inc.", price: 190, trend: 1.2, history: [] },
+            { symbol: "TSLA", name: "Tesla Motors", price: 175, trend: -2.4, history: [] },
+            { symbol: "NVDA", name: "Nvidia Corp", price: 850, trend: 5.8, history: [] },
+            { symbol: "BTC", name: "Bitcoin", price: 65000, trend: 0.5, history: [] },
+            { symbol: "AMZN", name: "Amazon", price: 180, trend: 1.1, history: [] },
+            { symbol: "META", name: "Meta Platforms", price: 500, trend: 2.3, history: [] },
+            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155, trend: 0.8, history: [] },
+            { symbol: "MSFT", name: "Microsoft", price: 420, trend: 1.4, history: [] }
+        ];
+
+        // Seed initial history
+        STOCKS.forEach(s => {
+            let last = s.price;
+            for(let i=0; i<50; i++) {
+                const open = last;
+                const close = last + (Math.random() - 0.5) * (last * 0.05);
+                const high = Math.max(open, close) + Math.random() * (last * 0.01);
+                const low = Math.min(open, close) - Math.random() * (last * 0.01);
+                s.history.push({ open, close, high, low });
+                last = close;
+            }
+        });
+
+        const COMPANY_TIERS = ["Local", "Small Chain", "Large Chain", "Regional Giant", "Global Conglomerate"];
+
+        const COMPANIES = [
+            { id: 'c1', name: "Corner Shop", price: 2500, rev: 80, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
+            { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400" },
+            { id: 'c3', name: "E-Com Brand", price: 35000, rev: 1200, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400" },
+            { id: 'c4', name: "Ad Agency", price: 150000, rev: 5500, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
+            { id: 'c5', name: "SaaS Enterprise", price: 750000, rev: 28000, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
+            { id: 'c6', name: "Logistics Hub", price: 2500000, rev: 95000, img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400" }
+        ];
+
+        const REAL_ESTATE = [
+            { id: 're1', name: "Cozy Tiny House", price: 45000, img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400" },
+            { id: 're2', name: "Modern Suburban Home", price: 320000, img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400" },
+            { id: 're3', name: "Luxury Villa", price: 1500000, img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400" },
+            { id: 're4', name: "Glass Beach Mansion", price: 8500000, img: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400" },
+            { id: 're5', name: "City Center Penthouse", price: 4200000, img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=400" },
+            { id: 're6', name: "Private Island Villa", price: 25000000, img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400" }
+        ];
+
+        const ASSETS = {
             jewelry: [
-                { id: 'j1', name: 'Silver Chain', price: 500, img: 'https://images.unsplash.com/photo-1611085583191-a3b1a30a8a3a?w=400' },
-                { id: 'j2', name: 'Gold Signet Ring', price: 2500, img: 'https://images.unsplash.com/photo-1589128777073-263566ae5e4d?w=400' },
-                { id: 'j3', name: 'Rolex Submariner', price: 15000, img: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400' },
-                { id: 'j4', name: 'Diamond Pendant', price: 45000, img: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=400' },
-                { id: 'j5', name: 'Patek Philippe', price: 120000, img: 'https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?w=400' }
+                { id: 'j1', name: "Rolex Submariner", price: 12000, img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400" },
+                { id: 'j2', name: "Diamond Chain", price: 85000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" }
+            ],
+            cars: [
+                { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" },
+                { id: 'car2', name: "Ferrari SF90", price: 550000, img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400" }
             ],
             furniture: [
-                { id: 'f1', name: 'Designer Lamp', price: 800, img: 'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=400' },
-                { id: 'f2', name: 'Ergonomic Chair', price: 1400, img: 'https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400' },
-                { id: 'f3', name: 'Marble Coffee Table', price: 3500, img: 'https://images.unsplash.com/photo-1538688543467-f9ef6f03d09a?w=400' },
-                { id: 'f4', name: 'Velvet Sofa Sectional', price: 8000, img: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400' },
-                { id: 'f5', name: 'Grand Piano', price: 50000, img: 'https://images.unsplash.com/photo-1520523839897-bd0b52f945a0?w=400' }
+                { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" }
             ]
         };
 
-        const taxiData = {
-            cab: { price: 30000, inc: 100, max: 70 },
-            bus: { price: 160000, inc: 600, max: 50 },
-            artBus: { price: 180000, inc: 800, max: 40 }
+        let state = {
+            balance: 0,
+            netWorth: 0,
+            revenue: 0,
+            xp: 0,
+            level: 1,
+            ownedAssets: [],
+            shares: {},
+            currentTierId: 0,
+            renting: {}, 
+            renovations: {},
+            compTiers: {},
+            compOutlets: {}
         };
 
-        const cardData = {
-            gold: { price: 50000, multiplier: 1.1 },
-            platinum: { price: 1000000, multiplier: 1.25 },
-            black: { price: 100000000, multiplier: 1.5 }
-        };
+        let activeStock = null;
+        let chartType = 'candlestick';
 
-        // --- CORE LOGIC ---
-        function init() {
-            const saved = localStorage.getItem('v_empire_v2');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                // Ensure starting balance logic if no balance exists or reset happened
-                gameState = { ...gameState, ...parsed };
-                if (gameState.level === 1 && gameState.xpToNext === 1000) {
-                    gameState.xpToNext = 200;
-                }
-            }
+        const saved = localStorage.getItem('vercel_empire_v10');
+        if (saved) state = { ...state, ...JSON.parse(saved) };
+
+        function saveGame() { localStorage.setItem('vercel_empire_v10', JSON.stringify(state)); }
+
+        function mintMoney(e) {
+            const tier = CARD_TIERS[state.currentTierId];
+            // Base money is 5, scales with level and card multiplier
+            const amount = 5 * tier.mult * state.level;
+            state.balance += amount;
             
+            // Clicking XP scales slightly with level
+            const clickXp = 3 + (state.level * 0.2); 
+            state.xp += Math.min(clickXp, 15);
+            
+            checkLevelUp();
             updateUI();
-            setInterval(gameLoop, 100);
-            setInterval(marketLoop, 5000);
-            setInterval(saveGame, 2000);
-            renderCollection('jewelry'); // Default view
+            saveGame();
+
+            const card = document.getElementById('game-card');
+            card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
+            setTimeout(() => { card.style.transform = ''; }, 100);
         }
 
-        function gameLoop() {
-            const income = (gameState.incomePerHour / 3600) * 0.1;
-            gameState.balance += income;
-            gainXP(income / 20);
-            calculateStats();
-            updateStatusDisplays();
-        }
-
-        function handleManualClick() {
-            gameState.balance += gameState.cashPerClick; 
-            gainXP(0.5);
-            calculateStats();
-            updateStatusDisplays();
-            
-            const card = document.getElementById('gen-card');
-            card.style.transform = `rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg) scale(0.98)`;
-            setTimeout(() => card.style.transform = '', 100);
-        }
-
-        function gainXP(amount) {
-            const m = gameState.activeCard ? cardData[gameState.activeCard].multiplier : 1;
-            gameState.xp += amount * m;
-            
-            if(gameState.xp >= gameState.xpToNext && gameState.level < 30) {
-                gameState.level++;
-                gameState.xp -= gameState.xpToNext;
-                gameState.xpToNext *= 1.05; 
-                gameState.cashPerClick += 5; 
-                notify(`RANK UP: LEVEL ${gameState.level}`, 'success');
+        function checkLevelUp() {
+            const xpReq = 200 * Math.pow(1.05, state.level - 1);
+            if (state.xp >= xpReq) {
+                state.xp -= xpReq;
+                state.level++;
+                logToTerminal(`LEVEL UP: REACHED LEVEL ${state.level}`);
+                checkLevelUp(); 
             }
         }
 
-        function purchaseCard(tier) {
-            const card = cardData[tier];
-            if (gameState.activeCard === tier) return notify("Card already active", "error");
-            if (gameState.balance >= card.price) {
-                gameState.balance -= card.price;
-                gameState.activeCard = tier;
-                updateUI();
-                notify(`${tier.toUpperCase()} status activated`, 'success');
-            } else {
-                notify("Insufficient funds", "error");
-            }
-        }
-
-        function calculateStats() {
-            let inc = 0;
-            let val = gameState.balance;
-            
-            gameState.properties.forEach(p => { 
-                if(p.owned) { 
-                    inc += p.rent; 
-                    val += p.price; 
+        function calculateNetWorth() {
+            let totalValue = state.balance;
+            state.ownedAssets.forEach(assetId => {
+                const c = COMPANIES.find(i => i.id === assetId);
+                const re = REAL_ESTATE.find(i => i.id === assetId);
+                const j = ASSETS.jewelry.find(i => i.id === assetId);
+                const car = ASSETS.cars.find(i => i.id === assetId);
+                const f = ASSETS.furniture.find(i => i.id === assetId);
+                
+                let item = c || re || j || car || f;
+                if (item) {
+                    let val = item.price;
+                    if (c) {
+                        const tier = state.compTiers[assetId] || 0;
+                        const outlets = state.compOutlets[assetId] || 1;
+                        val = item.price * Math.pow(4, tier) * outlets;
+                    } else if (re && state.renovations[assetId]) {
+                        val += (item.price * 0.2 * state.renovations[assetId]);
+                    }
+                    totalValue += val;
                 }
             });
-            
-            gameState.stocks.forEach(s => { 
-                val += (s.owned * s.price); 
+            Object.entries(state.shares).forEach(([symbol, amount]) => {
+                const stock = STOCKS.find(s => s.symbol === symbol);
+                if (stock) totalValue += (stock.price * amount);
             });
+            state.netWorth = totalValue;
 
-            // Collection adds to net worth
-            [...cosmeticData.jewelry, ...cosmeticData.furniture].forEach(item => {
-                if (gameState.collection.includes(item.id)) {
-                    val += item.price;
-                }
-            });
-
-            if (gameState.shop.level === 1) inc += 500;
-            if (gameState.shop.level === 2) inc += 2500;
-            inc += (gameState.shop.upgrades.decor * 100) + (gameState.shop.upgrades.ads * 300);
-            
-            inc += (gameState.taxi.cab * taxiData.cab.inc);
-            inc += (gameState.taxi.bus * taxiData.bus.inc);
-            inc += (gameState.taxi.artBus * taxiData.artBus.inc);
-            
-            val += (gameState.taxi.cab * taxiData.cab.price) + (gameState.taxi.bus * taxiData.bus.price) + (gameState.taxi.artBus * taxiData.artBus.price);
-            
-            gameState.incomePerHour = inc;
-            gameState.netWorth = val;
-        }
-
-        function buyProperty(id) {
-            const p = gameState.properties.find(x => x.id === id);
-            if(gameState.balance >= p.price) {
-                gameState.balance -= p.price;
-                p.owned = true;
-                updateUI();
-                notify(`${p.name} acquired`, 'success');
-            } else notify("Insufficient funds", "error");
-        }
-
-        function buyCosmetic(id, price, name) {
-            if (gameState.collection.includes(id)) return;
-            if (gameState.balance >= price) {
-                gameState.balance -= price;
-                gameState.collection.push(id);
-                updateUI();
-                notify(`${name} added to collection`, 'success');
-            } else {
-                notify("Insufficient funds", "error");
-            }
-        }
-
-        function toggleFavorite(id) {
-            if(gameState.favorites.includes(id)) {
-                gameState.favorites = gameState.favorites.filter(x => x !== id);
-            } else {
-                gameState.favorites.push(id);
-            }
-            updateUI();
-        }
-
-        function buyTaxi(type, count) {
-            const data = taxiData[type];
-            const totalCost = data.price * count;
-            if(gameState.taxi[type] + count > data.max) return notify("Fleet capacity reached", "error");
-            if(gameState.balance >= totalCost) {
-                gameState.balance -= totalCost;
-                gameState.taxi[type] += count;
-                updateUI();
-            } else notify("Insufficient funds", "error");
-        }
-
-        function upgradeShop() {
-            const costs = [5000, 50000];
-            const cost = costs[gameState.shop.level];
-            if(gameState.shop.level >= 2) return;
-            if(gameState.balance >= cost) {
-                gameState.balance -= cost;
-                gameState.shop.level++;
-                updateUI();
-            }
+            // Optional XP scaling for progress feel
+            state.xp = Math.max(state.xp, state.netWorth * 0.03);
+            checkLevelUp();
         }
 
         function updateUI() {
-            calculateStats();
-            updateStatusDisplays();
-            renderStocks();
-            renderRealEstate();
-            renderCompanies();
-            renderWatchlist();
-            
-            // Refresh current collection view if tab is active
-            const activeTab = document.querySelector('.tab-content.active');
-            if (activeTab && activeTab.id === 'collection') {
-                // We don't know if we were viewing jewelry or furniture, 
-                // but re-rendering jewelry as default is safe or we can track it.
-            }
-
-            // Update bank buttons
-            ['gold', 'platinum', 'black'].forEach(tier => {
-                const btn = document.getElementById(`btn-card-${tier}`);
-                if (btn) {
-                    if (gameState.activeCard === tier) {
-                        btn.innerText = "ACTIVE";
-                        btn.classList.add('bg-zinc-800', 'text-zinc-500');
-                        btn.classList.remove('bg-white', 'text-black');
-                    } else {
-                        btn.innerText = format(cardData[tier].price);
-                        btn.classList.remove('bg-zinc-800', 'text-zinc-500');
-                        btn.classList.add('bg-white', 'text-black');
+            calculateNetWorth();
+            let rev = 0;
+            state.ownedAssets.forEach(id => {
+                const c = COMPANIES.find(x => x.id === id);
+                if (c) {
+                    const tierIdx = state.compTiers[id] || 0;
+                    const outlets = state.compOutlets[id] || 1;
+                    rev += (c.rev * Math.pow(3, tierIdx)) * outlets;
+                }
+                const re = REAL_ESTATE.find(x => x.id === id);
+                if (re && state.renting[id]) {
+                    let baseRent = (re.price * 0.005); 
+                    if (state.renovations[id]) {
+                        baseRent *= (1 + (state.renovations[id] * 0.5));
                     }
+                    rev += baseRent;
                 }
             });
+            state.revenue = rev;
+
+            document.getElementById('balance-display').innerText = '$' + Math.floor(state.balance).toLocaleString();
+            document.getElementById('nw-display').innerText = '$' + Math.floor(state.netWorth).toLocaleString();
+            document.getElementById('hr-display').innerText = '+$' + Math.floor(state.revenue).toLocaleString() + '/hr';
+            document.getElementById('lvl-display').innerText = state.level;
+            
+            const rankIndex = Math.min(Math.floor(state.level / 5), RANKS.length - 1);
+            document.getElementById('rank-display').innerText = RANKS[rankIndex];
+            document.getElementById('stat-rank').innerText = RANKS[rankIndex];
+            document.getElementById('stat-assets').innerText = state.ownedAssets.length;
+            document.getElementById('stat-mult').innerText = CARD_TIERS[state.currentTierId].mult + '.0x';
+
+            const xpReq = 200 * Math.pow(1.05, state.level - 1);
+            document.getElementById('xp-val').innerText = Math.floor(state.xp);
+            document.getElementById('xp-req').innerText = Math.floor(xpReq);
+            document.getElementById('next-lvl-val').innerText = state.level + 1;
+            document.getElementById('xp-bar').style.width = (state.xp / xpReq * 100) + '%';
+
+            const tier = CARD_TIERS[state.currentTierId];
+            document.getElementById('game-card').className = `debit-card p-8 flex flex-col justify-between ${tier.class}`;
+            document.getElementById('card-tier-label').innerText = tier.name;
+
+            renderWatchlist();
+            renderGrids();
+            if(activeStock) updateModalContent();
         }
 
-        function updateStatusDisplays() {
-            document.getElementById('balance-card-display').innerText = format(gameState.balance);
-            document.getElementById('networth-header-display').innerText = format(gameState.netWorth);
-            document.getElementById('income-display').innerText = `+${format(gameState.incomePerHour)}/hr`;
-            document.getElementById('legacy-level').innerText = gameState.level;
-            const xpPct = (gameState.xp / gameState.xpToNext) * 100;
-            document.getElementById('xp-fill').style.width = `${xpPct}%`;
-            document.getElementById('xp-text').innerText = `${Math.floor(gameState.xp)} / ${Math.floor(gameState.xpToNext)}`;
-        }
-
-        function drawChart(stock) {
-            const canvas = document.getElementById(`chart-${stock.id}`);
+        function drawGraph(canvasId, history, type = 'candlestick') {
+            const canvas = document.getElementById(canvasId);
             if (!canvas) return;
             const ctx = canvas.getContext('2d');
-            const width = canvas.width;
-            const height = canvas.height;
+            const width = canvas.width = canvas.offsetWidth * 2; 
+            const height = canvas.height = canvas.offsetHeight * 2;
+            ctx.scale(2, 2);
             
-            ctx.clearRect(0, 0, width, height);
+            const viewW = canvas.offsetWidth;
+            const viewH = canvas.offsetHeight;
             
-            const history = stock.history;
-            const min = Math.min(...history);
-            const max = Math.max(...history);
-            const range = max - min || 1;
+            ctx.clearRect(0, 0, viewW, viewH);
             
-            ctx.beginPath();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = history[history.length-1] >= history[0] ? '#10b981' : '#ef4444';
+            const padding = 10;
+            const minPrice = Math.min(...history.map(h => h.low)) * 0.98;
+            const maxPrice = Math.max(...history.map(h => h.high)) * 1.02;
+            const priceRange = maxPrice - minPrice;
             
-            for (let i = 0; i < history.length; i++) {
-                const x = (i / (history.length - 1)) * width;
-                const y = height - ((history[i] - min) / range) * height;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.stroke();
+            const barWidth = (viewW - padding * 2) / history.length;
+            
+            const getY = (price) => viewH - ((price - minPrice) / priceRange) * viewH;
 
-            ctx.lineTo(width, height);
-            ctx.lineTo(0, height);
-            const grad = ctx.createLinearGradient(0, 0, 0, height);
-            grad.addColorStop(0, history[history.length-1] >= history[0] ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)');
-            grad.addColorStop(1, 'transparent');
-            ctx.fillStyle = grad;
-            ctx.fill();
-        }
-
-        function renderStocks() {
-            const container = document.getElementById('stock-market-list');
-            if (!container) return;
-            container.innerHTML = '';
-            gameState.stocks.forEach(s => {
-                const isFav = gameState.favorites.includes(s.id);
-                const div = document.createElement('div');
-                div.className = 'card-container p-4 overflow-hidden';
-                div.innerHTML = `
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-3">
-                            <div class="stock-logo" style="background-image: url('${s.img}')"></div>
-                            <div>
-                                <h4 class="text-xs font-black text-white">${s.id}</h4>
-                                <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
-                            </div>
-                        </div>
-                        <button onclick="toggleFavorite('${s.id}')" class="text-lg ${isFav ? 'text-amber-400' : 'text-zinc-700'}">★</button>
-                    </div>
-                    <div class="text-xl font-mono font-bold text-white mb-2">${format(s.price)}</div>
-                    <div class="mb-4">
-                        <canvas id="chart-${s.id}" class="stock-chart-canvas" width="300" height="40"></canvas>
-                    </div>
+            if (type === 'candlestick') {
+                history.forEach((h, i) => {
+                    const isBull = h.close >= h.open;
+                    ctx.strokeStyle = isBull ? '#10b981' : '#ef4444';
+                    ctx.fillStyle = isBull ? '#10b981' : '#ef4444';
+                    ctx.lineWidth = 1;
                     
-                    <div class="flex gap-2 mb-3">
-                        <input id="qty-${s.id}" type="number" value="1" min="1" class="w-16 bg-zinc-900 border border-zinc-800 rounded px-2 py-1 text-[10px] font-mono text-white text-center focus:outline-none focus:border-white transition-colors">
-                        <div class="flex-1 grid grid-cols-2 gap-2">
-                            <button onclick="tradeStock('${s.id}', 1)" class="bg-white text-black rounded text-[9px] font-bold uppercase hover:bg-zinc-200 transition">Buy</button>
-                            <button onclick="tradeStock('${s.id}', -1)" class="bg-zinc-800 text-zinc-400 rounded text-[9px] font-bold uppercase hover:bg-zinc-700 transition">Sell (${s.owned})</button>
-                        </div>
-                    </div>
-                `;
-                container.appendChild(div);
-                drawChart(s);
-            });
-        }
+                    const x = padding + i * barWidth;
+                    const midX = x + barWidth / 2;
+                    
+                    const yHigh = getY(h.high);
+                    const yLow = getY(h.low);
+                    const yOpen = getY(h.open);
+                    const yClose = getY(h.close);
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(midX, yHigh);
+                    ctx.lineTo(midX, yLow);
+                    ctx.stroke();
+                    
+                    const bodyY = Math.min(yOpen, yClose);
+                    const bodyH = Math.max(Math.abs(yOpen - yClose), 1);
+                    ctx.fillRect(x + (barWidth * 0.2), bodyY, barWidth * 0.6, bodyH);
+                });
+            } else if (type === 'line' || type === 'area') {
+                ctx.beginPath();
+                ctx.strokeStyle = '#10b981';
+                ctx.lineWidth = 2;
+                history.forEach((h, i) => {
+                    const x = padding + i * barWidth + barWidth/2;
+                    const y = getY(h.close);
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                });
+                ctx.stroke();
 
-        function tradeStock(id, direction) {
-            const s = gameState.stocks.find(x => x.id === id);
-            const input = document.getElementById(`qty-${id}`);
-            const qty = Math.max(1, parseInt(input.value) || 1);
-            
-            if(direction > 0) {
-                const totalCost = s.price * qty;
-                if(gameState.balance >= totalCost) {
-                    gameState.balance -= totalCost;
-                    s.owned += qty;
-                    notify(`Purchased ${qty} shares of ${s.id}`, 'success');
-                } else {
-                    notify("Insufficient funds", "error");
-                }
-            } else {
-                const sellQty = Math.min(s.owned, qty);
-                if(sellQty > 0) {
-                    gameState.balance += s.price * sellQty;
-                    s.owned -= sellQty;
-                    notify(`Sold ${sellQty} shares of ${s.id}`, 'success');
-                } else {
-                    notify("No shares to sell", "error");
+                if (type === 'area') {
+                    ctx.lineTo(padding + (history.length-1) * barWidth + barWidth/2, viewH);
+                    ctx.lineTo(padding + barWidth/2, viewH);
+                    ctx.closePath();
+                    const grad = ctx.createLinearGradient(0, 0, 0, viewH);
+                    grad.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
+                    grad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = grad;
+                    ctx.fill();
                 }
             }
-            updateUI();
+        }
+
+        function openStockModal(symbol) {
+            activeStock = STOCKS.find(s => s.symbol === symbol);
+            document.getElementById('stock-modal').style.display = 'flex';
+            document.getElementById('modal-symbol').innerText = activeStock.symbol;
+            document.getElementById('modal-name').innerText = activeStock.name;
+            updateModalContent();
+        }
+
+        function closeStockModal() {
+            activeStock = null;
+            document.getElementById('stock-modal').style.display = 'none';
+        }
+
+        function setChartType(t) {
+            chartType = t;
+            if(activeStock) updateModalContent();
+        }
+
+        function updateModalContent() {
+            if(!activeStock) return;
+            document.getElementById('modal-price').innerText = '$' + activeStock.price.toLocaleString();
+            document.getElementById('modal-owned').innerText = state.shares[activeStock.symbol] || 0;
+            const high = Math.max(...activeStock.history.map(h => h.high));
+            const low = Math.min(...activeStock.history.map(h => h.low));
+            document.getElementById('modal-high').innerText = '$' + high.toLocaleString();
+            document.getElementById('modal-low').innerText = '$' + low.toLocaleString();
+            
+            drawGraph('modal-chart', activeStock.history, chartType);
+        }
+
+        function renderGrids() {
+            const compGrid = document.getElementById('companies-grid');
+            if(compGrid) {
+                compGrid.innerHTML = COMPANIES.map(c => {
+                    const isOwned = state.ownedAssets.includes(c.id);
+                    const tierIdx = state.compTiers[c.id] || 0;
+                    const outlets = state.compOutlets[c.id] || 1;
+                    const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
+                    const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
+                    const currentRev = (c.rev * Math.pow(3, tierIdx)) * outlets;
+
+                    return `
+                    <div class="glass-card p-6">
+                        <img src="${c.img}" class="item-img mb-4">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-black uppercase text-xs tracking-tight">${COMPANY_TIERS[tierIdx]} ${c.name}</h3>
+                                <p class="text-[10px] text-emerald-400 font-bold">+$${Math.floor(currentRev).toLocaleString()}/HR</p>
+                            </div>
+                            <span class="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">${outlets} OUTLETS</span>
+                        </div>
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="text-[11px] font-mono text-zinc-400">$${c.price.toLocaleString()}</p>
+                            ${isOwned ? `<span class="text-[9px] text-zinc-500 font-bold px-2 py-0.5 bg-zinc-900 border border-zinc-800 rounded">PORTFOLIO</span>` : ''}
+                        </div>
+                        ${!isOwned ? `<button onclick="buyAsset('${c.id}', ${c.price})" class="btn-buy" ${state.balance < c.price ? 'disabled' : ''}>ACQUIRE BUSINESS</button>` : `
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-16" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''}>
+                                    <span class="mb-1">${tierIdx >= 4 ? 'MAX TIER' : 'EVOLVE'}</span>
+                                    <span class="text-[8px] opacity-60">${tierIdx >= 4 ? '' : '$' + nextTierPrice.toLocaleString()}</span>
+                                </button>
+                                <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-16" ${state.balance < nextOutletPrice || outlets >= 60 ? 'disabled' : ''}>
+                                    <span class="mb-1">${outlets >= 60 ? 'MAX OUTLETS' : '+1 OUTLET'}</span>
+                                    <span class="text-[8px] opacity-60">${outlets >= 60 ? '' : '$' + nextOutletPrice.toLocaleString()}</span>
+                                </button>
+                            </div>
+                        `}
+                    </div>`;
+                }).join('');
+            }
+
+            const reGrid = document.getElementById('re-grid');
+            if(reGrid) {
+                reGrid.innerHTML = REAL_ESTATE.map(re => {
+                    const isOwned = state.ownedAssets.includes(re.id);
+                    const isRenting = state.renting[re.id];
+                    const renLevel = state.renovations[re.id] || 0;
+                    const renCost = Math.floor(re.price * 0.15 * (renLevel + 1));
+                    return `
+                    <div class="glass-card p-4">
+                        <img src="${re.img}" class="item-img mb-4">
+                        <h3 class="font-black uppercase text-[11px]">${re.name}</h3>
+                        <p class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mb-2">REAL ESTATE ${renLevel > 0 ? `• Lvl ${renLevel}` : ''}</p>
+                        <p class="text-[12px] font-mono text-white mb-4">$${re.price.toLocaleString()}</p>
+                        ${!isOwned ? `<button onclick="buyAsset('${re.id}', ${re.price})" class="btn-buy" ${state.balance < re.price ? 'disabled' : ''}>PURCHASE PROPERTY</button>` : `
+                            <div class="space-y-2">
+                                <button onclick="toggleRental('${re.id}')" class="btn-buy ${isRenting ? 'bg-emerald-600 border-emerald-500' : 'bg-zinc-800'}">${isRenting ? 'STOP RENTAL' : 'LIST FOR RENT'}</button>
+                                <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy bg-zinc-900 border border-zinc-800" ${state.balance < renCost ? 'disabled' : ''}>RENOVATE ($${renCost.toLocaleString()})</button>
+                            </div>
+                        `}
+                    </div>`;
+                }).join('');
+            }
+
+            const bankGrid = document.getElementById('bank-grid');
+            if(bankGrid) {
+                bankGrid.innerHTML = CARD_TIERS.map(t => {
+                    if (t.id === 0) return '';
+                    return `
+                        <div class="glass-card p-8 border-white/5">
+                            <div class="h-40 rounded-xl mb-6 ${t.class}"></div>
+                            <h3 class="text-2xl font-black uppercase mb-1">${t.name}</h3>
+                            <p class="text-xs text-zinc-500 font-bold mb-8">${t.mult}x MULTIPLIER</p>
+                            <button onclick="upgradeCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price || state.currentTierId >= t.id ? 'disabled' : ''}>
+                                ${state.currentTierId >= t.id ? 'ACTIVE' : '$' + t.price.toLocaleString()}
+                            </button>
+                        </div>`;
+                }).join('');
+            }
+
+            const stocksFullGrid = document.getElementById('stocks-full-grid');
+            if(stocksFullGrid) {
+                if (state.level < 3) {
+                    stocksFullGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card">
+                        <p class="text-2xl font-black uppercase tracking-tighter mb-2">TRADING LOCKED</p>
+                        <p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">REACH LEVEL 3 TO ACCESS THE STOCK MARKET</p>
+                    </div>`;
+                } else {
+                    stocksFullGrid.innerHTML = STOCKS.map(s => {
+                        const owned = state.shares[s.symbol] || 0;
+                        return `
+                        <div class="glass-card p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <div>
+                                    <h3 class="text-xl font-black tracking-tighter">${s.symbol}</h3>
+                                    <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
+                                </div>
+                                <div class="text-right">
+                                    <p class="text-lg font-bold mono">$${s.price.toLocaleString()}</p>
+                                    <p class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend)}%</p>
+                                </div>
+                            </div>
+                            
+                            <div class="chart-container" onclick="openStockModal('${s.symbol}')">
+                                <canvas id="chart-${s.symbol}" class="w-full h-full"></canvas>
+                                <div class="absolute inset-0 flex items-center justify-center opacity-0 hover:opacity-100 bg-black/40 transition-opacity pointer-events-none">
+                                    <span class="text-[9px] font-bold uppercase tracking-widest bg-white text-black px-2 py-1 rounded">ZOOM ANALYTICS</span>
+                                </div>
+                            </div>
+
+                            <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900">
+                                <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
+                                <p class="text-sm font-bold mono">${owned} SHARES</p>
+                                <p class="text-[10px] text-zinc-600 font-bold mono">VAL: $${(owned * s.price).toLocaleString()}</p>
+                            </div>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price ? 'disabled' : ''}>BUY</button>
+                                <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''}>SELL</button>
+                            </div>
+                        </div>`;
+                    }).join('');
+                    
+                    STOCKS.forEach(s => drawGraph(`chart-${s.symbol}`, s.history, 'candlestick'));
+                }
+            }
         }
 
         function renderWatchlist() {
             const container = document.getElementById('watchlist-container');
-            if (!container) return;
-            const favs = gameState.stocks.filter(s => gameState.favorites.includes(s.id));
-            if(favs.length === 0) {
-                container.innerHTML = `<p class="text-zinc-600 italic text-[10px]">No stocks favorited.</p>`;
+            if (state.level < 4) {
+                container.innerHTML = `
+                <div class="py-10 text-center bg-zinc-900/40 rounded-lg border border-zinc-800 border-dashed">
+                    <p class="text-[9px] text-zinc-600 font-black uppercase tracking-widest mb-1">LOCKED</p>
+                    <p class="text-[8px] text-zinc-700 font-bold uppercase tracking-widest">REACH LEVEL 4</p>
+                </div>`;
                 return;
             }
-            container.innerHTML = '';
-            favs.forEach(s => {
-                const div = document.createElement('div');
-                div.className = 'flex justify-between items-center border-b border-zinc-900 pb-2';
-                div.innerHTML = `
-                    <div class="flex items-center gap-2">
-                        <div class="w-4 h-4 rounded-full bg-zinc-800" style="background-image:url('${s.img}'); background-size:contain;"></div>
-                        <span class="text-[10px] font-bold text-white">${s.id}</span>
+            container.innerHTML = STOCKS.slice(0, 5).map(s => {
+                return `
+                <div class="flex justify-between items-center bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 cursor-pointer hover:border-zinc-400" onclick="openStockModal('${s.symbol}')">
+                    <div>
+                        <p class="text-[10px] font-black">${s.symbol}</p>
+                        <p class="text-[8px] text-zinc-600 font-bold uppercase">${s.name.split(' ')[0]}</p>
                     </div>
-                    <span class="text-[10px] font-mono font-bold text-zinc-400">${format(s.price)}</span>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function renderRealEstate() {
-            const container = document.getElementById('realestate-list');
-            if (!container) return;
-            container.innerHTML = '';
-            gameState.properties.forEach(p => {
-                const div = document.createElement('div');
-                div.className = `card-container p-3 ${p.owned ? 'border-emerald-900/50 bg-emerald-950/10' : ''}`;
-                div.innerHTML = `
-                    <div class="house-img mb-3" style="background-image: url('${p.img}')"></div>
-                    <h4 class="text-[10px] font-bold text-zinc-300 uppercase truncate">${p.name}</h4>
-                    <p class="text-[9px] text-zinc-500 font-mono mb-2">${format(p.price)}</p>
-                    ${!p.owned ? 
-                        `<button onclick="buyProperty(${p.id})" class="w-full bg-zinc-800 hover:bg-white hover:text-black py-2 rounded text-[9px] font-bold uppercase transition">Acquire</button>` :
-                        `<div class="text-emerald-500 text-[9px] font-bold uppercase text-center py-2">Owned Asset</div>`
-                    }
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function renderCollection(category) {
-            const container = document.getElementById('collection-list');
-            if (!container) return;
-            container.innerHTML = '';
-            const items = cosmeticData[category];
-            items.forEach(item => {
-                const owned = gameState.collection.includes(item.id);
-                const div = document.createElement('div');
-                div.className = `card-container p-3 ${owned ? 'border-amber-900/50 bg-amber-950/10' : ''}`;
-                div.innerHTML = `
-                    <div class="item-img mb-3" style="background-image: url('${item.img}')"></div>
-                    <h4 class="text-[10px] font-bold text-zinc-300 uppercase truncate">${item.name}</h4>
-                    <p class="text-[9px] text-zinc-500 font-mono mb-2">${format(item.price)}</p>
-                    ${!owned ? 
-                        `<button onclick="buyCosmetic('${item.id}', ${item.price}, '${item.name}')" class="w-full bg-zinc-800 hover:bg-white hover:text-black py-2 rounded text-[9px] font-bold uppercase transition">Buy</button>` :
-                        `<div class="text-amber-500 text-[9px] font-bold uppercase text-center py-2">In Collection</div>`
-                    }
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        function renderCompanies() {
-            const container = document.getElementById('company-list');
-            if (!container) return;
-            container.innerHTML = '';
-            const shopDiv = document.createElement('div');
-            shopDiv.className = 'card-container p-6';
-            const shopLabels = ["Unstarted", "Local Shop", "Large Outlet"];
-            shopDiv.innerHTML = `
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-lg font-black text-white">RETAIL HUB</h3>
-                    <span class="text-[10px] bg-zinc-900 px-2 py-1 rounded text-zinc-400 font-bold uppercase">${shopLabels[gameState.shop.level]}</span>
-                </div>
-                <div class="space-y-4">
-                    <button onclick="upgradeShop()" class="w-full bg-white text-black py-3 rounded font-bold text-[10px] uppercase">
-                        ${gameState.shop.level < 2 ? `Upgrade (${format(gameState.shop.level === 0 ? 5000 : 50000)})` : 'Max Level'}
-                    </button>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="buyShopUpgrade('decor')" class="bg-zinc-900 border border-zinc-800 p-2 rounded text-[9px] font-bold uppercase text-zinc-400">Interior (+100/hr)</button>
-                        <button onclick="buyShopUpgrade('ads')" class="bg-zinc-900 border border-zinc-800 p-2 rounded text-[9px] font-bold uppercase text-zinc-400">Ads (+300/hr)</button>
+                    <div class="text-right">
+                        <p class="text-[10px] mono font-bold">$${s.price.toLocaleString()}</p>
+                        <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend)}%</p>
                     </div>
-                </div>
-            `;
-            container.appendChild(shopDiv);
-
-            const taxiDiv = document.createElement('div');
-            taxiDiv.className = 'card-container p-6';
-            taxiDiv.innerHTML = `
-                <h3 class="text-lg font-black text-white mb-4">TRANSPORT CORP</h3>
-                <div class="space-y-4">
-                    ${['cab', 'bus', 'artBus'].map(type => `
-                        <div class="flex items-center justify-between p-2 bg-zinc-900/50 rounded border border-zinc-800">
-                            <div>
-                                <p class="text-[10px] font-bold text-white uppercase">${type === 'artBus' ? 'Articulated Bus' : type}</p>
-                                <p class="text-[9px] text-zinc-500 font-mono">${gameState.taxi[type]} / ${taxiData[type].max}</p>
-                            </div>
-                            <div class="flex gap-2">
-                                <button onclick="buyTaxi('${type}', 1)" class="bg-white text-black px-3 py-1 rounded text-[9px] font-bold">1</button>
-                                <button onclick="buyTaxi('${type}', 5)" class="bg-white text-black px-3 py-1 rounded text-[9px] font-bold">5</button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
-            container.appendChild(taxiDiv);
+                </div>`;
+            }).join('') + `
+            <button onclick="showTab('stocks')" class="w-full mt-2 text-[9px] text-zinc-500 font-bold uppercase hover:text-white transition-colors">VIEW ALL MARKETS →</button>`;
         }
 
-        function buyShopUpgrade(type) {
-            const cost = 2500;
-            if(gameState.shop.level === 0) return notify("Open a shop first", "error");
-            if(gameState.balance >= cost) {
-                gameState.balance -= cost;
-                gameState.shop.upgrades[type]++;
-                updateUI();
-            }
-        }
-
-        function format(n) {
-            if (n >= 1e9) return '$' + (n / 1e9).toFixed(2) + 'B';
-            if (n >= 1e6) return '$' + (n / 1e6).toFixed(2) + 'M';
-            return '$' + Math.floor(n).toLocaleString();
-        }
-
-        function marketLoop() {
-            gameState.stocks.forEach(s => {
-                s.price *= (1 + (Math.random() * s.v * 2 - s.v));
-                if(s.price < 1) s.price = 1;
-                s.history.push(s.price);
-                if (s.history.length > 20) s.history.shift();
-            });
-            calculateStats(); 
-            renderStocks();
-            renderWatchlist();
-        }
-
-        function saveGame() {
-            localStorage.setItem('v_empire_v2', JSON.stringify(gameState));
-        }
-
-        function switchTab(id) {
-            document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-            document.querySelectorAll('.btn-tab').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById(id);
-            if (target) target.classList.add('active');
-            
-            const btns = Array.from(document.querySelectorAll('.btn-tab'));
-            btns.forEach(b => {
-                if (b.innerText.toLowerCase().includes(id.substring(0,4))) {
-                    b.classList.add('active');
+        function tradeStock(symbol, isBuy) {
+            if (state.level < 3) return;
+            const stock = STOCKS.find(s => s.symbol === symbol);
+            if (isBuy) {
+                if (state.balance >= stock.price) {
+                    state.balance -= stock.price;
+                    state.shares[symbol] = (state.shares[symbol] || 0) + 1;
+                    logToTerminal(`PURCHASED 1 UNIT OF ${symbol}`);
                 }
-            });
-
-            if (id === 'collection') renderCollection('jewelry');
+            } else {
+                if (state.shares[symbol] > 0) {
+                    state.balance += stock.price;
+                    state.shares[symbol]--;
+                    logToTerminal(`SOLD 1 UNIT OF ${symbol}`);
+                }
+            }
+            updateUI();
+            saveGame();
         }
 
-        function notify(msg, type) {
-            const box = document.getElementById('notification-box');
-            if (!box) return;
-            const n = document.createElement('div');
-            n.className = `${type === 'success' ? 'bg-white text-black' : 'bg-red-600 text-white'} px-4 py-2 rounded text-[9px] font-bold uppercase mb-2 shadow-xl border border-zinc-200`;
-            n.innerText = msg;
-            box.appendChild(n);
-            setTimeout(() => n.remove(), 2000);
-        }
-
-        function resetGame() {
-            if(confirm("Wipe all data?")) {
-                localStorage.removeItem('v_empire_v2');
-                location.reload();
+        function buyAsset(id, price) {
+            if (state.balance >= price && !state.ownedAssets.includes(id)) {
+                state.balance -= price;
+                state.ownedAssets.push(id);
+                logToTerminal(`ASSET ACQUIRED: ${id.toUpperCase()}`);
+                updateUI();
+                saveGame();
             }
         }
 
-        window.onload = init;
+        function evolveCompany(id, price) {
+            const currentIdx = state.compTiers[id] || 0;
+            if (state.balance >= price && currentIdx < 4) {
+                state.balance -= price;
+                state.compTiers[id] = currentIdx + 1;
+                logToTerminal(`${id.toUpperCase()} EVOLVED TO ${COMPANY_TIERS[currentIdx+1]} STATUS`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function addOutlet(id, price) {
+            const count = state.compOutlets[id] || 1;
+            if (state.balance >= price && count < 60) {
+                state.balance -= price;
+                state.compOutlets[id] = count + 1;
+                logToTerminal(`${id.toUpperCase()} OPENED OUTLET #${count+1}`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function toggleRental(id) {
+            state.renting[id] = !state.renting[id];
+            logToTerminal(`PROPERTY ${id.toUpperCase()} RENTAL STATUS: ${state.renting[id] ? 'ACTIVE' : 'INACTIVE'}`);
+            updateUI();
+            saveGame();
+        }
+
+        function renovateProperty(id, cost) {
+            if (state.balance >= cost) {
+                state.balance -= cost;
+                state.renovations[id] = (state.renovations[id] || 0) + 1;
+                logToTerminal(`PROPERTY ${id.toUpperCase()} RENOVATED TO LEVEL ${state.renovations[id]}`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function upgradeCard(id, price) {
+            if (state.balance >= price) {
+                state.balance -= price;
+                state.currentTierId = id;
+                logToTerminal(`CARD UPGRADED: ${CARD_TIERS[id].name}`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function filterCollection(cat) {
+            const grid = document.getElementById('coll-grid');
+            if (!grid) return;
+            const items = ASSETS[cat] || [];
+            document.querySelectorAll('.coll-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+            grid.innerHTML = items.map(i => `
+                <div class="glass-card p-4">
+                    <img src="${i.img}" class="item-img mb-4">
+                    <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
+                    <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">$${i.price.toLocaleString()}</p>
+                    <button onclick="buyAsset('${i.id}', ${i.price})" class="btn-buy" ${state.balance < i.price || state.ownedAssets.includes(i.id) ? 'disabled' : ''}>
+                        ${state.ownedAssets.includes(i.id) ? 'OWNED' : 'BUY'}
+                    </button>
+                </div>`).join('');
+        }
+
+        function logToTerminal(msg) {
+            const t = document.getElementById('terminal');
+            if (!t) return;
+            const p = document.createElement('p');
+            p.innerText = `> ${msg}`;
+            t.appendChild(p);
+            t.scrollTop = t.scrollHeight;
+        }
+
+        function showTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            const target = document.getElementById(tabId);
+            if(target) target.classList.add('active');
+            const btn = document.getElementById('btn-' + tabId);
+            if(btn) btn.classList.add('active');
+            
+            if (tabId === 'stocks') {
+                setTimeout(renderGrids, 10);
+            }
+        }
+
+        // Main Simulation Loop
+        setInterval(() => {
+            state.balance += (state.revenue / 3600);
+            STOCKS.forEach(s => {
+                const oldPrice = s.price;
+                s.trend += (Math.random() - 0.5) * 0.2;
+                s.price += (Math.random() - 0.5) * (s.price * 0.008);
+                s.price = Math.max(1, parseFloat(s.price.toFixed(2)));
+                s.trend = parseFloat(s.trend.toFixed(2));
+                
+                const open = oldPrice;
+                const close = s.price;
+                const high = Math.max(open, close) + Math.random() * (open * 0.005);
+                const low = Math.min(open, close) - Math.random() * (open * 0.005);
+                
+                s.history.push({ open, close, high, low });
+                if(s.history.length > 50) s.history.shift();
+            });
+            updateUI();
+        }, 1000);
+
+        const cardContainer = document.getElementById('card-container');
+        const gameCard = document.getElementById('game-card');
+        const cardGlare = document.getElementById('card-glare');
+
+        cardContainer.addEventListener('mousemove', (e) => {
+            const rect = cardContainer.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            const xc = rect.width / 2;
+            const yc = rect.height / 2;
+            gameCard.style.transform = `rotateY(${(x - xc)/15}deg) rotateX(${-(y - yc)/15}deg)`;
+            cardGlare.style.setProperty('--x', `${(x / rect.width) * 100}%`);
+            cardGlare.style.setProperty('--y', `${(y / rect.height) * 100}%`);
+        });
+
+        cardContainer.addEventListener('mouseleave', () => gameCard.style.transform = 'rotateY(0deg) rotateX(0deg)');
+
+        window.addEventListener('keydown', (e) => {
+            if(e.key === 'Escape') closeStockModal();
+        });
+
+        window.onload = () => {
+            updateUI();
+            filterCollection('jewelry');
+        };
     </script>
 </body>
 </html>
