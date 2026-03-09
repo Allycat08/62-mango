@@ -412,6 +412,18 @@
         </div>
     </main>
 
+    <!-- CHEAT PANEL -->
+    <div id="cheat-panel" style="display:none;" class="fixed left-4 top-1/2 -translate-y-1/2 glass-card p-4 z-[90] flex-col gap-3 border-red-900/50 bg-black/90 backdrop-blur">
+        <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest">DEV CONSOLE</p>
+        <input type="number" id="cheat-input" placeholder="AMOUNT" class="bg-zinc-900 border border-zinc-800 text-white text-xs px-3 py-2 rounded w-32 focus:outline-none focus:border-red-500 transition-colors">
+        <button onclick="applyCheat()" class="bg-red-900/30 border border-red-900/50 text-red-500 text-[10px] font-bold py-2 rounded hover:bg-red-600 hover:text-white transition-colors uppercase tracking-widest">Inject Cash</button>
+    </div>
+
+    <!-- BOUNCING WATERMARK -->
+    <div id="illegitimate-watermark" style="display:none; position:fixed; z-index:9999; font-weight:900; color:rgba(239, 68, 68, 0.4); font-size:2rem; pointer-events:none; white-space:nowrap; user-select:none;">
+        (ILLEGITIMATE)
+    </div>
+
     <!-- MODALS -->
     <div id="onboarding-modal">
         <div class="w-full max-w-md glass-card p-12 text-center">
@@ -427,7 +439,7 @@
 
     <div id="stock-modal">
         <div class="w-full max-w-4xl glass-card p-8 relative">
-            <button onclick="closeStockModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white font-black">CLOSE [ESC]</button>
+            <button onclick="closeStockModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white font-black">CLOSE[ESC]</button>
             <div class="flex justify-between items-end mb-8">
                 <div>
                     <h2 class="text-4xl font-black tracking-tighter" id="modal-symbol">SYMB</h2>
@@ -605,7 +617,8 @@
             compOutlets: {},
             taxiFleet: { cars: 1, busses: 0, artBusses: 0 },
             tradeMax: false,
-            collectionOwnedTime: {}
+            collectionOwnedTime: {},
+            isCheater: false
         };
 
         let activeStock = null;
@@ -622,9 +635,13 @@
             const input = document.getElementById('name-input').value;
             if (input.trim().length > 0) {
                 state.userName = input.trim().toUpperCase();
+                if (input.trim().toLowerCase() === "garykasparovbuttholebeaater612") {
+                    state.isCheater = true;
+                }
                 document.getElementById('onboarding-modal').style.display = 'none';
                 saveGame();
                 updateUI();
+                if (state.isCheater) activateCheatMode();
             }
         }
 
@@ -1146,8 +1163,7 @@
             const ownedCollections =[];
             state.ownedAssets.forEach(id => {
                 let foundCat = null;
-                let foundItem = null;
-                ['jewelry', 'cars', 'furniture'].forEach(cat => {
+                let foundItem = null;['jewelry', 'cars', 'furniture'].forEach(cat => {
                     const item = ASSETS[cat].find(i => i.id === id);
                     if (item) { foundCat = cat; foundItem = item; }
                 });
@@ -1531,12 +1547,56 @@
                 // Notice we specifically don't close auction modal on ESC
             }
         });
+        
+        function applyCheat() {
+            const val = parseFloat(document.getElementById('cheat-input').value);
+            if (!isNaN(val) && val > 0) {
+                state.balance += val;
+                logToTerminal(`[SYSTEM] ILLEGITIMATE FUNDS ADDED: $${val.toLocaleString()}`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        let wmX = 50; let wmY = 50;
+        let wmDx = 2; let wmDy = 2;
+        function animateWatermark() {
+            const el = document.getElementById('illegitimate-watermark');
+            if(el.style.display !== 'block') return;
+            const rect = el.getBoundingClientRect();
+            const winW = window.innerWidth;
+            const winH = window.innerHeight;
+
+            if (wmX + rect.width >= winW) { wmX = winW - rect.width; wmDx *= -1; }
+            else if (wmX <= 0) { wmX = 0; wmDx *= -1; }
+
+            if (wmY + rect.height >= winH) { wmY = winH - rect.height; wmDy *= -1; }
+            else if (wmY <= 0) { wmY = 0; wmDy *= -1; }
+
+            wmX += wmDx;
+            wmY += wmDy;
+            el.style.left = wmX + 'px';
+            el.style.top = wmY + 'px';
+
+            requestAnimationFrame(animateWatermark);
+        }
+
+        function activateCheatMode() {
+            document.getElementById('cheat-panel').style.display = 'flex';
+            const wm = document.getElementById('illegitimate-watermark');
+            if (wm.style.display !== 'block') {
+                wm.style.display = 'block';
+                requestAnimationFrame(animateWatermark);
+            }
+        }
+
         window.onload = () => {
             if (!state.userName) {
                 document.getElementById('onboarding-modal').style.display = 'flex';
             } else {
                 document.getElementById('onboarding-modal').style.display = 'none';
             }
+            if (state.isCheater) activateCheatMode();
             updateUI();
             filterCollection('jewelry');
         };
