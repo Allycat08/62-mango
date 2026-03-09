@@ -748,7 +748,7 @@
                     const ethPrice = STOCKS.find(s => s.symbol === 'ETH').price;
                     totalValue += nft.priceEth * ethPrice;
                 } else if (c) {
-                    totalValue += calcCompanyInvestment(c, assetId);
+                    totalValue += Math.floor(calcCompanyInvestment(c, assetId) * 0.3);
                 } else if (re && state.renovations[assetId]) {
                     totalValue += (re.price) + (re.price * 0.2 * state.renovations[assetId]);
                 } else if (re) {
