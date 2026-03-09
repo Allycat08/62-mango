@@ -1,6 +1,3 @@
-
-
-
 ```html
 <!DOCTYPE html>
 <html lang="en">
@@ -180,6 +177,68 @@
         }
         input:checked + .slider { background-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(20px); }
+
+        /* MOBILE MODE (9:16) CSS */
+        .mobile-mode {
+            max-width: min(100vw, calc(100vh * (9 / 16))) !important;
+            height: 100vh;
+            max-height: 100vh;
+            margin: 0 auto;
+            border-left: 1px solid #1a1a1a;
+            border-right: 1px solid #1a1a1a;
+            padding: 1.5rem !important;
+            overflow-y: auto;
+            overflow-x: hidden;
+            border-radius: 0;
+            background-color: var(--bg);
+            position: relative;
+            transform: translateZ(0); /* Constraints fixed modals to this container */
+        }
+        @media (min-width: 600px) {
+            .mobile-mode {
+                height: 90vh;
+                max-height: 90vh;
+                margin: 5vh auto;
+                border: 2px solid #222;
+                border-radius: 40px;
+                box-shadow: 0 20px 80px rgba(0,0,0,0.9);
+                padding: 1.5rem !important;
+            }
+        }
+        .mobile-mode::-webkit-scrollbar { display: none; }
+        .mobile-mode { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        .mobile-mode nav::-webkit-scrollbar { display: none; }
+        .mobile-mode nav { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .mobile-mode header { flex-direction: column; gap: 1rem; }
+        .mobile-mode .stats-badge { width: 100%; justify-content: space-between; padding: 1rem; gap: 0; }
+        .mobile-mode .stats-badge > div { flex: 1; }
+        .mobile-mode .col-span-12 { grid-column: span 12 / span 12 !important; }
+
+        .mobile-mode #companies-grid,
+        .mobile-mode #re-grid,
+        .mobile-mode #stocks-full-grid,
+        .mobile-mode #crypto-grid,
+        .mobile-mode #nft-grid,
+        .mobile-mode #coll-grid,
+        .mobile-mode #trading-grid,
+        .mobile-mode #bank-grid,
+        .mobile-mode #profile-portfolio-list {
+            grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+        }
+        
+        .mobile-mode #dashboard .grid-cols-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        }
+
+        .mobile-mode #stock-modal, 
+        .mobile-mode #reset-modal, 
+        .mobile-mode #onboarding-modal, 
+        .mobile-mode #auction-modal {
+            position: absolute;
+            border-radius: inherit;
+        }
     </style>
 </head>
 <body class="p-6 max-w-[1400px] mx-auto">
@@ -445,7 +504,10 @@
             <h2 class="text-3xl font-black tracking-tighter mb-2 uppercase">Welcome to Vercel</h2>
             <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-10">Initialize your empire credentials</p>
             <input type="text" id="name-input" placeholder="ENTER YOUR NAME" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-6 py-4 text-center font-black uppercase text-sm mb-6 focus:outline-none focus:border-white transition-colors">
-            <button onclick="finishOnboarding()" class="w-full py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded hover:bg-zinc-200 transition-colors">Begin Operation</button>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="finishOnboarding(false)" class="w-full py-4 bg-white text-black font-black text-[10px] md:text-xs uppercase tracking-widest rounded hover:bg-zinc-200 transition-colors">Desktop UI</button>
+                <button onclick="finishOnboarding(true)" class="w-full py-4 bg-zinc-900 text-zinc-400 border border-zinc-800 font-black text-[10px] md:text-xs uppercase tracking-widest rounded hover:text-white transition-colors">Mobile (9:16)</button>
+            </div>
         </div>
     </div>
 
@@ -569,7 +631,7 @@
 
         const COMPANIES =[
             { id: 'c1', name: "Corner Shop", price: 2500, rev: 80, bill: 15, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
-            { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, bill: 50, img: "https://images.unsplash.com/photo-1630717285906-29364ffacea0?w=400", customFleet: true },
+            { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, bill: 50, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400", customFleet: true },
             { id: 'c3', name: "E-Com Brand", price: 35000, rev: 1200, bill: 300, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400" },
             { id: 'c4', name: "Ad Agency", price: 150000, rev: 5500, bill: 1200, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
             { id: 'c5', name: "SaaS Enterprise", price: 750000, rev: 28000, bill: 8000, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
@@ -609,14 +671,14 @@
                 { id: 'j2', name: "Diamond Chain", price: 85000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" },
                 { id: 'j3', name: "Patek Philippe Nautilus", price: 145000, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400" },
                 { id: 'j4', name: "Cartier Love Bracelet", price: 25000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" },
-                { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "https://images.unsplash.com/photo-1735480165036-3d1d2f41460f?w=400" },
+                { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
                 { id: 'j6', name: "Emerald Necklace", price: 850000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" }
             ],
             cars:[
                 { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" },
                 { id: 'car2', name: "Ferrari SF90", price: 550000, img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400" },
                 { id: 'car3', name: "Lamborghini Aventador", price: 450000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
-                { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "https://https://images.unsplash.com/photo-1680984819279-fd238d3dd827?w=400" },
+                { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
                 { id: 'car5', name: "Aston Martin Valkyrie", price: 3200000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
                 { id: 'car6', name: "McLaren P1", price: 1500000, img: "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400" }
             ],
@@ -624,8 +686,8 @@
                 { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" },
                 { id: 'f2', name: "Chesterfield Sofa", price: 8500, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" },
                 { id: 'f3', name: "Marble Dining Table", price: 15000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
-                { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "https://https://images.unsplash.com/photo-1703494706828-272dd636ada4?w=400" },
-                { id: 'f5', name: "Mahogany Desk", price: 12000, img: "https://https://encrypted-tbn1.gstatic.com/shopping?w=400" },
+                { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
+                { id: 'f5', name: "Mahogany Desk", price: 12000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" },
                 { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400" }
             ]
         };
@@ -649,7 +711,8 @@
             taxiFleet: { cars: 1, busses: 0, artBusses: 0 },
             tradeMax: false,
             collectionOwnedTime: {},
-            isCheater: false
+            isCheater: false,
+            isMobile: false
         };
 
         let activeStock = null;
@@ -663,15 +726,27 @@
 
         function saveGame() { localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); }
 
-        function finishOnboarding() {
+        function applyMobileMode() {
+            if (state.isMobile) {
+                document.body.classList.add('mobile-mode');
+                document.documentElement.style.backgroundColor = "#050505";
+            } else {
+                document.body.classList.remove('mobile-mode');
+                document.documentElement.style.backgroundColor = "var(--bg)";
+            }
+        }
+
+        function finishOnboarding(isMobile) {
             const input = document.getElementById('name-input').value;
             if (input.trim().length > 0) {
                 state.userName = input.trim().toUpperCase();
                 if (input.trim().toLowerCase() === "garykasparovbuttholebeaater612") {
                     state.isCheater = true;
                 }
+                state.isMobile = !!isMobile;
                 document.getElementById('onboarding-modal').style.display = 'none';
                 saveGame();
+                applyMobileMode();
                 updateUI();
                 if (state.isCheater) activateCheatMode();
             }
@@ -1705,13 +1780,14 @@
             const el = document.getElementById('illegitimate-watermark');
             if(el.style.display !== 'block') return;
             const rect = el.getBoundingClientRect();
-            const winW = window.innerWidth;
-            const winH = window.innerHeight;
+            const container = state.isMobile ? document.body : window;
+            const winW = state.isMobile ? document.body.clientWidth : window.innerWidth;
+            const winH = state.isMobile ? document.body.clientHeight : window.innerHeight;
 
-            if (wmX + rect.width >= winW) { wmX = winW - rect.width; wmDx *= -1; }
+            if (wmX + rect.width >= winW) { wmX = Math.max(0, winW - rect.width); wmDx *= -1; }
             else if (wmX <= 0) { wmX = 0; wmDx *= -1; }
 
-            if (wmY + rect.height >= winH) { wmY = winH - rect.height; wmDy *= -1; }
+            if (wmY + rect.height >= winH) { wmY = Math.max(0, winH - rect.height); wmDy *= -1; }
             else if (wmY <= 0) { wmY = 0; wmDy *= -1; }
 
             wmX += wmDx;
@@ -1737,6 +1813,7 @@
             } else {
                 document.getElementById('onboarding-modal').style.display = 'none';
             }
+            applyMobileMode();
             if (state.isCheater) activateCheatMode();
             updateUI();
             filterCollection('jewelry');
