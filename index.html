@@ -1,3 +1,7 @@
+
+
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -349,18 +353,29 @@
 
         <!-- COMPANIES TAB -->
         <div id="companies" class="tab-content">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-xl font-black uppercase tracking-tight">ENTERPRISE INFRASTRUCTURE</h2>
-                <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">
-                    BUILD, UPGRADE & SELL FOR 30% OF INVESTMENTS
-                </p>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-xl font-black uppercase tracking-tight">ENTERPRISE INFRASTRUCTURE</h2>
+                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">
+                        BUILD, UPGRADE & SELL FOR 30% OF INVESTMENTS
+                    </p>
+                </div>
             </div>
             <div id="companies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
         <!-- REAL ESTATE TAB -->
         <div id="real-estate" class="tab-content">
-            <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL PROPERTY PORTFOLIO</h2>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-xl font-black uppercase tracking-tight">GLOBAL PROPERTY PORTFOLIO</h2>
+                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">RENT, RENOVATE & SELL FOR 90% OF INVESTMENTS</p>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="filterRealEstate('house')" class="re-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active" data-cat="house">Houses</button>
+                    <button onclick="filterRealEstate('apartment')" class="re-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900" data-cat="apartment">Apartments</button>
+                </div>
+            </div>
             <div id="re-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
@@ -478,7 +493,7 @@
             </div>
         </div>
     </main>
- <!-- Allycat08 -->
+
     <!-- CHEAT PANEL -->
     <div id="cheat-panel" style="display:none;" class="fixed left-4 top-1/2 -translate-y-1/2 glass-card p-4 z-[90] flex-col gap-3 border-red-900/50 bg-black/90 backdrop-blur">
         <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest">DEV CONSOLE</p>
@@ -548,7 +563,6 @@
         </div>
     </div>
 
- 
     <!-- AUCTION MODAL -->
     <div id="auction-modal">
         <div class="w-full max-w-xl glass-card p-8 text-center relative border border-amber-900/50">
@@ -657,13 +671,47 @@
         ];
 
         const REAL_ESTATE =[
-            { id: 're1', name: "Cozy Tiny House", price: 45000, img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400" },
-            { id: 're2', name: "Modern Suburban Home", price: 320000, img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400" },
-            { id: 're3', name: "Luxury Villa", price: 1500000, img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400" },
-            { id: 're4', name: "Glass Beach Mansion", price: 8500000, img: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400" },
-            { id: 're5', name: "City Center Penthouse", price: 4200000, img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=400" },
-            { id: 're6', name: "Private Island Villa", price: 25000000, img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400" }
+            { id: 're1', name: "Cozy Tiny House", price: 45000, type: 'house', img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400" },
+            { id: 're2', name: "Modern Suburban Home", price: 320000, type: 'house', img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400" },
+            { id: 're3', name: "Luxury Villa", price: 1500000, type: 'house', img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400" },
+            { id: 're4', name: "Glass Beach Mansion", price: 8500000, type: 'house', img: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400" },
+            { id: 're5', name: "City Center Penthouse", price: 4200000, type: 'apartment', img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=400" },
+            { id: 're6', name: "Private Island Villa", price: 25000000, type: 'house', img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400" }
         ];
+
+        const houseNames =["Log Cabin", "Farmhouse", "Ranch Style", "Colonial", "Townhouse", "Victorian", "Georgian", "Tudor", "Mediterranean", "Craftsman", "Mid-Century", "Prairie", "Contemporary", "Bungalow", "Cape Cod", "Cottage", "French Country", "Spanish Style", "Tudor Revival", "Greek Revival", "Italianate", "Art Deco", "Modernist", "Postmodern", "Minimalist", "A-Frame", "Saltbox", "Shotgun", "Split-Level", "Desert Dome", "Eco House"];
+        const aptNames =["Studio Apartment", "Micro Studio", "Loft", "Junior 1-Bed", "1-Bed Apt", "2-Bed Apt", "3-Bed Apt", "4-Bed Apt", "Duplex Apt", "Triplex Apt", "Garden Apt", "Basement Suite", "Walk-up Apt", "Railroad Apt", "High-rise Apt", "Mid-rise Apt", "Low-rise Apt", "Luxury Condo", "Luxury Loft", "Executive Suite", "Corner Penthouse", "Multi-level Penthouse", "Condo with Terrace", "Service Apt", "Corporate Apt", "Micro Apt", "Alcove Studio", "Convertible Studio", "Classic Six", "Floor-Through Apt", "Skyhouse", "Tower Suite"];
+
+        const houseImgs =[
+            "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400",
+            "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400",
+            "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400"
+        ];
+        const aptImgs =[
+            "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
+            "https://images.unsplash.com/photo-1502672260266-1c1c24240f57?w=400",
+            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"
+        ];
+
+        houseNames.forEach((name, i) => {
+            REAL_ESTATE.push({
+                id: 're_h_' + i,
+                name: name,
+                price: Math.floor(60000 + (i * 45000) * (1 + i * 0.1)),
+                type: 'house',
+                img: houseImgs[i % houseImgs.length]
+            });
+        });
+
+        aptNames.forEach((name, i) => {
+            REAL_ESTATE.push({
+                id: 're_a_' + i,
+                name: name,
+                price: Math.floor(35000 + (i * 35000) * (1 + i * 0.08)),
+                type: 'apartment',
+                img: aptImgs[i % aptImgs.length]
+            });
+        });
 
         const ASSETS = {
             jewelry:[
@@ -718,6 +766,7 @@
         let activeStock = null;
         let chartType = 'candlestick';
         let currentCollectionCat = 'jewelry';
+        let currentRECat = 'house';
         let activeAuction = null;
 
         const saved = localStorage.getItem('vercel_empire_v12_favs');
@@ -809,6 +858,15 @@
             return inv;
         }
 
+        function calcRealEstateInvestment(re, id) {
+            let inv = re.price;
+            const renLevel = state.renovations[id] || 0;
+            for (let i = 0; i < renLevel; i++) {
+                inv += Math.floor(re.price * 0.15 * (i + 1));
+            }
+            return inv;
+        }
+
         function calculateNetWorth() {
             let totalValue = state.balance;
             state.ownedAssets.forEach(assetId => {
@@ -824,10 +882,8 @@
                     totalValue += nft.priceEth * ethPrice;
                 } else if (c) {
                     totalValue += Math.floor(calcCompanyInvestment(c, assetId) * 0.3);
-                } else if (re && state.renovations[assetId]) {
-                    totalValue += (re.price) + (re.price * 0.2 * state.renovations[assetId]);
                 } else if (re) {
-                    totalValue += re.price;
+                    totalValue += Math.floor(calcRealEstateInvestment(re, assetId) * 0.9);
                 } else if (j || car || f) {
                     let item = j || car || f;
                     totalValue += getCollectionSellPrice(assetId, item.price);
@@ -1101,6 +1157,24 @@
             saveGame();
         }
 
+        function sellProperty(id) {
+            const re = REAL_ESTATE.find(x => x.id === id);
+            if (!re || !state.ownedAssets.includes(id)) return;
+
+            const investment = calcRealEstateInvestment(re, id);
+            const returnAmount = Math.floor(investment * 0.9);
+
+            state.balance += returnAmount;
+            state.ownedAssets = state.ownedAssets.filter(a => a !== id);
+
+            if (state.renovations[id]) delete state.renovations[id];
+            if (state.renting[id]) delete state.renting[id];
+
+            logToTerminal(`SOLD PROPERTY: ${re.name} FOR $${returnAmount.toLocaleString()} (90% OF INVESTMENTS)`);
+            updateUI();
+            saveGame();
+        }
+
         function renderGrids() {
             const compGrid = document.getElementById('companies-grid');
             if(compGrid) {
@@ -1202,21 +1276,27 @@
 
             const reGrid = document.getElementById('re-grid');
             if(reGrid) {
-                reGrid.innerHTML = REAL_ESTATE.map(re => {
+                const filteredRE = REAL_ESTATE.filter(r => r.type === currentRECat);
+                reGrid.innerHTML = filteredRE.map(re => {
                     const isOwned = state.ownedAssets.includes(re.id);
                     const isRenting = state.renting[re.id];
                     const renLevel = state.renovations[re.id] || 0;
                     const renCost = Math.floor(re.price * 0.15 * (renLevel + 1));
                     return `
-                    <div class="glass-card p-4">
+                    <div class="glass-card p-4 flex flex-col">
                         <img src="${re.img}" class="item-img mb-4">
-                        <h3 class="font-black uppercase text-[11px]">${re.name}</h3>
-                        <p class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mb-2">REAL ESTATE ${renLevel > 0 ? `• Lvl ${renLevel}` : ''}</p>
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h3 class="font-black uppercase text-[11px]">${re.name}</h3>
+                                <p class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mb-2">REAL ESTATE ${renLevel > 0 ? `• Lvl ${renLevel}` : ''}</p>
+                            </div>
+                        </div>
                         <p class="text-[12px] font-mono text-white mb-4">$${re.price.toLocaleString()}</p>
-                        ${!isOwned ? `<button onclick="buyAsset('${re.id}', ${re.price})" class="btn-buy" ${state.balance < re.price ? 'disabled' : ''}>PURCHASE PROPERTY</button>` : `
-                            <div class="space-y-2">
+                        ${!isOwned ? `<button onclick="buyAsset('${re.id}', ${re.price})" class="btn-buy mt-auto" ${state.balance < re.price ? 'disabled' : ''}>PURCHASE PROPERTY</button>` : `
+                            <div class="space-y-2 mt-auto">
                                 <button onclick="toggleRental('${re.id}')" class="btn-buy ${isRenting ? 'bg-emerald-600 border-emerald-500' : 'bg-zinc-800'}">${isRenting ? 'STOP RENTAL' : 'LIST FOR RENT'}</button>
                                 <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy bg-zinc-900 border border-zinc-800" ${state.balance < renCost ? 'disabled' : ''}>RENOVATE ($${renCost.toLocaleString()})</button>
+                                <button onclick="sellProperty('${re.id}')" class="btn-buy !bg-red-950/30 !text-red-500 !border-red-900/50 hover:!bg-red-500 hover:!text-white transition-colors">SELL PROPERTY</button>
                             </div>
                         `}
                     </div>`;
@@ -1687,6 +1767,12 @@
             renderGrids();
         }
 
+        function filterRealEstate(cat) {
+            currentRECat = cat;
+            document.querySelectorAll('.re-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+            renderGrids();
+        }
+
         function logToTerminal(msg) {
             const t = document.getElementById('terminal');
             if (!t) return;
@@ -1703,7 +1789,7 @@
             if(target) target.classList.add('active');
             const btn = document.getElementById('btn-' + tabId);
             if(btn) btn.classList.add('active');
-            if (['stocks', 'profile', 'collection', 'trading', 'companies'].includes(tabId)) setTimeout(updateUI, 10);
+            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate'].includes(tabId)) setTimeout(updateUI, 10);
         }
 
         setInterval(() => {
@@ -1817,8 +1903,9 @@
             if (state.isCheater) activateCheatMode();
             updateUI();
             filterCollection('jewelry');
+            filterRealEstate('house');
         };
     </script>
 </body>
 </html>
-
+```
