@@ -133,7 +133,7 @@
             background: #111;
         }
 
-        #stock-modal, #reset-modal, #onboarding-modal {
+        #stock-modal, #reset-modal, #onboarding-modal, #auction-modal {
             display: none;
             position: fixed;
             inset: 0;
@@ -211,6 +211,7 @@
         <button onclick="showTab('real-estate')" class="nav-link" id="btn-real-estate">Real Estate</button>
         <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Market</button>
         <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
+        <button onclick="showTab('trading')" class="nav-link" id="btn-trading">Trading</button>
         <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
         <button onclick="showTab('profile')" class="nav-link" id="btn-profile">Profile</button>
     </nav>
@@ -325,8 +326,13 @@
 
         <!-- COLLECTION TAB -->
         <div id="collection" class="tab-content">
-            <div class="flex justify-between items-center mb-8">
-                <h2 class="text-xl font-black uppercase tracking-tight">LUXURY ASSETS</h2>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-xl font-black uppercase tracking-tight">LUXURY ASSETS</h2>
+                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">
+                        ACQUIRE HIGH VALUE ASSETS • SELL & AUCTION IN TRADING TAB
+                    </p>
+                </div>
                 <div class="flex gap-2">
                     <button onclick="filterCollection('jewelry')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active" data-cat="jewelry">Jewelry</button>
                     <button onclick="filterCollection('cars')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900" data-cat="cars">Cars</button>
@@ -334,6 +340,15 @@
                 </div>
             </div>
             <div id="coll-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </div>
+
+        <!-- TRADING TAB -->
+        <div id="trading" class="tab-content">
+            <div class="flex justify-between items-center mb-8">
+                <h2 class="text-xl font-black uppercase tracking-tight text-amber-500">VBAY MARKETPLACE</h2>
+                <p class="text-[10px] text-zinc-500 font-bold tracking-widest">YOUR LISTINGS</p>
+            </div>
+            <div id="trading-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
         <!-- BANK TAB -->
@@ -448,6 +463,31 @@
         </div>
     </div>
 
+    <!-- AUCTION MODAL -->
+    <div id="auction-modal">
+        <div class="w-full max-w-xl glass-card p-8 text-center relative border border-amber-900/50">
+            <p class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-2">LIVE AUCTION</p>
+            <h2 class="text-2xl font-black uppercase mb-6" id="auction-item-name">ITEM NAME</h2>
+            
+            <div class="flex justify-between items-center mb-8 px-8 py-4 bg-zinc-950 rounded-lg border border-zinc-900">
+                <div>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">TIME REMAINING</p>
+                    <p class="text-3xl font-black mono text-white" id="auction-time">5:00</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">CURRENT BID</p>
+                    <p class="text-3xl font-black mono text-emerald-400" id="auction-price">$0</p>
+                </div>
+            </div>
+
+            <div class="h-40 overflow-y-auto bg-black border border-zinc-900 rounded p-4 mb-6 text-left space-y-1" id="auction-log">
+                <p class="text-[10px] mono text-zinc-500 italic">Waiting for bids...</p>
+            </div>
+
+            <button onclick="finishAuction()" class="w-full py-4 bg-amber-600 text-white font-black text-xs uppercase tracking-widest rounded hover:bg-amber-500 transition-colors">Accept Current Bid</button>
+        </div>
+    </div>
+
     <div id="reset-modal">
         <div class="w-full max-w-md glass-card p-10 text-center">
             <h2 class="text-3xl font-black tracking-tighter mb-4 uppercase">Wipe Data?</h2>
@@ -460,8 +500,8 @@
     </div>
 
     <script>
-        const RANKS = ["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign"];
-        const CARD_TIERS = [
+        const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign"];
+        const CARD_TIERS =[
             { id: 0, name: "DEFAULT CARD", price: 0, mult: 1, class: "tier-0" },
             { id: 1, name: "SAPPHIRE PREMIER", price: 50000, mult: 2, class: "tier-1" },
             { id: 2, name: "ULTRA VIOLET", price: 250000, mult: 5, class: "tier-2" },
@@ -470,19 +510,19 @@
             { id: 5, name: "CENTURION GOLD", price: 25000000, mult: 100, class: "tier-5" }
         ];
 
-        const STOCKS = [
+        const STOCKS =[
             { symbol: "AAPL", name: "Apple Inc.", price: 190.00, trend: 1.2, history: [], type: 'stock', logo: 'https://logo.clearbit.com/apple.com' },
-            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history: [], type: 'stock', logo: 'https://logo.clearbit.com/tesla.com' },
-            { symbol: "NVDA", name: "Nvidia Corp", price: 850.00, trend: 5.8, history: [], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
-            { symbol: "AMZN", name: "Amazon", price: 180.00, trend: 1.1, history: [], type: 'stock', logo: 'https://logo.clearbit.com/amazon.com' },
-            { symbol: "META", name: "Meta Platforms", price: 500.00, trend: 2.3, history: [], type: 'stock', logo: 'https://logo.clearbit.com/meta.com' },
-            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155.00, trend: 0.8, history: [], type: 'stock', logo: 'https://logo.clearbit.com/google.com' },
-            { symbol: "MSFT", name: "Microsoft", price: 420.00, trend: 1.4, history: [], type: 'stock', logo: 'https://logo.clearbit.com/microsoft.com' },
-            { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history: [], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/btc/200' },
-            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history: [], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/eth/200' }
+            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/tesla.com' },
+            { symbol: "NVDA", name: "Nvidia Corp", price: 850.00, trend: 5.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
+            { symbol: "AMZN", name: "Amazon", price: 180.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/amazon.com' },
+            { symbol: "META", name: "Meta Platforms", price: 500.00, trend: 2.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/meta.com' },
+            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/google.com' },
+            { symbol: "MSFT", name: "Microsoft", price: 420.00, trend: 1.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/microsoft.com' },
+            { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/btc/200' },
+            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/eth/200' }
         ];
 
-        const NFTS = [
+        const NFTS =[
             { id: 'nft1', name: "Bored Ape #402", priceEth: 65, img: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400", volatility: 0.15 },
             { id: 'nft2', name: "CryptoPunk #991", priceEth: 120, img: "https://images.unsplash.com/photo-1643101809754-43a91784611a?w=400", volatility: 0.25 },
             { id: 'nft3', name: "EtherRock #12", priceEth: 450, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400", volatility: 0.5 },
@@ -501,9 +541,9 @@
             }
         });
 
-        const COMPANY_TIERS = ["Local", "Small Chain", "Large Chain", "Regional Giant", "Global Conglomerate"];
+        const COMPANY_TIERS =["Local", "Small Chain", "Large Chain", "Regional Giant", "Global Conglomerate"];
 
-        const COMPANIES = [
+        const COMPANIES =[
             { id: 'c1', name: "Corner Shop", price: 2500, rev: 80, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
             { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400", customFleet: true },
             { id: 'c3', name: "E-Com Brand", price: 35000, rev: 1200, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400" },
@@ -512,7 +552,7 @@
             { id: 'c6', name: "Logistics Hub", price: 2500000, rev: 95000, img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400" }
         ];
 
-        const REAL_ESTATE = [
+        const REAL_ESTATE =[
             { id: 're1', name: "Cozy Tiny House", price: 45000, img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400" },
             { id: 're2', name: "Modern Suburban Home", price: 320000, img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400" },
             { id: 're3', name: "Luxury Villa", price: 1500000, img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400" },
@@ -522,16 +562,29 @@
         ];
 
         const ASSETS = {
-            jewelry: [
+            jewelry:[
                 { id: 'j1', name: "Rolex Submariner", price: 12000, img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400" },
-                { id: 'j2', name: "Diamond Chain", price: 85000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" }
+                { id: 'j2', name: "Diamond Chain", price: 85000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" },
+                { id: 'j3', name: "Patek Philippe Nautilus", price: 145000, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400" },
+                { id: 'j4', name: "Cartier Love Bracelet", price: 25000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" },
+                { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
+                { id: 'j6', name: "Emerald Necklace", price: 850000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" }
             ],
-            cars: [
+            cars:[
                 { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" },
-                { id: 'car2', name: "Ferrari SF90", price: 550000, img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400" }
+                { id: 'car2', name: "Ferrari SF90", price: 550000, img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400" },
+                { id: 'car3', name: "Lamborghini Aventador", price: 450000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
+                { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
+                { id: 'car5', name: "Aston Martin Valkyrie", price: 3200000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
+                { id: 'car6', name: "McLaren P1", price: 1500000, img: "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400" }
             ],
-            furniture: [
-                { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" }
+            furniture:[
+                { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" },
+                { id: 'f2', name: "Chesterfield Sofa", price: 8500, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" },
+                { id: 'f3', name: "Marble Dining Table", price: 15000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
+                { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
+                { id: 'f5', name: "Mahogany Desk", price: 12000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" },
+                { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400" }
             ]
         };
 
@@ -542,20 +595,23 @@
             revenue: 0,
             xp: 0,
             level: 1,
-            ownedAssets: [],
+            ownedAssets:[],
             shares: {},
-            favorites: [],
+            favorites:[],
             currentTierId: 0,
             renting: {}, 
             renovations: {},
             compTiers: {},
             compOutlets: {},
             taxiFleet: { cars: 1, busses: 0, artBusses: 0 },
-            tradeMax: false
+            tradeMax: false,
+            collectionOwnedTime: {}
         };
 
         let activeStock = null;
         let chartType = 'candlestick';
+        let currentCollectionCat = 'jewelry';
+        let activeAuction = null;
 
         const saved = localStorage.getItem('vercel_empire_v12_favs');
         if (saved) state = { ...state, ...JSON.parse(saved) };
@@ -601,6 +657,14 @@
             }
         }
 
+        function getCollectionSellPrice(id, basePrice) {
+            const boughtAt = state.collectionOwnedTime[id] || Date.now();
+            const elapsed = (Date.now() - boughtAt) / 1000;
+            let mult = 0.7 + (elapsed / 300) * 0.4;
+            if (mult > 1.1) mult = 1.1;
+            return Math.floor(basePrice * mult);
+        }
+
         function calculateNetWorth() {
             let totalValue = state.balance;
             state.ownedAssets.forEach(assetId => {
@@ -626,6 +690,8 @@
                         }
                     } else if (re && state.renovations[assetId]) {
                         val += (item.price * 0.2 * state.renovations[assetId]);
+                    } else if (j || car || f) {
+                        val = getCollectionSellPrice(assetId, item.price);
                     }
                     totalValue += val;
                 }
@@ -708,6 +774,7 @@
 
             renderWatchlist();
             renderGrids();
+            renderTradingGrid();
             renderProfilePortfolio();
             if(activeStock) updateModalContent();
         }
@@ -722,10 +789,10 @@
                 if (stock) stockValue += (stock.price * amount);
             });
 
-            const assetCats = [
+            const assetCats =[
                 { title: 'Companies', items: state.ownedAssets.filter(id => COMPANIES.some(c => c.id === id)) },
                 { title: 'Properties', items: state.ownedAssets.filter(id => REAL_ESTATE.some(re => re.id === id)) },
-                { title: 'Collections', items: state.ownedAssets.filter(id => [...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture].some(i => i.id === id)) },
+                { title: 'Collections', items: state.ownedAssets.filter(id =>[...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture].some(i => i.id === id)) },
                 { title: 'Digital Assets', items: Object.keys(state.shares).filter(s => state.shares[s] > 0) }
             ];
 
@@ -734,7 +801,7 @@
                     <p class="text-[9px] text-zinc-600 font-bold uppercase mb-4 tracking-widest">${cat.title} (${cat.items.length})</p>
                     <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
                         ${cat.items.length === 0 ? '<p class="text-[10px] text-zinc-800 font-mono italic">EMPTY SECTION</p>' : cat.items.map(id => {
-                            const found = COMPANIES.find(c => c.id === id) || REAL_ESTATE.find(r => r.id === id) || [...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture].find(i => i.id === id);
+                            const found = COMPANIES.find(c => c.id === id) || REAL_ESTATE.find(r => r.id === id) ||[...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture].find(i => i.id === id);
                             if (found) return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${found.name}</span> <span class="text-[9px] mono text-zinc-600">ID: ${found.id}</span></div>`;
                             return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${id}</span> <span class="text-[9px] mono text-zinc-600">${state.shares[id].toFixed(2)} UNITS</span></div>`;
                         }).join('')}
@@ -962,6 +1029,30 @@
                 }).join('');
             }
 
+            const collGrid = document.getElementById('coll-grid');
+            if (collGrid) {
+                const items = ASSETS[currentCollectionCat] ||[];
+                collGrid.innerHTML = items.map(i => {
+                    const isOwned = state.ownedAssets.includes(i.id);
+                    let actionHtml = '';
+                    if (!isOwned) {
+                        actionHtml = `<button onclick="buyCollectionAsset('${i.id}', ${i.price})" class="btn-buy mt-2" ${state.balance < i.price ? 'disabled' : ''}>BUY</button>`;
+                    } else {
+                        actionHtml = `<button class="btn-buy mt-2 opacity-50 cursor-not-allowed" disabled>OWNED</button>`;
+                    }
+
+                    return `
+                    <div class="glass-card p-4 flex flex-col justify-between">
+                        <div>
+                            <img src="${i.img}" class="item-img mb-4">
+                            <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
+                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${i.price.toLocaleString()}</p>
+                        </div>
+                        ${actionHtml}
+                    </div>`;
+                }).join('');
+            }
+
             const renderStockCard = (s) => {
                 const owned = state.shares[s.symbol] || 0;
                 const isFav = state.favorites.includes(s.symbol);
@@ -1046,6 +1137,53 @@
                 const canvas = document.getElementById(`chart-${s.symbol}`);
                 if (canvas) drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
             });
+        }
+
+        function renderTradingGrid() {
+            const tradingGrid = document.getElementById('trading-grid');
+            if (!tradingGrid) return;
+
+            const ownedCollections =[];
+            state.ownedAssets.forEach(id => {
+                let foundCat = null;
+                let foundItem = null;
+                ['jewelry', 'cars', 'furniture'].forEach(cat => {
+                    const item = ASSETS[cat].find(i => i.id === id);
+                    if (item) { foundCat = cat; foundItem = item; }
+                });
+                if (foundItem) ownedCollections.push({ cat: foundCat, item: foundItem });
+            });
+
+            if (ownedCollections.length === 0) {
+                tradingGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card border-dashed border-zinc-800"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">NO COLLECTIONS LISTED</p></div>`;
+            } else {
+                tradingGrid.innerHTML = ownedCollections.map(obj => {
+                    const i = obj.item;
+                    const cat = obj.cat;
+                    const sellPrice = getCollectionSellPrice(i.id, i.price);
+                    const canSell = state.level >= 4;
+                    const canAuction = state.level >= 12;
+
+                    return `
+                    <div class="glass-card p-4 flex flex-col justify-between border-amber-900/20">
+                        <div>
+                            <img src="${i.img}" class="item-img mb-4">
+                            <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
+                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${i.price.toLocaleString()}</p>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 mt-2">
+                            <button onclick="sellCollection('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center bg-zinc-900" ${!canSell ? 'disabled' : ''}>
+                                <span class="mb-0.5 font-black">${canSell ? 'SELL' : 'LVL 4'}</span>
+                                <span class="opacity-60">${canSell ? '$'+sellPrice.toLocaleString() : 'REQUIRED'}</span>
+                            </button>
+                            <button onclick="openAuctionModal('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center ${canAuction ? '!bg-amber-950/30 !text-amber-500 !border-amber-900/50 hover:!bg-amber-500 hover:!text-white' : 'bg-zinc-900'}" ${!canAuction ? 'disabled' : ''}>
+                                <span class="mb-0.5 font-black">${canAuction ? 'AUCTION' : 'LVL 12'}</span>
+                                <span class="opacity-60">${canAuction ? 'INTERACTIVE' : 'REQUIRED'}</span>
+                            </button>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
         }
 
         function renderWatchlist() {
@@ -1151,6 +1289,117 @@
             }
         }
 
+        function buyCollectionAsset(id, price) {
+            if (state.balance >= price && !state.ownedAssets.includes(id)) {
+                state.balance -= price;
+                state.ownedAssets.push(id);
+                state.collectionOwnedTime[id] = Date.now();
+                logToTerminal(`COLLECTION ACQUIRED: ${id.toUpperCase()}`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function sellCollection(id, cat) {
+            if (state.level < 4) return;
+            const item = ASSETS[cat].find(i => i.id === id);
+            if (!item || !state.ownedAssets.includes(id)) return;
+            
+            const price = getCollectionSellPrice(id, item.price);
+            state.balance += price;
+            state.ownedAssets = state.ownedAssets.filter(a => a !== id);
+            delete state.collectionOwnedTime[id];
+            
+            logToTerminal(`SOLD COLLECTION: ${item.name} FOR $${price.toLocaleString()}`);
+            updateUI();
+            saveGame();
+        }
+
+        function openAuctionModal(id, cat) {
+            if (state.level < 12) return;
+            const item = ASSETS[cat].find(i => i.id === id);
+            if (!item) return;
+
+            activeAuction = {
+                id: id,
+                cat: cat,
+                item: item,
+                currentBid: item.price,
+                timer: 300,
+                interval: null,
+                bids:[{ name: 'System', amount: item.price, msg: 'Starting bid at 100% MSRP' }]
+            };
+
+            const modal = document.getElementById('auction-modal');
+            modal.style.display = 'flex';
+            setUI('auction-item-name', item.name);
+            updateAuctionUI();
+
+            activeAuction.interval = setInterval(() => {
+                activeAuction.timer--;
+                
+                if (activeAuction.timer > 0 && activeAuction.currentBid < item.price * 5) {
+                    const chance = Math.random();
+                    if (chance < 0.20) {
+                        const increase = item.price * (Math.random() * 0.15 + 0.02);
+                        let nextBid = activeAuction.currentBid + increase;
+                        if (nextBid > item.price * 5) nextBid = item.price * 5;
+                        
+                        activeAuction.currentBid = nextBid;
+                        activeAuction.bids.unshift({
+                            name: "Bidder" + Math.floor(Math.random() * 9000 + 1000),
+                            amount: nextBid,
+                            msg: 'Placed a bid'
+                        });
+                        
+                        if (activeAuction.bids.length > 15) activeAuction.bids.pop();
+                    }
+                }
+
+                updateAuctionUI();
+
+                if (activeAuction.timer <= 0) {
+                    finishAuction();
+                }
+            }, 1000);
+        }
+
+        function updateAuctionUI() {
+            if (!activeAuction) return;
+            const min = Math.floor(activeAuction.timer / 60);
+            const sec = activeAuction.timer % 60;
+            setUI('auction-time', `${min}:${sec < 10 ? '0' : ''}${sec}`);
+            setUI('auction-price', '$' + Math.floor(activeAuction.currentBid).toLocaleString());
+            
+            const log = document.getElementById('auction-log');
+            if (log) {
+                log.innerHTML = activeAuction.bids.map(b => `
+                    <p class="text-[10px] mono">
+                        <span class="text-zinc-500">${b.name}</span> 
+                        <span class="text-zinc-700">${b.msg || ''}</span> 
+                        <span class="text-emerald-500 font-bold">$${Math.floor(b.amount).toLocaleString()}</span>
+                    </p>
+                `).join('');
+            }
+        }
+
+        function finishAuction() {
+            if (!activeAuction) return;
+            clearInterval(activeAuction.interval);
+            
+            const finalPrice = Math.floor(activeAuction.currentBid);
+            state.balance += finalPrice;
+            state.ownedAssets = state.ownedAssets.filter(a => a !== activeAuction.id);
+            delete state.collectionOwnedTime[activeAuction.id];
+            
+            logToTerminal(`AUCTION ENDED: ${activeAuction.item.name} SOLD FOR $${finalPrice.toLocaleString()}`);
+            
+            document.getElementById('auction-modal').style.display = 'none';
+            activeAuction = null;
+            updateUI();
+            saveGame();
+        }
+
         function buyTaxiAsset(type, cost) {
             const limits = { cars: 70, busses: 50, artBusses: 40 };
             if (state.balance >= cost && state.taxiFleet[type] < limits[type]) {
@@ -1212,19 +1461,9 @@
         }
 
         function filterCollection(cat) {
-            const grid = document.getElementById('coll-grid');
-            if (!grid) return;
-            const items = ASSETS[cat] || [];
+            currentCollectionCat = cat;
             document.querySelectorAll('.coll-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
-            grid.innerHTML = items.map(i => `
-                <div class="glass-card p-4">
-                    <img src="${i.img}" class="item-img mb-4">
-                    <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
-                    <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">$${i.price.toLocaleString()}</p>
-                    <button onclick="buyAsset('${i.id}', ${i.price})" class="btn-buy" ${state.balance < i.price || state.ownedAssets.includes(i.id) ? 'disabled' : ''}>
-                        ${state.ownedAssets.includes(i.id) ? 'OWNED' : 'BUY'}
-                    </button>
-                </div>`).join('');
+            renderGrids();
         }
 
         function logToTerminal(msg) {
@@ -1243,7 +1482,7 @@
             if(target) target.classList.add('active');
             const btn = document.getElementById('btn-' + tabId);
             if(btn) btn.classList.add('active');
-            if (tabId === 'stocks' || tabId === 'profile') setTimeout(updateUI, 10);
+            if (['stocks', 'profile', 'collection', 'trading'].includes(tabId)) setTimeout(updateUI, 10);
         }
 
         setInterval(() => {
@@ -1289,6 +1528,7 @@
             if(e.key === 'Escape') {
                 closeStockModal();
                 closeResetModal();
+                // Notice we specifically don't close auction modal on ESC
             }
         });
         window.onload = () => {
