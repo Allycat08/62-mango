@@ -144,6 +144,18 @@
             align-items: center;
             justify-content: center;
         }
+
+        .favorite-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            color: #333;
+            transition: color 0.2s;
+            z-index: 10;
+        }
+        .favorite-btn.active {
+            color: #fbbf24;
+        }
     </style>
 </head>
 <body class="p-6 max-w-[1400px] mx-auto">
@@ -216,7 +228,7 @@
                         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-4">EMPIRE PROGRESS</p>
                         <div class="flex justify-between text-[10px] font-bold mb-2">
                             <span class="text-zinc-400 uppercase tracking-widest">XP TO LVL <span id="next-lvl-val">2</span></span>
-                            <span class="mono"><span id="xp-val">0</span> / <span id="xp-req">200</span></span>
+                            <span class="mono"><span id="xp-val">0</span> / <span id="xp-req">500</span></span>
                         </div>
                         <div class="progress-bg mb-10">
                             <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
@@ -372,15 +384,15 @@
         ];
 
         const STOCKS = [
-            { symbol: "AAPL", name: "Apple Inc.", price: 190.00, trend: 1.2, history: [], type: 'stock' },
-            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history: [], type: 'stock' },
-            { symbol: "NVDA", name: "Nvidia Corp", price: 850.00, trend: 5.8, history: [], type: 'stock' },
-            { symbol: "AMZN", name: "Amazon", price: 180.00, trend: 1.1, history: [], type: 'stock' },
-            { symbol: "META", name: "Meta Platforms", price: 500.00, trend: 2.3, history: [], type: 'stock' },
-            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155.00, trend: 0.8, history: [], type: 'stock' },
-            { symbol: "MSFT", name: "Microsoft", price: 420.00, trend: 1.4, history: [], type: 'stock' },
-            { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history: [], type: 'crypto' },
-            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history: [], type: 'crypto' }
+            { symbol: "AAPL", name: "Apple Inc.", price: 190.00, trend: 1.2, history: [], type: 'stock', logo: 'https://logo.clearbit.com/apple.com' },
+            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history: [], type: 'stock', logo: 'https://logo.clearbit.com/tesla.com' },
+            { symbol: "NVDA", name: "Nvidia Corp", price: 850.00, trend: 5.8, history: [], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
+            { symbol: "AMZN", name: "Amazon", price: 180.00, trend: 1.1, history: [], type: 'stock', logo: 'https://logo.clearbit.com/amazon.com' },
+            { symbol: "META", name: "Meta Platforms", price: 500.00, trend: 2.3, history: [], type: 'stock', logo: 'https://logo.clearbit.com/meta.com' },
+            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155.00, trend: 0.8, history: [], type: 'stock', logo: 'https://logo.clearbit.com/google.com' },
+            { symbol: "MSFT", name: "Microsoft", price: 420.00, trend: 1.4, history: [], type: 'stock', logo: 'https://logo.clearbit.com/microsoft.com' },
+            { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history: [], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/btc/200' },
+            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history: [], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/eth/200' }
         ];
 
         const NFTS = [
@@ -444,6 +456,7 @@
             level: 1,
             ownedAssets: [],
             shares: {},
+            favorites: [],
             currentTierId: 0,
             renting: {}, 
             renovations: {},
@@ -455,10 +468,10 @@
         let activeStock = null;
         let chartType = 'candlestick';
 
-        const saved = localStorage.getItem('vercel_empire_v11_fix');
+        const saved = localStorage.getItem('vercel_empire_v12_favs');
         if (saved) state = { ...state, ...JSON.parse(saved) };
 
-        function saveGame() { localStorage.setItem('vercel_empire_v11_fix', JSON.stringify(state)); }
+        function saveGame() { localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); }
 
         function mintMoney(e) {
             const tier = CARD_TIERS[state.currentTierId];
@@ -475,7 +488,8 @@
         }
 
         function checkLevelUp() {
-            const xpReq = 200 * Math.pow(1.05, state.level - 1);
+            // Difficulty adjusted: higher base and higher multiplier
+            const xpReq = 500 * Math.pow(1.12, state.level - 1);
             if (state.xp >= xpReq) {
                 state.xp -= xpReq;
                 state.level++;
@@ -562,7 +576,8 @@
             setUI('stat-eth', (state.shares['ETH'] || 0).toFixed(2));
             setUI('stat-mult', CARD_TIERS[state.currentTierId].mult + '.0x');
 
-            const xpReq = 200 * Math.pow(1.05, state.level - 1);
+            // Difficulty adjusted: higher base and higher multiplier
+            const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
             setUI('xp-req', Math.floor(xpReq));
             setUI('next-lvl-val', state.level + 1);
@@ -640,6 +655,15 @@
             }
         }
 
+        function toggleFavorite(symbol, event) {
+            if(event) event.stopPropagation();
+            const index = state.favorites.indexOf(symbol);
+            if(index > -1) state.favorites.splice(index, 1);
+            else state.favorites.push(symbol);
+            updateUI();
+            saveGame();
+        }
+
         function openStockModal(symbol) {
             activeStock = STOCKS.find(s => s.symbol === symbol);
             const modal = document.getElementById('stock-modal');
@@ -665,7 +689,7 @@
             const m = document.getElementById('reset-modal');
             if (m) m.style.display = 'none'; 
         }
-        function confirmReset() { localStorage.removeItem('vercel_empire_v11_fix'); window.location.reload(); }
+        function confirmReset() { localStorage.removeItem('vercel_empire_v12_favs'); window.location.reload(); }
 
         function setChartType(t) {
             chartType = t;
@@ -792,14 +816,21 @@
 
             const renderStockCard = (s) => {
                 const owned = state.shares[s.symbol] || 0;
+                const isFav = state.favorites.includes(s.symbol);
                 const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 const trendAbs = Math.abs(s.trend).toFixed(2);
                 return `
-                <div class="glass-card p-6">
-                    <div class="flex justify-between items-start mb-2">
-                        <div>
-                            <h3 class="text-xl font-black tracking-tighter">${s.symbol}</h3>
-                            <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
+                <div class="glass-card p-6 relative">
+                    <button onclick="toggleFavorite('${s.symbol}', event)" class="favorite-btn ${isFav ? 'active' : ''}">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>
+                    </button>
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <img src="${s.logo}" class="w-10 h-10 rounded bg-white p-1" onerror="this.src='https://ui-avatars.com/api/?name=${s.symbol}&background=1a1a1a&color=fff'">
+                            <div>
+                                <h3 class="text-xl font-black tracking-tighter">${s.symbol}</h3>
+                                <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
+                            </div>
                         </div>
                         <div class="text-right">
                             <p class="text-lg font-bold mono">$${priceFormatted}</p>
@@ -872,25 +903,35 @@
         function renderWatchlist() {
             const container = document.getElementById('watchlist-container');
             if(!container) return;
-            if (state.level < 4) {
-                container.innerHTML = `<div class="py-10 text-center bg-zinc-900/40 rounded-lg border border-zinc-800 border-dashed"><p class="text-[8px] text-zinc-700 font-bold uppercase tracking-widest">REACH LEVEL 4</p></div>`;
+            if (state.level < 6) {
+                container.innerHTML = `<div class="py-10 text-center bg-zinc-900/40 rounded-lg border border-zinc-800 border-dashed"><p class="text-[8px] text-zinc-700 font-bold uppercase tracking-widest">REACH LEVEL 6 FOR WATCHLIST</p></div>`;
                 return;
             }
-            container.innerHTML = STOCKS.slice(0, 5).map(s => {
-                const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                const trendFormatted = Math.abs(s.trend).toFixed(2);
-                return `
-                <div class="flex justify-between items-center bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 cursor-pointer hover:border-zinc-400" onclick="openStockModal('${s.symbol}')">
-                    <div>
-                        <p class="text-[10px] font-black">${s.symbol}</p>
-                        <p class="text-[8px] text-zinc-600 font-bold uppercase">${s.type}</p>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-[10px] mono font-bold">$${priceFormatted}</p>
-                        <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${trendFormatted}%</p>
-                    </div>
-                </div>`;
-            }).join('') + `<button onclick="showTab('stocks')" class="w-full mt-2 text-[9px] text-zinc-500 font-bold uppercase hover:text-white transition-colors">VIEW ALL MARKETS →</button>`;
+
+            const favStocks = STOCKS.filter(s => state.favorites.includes(s.symbol));
+            if(favStocks.length === 0) {
+                container.innerHTML = `<div class="py-10 text-center bg-zinc-900/40 rounded-lg border border-zinc-800 border-dashed"><p class="text-[8px] text-zinc-700 font-bold uppercase tracking-widest">NO FAVORITES SELECTED</p></div>`;
+            } else {
+                container.innerHTML = favStocks.map(s => {
+                    const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                    const trendFormatted = Math.abs(s.trend).toFixed(2);
+                    return `
+                    <div class="flex justify-between items-center bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 cursor-pointer hover:border-zinc-400" onclick="openStockModal('${s.symbol}')">
+                        <div class="flex items-center gap-2">
+                            <img src="${s.logo}" class="w-5 h-5 rounded-sm bg-white p-0.5" onerror="this.src='https://ui-avatars.com/api/?name=${s.symbol}&background=1a1a1a&color=fff'">
+                            <div>
+                                <p class="text-[10px] font-black">${s.symbol}</p>
+                                <p class="text-[8px] text-zinc-600 font-bold uppercase">${s.type}</p>
+                            </div>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] mono font-bold">$${priceFormatted}</p>
+                            <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${trendFormatted}%</p>
+                        </div>
+                    </div>`;
+                }).join('');
+            }
+            container.innerHTML += `<button onclick="showTab('stocks')" class="w-full mt-2 text-[9px] text-zinc-500 font-bold uppercase hover:text-white transition-colors">VIEW ALL MARKETS →</button>`;
         }
 
         function tradeStock(symbol, isBuy) {
