@@ -133,7 +133,7 @@
             background: #111;
         }
 
-        #stock-modal, #reset-modal {
+        #stock-modal, #reset-modal, #onboarding-modal {
             display: none;
             position: fixed;
             inset: 0;
@@ -144,6 +144,8 @@
             align-items: center;
             justify-content: center;
         }
+
+        #onboarding-modal { display: flex; }
 
         .favorite-btn {
             position: absolute;
@@ -156,6 +158,24 @@
         .favorite-btn.active {
             color: #fbbf24;
         }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider {
+            position: absolute; cursor: pointer; inset: 0;
+            background-color: #333; transition: .4s; border-radius: 20px;
+        }
+        .slider:before {
+            position: absolute; content: ""; height: 16px; width: 16px;
+            left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;
+        }
+        input:checked + .slider { background-color: var(--accent); }
+        input:checked + .slider:before { transform: translateX(20px); }
     </style>
 </head>
 <body class="p-6 max-w-[1400px] mx-auto">
@@ -192,9 +212,11 @@
         <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Market</button>
         <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
         <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
+        <button onclick="showTab('profile')" class="nav-link" id="btn-profile">Profile</button>
     </nav>
 
     <main>
+        <!-- DASHBOARD TAB -->
         <div id="dashboard" class="tab-content active">
             <div class="grid grid-cols-12 gap-6">
                 <div class="col-span-12 lg:col-span-4">
@@ -211,7 +233,7 @@
                                 <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
                             </div>
                             <div class="flex justify-between items-end relative z-10">
-                                <p class="text-[11px] text-white/30 font-medium">**** **** **** 2024</p>
+                                <p class="text-[11px] text-white/30 font-medium tracking-widest uppercase" id="card-name-display">HOLDER NAME</p>
                                 <p class="text-[11px] text-white/30 font-bold uppercase tracking-widest">DEBIT</p>
                             </div>
                         </div>
@@ -255,23 +277,26 @@
                     </div>
 
                     <div class="glass-card p-6 h-48 overflow-y-auto font-mono text-[10px] text-zinc-600 space-y-1" id="terminal">
-                        <p class="text-zinc-400">> VERCEL OS v5.0.1 INITIALIZED...</p>
-                        <p class="text-emerald-500">> SYSTEM READY. BALANCE: $0.</p>
+                        <p class="text-zinc-400">> VERCEL OS v5.5 INITIALIZED...</p>
+                        <p class="text-emerald-500">> SYSTEM READY. WELCOME BACK.</p>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- COMPANIES TAB -->
         <div id="companies" class="tab-content">
             <h2 class="text-xl font-black uppercase tracking-tight mb-8">ENTERPRISE INFRASTRUCTURE</h2>
             <div id="companies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
+        <!-- REAL ESTATE TAB -->
         <div id="real-estate" class="tab-content">
             <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL PROPERTY PORTFOLIO</h2>
             <div id="re-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
+        <!-- MARKET TAB -->
         <div id="stocks" class="tab-content">
             <section class="mb-12">
                 <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
@@ -298,6 +323,7 @@
             </section>
         </div>
 
+        <!-- COLLECTION TAB -->
         <div id="collection" class="tab-content">
             <div class="flex justify-between items-center mb-8">
                 <h2 class="text-xl font-black uppercase tracking-tight">LUXURY ASSETS</h2>
@@ -310,18 +336,79 @@
             <div id="coll-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
+        <!-- BANK TAB -->
         <div id="bank" class="tab-content relative pb-24">
             <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
             <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
-            
-            <div class="absolute bottom-0 right-0 flex items-center gap-4">
-                <p class="text-[9px] text-zinc-700 font-bold uppercase tracking-widest">DANGER ZONE</p>
-                <button onclick="openResetModal()" class="px-4 py-2 border border-red-900/30 bg-red-950/20 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded hover:bg-red-500 hover:text-white transition-all">
-                    Reset Empire
-                </button>
+        </div>
+
+        <!-- PROFILE TAB -->
+        <div id="profile" class="tab-content">
+            <div class="grid grid-cols-12 gap-8">
+                <div class="col-span-12 lg:col-span-4 space-y-6">
+                    <div class="glass-card p-8 text-center">
+                        <div class="w-24 h-24 bg-zinc-900 rounded-full mx-auto mb-6 flex items-center justify-center border border-zinc-800">
+                             <svg width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white" class="opacity-20"/>
+                            </svg>
+                        </div>
+                        <h2 class="text-3xl font-black tracking-tighter uppercase" id="profile-name">NAME</h2>
+                        <p class="text-[10px] text-emerald-500 font-bold tracking-[0.2em] mb-8" id="profile-rank">STARTUP</p>
+                        
+                        <div class="text-left space-y-4 border-t border-zinc-900 pt-8">
+                            <div>
+                                <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">TOTAL NET WORTH</p>
+                                <p class="text-2xl font-black mono" id="profile-nw">$0</p>
+                            </div>
+                            <div>
+                                <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">CASH ON HAND</p>
+                                <p class="text-lg font-bold mono text-zinc-400" id="profile-balance">$0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="glass-card p-8">
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">GLOBAL SETTINGS</p>
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <p class="text-xs font-bold uppercase">Buy/Sell All</p>
+                                <p class="text-[9px] text-zinc-600 font-medium">Trade max possible amounts</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="toggle-trade-max" onchange="toggleTradeMax()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <button onclick="openResetModal()" class="w-full mt-10 py-3 border border-red-900/30 bg-red-950/20 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded hover:bg-red-500 hover:text-white transition-all">
+                            Reset Empire Data
+                        </button>
+                    </div>
+                </div>
+
+                <div class="col-span-12 lg:col-span-8 space-y-6">
+                    <div class="glass-card p-8">
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">PORTFOLIO SUMMARY</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="profile-portfolio-list">
+                            <!-- Populated via JS -->
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
+
+    <!-- MODALS -->
+    <div id="onboarding-modal">
+        <div class="w-full max-w-md glass-card p-12 text-center">
+            <svg width="60" height="60" viewBox="0 0 76 65" fill="none" class="mx-auto mb-8">
+                <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
+            </svg>
+            <h2 class="text-3xl font-black tracking-tighter mb-2 uppercase">Welcome to Vercel</h2>
+            <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-10">Initialize your empire credentials</p>
+            <input type="text" id="name-input" placeholder="ENTER YOUR NAME" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-6 py-4 text-center font-black uppercase text-sm mb-6 focus:outline-none focus:border-white transition-colors">
+            <button onclick="finishOnboarding()" class="w-full py-4 bg-white text-black font-black text-xs uppercase tracking-widest rounded hover:bg-zinc-200 transition-colors">Begin Operation</button>
+        </div>
+    </div>
 
     <div id="stock-modal">
         <div class="w-full max-w-4xl glass-card p-8 relative">
@@ -449,6 +536,7 @@
         };
 
         let state = {
+            userName: "",
             balance: 0,
             netWorth: 0,
             revenue: 0,
@@ -462,7 +550,8 @@
             renovations: {},
             compTiers: {},
             compOutlets: {},
-            taxiFleet: { cars: 1, busses: 0, artBusses: 0 }
+            taxiFleet: { cars: 1, busses: 0, artBusses: 0 },
+            tradeMax: false
         };
 
         let activeStock = null;
@@ -472,6 +561,21 @@
         if (saved) state = { ...state, ...JSON.parse(saved) };
 
         function saveGame() { localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); }
+
+        function finishOnboarding() {
+            const input = document.getElementById('name-input').value;
+            if (input.trim().length > 0) {
+                state.userName = input.trim().toUpperCase();
+                document.getElementById('onboarding-modal').style.display = 'none';
+                saveGame();
+                updateUI();
+            }
+        }
+
+        function toggleTradeMax() {
+            state.tradeMax = document.getElementById('toggle-trade-max').checked;
+            saveGame();
+        }
 
         function mintMoney(e) {
             const tier = CARD_TIERS[state.currentTierId];
@@ -488,7 +592,6 @@
         }
 
         function checkLevelUp() {
-            // Difficulty adjusted: higher base and higher multiplier
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             if (state.xp >= xpReq) {
                 state.xp -= xpReq;
@@ -540,6 +643,10 @@
         }
 
         function updateUI() {
+            if (state.userName) {
+                document.getElementById('onboarding-modal').style.display = 'none';
+            }
+
             calculateNetWorth();
             let rev = 0;
             state.ownedAssets.forEach(id => {
@@ -568,15 +675,16 @@
             setUI('nw-display', '$' + Math.floor(state.netWorth).toLocaleString());
             setUI('hr-display', '+$' + Math.floor(state.revenue).toLocaleString() + '/hr');
             setUI('lvl-display', state.level);
+            setUI('card-name-display', state.userName || "HOLDER NAME");
             
             const rankIndex = Math.min(Math.floor(state.level / 5), RANKS.length - 1);
-            setUI('rank-display', RANKS[rankIndex]);
-            setUI('stat-rank', RANKS[rankIndex]);
+            const rankStr = RANKS[rankIndex];
+            setUI('rank-display', rankStr);
+            setUI('stat-rank', rankStr);
             setUI('stat-assets', state.ownedAssets.length);
             setUI('stat-eth', (state.shares['ETH'] || 0).toFixed(2));
             setUI('stat-mult', CARD_TIERS[state.currentTierId].mult + '.0x');
 
-            // Difficulty adjusted: higher base and higher multiplier
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
             setUI('xp-req', Math.floor(xpReq));
@@ -590,9 +698,49 @@
             if(gCard) gCard.className = `debit-card p-8 flex flex-col justify-between ${tier.class}`;
             setUI('card-tier-label', tier.name);
 
+            // Profile Tab UI
+            setUI('profile-name', state.userName);
+            setUI('profile-rank', rankStr);
+            setUI('profile-nw', '$' + Math.floor(state.netWorth).toLocaleString());
+            setUI('profile-balance', '$' + Math.floor(state.balance).toLocaleString());
+            const tradeMaxToggle = document.getElementById('toggle-trade-max');
+            if(tradeMaxToggle) tradeMaxToggle.checked = state.tradeMax;
+
             renderWatchlist();
             renderGrids();
+            renderProfilePortfolio();
             if(activeStock) updateModalContent();
+        }
+
+        function renderProfilePortfolio() {
+            const container = document.getElementById('profile-portfolio-list');
+            if(!container) return;
+
+            let stockValue = 0;
+            Object.entries(state.shares).forEach(([symbol, amount]) => {
+                const stock = STOCKS.find(s => s.symbol === symbol);
+                if (stock) stockValue += (stock.price * amount);
+            });
+
+            const assetCats = [
+                { title: 'Companies', items: state.ownedAssets.filter(id => COMPANIES.some(c => c.id === id)) },
+                { title: 'Properties', items: state.ownedAssets.filter(id => REAL_ESTATE.some(re => re.id === id)) },
+                { title: 'Collections', items: state.ownedAssets.filter(id => [...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture].some(i => i.id === id)) },
+                { title: 'Digital Assets', items: Object.keys(state.shares).filter(s => state.shares[s] > 0) }
+            ];
+
+            container.innerHTML = assetCats.map(cat => `
+                <div>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-4 tracking-widest">${cat.title} (${cat.items.length})</p>
+                    <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
+                        ${cat.items.length === 0 ? '<p class="text-[10px] text-zinc-800 font-mono italic">EMPTY SECTION</p>' : cat.items.map(id => {
+                            const found = COMPANIES.find(c => c.id === id) || REAL_ESTATE.find(r => r.id === id) || [...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture].find(i => i.id === id);
+                            if (found) return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${found.name}</span> <span class="text-[9px] mono text-zinc-600">ID: ${found.id}</span></div>`;
+                            return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${id}</span> <span class="text-[9px] mono text-zinc-600">${state.shares[id].toFixed(2)} UNITS</span></div>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
         }
 
         function drawGraph(canvasId, history, type = 'candlestick') {
@@ -915,19 +1063,29 @@
                 container.innerHTML = favStocks.map(s => {
                     const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
                     const trendFormatted = Math.abs(s.trend).toFixed(2);
+                    const owned = state.shares[s.symbol] || 0;
                     return `
-                    <div class="flex justify-between items-center bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 cursor-pointer hover:border-zinc-400" onclick="openStockModal('${s.symbol}')">
-                        <div class="flex items-center gap-2">
-                            <img src="${s.logo}" class="w-5 h-5 rounded-sm bg-white p-0.5" onerror="this.src='https://ui-avatars.com/api/?name=${s.symbol}&background=1a1a1a&color=fff'">
-                            <div>
-                                <p class="text-[10px] font-black">${s.symbol}</p>
-                                <p class="text-[8px] text-zinc-600 font-bold uppercase">${s.type}</p>
+                    <div class="bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 hover:border-zinc-400 transition-colors">
+                        <div class="flex justify-between items-center cursor-pointer mb-2" onclick="openStockModal('${s.symbol}')">
+                            <div class="flex items-center gap-2">
+                                <img src="${s.logo}" class="w-5 h-5 rounded-sm bg-white p-0.5" onerror="this.src='https://ui-avatars.com/api/?name=${s.symbol}&background=1a1a1a&color=fff'">
+                                <div>
+                                    <p class="text-[10px] font-black">${s.symbol}</p>
+                                    <p class="text-[8px] text-zinc-600 font-bold uppercase">${s.type}</p>
+                                </div>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-[10px] mono font-bold">$${priceFormatted}</p>
+                                <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${trendFormatted}%</p>
                             </div>
                         </div>
-                        <div class="text-right">
-                            <p class="text-[10px] mono font-bold">$${priceFormatted}</p>
-                            <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${trendFormatted}%</p>
-                        </div>
+                        
+                        ${state.level >= 8 ? `
+                            <div class="grid grid-cols-2 gap-2 mt-2">
+                                <button onclick="tradeStock('${s.symbol}', true)" class="text-[8px] py-1.5 border border-zinc-800 rounded font-black hover:bg-emerald-500 hover:text-white transition-colors" ${state.balance < s.price ? 'disabled' : ''}>BUY ${state.tradeMax ? 'ALL' : ''}</button>
+                                <button onclick="tradeStock('${s.symbol}', false)" class="text-[8px] py-1.5 border border-zinc-800 rounded font-black hover:bg-red-500 hover:text-white transition-colors" ${owned <= 0 ? 'disabled' : ''}>SELL ${state.tradeMax ? 'ALL' : ''}</button>
+                            </div>
+                        ` : ''}
                     </div>`;
                 }).join('');
             }
@@ -937,17 +1095,24 @@
         function tradeStock(symbol, isBuy) {
             if (state.level < 3) return;
             const stock = STOCKS.find(s => s.symbol === symbol);
+            
             if (isBuy) {
-                if (state.balance >= stock.price) {
-                    state.balance -= stock.price;
-                    state.shares[symbol] = (state.shares[symbol] || 0) + 1;
-                    logToTerminal(`PURCHASED 1 UNIT OF ${symbol} @ $${stock.price.toFixed(2)}`);
+                let amount = 1;
+                if (state.tradeMax) amount = Math.floor(state.balance / stock.price);
+                
+                if (amount > 0 && state.balance >= (stock.price * amount)) {
+                    state.balance -= (stock.price * amount);
+                    state.shares[symbol] = (state.shares[symbol] || 0) + amount;
+                    logToTerminal(`PURCHASED ${amount} ${symbol} @ $${stock.price.toFixed(2)}`);
                 }
             } else {
-                if (state.shares[symbol] >= 1) {
-                    state.balance += stock.price;
-                    state.shares[symbol] -= 1;
-                    logToTerminal(`SOLD 1 UNIT OF ${symbol} @ $${stock.price.toFixed(2)}`);
+                let amount = 1;
+                if (state.tradeMax) amount = state.shares[symbol] || 0;
+                
+                if (amount > 0 && (state.shares[symbol] || 0) >= amount) {
+                    state.balance += (stock.price * amount);
+                    state.shares[symbol] -= amount;
+                    logToTerminal(`SOLD ${amount} ${symbol} @ $${stock.price.toFixed(2)}`);
                 }
             }
             updateUI();
@@ -1078,7 +1243,7 @@
             if(target) target.classList.add('active');
             const btn = document.getElementById('btn-' + tabId);
             if(btn) btn.classList.add('active');
-            if (tabId === 'stocks') setTimeout(renderGrids, 10);
+            if (tabId === 'stocks' || tabId === 'profile') setTimeout(updateUI, 10);
         }
 
         setInterval(() => {
@@ -1127,6 +1292,11 @@
             }
         });
         window.onload = () => {
+            if (!state.userName) {
+                document.getElementById('onboarding-modal').style.display = 'flex';
+            } else {
+                document.getElementById('onboarding-modal').style.display = 'none';
+            }
             updateUI();
             filterCollection('jewelry');
         };
