@@ -195,7 +195,7 @@
             border-radius: 0;
             background-color: var(--bg);
             position: relative;
-            transform: translateZ(0);
+            transform: translateZ(0); /* Constraints fixed modals to this container */
         }
         @media (min-width: 600px) {
             .mobile-mode {
@@ -629,35 +629,35 @@
         ];
 
         const COLLEGES =[
-            { id: 'uni1', name: "Community College", tuition: 5000, acc: 80, req: 10 },
-            { id: 'uni2', name: "State College", tuition: 25000, acc: 65, req: 20 },
-            { id: 'uni3', name: "Tech Institute", tuition: 85000, acc: 50, req: 35 },
-            { id: 'uni4', name: "Global Economics", tuition: 150000, acc: 35, req: 50 },
-            { id: 'uni5', name: "Medical Institute", tuition: 300000, acc: 25, req: 65 },
-            { id: 'uni6', name: "Ivy League", tuition: 500000, acc: 15, req: 80 },
-            { id: 'uni7', name: "Sovereign Institute", tuition: 1000000, acc: 8, req: 90 },
-            { id: 'uni8', name: "Vercel University", tuition: 2500000, acc: 2, req: 100 }
+            { id: 'uni1', name: "Community College", tuition: 5000, acc: 80, req: 10, maxDeg: 1 },
+            { id: 'uni2', name: "State College", tuition: 25000, acc: 65, req: 20, maxDeg: 2 },
+            { id: 'uni3', name: "Tech Institute", tuition: 85000, acc: 50, req: 35, maxDeg: 4 },
+            { id: 'uni4', name: "Global Economics", tuition: 150000, acc: 35, req: 50, maxDeg: 6 },
+            { id: 'uni5', name: "Medical Institute", tuition: 300000, acc: 25, req: 65, maxDeg: 8 },
+            { id: 'uni6', name: "Ivy League", tuition: 500000, acc: 15, req: 80, maxDeg: 10 },
+            { id: 'uni7', name: "Sovereign Institute", tuition: 1000000, acc: 8, req: 90, maxDeg: 11 },
+            { id: 'uni8', name: "Vercel University", tuition: 2500000, acc: 2, req: 100, maxDeg: 12 }
         ];
 
         const DEGREES =[
-            { id: 'deg1', name: "Associate of Arts", mult: 1.02 },
-            { id: 'deg2', name: "Associate of Science", mult: 1.03 },
-            { id: 'deg3', name: "Bachelor of Arts", mult: 1.05 },
-            { id: 'deg4', name: "Bachelor of Science", mult: 1.06 },
-            { id: 'deg5', name: "Bachelor of Commerce", mult: 1.08 },
-            { id: 'deg6', name: "Master of Arts", mult: 1.10 },
-            { id: 'deg7', name: "Master of Science", mult: 1.12 },
-            { id: 'deg8', name: "Master of Business (MBA)", mult: 1.15 },
-            { id: 'deg9', name: "Juris Doctor (JD)", mult: 1.20 },
-            { id: 'deg10', name: "Doctor of Medicine (MD)", mult: 1.25 },
-            { id: 'deg11', name: "Doctor of Philosophy (PhD)", mult: 1.30 },
-            { id: 'deg12', name: "Vercel Laureate", mult: 1.50 }
+            { id: 'deg1', name: "Associate of Arts", mult: 1.01 },
+            { id: 'deg2', name: "Associate of Science", mult: 1.01 },
+            { id: 'deg3', name: "Bachelor of Arts", mult: 1.02 },
+            { id: 'deg4', name: "Bachelor of Science", mult: 1.02 },
+            { id: 'deg5', name: "Bachelor of Commerce", mult: 1.03 },
+            { id: 'deg6', name: "Master of Arts", mult: 1.03 },
+            { id: 'deg7', name: "Master of Science", mult: 1.04 },
+            { id: 'deg8', name: "Master of Business (MBA)", mult: 1.04 },
+            { id: 'deg9', name: "Juris Doctor (JD)", mult: 1.05 },
+            { id: 'deg10', name: "Doctor of Medicine (MD)", mult: 1.05 },
+            { id: 'deg11', name: "Doctor of Philosophy (PhD)", mult: 1.08 },
+            { id: 'deg12', name: "Vercel Laureate", mult: 1.10 }
         ];
 
         const STOCKS =[
             { symbol: "AAPL", name: "Apple Inc.", price: 170.00, trend: 1.2, history: [], type: 'stock', logo: 'https://logo.clearbit.com/apple.com' },
             { symbol: "MSFT", name: "Microsoft", price: 400.00, trend: 1.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/microsoft.com' },
-            { symbol: "NVDA", name: "Nvidia Corp", price: 850.00, trend: 5.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
+            { symbol: "NVDA", name: "Nvidia Corp", price: 130.00, trend: 5.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
             { symbol: "AMZN", name: "Amazon", price: 175.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/amazon.com' },
             { symbol: "META", name: "Meta Platforms", price: 480.00, trend: 2.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/meta.com' },
             { symbol: "GOOGL", name: "Alphabet Inc.", price: 140.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/google.com' },
@@ -670,7 +670,7 @@
             { symbol: "JNJ", name: "Johnson & Johnson", price: 155.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/jnj.com' },
             { symbol: "MA", name: "Mastercard", price: 470.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/mastercard.com' },
             { symbol: "PG", name: "Procter & Gamble", price: 160.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pg.com' },
-            { symbol: "AVGO", name: "Broadcom", price: 1300.00, trend: 2.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/broadcom.com' },
+            { symbol: "AVGO", name: "Broadcom", price: 160.00, trend: 2.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/broadcom.com' },
             { symbol: "HD", name: "Home Depot", price: 370.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/homedepot.com' },
             { symbol: "ORCL", name: "Oracle", price: 125.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/oracle.com' },
             { symbol: "CVX", name: "Chevron", price: 150.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/chevron.com' },
@@ -708,7 +708,7 @@
             { symbol: "PSX", name: "Phillips 66", price: 155.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/phillips66.com' },
             { symbol: "DOW", name: "Dow Inc.", price: 55.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/dow.com' },
             { symbol: "NUE", name: "Nucor", price: 190.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nucor.com' },
-            { symbol: "SQ", name: "Block (Square)", price: 80.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/squareup.com' },
+            { symbol: "SQ", name: "Block", price: 80.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/squareup.com' },
             { symbol: "PYPL", name: "PayPal", price: 65.00, trend: -0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/paypal.com' },
             { symbol: "SHOP", name: "Shopify", price: 75.00, trend: 2.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/shopify.com' },
             { symbol: "COIN", name: "Coinbase", price: 250.00, trend: 4.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/coinbase.com' },
@@ -729,7 +729,7 @@
             { symbol: "ABNB", name: "Airbnb", price: 160.00, trend: 1.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/airbnb.com' },
             { symbol: "LMT", name: "Lockheed Martin", price: 450.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/lockheedmartin.com' },
             { symbol: "UNP", name: "Union Pacific", price: 240.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/up.com' },
-            
+
             { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/btc/200' },
             { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/eth/200' },
             { symbol: "BNB", name: "Binance Coin", price: 580.00, trend: 0.8, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/bnb/200' },
@@ -743,7 +743,19 @@
             { symbol: "LINK", name: "Chainlink", price: 14.50, trend: 1.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/link/200' },
             { symbol: "MATIC", name: "Polygon", price: 0.75, trend: 0.6, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/matic/200' },
             { symbol: "LTC", name: "Litecoin", price: 82.00, trend: -0.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/ltc/200' },
-            { symbol: "BCH", name: "Bitcoin Cash", price: 480.00, trend: 1.9, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/bch/200' }
+            { symbol: "BCH", name: "Bitcoin Cash", price: 480.00, trend: 1.9, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/bch/200' },
+            { symbol: "UNI", name: "Uniswap", price: 10.00, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/uni/200' },
+            { symbol: "ATOM", name: "Cosmos", price: 8.50, trend: 0.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/atom/200' },
+            { symbol: "XLM", name: "Stellar", price: 0.11, trend: 0.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/xlm/200' },
+            { symbol: "ICP", name: "Internet Computer", price: 12.00, trend: -0.8, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/icp/200' },
+            { symbol: "APT", name: "Aptos", price: 14.00, trend: 2.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/apt/200' },
+            { symbol: "NEAR", name: "NEAR Protocol", price: 7.00, trend: 1.8, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/near/200' },
+            { symbol: "FIL", name: "Filecoin", price: 6.00, trend: -0.4, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/fil/200' },
+            { symbol: "INJ", name: "Injective", price: 34.00, trend: 3.6, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/inj/200' },
+            { symbol: "STX", name: "Stacks", price: 2.80, trend: 1.4, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/stx/200' },
+            { symbol: "ALGO", name: "Algorand", price: 0.22, trend: 0.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/algo/200' },
+            { symbol: "GRT", name: "The Graph", price: 0.30, trend: 0.7, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/grt/200' },
+            { symbol: "RUNE", name: "THORChain", price: 7.50, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/rune/200' }
         ];
 
         const NFTS =[
@@ -752,6 +764,41 @@
             { id: 'nft3', name: "EtherRock #12", priceEth: 450, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400", volatility: 0.5 },
             { id: 'nft4', name: "Vercel Genesis", priceEth: 25, img: "https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=400", volatility: 0.1 }
         ];
+
+        (function generateNFTs() {
+            const nftImageUrls =[
+                "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400",
+                "https://images.unsplash.com/photo-1643101809754-43a91784611a?w=400",
+                "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400",
+                "https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=400",
+                "https://images.unsplash.com/photo-1645516484419-35a747c99474?w=400",
+                "https://images.unsplash.com/photo-1618172193622-ae2d025f4032?w=400"
+            ];
+            const cols =[
+                { name: "Mutant Ape", base: 10, vol: 0.2 },
+                { name: "Doodle", base: 4, vol: 0.3 },
+                { name: "Azuki", base: 6, vol: 0.25 },
+                { name: "Pudgy Penguin", base: 8, vol: 0.15 },
+                { name: "CloneX", base: 3, vol: 0.4 },
+                { name: "Meebit", base: 2, vol: 0.1 },
+                { name: "Cool Cat", base: 1.5, vol: 0.2 },
+                { name: "Moonbird", base: 2.5, vol: 0.35 }
+            ];
+            let idCounter = 5;
+            cols.forEach(col => {
+                for(let i=0; i<35; i++) {
+                    const num = Math.floor(Math.random() * 9000) + 1000;
+                    const price = col.base + (Math.random() * col.base * 0.5);
+                    NFTS.push({
+                        id: 'nft' + (idCounter++),
+                        name: `${col.name} #${num}`,
+                        priceEth: parseFloat(price.toFixed(2)),
+                        img: nftImageUrls[Math.floor(Math.random() * nftImageUrls.length)],
+                        volatility: col.vol + (Math.random() * 0.1)
+                    });
+                }
+            });
+        })();
 
         STOCKS.forEach(s => {
             let last = s.price;
@@ -931,17 +978,14 @@
                 if (res.ok) {
                     const data = await res.json();
                     const realTime = new Date(data.utc_datetime).getTime();
-                    // If local time is more than 30 mins ahead of real UTC time, we detect a clock forward.
                     if (currentTime - realTime > 1800000) {
                         isCheating = true;
                     }
                 }
-            } catch (e) {
-                // If API fails, fall back to assuming innocence and calculate offline time via local clock
-            }
+            } catch (e) {}
 
             if (isCheating) {
-                state.balance *= 0.01; // 99% reduction
+                state.balance *= 0.01;
                 logToTerminal("TEMPORAL ANOMALY DETECTED. 99% WEALTH CONFISCATED.");
             } else {
                 const elapsed = currentTime - state.lastSaveTime;
@@ -1800,6 +1844,7 @@
                             const assetsCount = state.ownedAssets.length;
                             const acc = Math.min(100, c.acc + (assetsCount * 2));
                             const tuition = Math.max(0, c.tuition - Math.floor(assetsCount * (c.tuition * 0.02)));
+                            const isLockedByDegree = ownedDegrees >= c.maxDeg;
 
                             return `
                             <div class="glass-card p-6 flex flex-col justify-between">
@@ -1815,7 +1860,10 @@
                                     </div>
                                     <p class="text-[12px] font-mono text-white mb-6">Tuition: $${tuition.toLocaleString()}</p>
                                 </div>
-                                <button onclick="applyCollege('${c.id}', ${tuition}, ${acc})" class="btn-buy" ${state.balance < tuition ? 'disabled' : ''}>APPLY & PAY</button>
+                                ${isLockedByDegree ? 
+                                    `<button class="btn-buy bg-zinc-900 text-zinc-500 opacity-50 cursor-not-allowed" disabled>MAX DEGREES</button>` : 
+                                    `<button onclick="applyCollege('${c.id}', ${tuition}, ${acc})" class="btn-buy" ${state.balance < tuition ? 'disabled' : ''}>APPLY & PAY</button>`
+                                }
                             </div>
                             `;
                         }).join('')}
@@ -1825,16 +1873,18 @@
         }
 
         function applyCollege(id, tuition, acc) {
-            if (state.education.degrees.length >= DEGREES.length) return;
+            const college = COLLEGES.find(c => c.id === id);
+            if (!college || state.education.degrees.length >= college.maxDeg) return;
+
             if (state.balance >= tuition) {
                 state.balance -= tuition;
                 const roll = Math.random() * 100;
                 if (roll <= acc) {
                     state.education.enrolledCollegeId = id;
                     state.education.classesTaken = 0;
-                    logToTerminal(`ACCEPTED into ${COLLEGES.find(c=>c.id===id).name}!`);
+                    logToTerminal(`ACCEPTED into ${college.name}!`);
                 } else {
-                    logToTerminal(`REJECTED from ${COLLEGES.find(c=>c.id===id).name}. Tuition lost.`);
+                    logToTerminal(`REJECTED from ${college.name}. Tuition lost.`);
                 }
                 updateUI();
                 saveGame();
