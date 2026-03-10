@@ -809,8 +809,7 @@
 
         function mintMoney(e) {
             const now = Date.now();
-            if (now - (state.lastMintTime || 0) < 60000) {
-                logToTerminal(`CARD SYSTEM: COOLING DOWN.`);
+            if (now - (state.lastMintTime || 0) < 60) {
                 return;
             }
 
@@ -989,9 +988,9 @@
             if (cdEl) {
                 const now = Date.now();
                 const elapsed = now - (state.lastMintTime || 0);
-                if (elapsed < 60000) {
-                    const left = Math.ceil((60000 - elapsed) / 1000);
-                    cdEl.innerText = `${left}S`;
+                if (elapsed < 60) {
+                    const left = 60 - elapsed;
+                    cdEl.innerText = `${left}MS`;
                     cdEl.style.color = '#ef4444';
                     if(gCard) gCard.style.cursor = 'not-allowed';
                 } else {
