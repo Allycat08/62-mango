@@ -1,3 +1,7 @@
+
+
+
+```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -291,7 +295,10 @@
                                 <svg width="50" viewBox="0 0 76 65" fill="white" class="opacity-50"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z"/></svg>
                             </div>
                             <div class="relative z-10">
-                                <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest mb-1">CURRENT BALANCE</p>
+                                <div class="flex justify-between items-center mb-1">
+                                    <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">CURRENT BALANCE</p>
+                                    <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
+                                </div>
                                 <h2 class="text-4xl font-black mb-1 tracking-tighter" id="balance-display">$0</h2>
                                 <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
                             </div>
@@ -756,7 +763,8 @@
             tradeMax: false,
             collectionOwnedTime: {},
             isCheater: false,
-            isMobile: false
+            isMobile: false,
+            lastMintTime: 0
         };
 
         let activeStock = null;
@@ -768,6 +776,7 @@
         const saved = localStorage.getItem('vercel_empire_v12_favs');
         if (saved) state = { ...state, ...JSON.parse(saved) };
         if (!state.compCustomUpgrades) state.compCustomUpgrades = {};
+        if (!state.lastMintTime) state.lastMintTime = 0;
 
         function saveGame() { localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); }
 
@@ -803,17 +812,27 @@
         }
 
         function mintMoney(e) {
+            const now = Date.now();
+            if (now - (state.lastMintTime || 0) < 60000) {
+                logToTerminal(`CARD SYSTEM: COOLING DOWN.`);
+                return;
+            }
+
             const tier = CARD_TIERS[state.currentTierId];
             const amount = 5 * tier.mult * state.level;
             state.balance += amount;
             const clickXp = 3 + (state.level * 0.2); 
             state.xp += Math.min(clickXp, 15);
+            state.lastMintTime = now;
+
             checkLevelUp();
             updateUI();
             saveGame();
             const card = document.getElementById('game-card');
-            card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
-            setTimeout(() => { card.style.transform = ''; }, 100);
+            if (card) {
+                card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
+                setTimeout(() => { card.style.transform = ''; }, 100);
+            }
         }
 
         function checkLevelUp() {
@@ -969,6 +988,22 @@
             const gCard = document.getElementById('game-card');
             if(gCard) gCard.className = `debit-card p-8 flex flex-col justify-between ${tier.class}`;
             setUI('card-tier-label', tier.name);
+
+            const cdEl = document.getElementById('mint-cooldown');
+            if (cdEl) {
+                const now = Date.now();
+                const elapsed = now - (state.lastMintTime || 0);
+                if (elapsed < 60000) {
+                    const left = Math.ceil((60000 - elapsed) / 1000);
+                    cdEl.innerText = `${left}S`;
+                    cdEl.style.color = '#ef4444';
+                    if(gCard) gCard.style.cursor = 'not-allowed';
+                } else {
+                    cdEl.innerText = `READY`;
+                    cdEl.style.color = '#10b981';
+                    if(gCard) gCard.style.cursor = 'pointer';
+                }
+            }
 
             setUI('profile-name', state.userName);
             setUI('profile-rank', rankStr);
