@@ -447,11 +447,8 @@
 
         <!-- ACADEMICS TAB -->
         <div id="academics" class="tab-content">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight">GLOBAL ACADEMICS</h2>
-                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">EARN DEGREES TO MULTIPLY YOUR INCOME</p>
-                </div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4" id="academics-header">
+                <!-- Injected via JS -->
             </div>
             <div id="edu-content"></div>
         </div>
@@ -633,21 +630,13 @@
 
         const COLLEGES =[
             { id: 'uni1', name: "Community College", tuition: 5000, acc: 80, req: 10 },
-            { id: 'uni2', name: "City University", tuition: 15000, acc: 70, req: 15 },
-            { id: 'uni3', name: "State College", tuition: 25000, acc: 65, req: 20 },
-            { id: 'uni4', name: "National University", tuition: 40000, acc: 60, req: 25 },
-            { id: 'uni5', name: "Tech Institute", tuition: 60000, acc: 50, req: 30 },
-            { id: 'uni6', name: "Business Academy", tuition: 85000, acc: 45, req: 35 },
-            { id: 'uni7', name: "Global School of Economics", tuition: 120000, acc: 40, req: 40 },
-            { id: 'uni8', name: "Liberal Arts College", tuition: 150000, acc: 35, req: 45 },
-            { id: 'uni9', name: "Polytechnic Uni", tuition: 200000, acc: 30, req: 50 },
-            { id: 'uni10', name: "Medical Institute", tuition: 250000, acc: 25, req: 55 },
-            { id: 'uni11', name: "Law Academy", tuition: 300000, acc: 20, req: 60 },
-            { id: 'uni12', name: "Ivy League - East", tuition: 400000, acc: 15, req: 65 },
-            { id: 'uni13', name: "Ivy League - West", tuition: 500000, acc: 10, req: 70 },
-            { id: 'uni14', name: "Royal Academy", tuition: 750000, acc: 8, req: 75 },
-            { id: 'uni15', name: "Sovereign Institute", tuition: 1000000, acc: 5, req: 80 },
-            { id: 'uni16', name: "Vercel University", tuition: 2500000, acc: 2, req: 100 }
+            { id: 'uni2', name: "State College", tuition: 25000, acc: 65, req: 20 },
+            { id: 'uni3', name: "Tech Institute", tuition: 85000, acc: 50, req: 35 },
+            { id: 'uni4', name: "Global Economics", tuition: 150000, acc: 35, req: 50 },
+            { id: 'uni5', name: "Medical Institute", tuition: 300000, acc: 25, req: 65 },
+            { id: 'uni6', name: "Ivy League", tuition: 500000, acc: 15, req: 80 },
+            { id: 'uni7', name: "Sovereign Institute", tuition: 1000000, acc: 8, req: 90 },
+            { id: 'uni8', name: "Vercel University", tuition: 2500000, acc: 2, req: 100 }
         ];
 
         const DEGREES =[
@@ -666,15 +655,95 @@
         ];
 
         const STOCKS =[
-            { symbol: "AAPL", name: "Apple Inc.", price: 190.00, trend: 1.2, history: [], type: 'stock', logo: 'https://logo.clearbit.com/apple.com' },
-            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/tesla.com' },
+            { symbol: "AAPL", name: "Apple Inc.", price: 170.00, trend: 1.2, history: [], type: 'stock', logo: 'https://logo.clearbit.com/apple.com' },
+            { symbol: "MSFT", name: "Microsoft", price: 400.00, trend: 1.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/microsoft.com' },
             { symbol: "NVDA", name: "Nvidia Corp", price: 850.00, trend: 5.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
-            { symbol: "AMZN", name: "Amazon", price: 180.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/amazon.com' },
-            { symbol: "META", name: "Meta Platforms", price: 500.00, trend: 2.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/meta.com' },
-            { symbol: "GOOGL", name: "Alphabet Inc.", price: 155.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/google.com' },
-            { symbol: "MSFT", name: "Microsoft", price: 420.00, trend: 1.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/microsoft.com' },
+            { symbol: "AMZN", name: "Amazon", price: 175.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/amazon.com' },
+            { symbol: "META", name: "Meta Platforms", price: 480.00, trend: 2.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/meta.com' },
+            { symbol: "GOOGL", name: "Alphabet Inc.", price: 140.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/google.com' },
+            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/tesla.com' },
+            { symbol: "BRK.B", name: "Berkshire Hathaway", price: 405.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/berkshirehathaway.com' },
+            { symbol: "LLY", name: "Eli Lilly", price: 750.00, trend: 3.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/lilly.com' },
+            { symbol: "V", name: "Visa", price: 280.00, trend: 0.9, history:[], type: 'stock', logo: 'https://logo.clearbit.com/visa.com' },
+            { symbol: "JPM", name: "JPMorgan Chase", price: 190.00, trend: 1.0, history:[], type: 'stock', logo: 'https://logo.clearbit.com/jpmorganchase.com' },
+            { symbol: "WMT", name: "Walmart", price: 60.00, trend: 0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/walmart.com' },
+            { symbol: "JNJ", name: "Johnson & Johnson", price: 155.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/jnj.com' },
+            { symbol: "MA", name: "Mastercard", price: 470.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/mastercard.com' },
+            { symbol: "PG", name: "Procter & Gamble", price: 160.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pg.com' },
+            { symbol: "AVGO", name: "Broadcom", price: 1300.00, trend: 2.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/broadcom.com' },
+            { symbol: "HD", name: "Home Depot", price: 370.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/homedepot.com' },
+            { symbol: "ORCL", name: "Oracle", price: 125.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/oracle.com' },
+            { symbol: "CVX", name: "Chevron", price: 150.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/chevron.com' },
+            { symbol: "MRK", name: "Merck", price: 125.00, trend: 0.7, history:[], type: 'stock', logo: 'https://logo.clearbit.com/merck.com' },
+            { symbol: "KO", name: "Coca-Cola", price: 60.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/coca-colacompany.com' },
+            { symbol: "PEP", name: "PepsiCo", price: 170.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pepsico.com' },
+            { symbol: "BAC", name: "Bank of America", price: 35.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/bankofamerica.com' },
+            { symbol: "COST", name: "Costco", price: 730.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/costco.com' },
+            { symbol: "MCD", name: "McDonald's", price: 280.00, trend: 0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/mcdonalds.com' },
+            { symbol: "CRM", name: "Salesforce", price: 300.00, trend: 1.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/salesforce.com' },
+            { symbol: "AMD", name: "AMD", price: 180.00, trend: 3.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/amd.com' },
+            { symbol: "NFLX", name: "Netflix", price: 600.00, trend: 2.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/netflix.com' },
+            { symbol: "ADBE", name: "Adobe", price: 500.00, trend: 1.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/adobe.com' },
+            { symbol: "INTC", name: "Intel", price: 40.00, trend: -0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/intel.com' },
+            { symbol: "TXN", name: "Texas Instruments", price: 170.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/ti.com' },
+            { symbol: "QCOM", name: "Qualcomm", price: 165.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/qualcomm.com' },
+            { symbol: "AMAT", name: "Applied Materials", price: 200.00, trend: 1.9, history:[], type: 'stock', logo: 'https://logo.clearbit.com/appliedmaterials.com' },
+            { symbol: "INTU", name: "Intuit", price: 650.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/intuit.com' },
+            { symbol: "IBM", name: "IBM", price: 190.00, trend: 0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/ibm.com' },
+            { symbol: "BA", name: "Boeing", price: 180.00, trend: -1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/boeing.com' },
+            { symbol: "GE", name: "General Electric", price: 160.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/ge.com' },
+            { symbol: "MMM", name: "3M", price: 100.00, trend: -0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/3m.com' },
+            { symbol: "CAT", name: "Caterpillar", price: 340.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/caterpillar.com' },
+            { symbol: "DIS", name: "Walt Disney", price: 110.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/thewaltdisneycompany.com' },
+            { symbol: "C", name: "Citigroup", price: 60.00, trend: 0.7, history:[], type: 'stock', logo: 'https://logo.clearbit.com/citigroup.com' },
+            { symbol: "XOM", name: "ExxonMobil", price: 115.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/exxonmobil.com' },
+            { symbol: "BP", name: "BP", price: 35.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/bp.com' },
+            { symbol: "COP", name: "ConocoPhillips", price: 120.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/conocophillips.com' },
+            { symbol: "SLB", name: "Schlumberger", price: 50.00, trend: 0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/slb.com' },
+            { symbol: "EOG", name: "EOG Resources", price: 130.00, trend: 0.7, history:[], type: 'stock', logo: 'https://logo.clearbit.com/eogresources.com' },
+            { symbol: "MPC", name: "Marathon Petroleum", price: 190.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/marathonpetroleum.com' },
+            { symbol: "PXD", name: "Pioneer Natural", price: 260.00, trend: 0.9, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pxd.com' },
+            { symbol: "OXY", name: "Occidental", price: 65.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/oxy.com' },
+            { symbol: "VLO", name: "Valero Energy", price: 160.00, trend: 1.0, history:[], type: 'stock', logo: 'https://logo.clearbit.com/valero.com' },
+            { symbol: "PSX", name: "Phillips 66", price: 155.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/phillips66.com' },
+            { symbol: "DOW", name: "Dow Inc.", price: 55.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/dow.com' },
+            { symbol: "NUE", name: "Nucor", price: 190.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nucor.com' },
+            { symbol: "SQ", name: "Block (Square)", price: 80.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/squareup.com' },
+            { symbol: "PYPL", name: "PayPal", price: 65.00, trend: -0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/paypal.com' },
+            { symbol: "SHOP", name: "Shopify", price: 75.00, trend: 2.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/shopify.com' },
+            { symbol: "COIN", name: "Coinbase", price: 250.00, trend: 4.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/coinbase.com' },
+            { symbol: "HOOD", name: "Robinhood", price: 18.00, trend: 1.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/robinhood.com' },
+            { symbol: "PLTR", name: "Palantir", price: 25.00, trend: 3.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/palantir.com' },
+            { symbol: "RBLX", name: "Roblox", price: 40.00, trend: 1.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/roblox.com' },
+            { symbol: "ROKU", name: "Roku", price: 60.00, trend: -0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/roku.com' },
+            { symbol: "SNAP", name: "Snap", price: 12.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/snap.com' },
+            { symbol: "PINS", name: "Pinterest", price: 35.00, trend: 0.9, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pinterest.com' },
+            { symbol: "ZM", name: "Zoom", price: 60.00, trend: -0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/zoom.us' },
+            { symbol: "SPOT", name: "Spotify", price: 290.00, trend: 1.7, history:[], type: 'stock', logo: 'https://logo.clearbit.com/spotify.com' },
+            { symbol: "DOCU", name: "DocuSign", price: 50.00, trend: 0.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/docusign.com' },
+            { symbol: "TWLO", name: "Twilio", price: 60.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/twilio.com' },
+            { symbol: "SNOW", name: "Snowflake", price: 160.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/snowflake.com' },
+            { symbol: "DASH", name: "DoorDash", price: 130.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/doordash.com' },
+            { symbol: "ETSY", name: "Etsy", price: 70.00, trend: -0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/etsy.com' },
+            { symbol: "UBER", name: "Uber", price: 75.00, trend: 1.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/uber.com' },
+            { symbol: "ABNB", name: "Airbnb", price: 160.00, trend: 1.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/airbnb.com' },
+            { symbol: "LMT", name: "Lockheed Martin", price: 450.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/lockheedmartin.com' },
+            { symbol: "UNP", name: "Union Pacific", price: 240.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/up.com' },
+            
             { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/btc/200' },
-            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/eth/200' }
+            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/eth/200' },
+            { symbol: "BNB", name: "Binance Coin", price: 580.00, trend: 0.8, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/bnb/200' },
+            { symbol: "SOL", name: "Solana", price: 145.00, trend: 2.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/sol/200' },
+            { symbol: "XRP", name: "XRP", price: 0.62, trend: 0.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/xrp/200' },
+            { symbol: "ADA", name: "Cardano", price: 0.45, trend: -0.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/ada/200' },
+            { symbol: "AVAX", name: "Avalanche", price: 35.00, trend: 1.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/avax/200' },
+            { symbol: "DOGE", name: "Dogecoin", price: 0.16, trend: 3.0, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/doge/200' },
+            { symbol: "DOT", name: "Polkadot", price: 7.20, trend: 0.4, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/dot/200' },
+            { symbol: "TRX", name: "TRON", price: 0.12, trend: 0.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/trx/200' },
+            { symbol: "LINK", name: "Chainlink", price: 14.50, trend: 1.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/link/200' },
+            { symbol: "MATIC", name: "Polygon", price: 0.75, trend: 0.6, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/matic/200' },
+            { symbol: "LTC", name: "Litecoin", price: 82.00, trend: -0.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/ltc/200' },
+            { symbol: "BCH", name: "Bitcoin Cash", price: 480.00, trend: 1.9, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/bch/200' }
         ];
 
         const NFTS =[
@@ -702,7 +771,7 @@
             { id: 'c1', name: "Corner Shop", price: 2500, rev: 80, bill: 15, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
             { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, bill: 50, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400", customFleet: true },
             { id: 'c3', name: "E-Com Brand", price: 35000, rev: 1200, bill: 300, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400" },
-            { id: 'c4', name: "Ad Agency", price: 15000, rev: 5500, bill: 1200, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
+            { id: 'c4', name: "Ad Agency", price: 150000, rev: 5500, bill: 1200, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
             { id: 'c5', name: "SaaS Enterprise", price: 750000, rev: 28000, bill: 8000, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
             { id: 'c6', name: "Logistics Hub", price: 2500000, rev: 95000, bill: 30000, img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400" },
             { id: 'c7', name: "Coffee Stand", price: 1500, rev: 50, bill: 5, img: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400", customUpgrades:[ { id: 'machine', name: 'Espresso Maker', price: 600, rev: 25, bill: 5, max: 3 }, { id: 'beans', name: 'Premium Beans', price: 400, rev: 15, bill: 2, max: 5 } ] },
@@ -1167,7 +1236,7 @@
                         ${cat.items.length === 0 ? '<p class="text-[10px] text-zinc-800 font-mono italic">EMPTY SECTION</p>' : cat.items.map(id => {
                             const found = COMPANIES.find(c => c.id === id) || REAL_ESTATE.find(r => r.id === id) ||[...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture].find(i => i.id === id);
                             if (found) return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${found.name}</span> <span class="text-[9px] mono text-zinc-600">ID: ${found.id}</span></div>`;
-                            return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${id}</span> <span class="text-[9px] mono text-zinc-600">${state.shares[id].toFixed(2)} UNITS</span></div>`;
+                            return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${id}</span> <span class="text-[9px] mono text-zinc-600">${state.shares[id].toFixed(3)} UNITS</span></div>`;
                         }).join('')}
                     </div>
                 </div>
@@ -1278,7 +1347,7 @@
         function updateModalContent() {
             if(!activeStock) return;
             setUI('modal-price', '$' + activeStock.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-            setUI('modal-owned', (state.shares[activeStock.symbol] || 0).toFixed(2));
+            setUI('modal-owned', (state.shares[activeStock.symbol] || 0).toFixed(3));
             const high = Math.max(...activeStock.history.map(h => h.high));
             const low = Math.min(...activeStock.history.map(h => h.low));
             setUI('modal-high', '$' + high.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
@@ -1513,7 +1582,7 @@
                 const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 const trendAbs = Math.abs(s.trend).toFixed(2);
                 return `
-                <div class="glass-card p-6 relative">
+                <div class="glass-card p-6 relative flex flex-col">
                     <button onclick="toggleFavorite('${s.symbol}', event)" class="favorite-btn ${isFav ? 'active' : ''}">
                         <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>
                     </button>
@@ -1533,14 +1602,19 @@
                     <div class="chart-container" onclick="openStockModal('${s.symbol}')">
                         <canvas id="chart-${s.symbol}" class="w-full h-full"></canvas>
                     </div>
-                    <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900">
+                    <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900 mt-auto">
                         <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
-                        <p class="text-sm font-bold mono">${owned.toFixed(2)} UNITS</p>
+                        <p class="text-sm font-bold mono">${owned.toFixed(3)} UNITS</p>
                     </div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price ? 'disabled' : ''}>BUY</button>
-                        <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''}>SELL</button>
-                    </div>
+                    ${state.level >= 3 ? `
+                        <div class="mb-2">
+                            <input type="number" id="trade-amt-${s.symbol}" step="0.001" min="0.001" value="1.000" class="w-full bg-zinc-900 border border-zinc-800 text-white rounded p-1.5 text-xs mono text-center focus:border-emerald-500 focus:outline-none transition-colors" placeholder="AMOUNT">
+                        </div>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price * 0.001 ? 'disabled' : ''}>BUY</button>
+                            <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''}>SELL</button>
+                        </div>
+                    ` : ''}
                 </div>`;
             };
 
@@ -1641,10 +1715,43 @@
 
         function renderEducation() {
             const container = document.getElementById('edu-content');
-            if (!container) return;
+            const header = document.getElementById('academics-header');
+            if (!container || !header) return;
+
+            const totalDegrees = DEGREES.length;
+            const ownedDegrees = state.education.degrees.length;
+            const isMaxed = ownedDegrees >= totalDegrees;
+
+            header.innerHTML = `
+                <div>
+                    <h2 class="text-xl font-black uppercase tracking-tight">GLOBAL ACADEMICS</h2>
+                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">EARN DEGREES TO MULTIPLY YOUR INCOME</p>
+                </div>
+                <div class="text-right">
+                    <p class="text-[10px] font-bold uppercase tracking-widest ${isMaxed ? 'text-emerald-500' : 'text-amber-500'}">DEGREES: ${ownedDegrees} / ${totalDegrees}</p>
+                </div>
+            `;
 
             if (state.level < 7) {
                 container.innerHTML = `<div class="py-20 text-center glass-card border-dashed border-zinc-800"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">ACADEMICS UNLOCK AT LEVEL 7</p></div>`;
+                return;
+            }
+
+            if (isMaxed && !state.education.enrolledCollegeId) {
+                container.innerHTML = `
+                    <div class="py-20 text-center glass-card border-emerald-900/50 mb-8">
+                        <p class="text-emerald-500 font-black uppercase text-xl tracking-tight mb-2">MAXIMUM DEGREES REACHED</p>
+                        <p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">YOU HAVE CONQUERED THE ACADEMIC WORLD</p>
+                    </div>
+                    <div id="edu-degrees-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                        ${DEGREES.map(d => `
+                            <div class="glass-card p-4 border border-emerald-500/50">
+                                <h4 class="text-[11px] font-black uppercase mb-1">${d.name}</h4>
+                                <p class="text-[9px] text-emerald-500 font-bold mb-0 mono">${d.mult}x MULTIPLIER</p>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
                 return;
             }
 
@@ -1718,6 +1825,7 @@
         }
 
         function applyCollege(id, tuition, acc) {
+            if (state.education.degrees.length >= DEGREES.length) return;
             if (state.balance >= tuition) {
                 state.balance -= tuition;
                 const roll = Math.random() * 100;
@@ -1741,6 +1849,7 @@
         }
 
         function graduate(degreeId) {
+            if (state.education.degrees.includes(degreeId)) return;
             state.education.degrees.push(degreeId);
             state.education.enrolledCollegeId = null;
             state.education.classesTaken = 0;
@@ -1797,23 +1906,33 @@
             if (state.level < 3) return;
             const stock = STOCKS.find(s => s.symbol === symbol);
             
+            let inputEl = document.getElementById(`trade-amt-${symbol}`);
+            let inputAmt = inputEl ? parseFloat(inputEl.value) : 1;
+            if (isNaN(inputAmt) || inputAmt <= 0) inputAmt = 1;
+
             if (isBuy) {
-                let amount = 1;
-                if (state.tradeMax) amount = Math.floor(state.balance / stock.price);
+                let amount = inputAmt;
+                if (state.tradeMax) amount = Math.floor((state.balance / stock.price) * 1000) / 1000;
                 
                 if (amount > 0 && state.balance >= (stock.price * amount)) {
                     state.balance -= (stock.price * amount);
                     state.shares[symbol] = (state.shares[symbol] || 0) + amount;
-                    logToTerminal(`PURCHASED ${amount} ${symbol} @ $${stock.price.toFixed(2)}`);
+                    logToTerminal(`PURCHASED ${amount.toFixed(3)} ${symbol} @ $${stock.price.toFixed(2)}`);
                 }
             } else {
-                let amount = 1;
+                let amount = inputAmt;
                 if (state.tradeMax) amount = state.shares[symbol] || 0;
+                
+                if (amount > (state.shares[symbol] || 0)) amount = state.shares[symbol] || 0;
                 
                 if (amount > 0 && (state.shares[symbol] || 0) >= amount) {
                     state.balance += (stock.price * amount);
                     state.shares[symbol] -= amount;
-                    logToTerminal(`SOLD ${amount} ${symbol} @ $${stock.price.toFixed(2)}`);
+                    if(state.shares[symbol] < 0.001) { 
+                        state.balance += (stock.price * state.shares[symbol]);
+                        state.shares[symbol] = 0;
+                    }
+                    logToTerminal(`SOLD ${amount.toFixed(3)} ${symbol} @ $${stock.price.toFixed(2)}`);
                 }
             }
             updateUI();
