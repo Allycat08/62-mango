@@ -81,10 +81,14 @@
 
         .tier-0 { background: linear-gradient(135deg, #1c1c1c, #0a0a0a); }
         .tier-1 { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
-        .tier-2 { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
-        .tier-3 { background: linear-gradient(135deg, #db2777, #831843); }
-        .tier-4 { background: linear-gradient(135deg, #10b981, #064e3b); }
-        .tier-5 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; }
+        .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; } /* PLATINUM */
+        .tier-3 { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
+        .tier-4 { background: linear-gradient(135deg, #64748b, #334155); } /* TITANIUM */
+        .tier-5 { background: linear-gradient(135deg, #db2777, #831843); }
+        .tier-6 { background: linear-gradient(135deg, #18181b, #0f172a); } /* OBSIDIAN */
+        .tier-7 { background: linear-gradient(135deg, #10b981, #064e3b); }
+        .tier-8 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; } /* GOLD */
+        .tier-9 { background: linear-gradient(135deg, #000000, #111111); border: 1px solid #ffffff; } /* BLACK */
 
         .progress-bg { background: #1a1a1a; height: 4px; border-radius: 2px; }
         .progress-fill { background: #ffffff; height: 100%; border-radius: 2px; transition: width 0.3s; }
@@ -191,7 +195,7 @@
             border-radius: 0;
             background-color: var(--bg);
             position: relative;
-            transform: translateZ(0); /* Constraints fixed modals to this container */
+            transform: translateZ(0);
         }
         @media (min-width: 600px) {
             .mobile-mode {
@@ -223,7 +227,9 @@
         .mobile-mode #coll-grid,
         .mobile-mode #trading-grid,
         .mobile-mode #bank-grid,
-        .mobile-mode #profile-portfolio-list {
+        .mobile-mode #profile-portfolio-list,
+        .mobile-mode #edu-colleges-grid,
+        .mobile-mode #edu-degrees-grid {
             grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
         }
         
@@ -275,6 +281,7 @@
         <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
         <button onclick="showTab('trading')" class="nav-link" id="btn-trading">Trading</button>
         <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
+        <button onclick="showTab('academics')" class="nav-link" id="btn-academics">Academics</button>
         <button onclick="showTab('profile')" class="nav-link" id="btn-profile">Profile</button>
     </nav>
 
@@ -436,6 +443,17 @@
         <div id="bank" class="tab-content relative pb-24">
             <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
             <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
+        </div>
+
+        <!-- ACADEMICS TAB -->
+        <div id="academics" class="tab-content">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+                <div>
+                    <h2 class="text-xl font-black uppercase tracking-tight">GLOBAL ACADEMICS</h2>
+                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">EARN DEGREES TO MULTIPLY YOUR INCOME</p>
+                </div>
+            </div>
+            <div id="edu-content"></div>
         </div>
 
         <!-- PROFILE TAB -->
@@ -603,10 +621,48 @@
         const CARD_TIERS =[
             { id: 0, name: "DEFAULT CARD", price: 0, mult: 1, class: "tier-0" },
             { id: 1, name: "SAPPHIRE PREMIER", price: 50000, mult: 2, class: "tier-1" },
-            { id: 2, name: "ULTRA VIOLET", price: 250000, mult: 5, class: "tier-2" },
-            { id: 3, name: "ROSÉ EXECUTIVE", price: 1000000, mult: 10, class: "tier-3" },
-            { id: 4, name: "EMERALD PRIVATE", price: 5000000, mult: 25, class: "tier-4" },
-            { id: 5, name: "CENTURION GOLD", price: 25000000, mult: 100, class: "tier-5" }
+            { id: 2, name: "PLATINUM RESERVE", price: 100000, mult: 3, class: "tier-2" },
+            { id: 3, name: "ULTRA VIOLET", price: 250000, mult: 5, class: "tier-3" },
+            { id: 4, name: "TITANIUM ELITE", price: 500000, mult: 7, class: "tier-4" },
+            { id: 5, name: "ROSÉ EXECUTIVE", price: 1000000, mult: 10, class: "tier-5" },
+            { id: 6, name: "OBSIDIAN INFINITE", price: 2500000, mult: 15, class: "tier-6" },
+            { id: 7, name: "EMERALD PRIVATE", price: 5000000, mult: 25, class: "tier-7" },
+            { id: 8, name: "CENTURION GOLD", price: 25000000, mult: 100, class: "tier-8" },
+            { id: 9, name: "VERCEL BLACK", price: 100000000, mult: 250, class: "tier-9" }
+        ];
+
+        const COLLEGES =[
+            { id: 'uni1', name: "Community College", tuition: 5000, acc: 80, req: 10 },
+            { id: 'uni2', name: "City University", tuition: 15000, acc: 70, req: 15 },
+            { id: 'uni3', name: "State College", tuition: 25000, acc: 65, req: 20 },
+            { id: 'uni4', name: "National University", tuition: 40000, acc: 60, req: 25 },
+            { id: 'uni5', name: "Tech Institute", tuition: 60000, acc: 50, req: 30 },
+            { id: 'uni6', name: "Business Academy", tuition: 85000, acc: 45, req: 35 },
+            { id: 'uni7', name: "Global School of Economics", tuition: 120000, acc: 40, req: 40 },
+            { id: 'uni8', name: "Liberal Arts College", tuition: 150000, acc: 35, req: 45 },
+            { id: 'uni9', name: "Polytechnic Uni", tuition: 200000, acc: 30, req: 50 },
+            { id: 'uni10', name: "Medical Institute", tuition: 250000, acc: 25, req: 55 },
+            { id: 'uni11', name: "Law Academy", tuition: 300000, acc: 20, req: 60 },
+            { id: 'uni12', name: "Ivy League - East", tuition: 400000, acc: 15, req: 65 },
+            { id: 'uni13', name: "Ivy League - West", tuition: 500000, acc: 10, req: 70 },
+            { id: 'uni14', name: "Royal Academy", tuition: 750000, acc: 8, req: 75 },
+            { id: 'uni15', name: "Sovereign Institute", tuition: 1000000, acc: 5, req: 80 },
+            { id: 'uni16', name: "Vercel University", tuition: 2500000, acc: 2, req: 100 }
+        ];
+
+        const DEGREES =[
+            { id: 'deg1', name: "Associate of Arts", mult: 1.2 },
+            { id: 'deg2', name: "Associate of Science", mult: 1.3 },
+            { id: 'deg3', name: "Bachelor of Arts", mult: 1.5 },
+            { id: 'deg4', name: "Bachelor of Science", mult: 1.8 },
+            { id: 'deg5', name: "Bachelor of Commerce", mult: 2.0 },
+            { id: 'deg6', name: "Master of Arts", mult: 2.5 },
+            { id: 'deg7', name: "Master of Science", mult: 3.0 },
+            { id: 'deg8', name: "Master of Business (MBA)", mult: 4.0 },
+            { id: 'deg9', name: "Juris Doctor (JD)", mult: 5.0 },
+            { id: 'deg10', name: "Doctor of Medicine (MD)", mult: 6.0 },
+            { id: 'deg11', name: "Doctor of Philosophy (PhD)", mult: 8.0 },
+            { id: 'deg12', name: "Vercel Laureate", mult: 10.0 }
         ];
 
         const STOCKS =[
@@ -749,7 +805,8 @@
             ownedAssets:[],
             shares: {},
             favorites:[],
-            currentTierId: 0,
+            ownedCards: [0],
+            equippedCardId: 0,
             renting: {}, 
             renovations: {},
             compTiers: {},
@@ -760,7 +817,9 @@
             collectionOwnedTime: {},
             isCheater: false,
             isMobile: false,
-            lastMintTime: 0
+            lastMintTime: 0,
+            lastSaveTime: 0,
+            education: { enrolledCollegeId: null, classesTaken: 0, degrees:[] }
         };
 
         let activeStock = null;
@@ -773,8 +832,61 @@
         if (saved) state = { ...state, ...JSON.parse(saved) };
         if (!state.compCustomUpgrades) state.compCustomUpgrades = {};
         if (!state.lastMintTime) state.lastMintTime = 0;
+        if (!state.ownedCards) state.ownedCards = [0];
+        if (state.currentTierId !== undefined && !state.ownedCards.includes(state.currentTierId)) {
+            state.ownedCards =[];
+            for (let i = 0; i <= state.currentTierId; i++) state.ownedCards.push(i);
+            state.equippedCardId = state.currentTierId;
+            delete state.currentTierId;
+        }
+        if (state.equippedCardId === undefined) state.equippedCardId = 0;
+        if (!state.education) state.education = { enrolledCollegeId: null, classesTaken: 0, degrees:[] };
 
-        function saveGame() { localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); }
+        function saveGame() { 
+            state.lastSaveTime = Date.now();
+            localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); 
+        }
+
+        async function checkOfflineEarnings() {
+            if (!state.lastSaveTime) {
+                state.lastSaveTime = Date.now();
+                saveGame();
+                return;
+            }
+            
+            let currentTime = Date.now();
+            let isCheating = false;
+            
+            try {
+                const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC', { cache: 'no-store' });
+                if (res.ok) {
+                    const data = await res.json();
+                    const realTime = new Date(data.utc_datetime).getTime();
+                    // If local time is more than 30 mins ahead of real UTC time, we detect a clock forward.
+                    if (currentTime - realTime > 1800000) {
+                        isCheating = true;
+                    }
+                }
+            } catch (e) {
+                // If API fails, fall back to assuming innocence and calculate offline time via local clock
+            }
+
+            if (isCheating) {
+                state.balance *= 0.01; // 99% reduction
+                logToTerminal("TEMPORAL ANOMALY DETECTED. 99% WEALTH CONFISCATED.");
+            } else {
+                const elapsed = currentTime - state.lastSaveTime;
+                if (elapsed > 0 && state.revenue > 0) {
+                    const elapsedHours = elapsed / 3600000;
+                    const earned = state.revenue * elapsedHours;
+                    state.balance += earned;
+                    logToTerminal(`OFFLINE EARNINGS: $${Math.floor(earned).toLocaleString()}`);
+                }
+            }
+            
+            state.lastSaveTime = currentTime;
+            saveGame();
+        }
 
         function applyMobileMode() {
             if (state.isMobile) {
@@ -807,14 +919,27 @@
             saveGame();
         }
 
+        function getDegreeMult() {
+            let mult = 1;
+            if (state.education && state.education.degrees) {
+                state.education.degrees.forEach(dId => {
+                    const d = DEGREES.find(x => x.id === dId);
+                    if (d) mult *= d.mult;
+                });
+            }
+            return mult;
+        }
+
         function mintMoney(e) {
             const now = Date.now();
             if (now - (state.lastMintTime || 0) < 60) {
                 return;
             }
 
-            const tier = CARD_TIERS[state.currentTierId];
-            const amount = 5 * tier.mult * state.level;
+            const tier = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
+            const degreeMult = getDegreeMult();
+            const amount = 5 * tier.mult * state.level * degreeMult;
+            
             state.balance += amount;
             const clickXp = 3 + (state.level * 0.2); 
             state.xp += Math.min(clickXp, 15);
@@ -955,7 +1080,9 @@
                     rev += baseRent;
                 }
             });
-            state.revenue = rev - bills;
+            
+            const degreeMult = getDegreeMult();
+            state.revenue = (rev - bills) * degreeMult;
 
             setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
             setUI('nw-display', '$' + Math.floor(state.netWorth).toLocaleString());
@@ -969,7 +1096,9 @@
             setUI('stat-rank', rankStr);
             setUI('stat-assets', state.ownedAssets.length);
             setUI('stat-eth', (state.shares['ETH'] || 0).toFixed(2));
-            setUI('stat-mult', CARD_TIERS[state.currentTierId].mult + '.0x');
+            
+            const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
+            setUI('stat-mult', (equipped.mult * degreeMult).toFixed(1) + 'x');
 
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
@@ -979,10 +1108,9 @@
             const xpBar = document.getElementById('xp-bar');
             if(xpBar) xpBar.style.width = (state.xp / xpReq * 100) + '%';
             
-            const tier = CARD_TIERS[state.currentTierId];
             const gCard = document.getElementById('game-card');
-            if(gCard) gCard.className = `debit-card p-8 flex flex-col justify-between ${tier.class}`;
-            setUI('card-tier-label', tier.name);
+            if(gCard) gCard.className = `debit-card p-8 flex flex-col justify-between ${equipped.class}`;
+            setUI('card-tier-label', equipped.name);
 
             const cdEl = document.getElementById('mint-cooldown');
             if (cdEl) {
@@ -1010,6 +1138,7 @@
             renderWatchlist();
             renderGrids();
             renderTradingGrid();
+            renderEducation();
             renderProfilePortfolio();
             if(activeStock) updateModalContent();
         }
@@ -1332,15 +1461,24 @@
             const bankGrid = document.getElementById('bank-grid');
             if(bankGrid) {
                 bankGrid.innerHTML = CARD_TIERS.map(t => {
-                    if (t.id === 0) return '';
+                    const isOwned = state.ownedCards && state.ownedCards.includes(t.id);
+                    const isEquipped = state.equippedCardId === t.id;
+                    
+                    let btnStr = '';
+                    if (isEquipped) {
+                        btnStr = `<button class="btn-buy opacity-50 cursor-not-allowed" disabled>EQUIPPED</button>`;
+                    } else if (isOwned) {
+                        btnStr = `<button onclick="equipCard(${t.id})" class="btn-buy bg-zinc-800">EQUIP CARD</button>`;
+                    } else {
+                        btnStr = `<button onclick="buyCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''}>$${t.price.toLocaleString()}</button>`;
+                    }
+
                     return `
                         <div class="glass-card p-8 border-white/5">
                             <div class="h-40 rounded-xl mb-6 ${t.class}"></div>
                             <h3 class="text-2xl font-black uppercase mb-1">${t.name}</h3>
                             <p class="text-xs text-zinc-500 font-bold mb-8">${t.mult}x MULTIPLIER</p>
-                            <button onclick="upgradeCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price || state.currentTierId >= t.id ? 'disabled' : ''}>
-                                ${state.currentTierId >= t.id ? 'ACTIVE' : '$' + t.price.toLocaleString()}
-                            </button>
+                            ${btnStr}
                         </div>`;
                 }).join('');
             }
@@ -1499,6 +1637,116 @@
                     </div>`;
                 }).join('');
             }
+        }
+
+        function renderEducation() {
+            const container = document.getElementById('edu-content');
+            if (!container) return;
+
+            if (state.level < 7) {
+                container.innerHTML = `<div class="py-20 text-center glass-card border-dashed border-zinc-800"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">ACADEMICS UNLOCK AT LEVEL 7</p></div>`;
+                return;
+            }
+
+            if (state.education.enrolledCollegeId) {
+                const college = COLLEGES.find(c => c.id === state.education.enrolledCollegeId);
+                const req = college.req;
+                const taken = state.education.classesTaken || 0;
+                const canGraduate = taken >= req;
+
+                let html = `
+                    <div class="glass-card p-8 mb-8 text-center border-emerald-900/50">
+                        <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-2">CURRENTLY ENROLLED</p>
+                        <h2 class="text-3xl font-black uppercase mb-6">${college.name}</h2>
+                        
+                        <div class="progress-bg mb-6 max-w-xl mx-auto">
+                            <div class="progress-fill bg-emerald-500" style="width: ${(taken/req)*100}%"></div>
+                        </div>
+                        <p class="text-xs font-bold mono mb-8">${taken} / ${req} CLASSES COMPLETED</p>
+                        
+                        ${!canGraduate ? `<button onclick="attendClass()" class="btn-buy max-w-xs mx-auto py-4">ATTEND CLASS</button>` : ''}
+                    </div>
+                `;
+
+                if (canGraduate) {
+                    html += `
+                        <h3 class="text-lg font-black uppercase tracking-tight mb-4 text-amber-500">GRADUATION - SELECT YOUR DEGREE</h3>
+                        <div id="edu-degrees-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                            ${DEGREES.map(d => {
+                                const hasDegree = state.education.degrees.includes(d.id);
+                                return `
+                                    <div class="glass-card p-4 border ${hasDegree ? 'border-amber-500/50 opacity-50' : 'border-zinc-800'}">
+                                        <h4 class="text-[11px] font-black uppercase mb-1">${d.name}</h4>
+                                        <p class="text-[9px] text-amber-500 font-bold mb-4 mono">${d.mult}x MULTIPLIER</p>
+                                        <button onclick="graduate('${d.id}')" class="btn-buy" ${hasDegree ? 'disabled' : ''}>${hasDegree ? 'EARNED' : 'GRADUATE'}</button>
+                                    </div>
+                                `
+                            }).join('')}
+                        </div>
+                    `;
+                }
+                container.innerHTML = html;
+            } else {
+                container.innerHTML = `
+                    <div id="edu-colleges-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        ${COLLEGES.map(c => {
+                            const assetsCount = state.ownedAssets.length;
+                            const acc = Math.min(100, c.acc + (assetsCount * 2));
+                            const tuition = Math.max(0, c.tuition - Math.floor(assetsCount * (c.tuition * 0.02)));
+
+                            return `
+                            <div class="glass-card p-6 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="font-black uppercase text-xs tracking-tight mb-2">${c.name}</h3>
+                                    <div class="flex justify-between text-[9px] text-zinc-500 font-bold mb-1 uppercase">
+                                        <span>Acceptance</span>
+                                        <span class="${acc >= 50 ? 'text-emerald-500' : 'text-amber-500'}">${acc}%</span>
+                                    </div>
+                                    <div class="flex justify-between text-[9px] text-zinc-500 font-bold mb-4 uppercase">
+                                        <span>Classes Req.</span>
+                                        <span>${c.req}</span>
+                                    </div>
+                                    <p class="text-[12px] font-mono text-white mb-6">Tuition: $${tuition.toLocaleString()}</p>
+                                </div>
+                                <button onclick="applyCollege('${c.id}', ${tuition}, ${acc})" class="btn-buy" ${state.balance < tuition ? 'disabled' : ''}>APPLY & PAY</button>
+                            </div>
+                            `;
+                        }).join('')}
+                    </div>
+                `;
+            }
+        }
+
+        function applyCollege(id, tuition, acc) {
+            if (state.balance >= tuition) {
+                state.balance -= tuition;
+                const roll = Math.random() * 100;
+                if (roll <= acc) {
+                    state.education.enrolledCollegeId = id;
+                    state.education.classesTaken = 0;
+                    logToTerminal(`ACCEPTED into ${COLLEGES.find(c=>c.id===id).name}!`);
+                } else {
+                    logToTerminal(`REJECTED from ${COLLEGES.find(c=>c.id===id).name}. Tuition lost.`);
+                }
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function attendClass() {
+            state.education.classesTaken++;
+            logToTerminal(`ATTENDED CLASS: Progress ${state.education.classesTaken}`);
+            updateUI();
+            saveGame();
+        }
+
+        function graduate(degreeId) {
+            state.education.degrees.push(degreeId);
+            state.education.enrolledCollegeId = null;
+            state.education.classesTaken = 0;
+            logToTerminal(`GRADUATED with ${DEGREES.find(d=>d.id===degreeId).name}!`);
+            updateUI();
+            saveGame();
         }
 
         function renderWatchlist() {
@@ -1777,11 +2025,22 @@
             }
         }
 
-        function upgradeCard(id, price) {
-            if (state.balance >= price) {
+        function buyCard(id, price) {
+            if (state.balance >= price && (!state.ownedCards || !state.ownedCards.includes(id))) {
                 state.balance -= price;
-                state.currentTierId = id;
-                logToTerminal(`CARD UPGRADED: ${CARD_TIERS[id].name}`);
+                if(!state.ownedCards) state.ownedCards = [0];
+                state.ownedCards.push(id);
+                state.equippedCardId = id;
+                logToTerminal(`CARD ACQUIRED & EQUIPPED: ${CARD_TIERS.find(t=>t.id===id).name}`);
+                updateUI();
+                saveGame();
+            }
+        }
+
+        function equipCard(id) {
+            if (state.ownedCards && state.ownedCards.includes(id)) {
+                state.equippedCardId = id;
+                logToTerminal(`CARD EQUIPPED: ${CARD_TIERS.find(t=>t.id===id).name}`);
                 updateUI();
                 saveGame();
             }
@@ -1815,7 +2074,7 @@
             if(target) target.classList.add('active');
             const btn = document.getElementById('btn-' + tabId);
             if(btn) btn.classList.add('active');
-            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate'].includes(tabId)) setTimeout(updateUI, 10);
+            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'academics'].includes(tabId)) setTimeout(updateUI, 10);
         }
 
         setInterval(() => {
@@ -1834,7 +2093,9 @@
                 s.history.push({ open, close, high, low });
                 if(s.history.length > 50) s.history.shift();
             });
+            state.lastSaveTime = Date.now();
             updateUI();
+            saveGame();
         }, 1000);
 
         const cardContainer = document.getElementById('card-container');
@@ -1919,7 +2180,7 @@
             }
         }
 
-        window.onload = () => {
+        window.onload = async () => {
             if (!state.userName) {
                 document.getElementById('onboarding-modal').style.display = 'flex';
             } else {
@@ -1927,6 +2188,9 @@
             }
             applyMobileMode();
             if (state.isCheater) activateCheatMode();
+            
+            await checkOfflineEarnings();
+            
             updateUI();
             filterCollection('jewelry');
             filterRealEstate('house');
