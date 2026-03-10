@@ -651,18 +651,18 @@
         ];
 
         const DEGREES =[
-            { id: 'deg1', name: "Associate of Arts", mult: 1.2 },
-            { id: 'deg2', name: "Associate of Science", mult: 1.3 },
-            { id: 'deg3', name: "Bachelor of Arts", mult: 1.5 },
-            { id: 'deg4', name: "Bachelor of Science", mult: 1.8 },
-            { id: 'deg5', name: "Bachelor of Commerce", mult: 2.0 },
-            { id: 'deg6', name: "Master of Arts", mult: 2.5 },
-            { id: 'deg7', name: "Master of Science", mult: 3.0 },
-            { id: 'deg8', name: "Master of Business (MBA)", mult: 4.0 },
-            { id: 'deg9', name: "Juris Doctor (JD)", mult: 5.0 },
-            { id: 'deg10', name: "Doctor of Medicine (MD)", mult: 6.0 },
-            { id: 'deg11', name: "Doctor of Philosophy (PhD)", mult: 8.0 },
-            { id: 'deg12', name: "Vercel Laureate", mult: 10.0 }
+            { id: 'deg1', name: "Associate of Arts", mult: 1.02 },
+            { id: 'deg2', name: "Associate of Science", mult: 1.03 },
+            { id: 'deg3', name: "Bachelor of Arts", mult: 1.05 },
+            { id: 'deg4', name: "Bachelor of Science", mult: 1.06 },
+            { id: 'deg5', name: "Bachelor of Commerce", mult: 1.08 },
+            { id: 'deg6', name: "Master of Arts", mult: 1.10 },
+            { id: 'deg7', name: "Master of Science", mult: 1.12 },
+            { id: 'deg8', name: "Master of Business (MBA)", mult: 1.15 },
+            { id: 'deg9', name: "Juris Doctor (JD)", mult: 1.20 },
+            { id: 'deg10', name: "Doctor of Medicine (MD)", mult: 1.25 },
+            { id: 'deg11', name: "Doctor of Philosophy (PhD)", mult: 1.30 },
+            { id: 'deg12', name: "Vercel Laureate", mult: 1.50 }
         ];
 
         const STOCKS =[
@@ -702,7 +702,7 @@
             { id: 'c1', name: "Corner Shop", price: 2500, rev: 80, bill: 15, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
             { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, bill: 50, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400", customFleet: true },
             { id: 'c3', name: "E-Com Brand", price: 35000, rev: 1200, bill: 300, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400" },
-            { id: 'c4', name: "Ad Agency", price: 150000, rev: 5500, bill: 1200, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
+            { id: 'c4', name: "Ad Agency", price: 15000, rev: 5500, bill: 1200, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
             { id: 'c5', name: "SaaS Enterprise", price: 750000, rev: 28000, bill: 8000, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
             { id: 'c6', name: "Logistics Hub", price: 2500000, rev: 95000, bill: 30000, img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400" },
             { id: 'c7', name: "Coffee Stand", price: 1500, rev: 50, bill: 5, img: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400", customUpgrades:[ { id: 'machine', name: 'Espresso Maker', price: 600, rev: 25, bill: 5, max: 3 }, { id: 'beans', name: 'Premium Beans', price: 400, rev: 15, bill: 2, max: 5 } ] },
@@ -832,7 +832,7 @@
         if (saved) state = { ...state, ...JSON.parse(saved) };
         if (!state.compCustomUpgrades) state.compCustomUpgrades = {};
         if (!state.lastMintTime) state.lastMintTime = 0;
-        if (!state.ownedCards) state.ownedCards = [0];
+        if (!state.ownedCards) state.ownedCards =[0];
         if (state.currentTierId !== undefined && !state.ownedCards.includes(state.currentTierId)) {
             state.ownedCards =[];
             for (let i = 0; i <= state.currentTierId; i++) state.ownedCards.push(i);
@@ -1098,7 +1098,7 @@
             setUI('stat-eth', (state.shares['ETH'] || 0).toFixed(2));
             
             const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
-            setUI('stat-mult', (equipped.mult * degreeMult).toFixed(1) + 'x');
+            setUI('stat-mult', (equipped.mult * degreeMult).toFixed(2) + 'x');
 
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
