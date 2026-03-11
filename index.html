@@ -81,14 +81,14 @@
 
         .tier-0 { background: linear-gradient(135deg, #1c1c1c, #0a0a0a); }
         .tier-1 { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
-        .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; } /* PLATINUM */
+        .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; } 
         .tier-3 { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
-        .tier-4 { background: linear-gradient(135deg, #64748b, #334155); } /* TITANIUM */
+        .tier-4 { background: linear-gradient(135deg, #64748b, #334155); } 
         .tier-5 { background: linear-gradient(135deg, #db2777, #831843); }
-        .tier-6 { background: linear-gradient(135deg, #18181b, #0f172a); } /* OBSIDIAN */
+        .tier-6 { background: linear-gradient(135deg, #18181b, #0f172a); } 
         .tier-7 { background: linear-gradient(135deg, #10b981, #064e3b); }
-        .tier-8 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; } /* GOLD */
-        .tier-9 { background: linear-gradient(135deg, #000000, #111111); border: 1px solid #ffffff; } /* BLACK */
+        .tier-8 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; } 
+        .tier-9 { background: linear-gradient(135deg, #000000, #111111); border: 1px solid #ffffff; } 
 
         .progress-bg { background: #1a1a1a; height: 4px; border-radius: 2px; }
         .progress-fill { background: #ffffff; height: 100%; border-radius: 2px; transition: width 0.3s; }
@@ -195,7 +195,7 @@
             border-radius: 0;
             background-color: var(--bg);
             position: relative;
-            transform: translateZ(0); /* Constraints fixed modals to this container */
+            transform: translateZ(0); 
         }
         @media (min-width: 600px) {
             .mobile-mode {
@@ -375,7 +375,7 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                     <h2 class="text-xl font-black uppercase tracking-tight">GLOBAL PROPERTY PORTFOLIO</h2>
-                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">RENT, RENOVATE & SELL FOR 90% OF INVESTMENTS</p>
+                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">RENT, RENOVATE & SELL FOR 110% OF INVESTMENTS</p>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="filterRealEstate('house')" class="re-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active" data-cat="house">Houses</button>
@@ -418,7 +418,7 @@
                 <div>
                     <h2 class="text-xl font-black uppercase tracking-tight">LUXURY ASSETS</h2>
                     <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">
-                        ACQUIRE HIGH VALUE ASSETS • SELL & AUCTION IN TRADING TAB
+                        ACQUIRE HIGH VALUE ASSETS • RENOVATE CARS FOR PROFIT
                     </p>
                 </div>
                 <div class="flex gap-2">
@@ -427,6 +427,30 @@
                     <button onclick="filterCollection('furniture')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900" data-cat="furniture">Furniture</button>
                 </div>
             </div>
+            
+            <!-- Filters specifically for cars -->
+            <div id="cars-filters" class="flex flex-wrap gap-2 mb-8 hidden">
+                <select id="car-brand-filter" class="bg-zinc-900 border border-zinc-800 text-[10px] font-bold uppercase px-3 py-2 rounded focus:outline-none" onchange="renderGrids()">
+                    <option value="all">ALL BRANDS</option>
+                    <!-- Populated via JS -->
+                </select>
+                <select id="car-type-filter" class="bg-zinc-900 border border-zinc-800 text-[10px] font-bold uppercase px-3 py-2 rounded focus:outline-none" onchange="renderGrids()">
+                    <option value="all">ALL TYPES</option>
+                    <option value="Sedan">Sedan</option>
+                    <option value="SUV">SUV</option>
+                    <option value="Coupe">Coupe</option>
+                    <option value="Sports">Sports</option>
+                    <option value="Supercar">Supercar</option>
+                    <option value="Hypercar">Hypercar</option>
+                    <option value="Classic">Classic</option>
+                    <option value="Electric">Electric</option>
+                </select>
+                <select id="car-price-sort" class="bg-zinc-900 border border-zinc-800 text-[10px] font-bold uppercase px-3 py-2 rounded focus:outline-none" onchange="renderGrids()">
+                    <option value="asc">PRICE: LOW TO HIGH</option>
+                    <option value="desc">PRICE: HIGH TO LOW</option>
+                </select>
+            </div>
+
             <div id="coll-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
 
@@ -657,7 +681,7 @@
         const STOCKS =[
             { symbol: "AAPL", name: "Apple Inc.", price: 170.00, trend: 1.2, history: [], type: 'stock', logo: 'https://logo.clearbit.com/apple.com' },
             { symbol: "MSFT", name: "Microsoft", price: 400.00, trend: 1.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/microsoft.com' },
-            { symbol: "NVDA", name: "Nvidia Corp", price: 130.00, trend: 5.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
+            { symbol: "NVDA", name: "Nvidia Corp", price: 850.00, trend: 5.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
             { symbol: "AMZN", name: "Amazon", price: 175.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/amazon.com' },
             { symbol: "META", name: "Meta Platforms", price: 480.00, trend: 2.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/meta.com' },
             { symbol: "GOOGL", name: "Alphabet Inc.", price: 140.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/google.com' },
@@ -670,7 +694,7 @@
             { symbol: "JNJ", name: "Johnson & Johnson", price: 155.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/jnj.com' },
             { symbol: "MA", name: "Mastercard", price: 470.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/mastercard.com' },
             { symbol: "PG", name: "Procter & Gamble", price: 160.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pg.com' },
-            { symbol: "AVGO", name: "Broadcom", price: 160.00, trend: 2.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/broadcom.com' },
+            { symbol: "AVGO", name: "Broadcom", price: 1300.00, trend: 2.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/broadcom.com' },
             { symbol: "HD", name: "Home Depot", price: 370.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/homedepot.com' },
             { symbol: "ORCL", name: "Oracle", price: 125.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/oracle.com' },
             { symbol: "CVX", name: "Chevron", price: 150.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/chevron.com' },
@@ -708,7 +732,7 @@
             { symbol: "PSX", name: "Phillips 66", price: 155.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/phillips66.com' },
             { symbol: "DOW", name: "Dow Inc.", price: 55.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/dow.com' },
             { symbol: "NUE", name: "Nucor", price: 190.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nucor.com' },
-            { symbol: "SQ", name: "Block", price: 80.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/squareup.com' },
+            { symbol: "SQ", name: "Block (Square)", price: 80.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/squareup.com' },
             { symbol: "PYPL", name: "PayPal", price: 65.00, trend: -0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/paypal.com' },
             { symbol: "SHOP", name: "Shopify", price: 75.00, trend: 2.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/shopify.com' },
             { symbol: "COIN", name: "Coinbase", price: 250.00, trend: 4.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/coinbase.com' },
@@ -729,7 +753,7 @@
             { symbol: "ABNB", name: "Airbnb", price: 160.00, trend: 1.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/airbnb.com' },
             { symbol: "LMT", name: "Lockheed Martin", price: 450.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/lockheedmartin.com' },
             { symbol: "UNP", name: "Union Pacific", price: 240.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/up.com' },
-
+            
             { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/btc/200' },
             { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/eth/200' },
             { symbol: "BNB", name: "Binance Coin", price: 580.00, trend: 0.8, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/bnb/200' },
@@ -786,7 +810,7 @@
             ];
             let idCounter = 5;
             cols.forEach(col => {
-                for(let i=0; i<35; i++) {
+                for(let i=0; i<60; i++) {
                     const num = Math.floor(Math.random() * 9000) + 1000;
                     const price = col.base + (Math.random() * col.base * 0.5);
                     NFTS.push({
@@ -812,34 +836,64 @@
             }
         });
 
-        const COMPANY_TIERS =["Local", "Small Chain", "Large Chain", "Regional Giant", "Global Conglomerate"];
-
         const COMPANIES =[
-            { id: 'c1', name: "Corner Shop", price: 2500, rev: 80, bill: 15, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
-            { id: 'c2', name: "Taxi Service", price: 12000, rev: 350, bill: 50, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400", customFleet: true },
-            { id: 'c3', name: "E-Com Brand", price: 35000, rev: 1200, bill: 300, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400" },
-            { id: 'c4', name: "Ad Agency", price: 150000, rev: 5500, bill: 1200, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
-            { id: 'c5', name: "SaaS Enterprise", price: 750000, rev: 28000, bill: 8000, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
-            { id: 'c6', name: "Logistics Hub", price: 2500000, rev: 95000, bill: 30000, img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=400" },
-            { id: 'c7', name: "Coffee Stand", price: 1500, rev: 50, bill: 5, img: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400", customUpgrades:[ { id: 'machine', name: 'Espresso Maker', price: 600, rev: 25, bill: 5, max: 3 }, { id: 'beans', name: 'Premium Beans', price: 400, rev: 15, bill: 2, max: 5 } ] },
-            { id: 'c8', name: "Food Truck", price: 4500, rev: 140, bill: 20, img: "https://images.unsplash.com/photo-1565123409695-7b5ef63a2efb?w=400", customUpgrades:[ { id: 'grill', name: 'Flat Top Grill', price: 1500, rev: 60, bill: 10, max: 2 }, { id: 'fryer', name: 'Deep Fryer', price: 800, rev: 30, bill: 5, max: 2 } ] },
-            { id: 'c9', name: "Laundromat", price: 18000, rev: 500, bill: 80, img: "https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=400", customUpgrades:[ { id: 'washer', name: 'Commercial Washer', price: 3000, rev: 90, bill: 15, max: 10 }, { id: 'dryer', name: 'Heavy Dryer', price: 2500, rev: 75, bill: 20, max: 10 } ] },
-            { id: 'c10', name: "Car Wash", price: 50000, rev: 1200, bill: 300, img: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?w=400", customUpgrades:[ { id: 'wax', name: 'Auto Waxer', price: 8000, rev: 200, bill: 50, max: 4 }, { id: 'vac', name: 'Super Vacuums', price: 4000, rev: 100, bill: 20, max: 6 } ] },
-            { id: 'c11', name: "Indie Game Studio", price: 120000, rev: 3000, bill: 800, img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400", customUpgrades:[ { id: 'dev', name: 'Senior Developer', price: 25000, rev: 700, bill: 200, max: 5 }, { id: 'marketing', name: 'Marketing Push', price: 10000, rev: 250, bill: 50, max: 10 } ] },
-            { id: 'c12', name: "Local Gym", price: 250000, rev: 6000, bill: 1800, img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400", customUpgrades:[ { id: 'cardio', name: 'Cardio Zone', price: 40000, rev: 1000, bill: 250, max: 5 }, { id: 'weights', name: 'Powerlifting Rack', price: 20000, rev: 500, bill: 50, max: 8 } ] },
-            { id: 'c13', name: "Nightclub", price: 600000, rev: 15000, bill: 6000, img: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=400", customUpgrades:[ { id: 'vip', name: 'VIP Lounge', price: 100000, rev: 3000, bill: 800, max: 4 }, { id: 'laser', name: 'Laser System', price: 50000, rev: 1200, bill: 500, max: 3 } ] },
-            { id: 'c14', name: "Cloud Kitchen", price: 1000000, rev: 25000, bill: 6000, img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400", customUpgrades:[ { id: 'station', name: 'Prep Station', price: 150000, rev: 4000, bill: 1000, max: 8 }, { id: 'drone', name: 'Delivery Drone', price: 80000, rev: 2200, bill: 400, max: 15 } ] },
-            { id: 'c15', name: "Social Media App", price: 2500000, rev: 65000, bill: 25000, img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400", customUpgrades:[ { id: 'server', name: 'Server Cluster', price: 400000, rev: 11000, bill: 4000, max: 10 }, { id: 'algo', name: 'AI Feed Algo', price: 800000, rev: 25000, bill: 8000, max: 3 } ] },
-            { id: 'c16', name: "Data Center", price: 6000000, rev: 160000, bill: 70000, img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400", customUpgrades:[ { id: 'fiber', name: 'Fiber Backbone', price: 1000000, rev: 28000, bill: 10000, max: 5 }, { id: 'cooling', name: 'Liquid Cooling', price: 2000000, rev: 60000, bill: 25000, max: 4 } ] },
-            { id: 'c17', name: "Biotech Lab", price: 15000000, rev: 420000, bill: 180000, img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400", customUpgrades:[ { id: 'microscope', name: 'Electron Mic.', price: 2500000, rev: 75000, bill: 30000, max: 5 }, { id: 'sequencer', name: 'Gene Sequencer', price: 4000000, rev: 125000, bill: 50000, max: 4 } ] },
-            { id: 'c18', name: "Robotics Factory", price: 35000000, rev: 1000000, bill: 450000, img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400", customUpgrades:[ { id: 'arm', name: 'Assembly Arm', price: 5000000, rev: 150000, bill: 60000, max: 10 }, { id: 'ai', name: 'Neural Controller', price: 10000000, rev: 320000, bill: 120000, max: 5 } ] },
-            { id: 'c19', name: "Crypto Farm", price: 75000000, rev: 2200000, bill: 1100000, img: "https://images.unsplash.com/photo-1516245834210-c4c142787335?w=400", customUpgrades:[ { id: 'asic', name: 'ASIC Miner', price: 8000000, rev: 250000, bill: 130000, max: 15 }, { id: 'solar', name: 'Solar Array', price: 15000000, rev: 500000, bill: 10000, max: 5 } ] },
-            { id: 'c20', name: "Renewable Plant", price: 150000000, rev: 3800000, bill: 500000, img: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=400", customUpgrades:[ { id: 'turbine', name: 'Wind Turbine', price: 20000000, rev: 550000, bill: 50000, max: 10 }, { id: 'battery', name: 'Megapack Battery', price: 35000000, rev: 1000000, bill: 80000, max: 8 } ] },
-            { id: 'c21', name: "AI Research Lab", price: 300000000, rev: 8500000, bill: 3500000, img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400", customUpgrades:[ { id: 'node', name: 'Quantum Node', price: 45000000, rev: 1400000, bill: 500000, max: 10 }, { id: 'siphon', name: 'Data Siphon', price: 80000000, rev: 2600000, bill: 900000, max: 5 } ] },
-            { id: 'c22', name: "Space Tourism", price: 650000000, rev: 19000000, bill: 8500000, img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400", customUpgrades:[ { id: 'cruiser', name: 'Star Cruiser', price: 100000000, rev: 3200000, bill: 1500000, max: 5 }, { id: 'hotel', name: 'Zero-G Hotel', price: 250000000, rev: 8500000, bill: 3800000, max: 3 } ] },
-            { id: 'c23', name: "Quantum Computing", price: 1200000000, rev: 38000000, bill: 18000000, img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400", customUpgrades:[ { id: 'qubit', name: 'Qubit Matrix', price: 200000000, rev: 6800000, bill: 3200000, max: 10 }, { id: 'cryo', name: 'Cryo-Chamber', price: 450000000, rev: 16000000, bill: 7500000, max: 4 } ] },
-            { id: 'c24', name: "Deep Sea Mining", price: 2500000000, rev: 85000000, bill: 42000000, img: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400", customUpgrades:[ { id: 'sub', name: 'Leviathan Sub', price: 400000000, rev: 14500000, bill: 7000000, max: 8 }, { id: 'rig', name: 'Abyssal Rig', price: 850000000, rev: 32000000, bill: 15000000, max: 4 } ] }
+            { id: 'c1', name: "Used Car Dealership", price: 25000, rev: 400, bill: 150, img: "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=400", customUpgrades:[ {id:'lot', name:'Expand Lot', price:15000, rev:200, bill:50, max:5}, {id:'showroom', name:'Indoor Showroom', price:50000, rev:600, bill:150, max:2}, {id:'service', name:'Service Center', price:80000, rev:1000, bill:300, max:3}, {id:'marketing', name:'Local Ads', price:10000, rev:150, bill:40, max:10} ] },
+            { id: 'c2', name: "Delivery Fleet", price: 50000, rev: 800, bill: 250, img: "https://images.unsplash.com/photo-1580674285054-bed31e145f59?w=400", customUpgrades:[ {id:'van', name:'Cargo Van', price:25000, rev:350, bill:80, max:15}, {id:'ai', name:'Dispatch AI', price:100000, rev:1200, bill:300, max:2}, {id:'warehouse', name:'Warehouse Space', price:200000, rev:2500, bill:600, max:4}, {id:'drone', name:'Express Drones', price:75000, rev:900, bill:200, max:5} ] },
+            { id: 'c3', name: "E-Commerce Brand", price: 80000, rev: 1200, bill: 400, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400", customUpgrades:[ {id:'seo', name:'SEO Campaign', price:30000, rev:400, bill:50, max:5}, {id:'shipping', name:'Global Shipping', price:150000, rev:2000, bill:500, max:1}, {id:'packaging', name:'Custom Packaging', price:50000, rev:600, bill:100, max:3}, {id:'influencer', name:'Influencer Deal', price:250000, rev:3500, bill:800, max:4} ] },
+            { id: 'c4', name: "Advertising Agency", price: 150000, rev: 2500, bill: 800, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400", customUpgrades:[ {id:'billboard', name:'Billboard Network', price:80000, rev:1100, bill:250, max:4}, {id:'superbowl', name:'Super Bowl Ad', price:500000, rev:8000, bill:1500, max:1}, {id:'algo', name:'Viral Algorithm', price:200000, rev:3000, bill:600, max:3}, {id:'copywriter', name:'Top Copywriters', price:120000, rev:1800, bill:400, max:5} ] },
+            { id: 'c5', name: "SaaS Enterprise", price: 400000, rev: 6000, bill: 1500, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400", customUpgrades:[ {id:'cloud', name:'Cloud Servers', price:150000, rev:2200, bill:400, max:10}, {id:'sales', name:'Enterprise Sales', price:300000, rev:4500, bill:1000, max:5}, {id:'ui', name:'UI/UX Overhaul', price:200000, rev:2800, bill:500, max:2}, {id:'support', name:'24/7 Support Team', price:100000, rev:1500, bill:300, max:4} ] },
+            { id: 'c6', name: "Real Estate Firm", price: 1000000, rev: 15000, bill: 4000, img: "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400", customUpgrades:[ {id:'agent', name:'Star Agents', price:400000, rev:6000, bill:1200, max:6}, {id:'vr', name:'Virtual Tours', price:250000, rev:3500, bill:500, max:4}, {id:'global', name:'Global Listings', price:800000, rev:12000, bill:2500, max:3}, {id:'legal', name:'Legal Team', price:300000, rev:4000, bill:800, max:2} ] },
+            { id: 'c7', name: "Coffee Roastery", price: 1500000, rev: 22000, bill: 6000, img: "https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=400", customUpgrades:[ { id: 'roaster', name: 'Automated Roasters', price: 500000, rev: 7500, bill: 1500, max: 4 }, { id: 'fairtrade', name: 'Fair Trade Supply', price: 800000, rev: 12000, bill: 2500, max: 2 }, { id: 'cafe', name: 'Premium Cafe', price: 1200000, rev: 18000, bill: 4000, max: 5 }, { id: 'drive', name: 'Drive-Thru Node', price: 600000, rev: 9000, bill: 1800, max: 8 } ] },
+            { id: 'c8', name: "Laundromat Chain", price: 2500000, rev: 35000, bill: 10000, img: "https://images.unsplash.com/photo-1545173168-9f1947eebb7f?w=400", customUpgrades:[ { id: 'eco', name: 'Eco-Washers', price: 800000, rev: 11000, bill: 2000, max: 10 }, { id: 'app', name: 'App Booking', price: 500000, rev: 7000, bill: 1000, max: 2 }, { id: 'plant', name: 'Dry Cleaning Plant', price: 1500000, rev: 22000, bill: 5000, max: 3 }, { id: 'valet', name: 'Valet Service', price: 1000000, rev: 14000, bill: 3500, max: 4 } ] },
+            { id: 'c9', name: "Luxury Car Wash", price: 4000000, rev: 60000, bill: 15000, img: "https://images.unsplash.com/photo-1601362840469-51e4d8d58785?w=400", customUpgrades:[ { id: 'ceramic', name: 'Ceramic Coating Bay', price: 1200000, rev: 18000, bill: 4000, max: 5 }, { id: 'robot', name: 'Robotic Detailers', price: 2500000, rev: 38000, bill: 8000, max: 3 }, { id: 'sub', name: 'Unlimited Subs', price: 800000, rev: 12000, bill: 1000, max: 5 }, { id: 'lounge', name: 'VIP Lounge', price: 1500000, rev: 20000, bill: 3000, max: 2 } ] },
+            { id: 'c10', name: "Indie Game Studio", price: 6000000, rev: 95000, bill: 25000, img: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=400", customUpgrades:[ { id: 'engine', name: 'Custom Engine', price: 2000000, rev: 32000, bill: 5000, max: 2 }, { id: 'mocap', name: 'Motion Capture Tech', price: 3500000, rev: 55000, bill: 12000, max: 1 }, { id: 'local', name: 'Global Localization', price: 1500000, rev: 24000, bill: 4000, max: 4 }, { id: 'esports', name: 'E-Sports League', price: 4000000, rev: 65000, bill: 18000, max: 2 } ] },
+            { id: 'c11', name: "Local Gym Franchise", price: 10000000, rev: 150000, bill: 40000, img: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400", customUpgrades:[ { id: 'pool', name: 'Olympic Pools', price: 3000000, rev: 45000, bill: 15000, max: 5 }, { id: 'trainer', name: 'Elite Trainers', price: 1500000, rev: 22000, bill: 5000, max: 10 }, { id: 'nutrition', name: 'Nutrition Bar', price: 800000, rev: 12000, bill: 2000, max: 8 }, { id: 'cryo', name: 'Cryotherapy', price: 2500000, rev: 38000, bill: 8000, max: 4 } ] },
+            { id: 'c12', name: "Premium Nightclub", price: 15000000, rev: 240000, bill: 70000, img: "https://images.unsplash.com/photo-1566737236500-c8ac43014a67?w=400", customUpgrades:[ { id: 'dj', name: 'Celebrity DJs', price: 4000000, rev: 65000, bill: 18000, max: 5 }, { id: 'vault', name: 'Top Shelf Vault', price: 2500000, rev: 40000, bill: 8000, max: 3 }, { id: 'laser', name: 'Neon Laser Matrix', price: 1500000, rev: 24000, bill: 5000, max: 4 }, { id: 'heli', name: 'VIP Helipad', price: 6000000, rev: 100000, bill: 25000, max: 2 } ] },
+            { id: 'c13', name: "Cloud Kitchen Hub", price: 25000000, rev: 400000, bill: 120000, img: "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=400", customUpgrades:[ { id: 'aichef', name: 'AI Chefs', price: 8000000, rev: 130000, bill: 30000, max: 5 }, { id: 'drone', name: 'Delivery Swarm', price: 6000000, rev: 95000, bill: 20000, max: 8 }, { id: 'prep', name: 'Automated Prep', price: 4000000, rev: 60000, bill: 10000, max: 10 }, { id: 'ghost', name: 'Ghost Locations', price: 10000000, rev: 160000, bill: 40000, max: 6 } ] },
+            { id: 'c14', name: "Social Media App", price: 40000000, rev: 650000, bill: 180000, img: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=400", customUpgrades:[ { id: 'algo', name: 'Viral Algorithm', price: 12000000, rev: 200000, bill: 40000, max: 5 }, { id: 'video', name: 'Video Hosting', price: 18000000, rev: 300000, bill: 80000, max: 3 }, { id: 'fund', name: 'Creator Fund', price: 8000000, rev: 120000, bill: 15000, max: 6 }, { id: 'adnet', name: 'Ad Network', price: 15000000, rev: 250000, bill: 50000, max: 4 } ] },
+            { id: 'c15', name: "Global Data Center", price: 60000000, rev: 1000000, bill: 300000, img: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400", customUpgrades:[ { id: 'quantum', name: 'Quantum Uplinks', price: 20000000, rev: 350000, bill: 80000, max: 5 }, { id: 'cooling', name: 'Submersion Cooling', price: 15000000, rev: 250000, bill: 40000, max: 6 }, { id: 'fiber', name: 'Dark Fiber', price: 12000000, rev: 200000, bill: 30000, max: 8 }, { id: 'backup', name: 'Backup Generators', price: 8000000, rev: 120000, bill: 15000, max: 5 } ] },
+            { id: 'c16', name: "Biotech Lab", price: 100000000, rev: 1800000, bill: 500000, img: "https://images.unsplash.com/photo-1532094349884-543bc11b234d?w=400", customUpgrades:[ { id: 'crispr', name: 'CRISPR Editors', price: 35000000, rev: 650000, bill: 150000, max: 5 }, { id: 'superpc', name: 'Supercomputers', price: 25000000, rev: 450000, bill: 100000, max: 4 }, { id: 'trial', name: 'Clinical Trials', price: 50000000, rev: 950000, bill: 250000, max: 3 }, { id: 'bioprint', name: 'Bio-Printers', price: 20000000, rev: 350000, bill: 80000, max: 6 } ] },
+            { id: 'c17', name: "Robotics Factory", price: 150000000, rev: 2800000, bill: 800000, img: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400", customUpgrades:[ { id: 'nano', name: 'Nano-Assemblers', price: 50000000, rev: 950000, bill: 250000, max: 5 }, { id: 'core', name: 'Cognitive AI Cores', price: 80000000, rev: 1600000, bill: 400000, max: 3 }, { id: 'supply', name: 'Global Supply', price: 40000000, rev: 750000, bill: 150000, max: 6 }, { id: 'military', name: 'Military Contracts', price: 100000000, rev: 2000000, bill: 600000, max: 2 } ] },
+            { id: 'c18', name: "Crypto Mining Farm", price: 250000000, rev: 4800000, bill: 1500000, img: "https://images.unsplash.com/photo-1516245834210-c4c142787335?w=400", customUpgrades:[ { id: 'asic', name: 'ASIC Rigs', price: 80000000, rev: 1600000, bill: 500000, max: 8 }, { id: 'solar', name: 'Solar Array', price: 120000000, rev: 2200000, bill: 200000, max: 4 }, { id: 'geo', name: 'Geothermal Cooling', price: 60000000, rev: 1100000, bill: 100000, max: 5 }, { id: 'staking', name: 'Staking Nodes', price: 150000000, rev: 3000000, bill: 800000, max: 3 } ] },
+            { id: 'c19', name: "Renewable Plant", price: 400000000, rev: 8000000, bill: 2500000, img: "https://images.unsplash.com/photo-1466611653911-95081537e5b7?w=400", customUpgrades:[ { id: 'battery', name: 'Megapack Batteries', price: 150000000, rev: 3200000, bill: 800000, max: 5 }, { id: 'wind', name: 'Wind Turbines', price: 100000000, rev: 2100000, bill: 500000, max: 10 }, { id: 'tidal', name: 'Tidal Generators', price: 200000000, rev: 4200000, bill: 1000000, max: 4 }, { id: 'grid', name: 'Smart Grid', price: 80000000, rev: 1600000, bill: 300000, max: 6 } ] },
+            { id: 'c20', name: "AI Research Facility", price: 700000000, rev: 15000000, bill: 4000000, img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400", customUpgrades:[ { id: 'neural', name: 'Neural Networks', price: 250000000, rev: 5500000, bill: 1200000, max: 5 }, { id: 'siphon', name: 'Data Siphons', price: 150000000, rev: 3200000, bill: 600000, max: 8 }, { id: 'quantum', name: 'Quantum Processing', price: 400000000, rev: 9000000, bill: 2000000, max: 3 }, { id: 'sentience', name: 'Sentience Protocols', price: 600000000, rev: 14000000, bill: 3500000, max: 2 } ] },
+            { id: 'c21', name: "Orbital Logistics", price: 1200000000, rev: 28000000, bill: 8000000, img: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?w=400", customUpgrades:[ { id: 'shuttle', name: 'Cargo Shuttles', price: 400000000, rev: 9500000, bill: 2500000, max: 6 }, { id: 'station', name: 'Low-Earth Stations', price: 800000000, rev: 19500000, bill: 5000000, max: 3 }, { id: 'asteroid', name: 'Asteroid Drones', price: 600000000, rev: 14500000, bill: 3500000, max: 4 }, { id: 'jet', name: 'Hypersonic Jets', price: 250000000, rev: 5800000, bill: 1200000, max: 8 } ] },
+            { id: 'c22', name: "Space Tourism", price: 2000000000, rev: 50000000, bill: 15000000, img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400", customUpgrades:[ { id: 'cruiser', name: 'Star Cruisers', price: 800000000, rev: 21000000, bill: 5500000, max: 5 }, { id: 'hotel', name: 'Zero-G Hotels', price: 1500000000, rev: 40000000, bill: 10000000, max: 3 }, { id: 'lunar', name: 'Lunar Excursions', price: 1200000000, rev: 31000000, bill: 8000000, max: 4 }, { id: 'plasma', name: 'Plasma Thrusters', price: 500000000, rev: 12500000, bill: 2500000, max: 6 } ] },
+            { id: 'c23', name: "Quantum Computing", price: 5000000000, rev: 130000000, bill: 40000000, img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400", customUpgrades:[ { id: 'qubit', name: 'Qubit Matrix', price: 1500000000, rev: 41000000, bill: 11000000, max: 8 }, { id: 'web', name: 'Entanglement Web', price: 2500000000, rev: 70000000, bill: 18000000, max: 4 }, { id: 'cryo', name: 'Absolute Zero', price: 1000000000, rev: 26000000, bill: 6000000, max: 6 }, { id: 'crack', name: 'Crypto Cracker', price: 3500000000, rev: 100000000, bill: 25000000, max: 2 } ] },
+            { id: 'c24', name: "Deep Sea Mining", price: 10000000000, rev: 280000000, bill: 80000000, img: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400", customUpgrades:[ { id: 'sub', name: 'Leviathan Subs', price: 3000000000, rev: 88000000, bill: 22000000, max: 10 }, { id: 'rig', name: 'Abyssal Rigs', price: 6000000000, rev: 180000000, bill: 45000000, max: 5 }, { id: 'trench', name: 'Mariana Hubs', price: 8000000000, rev: 250000000, bill: 60000000, max: 3 }, { id: 'hydro', name: 'Hydro-Extractors', price: 2000000000, rev: 55000000, bill: 12000000, max: 12 } ] }
         ];
+
+        const CAR_BRANDS =["Porsche", "Ferrari", "Lamborghini", "Bugatti", "Aston Martin", "McLaren", "BMW", "Mercedes", "Audi", "Rolls-Royce", "Bentley", "Koenigsegg", "Pagani", "Toyota", "Ford", "Chevrolet", "Nissan", "Honda"];
+        const CAR_TYPES =["Supercar", "Hypercar", "Sedan", "SUV", "Coupe", "Sports", "Classic", "Electric"];
+        const CAR_IMAGES =[
+            "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400",
+            "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400",
+            "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400",
+            "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400",
+            "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400",
+            "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400",
+            "https://images.unsplash.com/photo-1494976388531-d1058494cdd8?w=400",
+            "https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=400",
+            "https://images.unsplash.com/photo-1502877338535-34c160eb2451?w=400",
+            "https://images.unsplash.com/photo-1563720360172-67b8f3dce741?w=400"
+        ];
+
+        for(let i=7; i<=142; i++) {
+            const b = CAR_BRANDS[i % CAR_BRANDS.length];
+            const t = CAR_TYPES[i % CAR_TYPES.length];
+            let p = 25000 + (i * 15000) + (Math.random() * 50000);
+            if (t === 'Hypercar') p *= 5;
+            if (t === 'Supercar') p *= 3;
+            if (t === 'Rolls-Royce' || t === 'Bentley') p *= 2.5;
+            ASSETS.cars.push({
+                id: 'car' + i,
+                name: `${b} Concept ${i}`,
+                brand: b,
+                type: t,
+                price: Math.floor(p),
+                img: CAR_IMAGES[i % CAR_IMAGES.length]
+            });
+        }
 
         const REAL_ESTATE =[
             { id: 're1', name: "Cozy Tiny House", price: 45000, type: 'house', img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400" },
@@ -884,33 +938,6 @@
             });
         });
 
-        const ASSETS = {
-            jewelry:[
-                { id: 'j1', name: "Rolex Submariner", price: 12000, img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400" },
-                { id: 'j2', name: "Diamond Chain", price: 85000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" },
-                { id: 'j3', name: "Patek Philippe Nautilus", price: 145000, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400" },
-                { id: 'j4', name: "Cartier Love Bracelet", price: 25000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" },
-                { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
-                { id: 'j6', name: "Emerald Necklace", price: 850000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" }
-            ],
-            cars:[
-                { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" },
-                { id: 'car2', name: "Ferrari SF90", price: 550000, img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400" },
-                { id: 'car3', name: "Lamborghini Aventador", price: 450000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
-                { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
-                { id: 'car5', name: "Aston Martin Valkyrie", price: 3200000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
-                { id: 'car6', name: "McLaren P1", price: 1500000, img: "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400" }
-            ],
-            furniture:[
-                { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" },
-                { id: 'f2', name: "Chesterfield Sofa", price: 8500, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" },
-                { id: 'f3', name: "Marble Dining Table", price: 15000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
-                { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
-                { id: 'f5', name: "Mahogany Desk", price: 12000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" },
-                { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400" }
-            ]
-        };
-
         let state = {
             userName: "",
             balance: 0,
@@ -925,10 +952,7 @@
             equippedCardId: 0,
             renting: {}, 
             renovations: {},
-            compTiers: {},
-            compOutlets: {},
             compCustomUpgrades: {},
-            taxiFleet: { cars: 1, busses: 0, artBusses: 0 },
             tradeMax: false,
             collectionOwnedTime: {},
             isCheater: false,
@@ -1086,22 +1110,26 @@
             return Math.floor(basePrice * mult);
         }
 
+        function getCarSellPrice(id, basePrice) {
+            let val = getCollectionSellPrice(id, basePrice);
+            const renLvl = state.renovations[id] || 0;
+            if (renLvl > 0) {
+                let totalRenovationValue = 0;
+                for(let i=0; i<renLvl; i++) {
+                    totalRenovationValue += basePrice * 0.10 * (i + 1); 
+                }
+                val += Math.floor(totalRenovationValue * 1.5); 
+            }
+            return Math.floor(val);
+        }
+
         function calcCompanyInvestment(c, id) {
             let inv = c.price;
-            if (c.customFleet) {
-                inv += (state.taxiFleet.cars - 1) * 15000;
-                inv += state.taxiFleet.busses * 120000;
-                inv += state.taxiFleet.artBusses * 350000;
-            } else if (c.customUpgrades) {
+            if (c.customUpgrades) {
                 c.customUpgrades.forEach(u => {
                     const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
                     inv += count * u.price;
                 });
-            } else {
-                const tierIdx = state.compTiers[id] || 0;
-                const outlets = state.compOutlets[id] || 1;
-                for(let i = 1; i <= tierIdx; i++) inv += c.price * Math.pow(5, i);
-                for(let i = 1; i < outlets; i++) inv += Math.floor(c.price * 0.8 * Math.pow(1.1, i));
             }
             return inv;
         }
@@ -1131,9 +1159,11 @@
                 } else if (c) {
                     totalValue += Math.floor(calcCompanyInvestment(c, assetId) * 0.3);
                 } else if (re) {
-                    totalValue += Math.floor(calcRealEstateInvestment(re, assetId) * 0.9);
-                } else if (j || car || f) {
-                    let item = j || car || f;
+                    totalValue += Math.floor(calcRealEstateInvestment(re, assetId) * 1.1);
+                } else if (car) {
+                    totalValue += getCarSellPrice(assetId, car.price);
+                } else if (j || f) {
+                    let item = j || f;
                     totalValue += getCollectionSellPrice(assetId, item.price);
                 }
             });
@@ -1161,25 +1191,14 @@
 
             state.ownedAssets.forEach(id => {
                 const c = COMPANIES.find(x => x.id === id);
-                if (c) {
-                    let itemRev = 0;
+                if (c && c.customUpgrades) {
+                    let itemRev = c.rev;
                     let itemBill = c.bill || 0;
-                    if (c.customFleet) {
-                        itemRev += (state.taxiFleet.cars * 350) + (state.taxiFleet.busses * 2800) + (state.taxiFleet.artBusses * 9500);
-                        itemBill += (state.taxiFleet.cars * 50) + (state.taxiFleet.busses * 400) + (state.taxiFleet.artBusses * 1500);
-                    } else if (c.customUpgrades) {
-                        itemRev += c.rev;
-                        c.customUpgrades.forEach(u => {
-                            const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
-                            itemRev += count * u.rev;
-                            itemBill += count * (u.bill || 0);
-                        });
-                    } else {
-                        const tierIdx = state.compTiers[id] || 0;
-                        const outlets = state.compOutlets[id] || 1;
-                        itemRev += (c.rev * Math.pow(3, tierIdx)) * outlets;
-                        itemBill = (c.bill * Math.pow(2.5, tierIdx)) * outlets;
-                    }
+                    c.customUpgrades.forEach(u => {
+                        const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
+                        itemRev += count * u.rev;
+                        itemBill += count * (u.bill || 0);
+                    });
                     rev += itemRev;
                     bills += itemBill;
                 }
@@ -1230,7 +1249,7 @@
                 const now = Date.now();
                 const elapsed = now - (state.lastMintTime || 0);
                 if (elapsed < 60) {
-                    const left = 60 - elapsed;
+            
                 }
             }
 
@@ -1402,15 +1421,8 @@
             state.balance += returnAmount;
             state.ownedAssets = state.ownedAssets.filter(a => a !== id);
             
-            if (c.customFleet) {
-                state.taxiFleet = { cars: 1, busses: 0, artBusses: 0 };
-            } else if (c.customUpgrades) {
-                if (state.compCustomUpgrades && state.compCustomUpgrades[id]) {
-                    delete state.compCustomUpgrades[id];
-                }
-            } else {
-                delete state.compTiers[id];
-                delete state.compOutlets[id];
+            if (state.compCustomUpgrades && state.compCustomUpgrades[id]) {
+                delete state.compCustomUpgrades[id];
             }
             
             logToTerminal(`SOLD COMPANY: ${c.name} FOR $${returnAmount.toLocaleString()} (30% OF INVESTMENTS)`);
@@ -1423,7 +1435,7 @@
             if (!re || !state.ownedAssets.includes(id)) return;
 
             const investment = calcRealEstateInvestment(re, id);
-            const returnAmount = Math.floor(investment * 0.9);
+            const returnAmount = Math.floor(investment * 1.1);
 
             state.balance += returnAmount;
             state.ownedAssets = state.ownedAssets.filter(a => a !== id);
@@ -1431,7 +1443,7 @@
             if (state.renovations[id]) delete state.renovations[id];
             if (state.renting[id]) delete state.renting[id];
 
-            logToTerminal(`SOLD PROPERTY: ${re.name} FOR $${returnAmount.toLocaleString()} (90% OF INVESTMENTS)`);
+            logToTerminal(`SOLD PROPERTY: ${re.name} FOR $${returnAmount.toLocaleString()} (110% OF INVESTMENTS)`);
             updateUI();
             saveGame();
         }
@@ -1441,24 +1453,15 @@
             if(compGrid) {
                 compGrid.innerHTML = COMPANIES.map(c => {
                     const isOwned = state.ownedAssets.includes(c.id);
-                    let itemRev = 0;
+                    let itemRev = c.rev;
                     let itemBill = c.bill || 0;
-                    const tierIdx = state.compTiers[c.id] || 0;
-                    const outlets = state.compOutlets[c.id] || 1;
                     
-                    if (c.customFleet) {
-                        itemRev = (state.taxiFleet.cars * 350) + (state.taxiFleet.busses * 2800) + (state.taxiFleet.artBusses * 9500);
-                        itemBill += (state.taxiFleet.cars * 50) + (state.taxiFleet.busses * 400) + (state.taxiFleet.artBusses * 1500);
-                    } else if (c.customUpgrades) {
-                        itemRev = c.rev;
+                    if (c.customUpgrades) {
                         c.customUpgrades.forEach(u => {
                             const count = (state.compCustomUpgrades[c.id] || {})[u.id] || 0;
                             itemRev += count * u.rev;
                             itemBill += count * (u.bill || 0);
                         });
-                    } else {
-                        itemRev = (c.rev * Math.pow(3, tierIdx)) * outlets;
-                        itemBill = (c.bill * Math.pow(2.5, tierIdx)) * outlets;
                     }
                     
                     const profit = itemRev - itemBill;
@@ -1467,24 +1470,7 @@
                     if (!isOwned) {
                         actionsHtml = `<button onclick="buyAsset('${c.id}', ${c.price})" class="btn-buy mt-auto" ${state.balance < c.price ? 'disabled' : ''}>ACQUIRE BUSINESS</button>`;
                     } else {
-                        if (c.customFleet) {
-                            const fleet = state.taxiFleet;
-                            actionsHtml = `
-                            <div class="space-y-2 mt-auto">
-                                <button onclick="buyTaxiAsset('cars', 15000)" class="btn-buy flex justify-between px-4" ${state.balance < 15000 || fleet.cars >= 70 ? 'disabled' : ''}>
-                                    <span>+1 CAR ($15K)</span>
-                                    <span class="opacity-40">${fleet.cars}/70</span>
-                                </button>
-                                <button onclick="buyTaxiAsset('busses', 120000)" class="btn-buy flex justify-between px-4" ${state.balance < 120000 || fleet.busses >= 50 ? 'disabled' : ''}>
-                                    <span>+1 BUS ($120K)</span>
-                                    <span class="opacity-40">${fleet.busses}/50</span>
-                                </button>
-                                <button onclick="buyTaxiAsset('artBusses', 350000)" class="btn-buy flex justify-between px-4" ${state.balance < 350000 || fleet.artBusses >= 40 ? 'disabled' : ''}>
-                                    <span>+1 ART. BUS ($350K)</span>
-                                    <span class="opacity-40">${fleet.artBusses}/40</span>
-                                </button>
-                            </div>`;
-                        } else if (c.customUpgrades) {
+                        if (c.customUpgrades) {
                             actionsHtml = `
                             <div class="space-y-2 mt-auto">
                                 ${c.customUpgrades.map(u => {
@@ -1494,20 +1480,6 @@
                                         <span class="opacity-40">${count}/${u.max}</span>
                                     </button>`;
                                 }).join('')}
-                            </div>`;
-                        } else {
-                            const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
-                            const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
-                            actionsHtml = `
-                            <div class="grid grid-cols-2 gap-2 mt-auto">
-                                <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-16" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''}>
-                                    <span class="mb-1">${tierIdx >= 4 ? 'MAX TIER' : 'EVOLVE'}</span>
-                                    <span class="text-[8px] opacity-60">${tierIdx >= 4 ? '' : '$' + nextTierPrice.toLocaleString()}</span>
-                                </button>
-                                <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-16" ${state.balance < nextOutletPrice || outlets >= 60 ? 'disabled' : ''}>
-                                    <span class="mb-1">${outlets >= 60 ? 'MAX OUTLETS' : '+1 OUTLET'}</span>
-                                    <span class="text-[8px] opacity-60">${outlets >= 60 ? '' : '$' + nextOutletPrice.toLocaleString()}</span>
-                                </button>
                             </div>`;
                         }
                     }
@@ -1519,11 +1491,10 @@
                         <img src="${c.img}" class="item-img mb-4">
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <h3 class="font-black uppercase text-xs tracking-tight">${!c.customFleet && !c.customUpgrades ? COMPANY_TIERS[tierIdx] + ' ' : ''}${c.name}</h3>
+                                <h3 class="font-black uppercase text-xs tracking-tight">${c.name}</h3>
                                 <p class="text-[10px] font-bold ${profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">${profit >= 0 ? '+' : ''}$${Math.floor(profit).toLocaleString()}/HR PROFIT</p>
                                 <p class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">REV: $${Math.floor(itemRev).toLocaleString()} | BILLS: $${Math.floor(itemBill).toLocaleString()}</p>
                             </div>
-                            ${!c.customFleet && !c.customUpgrades ? `<span class="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">${outlets} OUTLETS</span>` : ''}
                         </div>
                         <div class="flex justify-between items-center mb-4">
                             <p class="text-[11px] font-mono text-zinc-400">$${c.price.toLocaleString()}</p>
@@ -1589,16 +1560,52 @@
                 }).join('');
             }
 
+            // Populate Car Filters if empty
+            const brandFilter = document.getElementById('car-brand-filter');
+            if (brandFilter && brandFilter.options.length <= 1) {
+                const uniqueBrands =[...new Set(ASSETS.cars.map(c => c.brand))].sort();
+                uniqueBrands.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b; opt.innerText = b;
+                    brandFilter.appendChild(opt);
+                });
+            }
+
             const collGrid = document.getElementById('coll-grid');
             if (collGrid) {
-                const items = ASSETS[currentCollectionCat] ||[];
+                let items = ASSETS[currentCollectionCat] ||[];
+
+                if (currentCollectionCat === 'cars') {
+                    const bFilter = document.getElementById('car-brand-filter').value;
+                    const tFilter = document.getElementById('car-type-filter').value;
+                    const sSort = document.getElementById('car-price-sort').value;
+                    
+                    if (bFilter !== 'all') items = items.filter(x => x.brand === bFilter);
+                    if (tFilter !== 'all') items = items.filter(x => x.type === tFilter);
+                    
+                    items = [...items]; // clone to sort
+                    if (sSort === 'asc') items.sort((a,b) => a.price - b.price);
+                    else if (sSort === 'desc') items.sort((a,b) => b.price - a.price);
+                }
+
                 collGrid.innerHTML = items.map(i => {
                     const isOwned = state.ownedAssets.includes(i.id);
                     let actionHtml = '';
+                    
                     if (!isOwned) {
                         actionHtml = `<button onclick="buyCollectionAsset('${i.id}', ${i.price})" class="btn-buy mt-2" ${state.balance < i.price ? 'disabled' : ''}>BUY</button>`;
                     } else {
-                        actionHtml = `<button class="btn-buy mt-2 opacity-50 cursor-not-allowed" disabled>OWNED</button>`;
+                        if (currentCollectionCat === 'cars') {
+                            const renLvl = state.renovations[i.id] || 0;
+                            const renCost = Math.floor(i.price * 0.10 * (renLvl + 1));
+                            actionHtml = `
+                            <div class="mt-2 flex flex-col gap-2">
+                                <p class="text-[9px] font-bold text-amber-500 tracking-widest text-center">LVL ${renLvl} RENOVATIONS</p>
+                                <button onclick="renovateProperty('${i.id}', ${renCost})" class="btn-buy border border-amber-900/50" ${state.balance < renCost ? 'disabled' : ''}>RENOVATE ($${renCost.toLocaleString()})</button>
+                            </div>`;
+                        } else {
+                            actionHtml = `<button class="btn-buy mt-2 opacity-50 cursor-not-allowed" disabled>OWNED</button>`;
+                        }
                     }
 
                     return `
@@ -1681,7 +1688,7 @@
                     nftGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card bg-purple-950/5 border-purple-900/20"><p class="text-purple-500 font-bold uppercase text-[10px] tracking-widest">NFT MARKETPLACE UNLOCKS AT LEVEL 10</p></div>`;
                 } else {
                     if(nftStatus) nftStatus.innerText = "OPEN FOR TRADING";
-                    nftGrid.innerHTML = NFTS.map(n => {
+                    nftGrid.innerHTML = NFTS.slice(0, 48).map(n => {
                         const isOwned = state.ownedAssets.includes(n.id);
                         const ethBalance = state.shares['ETH'] || 0;
                         return `
@@ -1724,7 +1731,7 @@
                 tradingGrid.innerHTML = ownedCollections.map(obj => {
                     const i = obj.item;
                     const cat = obj.cat;
-                    const sellPrice = getCollectionSellPrice(i.id, i.price);
+                    const sellPrice = cat === 'cars' ? getCarSellPrice(i.id, i.price) : getCollectionSellPrice(i.id, i.price);
                     const canSell = state.level >= 4;
                     const canAuction = state.level >= 12;
 
@@ -1733,7 +1740,7 @@
                         <div>
                             <img src="${i.img}" class="item-img mb-4">
                             <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
-                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${i.price.toLocaleString()}</p>
+                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">EST VALUE: $${sellPrice.toLocaleString()}</p>
                         </div>
                         <div class="grid grid-cols-2 gap-2 mt-2">
                             <button onclick="sellCollection('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center bg-zinc-900" ${!canSell ? 'disabled' : ''}>
@@ -2042,7 +2049,7 @@
             const item = ASSETS[cat].find(i => i.id === id);
             if (!item || !state.ownedAssets.includes(id)) return;
             
-            const price = getCollectionSellPrice(id, item.price);
+            const price = cat === 'cars' ? getCarSellPrice(id, item.price) : getCollectionSellPrice(id, item.price);
             state.balance += price;
             state.ownedAssets = state.ownedAssets.filter(a => a !== id);
             delete state.collectionOwnedTime[id];
@@ -2057,14 +2064,22 @@
             const item = ASSETS[cat].find(i => i.id === id);
             if (!item) return;
 
+            let baseVal = item.price;
+            if (cat === 'cars') {
+                const renLvl = state.renovations[id] || 0;
+                let totalRenovationValue = 0;
+                for(let j=0; j<renLvl; j++) totalRenovationValue += item.price * 0.10 * (j+1);
+                baseVal += Math.floor(totalRenovationValue * 1.5);
+            }
+
             activeAuction = {
                 id: id,
                 cat: cat,
                 item: item,
-                currentBid: item.price,
+                currentBid: baseVal,
                 timer: 300,
                 interval: null,
-                bids:[{ name: 'System', amount: item.price, msg: 'Starting bid at 100% MSRP' }]
+                bids:[{ name: 'System', amount: baseVal, msg: 'Starting bid' }]
             };
 
             const modal = document.getElementById('auction-modal');
@@ -2075,12 +2090,12 @@
             activeAuction.interval = setInterval(() => {
                 activeAuction.timer--;
                 
-                if (activeAuction.timer > 0 && activeAuction.currentBid < item.price * 5) {
+                if (activeAuction.timer > 0 && activeAuction.currentBid < baseVal * 5) {
                     const chance = Math.random();
                     if (chance < 0.20) {
-                        const increase = item.price * (Math.random() * 0.15 + 0.02);
+                        const increase = baseVal * (Math.random() * 0.15 + 0.02);
                         let nextBid = activeAuction.currentBid + increase;
-                        if (nextBid > item.price * 5) nextBid = item.price * 5;
+                        if (nextBid > baseVal * 5) nextBid = baseVal * 5;
                         
                         activeAuction.currentBid = nextBid;
                         activeAuction.bids.unshift({
@@ -2137,80 +2152,13 @@
             saveGame();
         }
 
-        function buyTaxiAsset(type, cost) {
-            const limits = { cars: 70, busses: 50, artBusses: 40 };
-            if (state.balance >= cost && state.taxiFleet[type] < limits[type]) {
-                state.balance -= cost;
-                state.taxiFleet[type]++;
-                logToTerminal(`TAXI HUB: ACQUIRED ${type.toUpperCase()}`);
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function evolveCompany(id, price) {
-            const currentIdx = state.compTiers[id] || 0;
-            if (state.balance >= price && currentIdx < 4) {
-                state.balance -= price;
-                state.compTiers[id] = currentIdx + 1;
-                logToTerminal(`${id.toUpperCase()} EVOLVED TO ${COMPANY_TIERS[currentIdx+1]} STATUS`);
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function addOutlet(id, price) {
-            const count = state.compOutlets[id] || 1;
-            if (state.balance >= price && count < 60) {
-                state.balance -= price;
-                state.compOutlets[id] = count + 1;
-                logToTerminal(`${id.toUpperCase()} OPENED OUTLET #${count+1}`);
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function toggleRental(id) {
-            state.renting[id] = !state.renting[id];
-            logToTerminal(`PROPERTY ${id.toUpperCase()} RENTAL STATUS: ${state.renting[id] ? 'ACTIVE' : 'INACTIVE'}`);
-            updateUI();
-            saveGame();
-        }
-
-        function renovateProperty(id, cost) {
-            if (state.balance >= cost) {
-                state.balance -= cost;
-                state.renovations[id] = (state.renovations[id] || 0) + 1;
-                logToTerminal(`PROPERTY ${id.toUpperCase()} RENOVATED TO LEVEL ${state.renovations[id]}`);
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function buyCard(id, price) {
-            if (state.balance >= price && (!state.ownedCards || !state.ownedCards.includes(id))) {
-                state.balance -= price;
-                if(!state.ownedCards) state.ownedCards = [0];
-                state.ownedCards.push(id);
-                state.equippedCardId = id;
-                logToTerminal(`CARD ACQUIRED & EQUIPPED: ${CARD_TIERS.find(t=>t.id===id).name}`);
-                updateUI();
-                saveGame();
-            }
-        }
-
-        function equipCard(id) {
-            if (state.ownedCards && state.ownedCards.includes(id)) {
-                state.equippedCardId = id;
-                logToTerminal(`CARD EQUIPPED: ${CARD_TIERS.find(t=>t.id===id).name}`);
-                updateUI();
-                saveGame();
-            }
-        }
-
         function filterCollection(cat) {
             currentCollectionCat = cat;
             document.querySelectorAll('.coll-filter-btn').forEach(b => b.classList.toggle('active', b.dataset.cat === cat));
+            const filterBar = document.getElementById('cars-filters');
+            if (filterBar) {
+                filterBar.style.display = (cat === 'cars') ? 'flex' : 'none';
+            }
             renderGrids();
         }
 
@@ -2284,7 +2232,6 @@
             if(e.key === 'Escape') {
                 closeStockModal();
                 closeResetModal();
-                // Notice we specifically don't close auction modal on ESC
             }
         });
         
