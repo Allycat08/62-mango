@@ -1231,13 +1231,6 @@
                 const elapsed = now - (state.lastMintTime || 0);
                 if (elapsed < 60) {
                     const left = 60 - elapsed;
-                    cdEl.innerText = `${left}MS`;
-                    cdEl.style.color = '#ef4444';
-                    if(gCard) gCard.style.cursor = 'not-allowed';
-                } else {
-                    cdEl.innerText = `READY`;
-                    cdEl.style.color = '#10b981';
-                    if(gCard) gCard.style.cursor = 'pointer';
                 }
             }
 
