@@ -81,14 +81,14 @@
 
         .tier-0 { background: linear-gradient(135deg, #1c1c1c, #0a0a0a); }
         .tier-1 { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
-        .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; } /* PLATINUM */
+        .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; } 
         .tier-3 { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
-        .tier-4 { background: linear-gradient(135deg, #64748b, #334155); } /* TITANIUM */
+        .tier-4 { background: linear-gradient(135deg, #64748b, #334155); } 
         .tier-5 { background: linear-gradient(135deg, #db2777, #831843); }
-        .tier-6 { background: linear-gradient(135deg, #18181b, #0f172a); } /* OBSIDIAN */
+        .tier-6 { background: linear-gradient(135deg, #18181b, #0f172a); } 
         .tier-7 { background: linear-gradient(135deg, #10b981, #064e3b); }
-        .tier-8 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; } /* GOLD */
-        .tier-9 { background: linear-gradient(135deg, #000000, #111111); border: 1px solid #ffffff; } /* BLACK */
+        .tier-8 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; } 
+        .tier-9 { background: linear-gradient(135deg, #000000, #111111); border: 1px solid #ffffff; } 
 
         .progress-bg { background: #1a1a1a; height: 4px; border-radius: 2px; }
         .progress-fill { background: #ffffff; height: 100%; border-radius: 2px; transition: width 0.3s; }
@@ -428,9 +428,11 @@
                 </div>
             </div>
             
+            <!-- Filters specifically for cars -->
             <div id="cars-filters" class="flex flex-wrap gap-2 mb-8 hidden">
                 <select id="car-brand-filter" class="bg-zinc-900 border border-zinc-800 text-[10px] font-bold uppercase px-3 py-2 rounded focus:outline-none" onchange="renderGrids()">
                     <option value="all">ALL BRANDS</option>
+                    <!-- Populated via JS -->
                 </select>
                 <select id="car-type-filter" class="bg-zinc-900 border border-zinc-800 text-[10px] font-bold uppercase px-3 py-2 rounded focus:outline-none" onchange="renderGrids()">
                     <option value="all">ALL TYPES</option>
@@ -1008,7 +1010,7 @@
             } catch (e) {}
 
             if (isCheating) {
-                state.balance *= 0.01; // 99% reduction
+                state.balance *= 0.01;
                 logToTerminal("TEMPORAL ANOMALY DETECTED. 99% WEALTH CONFISCATED.");
             } else {
                 const elapsed = currentTime - state.lastSaveTime;
@@ -1592,7 +1594,7 @@
                     if (bFilter !== 'all') items = items.filter(x => x.brand === bFilter);
                     if (tFilter !== 'all') items = items.filter(x => x.type === tFilter);
                     
-                    items = [...items]; // clone to sort
+                    items =[...items]; 
                     if (sSort === 'asc') items.sort((a,b) => a.price - b.price);
                     else if (sSort === 'desc') items.sort((a,b) => b.price - a.price);
                 }
