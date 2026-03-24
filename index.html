@@ -502,7 +502,7 @@
                 <div class="flex items-center justify-between mb-8">
                     <div class="flex items-center gap-4">
                         <h2 class="text-xl font-black uppercase tracking-tight">DIGITAL COLLECTIBLES (NFTs)</h2>
-                        <span class="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-[10px] font-bold rounded">TRADE WITH ETH</span>
+                        <span class="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-[10px] font-bold rounded">TRADE WITH CRYPTO</span>
                     </div>
                     <div id="nft-status" class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest"></div>
                 </div>
@@ -885,10 +885,10 @@
         ];
 
         const NFTS =[
-            { id: 'nft1', name: "Bored Ape #402", priceEth: 65, img: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400", volatility: 0.15 },
-            { id: 'nft2', name: "CryptoPunk #991", priceEth: 120, img: "https://images.unsplash.com/photo-1643101809754-43a91784611a?w=400", volatility: 0.25 },
-            { id: 'nft3', name: "EtherRock #12", priceEth: 450, img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400", volatility: 0.5 },
-            { id: 'nft4', name: "Vercel Genesis", priceEth: 25, img: "https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=400", volatility: 0.1 }
+            { id: 'nft1', name: "Bored Ape #402", price: 65, currency: 'ETH', img: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400", volatility: 0.15 },
+            { id: 'nft2', name: "CryptoPunk #991", price: 120, currency: 'ETH', img: "https://images.unsplash.com/photo-1643101809754-43a91784611a?w=400", volatility: 0.25 },
+            { id: 'nft3', name: "EtherRock #12", price: 450, currency: 'ETH', img: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=400", volatility: 0.5 },
+            { id: 'nft4', name: "Vercel Genesis", price: 25, currency: 'SOL', img: "https://images.unsplash.com/photo-1634986666676-ec8fd927c23d?w=400", volatility: 0.1 }
         ];
 
         (function generateNFTs() {
@@ -910,15 +910,18 @@
                 { name: "Cool Cat", base: 1.5, vol: 0.2 },
                 { name: "Moonbird", base: 2.5, vol: 0.35 }
             ];
+            const cryptos = ['ETH', 'SOL', 'BNB', 'AVAX', 'MATIC', 'ADA', 'DOT'];
             let idCounter = 5;
             cols.forEach(col => {
+                const colCurrency = cryptos[Math.floor(Math.random() * cryptos.length)];
                 for(let i=0; i<35; i++) {
                     const num = Math.floor(Math.random() * 9000) + 1000;
                     const price = col.base + (Math.random() * col.base * 0.5);
                     NFTS.push({
                         id: 'nft' + (idCounter++),
                         name: `${col.name} #${num}`,
-                        priceEth: parseFloat(price.toFixed(2)),
+                        price: parseFloat(price.toFixed(2)),
+                        currency: colCurrency,
                         img: nftImageUrls[Math.floor(Math.random() * nftImageUrls.length)],
                         volatility: col.vol + (Math.random() * 0.1)
                     });
@@ -1281,8 +1284,9 @@
                 const bm = ASSETS.blackMarket.find(i => i.id === assetId);
                 
                 if (nft) {
-                    const ethPrice = STOCKS.find(s => s.symbol === 'ETH').price;
-                    totalValue += nft.priceEth * ethPrice;
+                    const cryptoStock = STOCKS.find(s => s.symbol === nft.currency);
+                    const cryptoPrice = cryptoStock ? cryptoStock.price : 0;
+                    totalValue += nft.price * cryptoPrice;
                 } else if (c) {
                     totalValue += Math.floor(calcCompanyInvestment(c, assetId) * 0.3);
                 } else if (re) {
@@ -1951,15 +1955,15 @@
                     if(nftStatus) nftStatus.innerText = "OPEN FOR TRADING";
                     nftGrid.innerHTML = NFTS.map(n => {
                         const isOwned = state.ownedAssets.includes(n.id);
-                        const ethBalance = state.shares['ETH'] || 0;
+                        const cryptoBalance = state.shares[n.currency] || 0;
                         return `
                         <div class="glass-card p-6 border-purple-900/20">
                             <img src="${n.img}" class="item-img mb-4 border border-zinc-900">
                             <h3 class="font-black uppercase text-xs tracking-tight mb-1">${n.name}</h3>
-                            <p class="text-[12px] font-mono text-purple-400 mb-6">${n.priceEth} ETH</p>
+                            <p class="text-[12px] font-mono text-purple-400 mb-6">${n.price} ${n.currency}</p>
                             ${isOwned ? 
-                                `<button onclick="sellNFT('${n.id}', ${n.priceEth})" class="btn-buy bg-purple-600/20 border-purple-600/50 hover:bg-purple-600 text-white">LIST FOR SALE</button>` : 
-                                `<button onclick="buyNFT('${n.id}', ${n.priceEth})" class="btn-buy" ${ethBalance < n.priceEth ? 'disabled' : ''}>MINT FOR ${n.priceEth} ETH</button>`
+                                `<button onclick="sellNFT('${n.id}', ${n.price}, '${n.currency}')" class="btn-buy bg-purple-600/20 border-purple-600/50 hover:bg-purple-600 text-white">LIST FOR SALE</button>` : 
+                                `<button onclick="buyNFT('${n.id}', ${n.price}, '${n.currency}')" class="btn-buy" ${cryptoBalance < n.price ? 'disabled' : ''}>MINT FOR ${n.price} ${n.currency}</button>`
                             }
                         </div>`;
                     }).join('');
@@ -2250,23 +2254,23 @@
             saveGame();
         }
 
-        function buyNFT(id, priceEth) {
-            const ethBalance = state.shares['ETH'] || 0;
-            if (ethBalance >= priceEth) {
-                state.shares['ETH'] -= priceEth;
+        function buyNFT(id, price, currency) {
+            const cryptoBalance = state.shares[currency] || 0;
+            if (cryptoBalance >= price) {
+                state.shares[currency] -= price;
                 state.ownedAssets.push(id);
-                logToTerminal(`NFT MINTED: ${id.toUpperCase()} FOR ${priceEth} ETH`);
+                logToTerminal(`NFT MINTED: ${id.toUpperCase()} FOR ${price} ${currency}`);
                 updateUI();
                 saveGame();
             }
         }
 
-        function sellNFT(id, priceEth) {
+        function sellNFT(id, price, currency) {
             const index = state.ownedAssets.indexOf(id);
             if (index > -1) {
                 state.ownedAssets.splice(index, 1);
-                state.shares['ETH'] = (state.shares['ETH'] || 0) + priceEth;
-                logToTerminal(`NFT SOLD: RECEIVED ${priceEth} ETH`);
+                state.shares[currency] = (state.shares[currency] || 0) + price;
+                logToTerminal(`NFT SOLD: RECEIVED ${price} ${currency}`);
                 updateUI();
                 saveGame();
             }
@@ -2458,7 +2462,7 @@
         function buyCard(id, price) {
             if (state.balance >= price && (!state.ownedCards || !state.ownedCards.includes(id))) {
                 state.balance -= price;
-                if(!state.ownedCards) state.ownedCards = [0];
+                if(!state.ownedCards) state.ownedCards =[0];
                 state.ownedCards.push(id);
                 state.equippedCardId = id;
                 logToTerminal(`CARD ACQUIRED & EQUIPPED: ${CARD_TIERS.find(t=>t.id===id).name}`);
