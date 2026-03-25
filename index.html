@@ -440,7 +440,7 @@
                         </div>
 
                         <!-- STAT WIDGETS -->
-                        <div id="empire-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div id="empire-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 grid-flow-row-dense">
                             <!-- Populated via JS -->
                         </div>
                     </div>
@@ -1086,7 +1086,8 @@
             education: { enrolledCollegeId: null, classesTaken: 0, degrees:[] },
             ownedThemes:['dark', 'light'],
             activeTheme: 'dark',
-            activeStats:['rank', 'assets', 'eth', 'multiplier']
+            activeStats:['rank', 'assets', 'eth', 'multiplier'],
+            widgetSizes: {}
         };
 
         let activeStock = null;
@@ -1115,7 +1116,8 @@
         if (!state.activeTheme) state.activeTheme = 'dark';
         
         // Stats Init
-        if (!state.activeStats) state.activeStats = ['rank', 'assets', 'eth', 'multiplier'];
+        if (!state.activeStats) state.activeStats =['rank', 'assets', 'eth', 'multiplier'];
+        if (!state.widgetSizes) state.widgetSizes = {};
 
         const AVAILABLE_STATS =[
             { id: 'rank', label: 'Current Rank', isMono: false, getValue: () => RANKS[Math.min(Math.floor(state.level / 5), RANKS.length - 1)] },
@@ -1343,27 +1345,27 @@
             if (el) el.innerText = val;
         }
 
-        let draggedStatIndex = null;
-        function statDragStart(e, index) {
-            draggedStatIndex = index;
+        let draggedWatchlistIndex = null;
+        function wlDragStart(e, index) {
+            draggedWatchlistIndex = index;
             e.dataTransfer.effectAllowed = 'move';
         }
-        function statDragOver(e) {
+        function wlDragOver(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
             e.currentTarget.classList.add('drag-over');
         }
-        function statDragLeave(e) {
+        function wlDragLeave(e) {
             e.currentTarget.classList.remove('drag-over');
         }
-        function statDrop(e, index) {
+        function wlDrop(e, index) {
             e.preventDefault();
             e.currentTarget.classList.remove('drag-over');
-            if(draggedStatIndex === null || draggedStatIndex === index) return;
-            const stats = [...state.activeStats];
-            const movedItem = stats.splice(draggedStatIndex, 1)[0];
-            stats.splice(index, 0, movedItem);
-            state.activeStats = stats;
+            if(draggedWatchlistIndex === null || draggedWatchlistIndex === index) return;
+            const favs = [...state.favorites];
+            const movedItem = favs.splice(draggedWatchlistIndex, 1)[0];
+            favs.splice(index, 0, movedItem);
+            state.favorites = favs;
             saveGame();
             updateUI();
         }
@@ -1380,21 +1382,40 @@
             updateUI();
         }
 
+        function resizeWidget(id, event) {
+            if (event) event.stopPropagation();
+            const currentSize = state.widgetSizes[id] || 1;
+            let nextSize = currentSize + 1;
+            if (nextSize > 4) nextSize = 1;
+            state.widgetSizes[id] = nextSize;
+            saveGame();
+            updateUI();
+        }
+
         function renderEmpireStats() {
             const grid = document.getElementById('empire-stats-grid');
             if(!grid) return;
+
+            const spanClasses = {
+                1: "col-span-1 md:col-span-1",
+                2: "col-span-2 md:col-span-2",
+                3: "col-span-2 md:col-span-3",
+                4: "col-span-2 md:col-span-4"
+            };
+
             grid.innerHTML = state.activeStats.map((statId, index) => {
                 const statDef = AVAILABLE_STATS.find(s => s.id === statId);
                 if(!statDef) return '';
                 const val = statDef.getValue();
+                const colSpanDesktop = state.widgetSizes[statId] || 1;
+                const spanClass = spanClasses[colSpanDesktop];
+
                 return `
-                <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800 cursor-move transition-colors hover:border-zinc-500" 
-                     draggable="true" 
-                     ondragstart="statDragStart(event, ${index})" 
-                     ondragover="statDragOver(event)" 
-                     ondragleave="statDragLeave(event)"
-                     ondrop="statDrop(event, ${index})">
-                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">${statDef.label}</p>
+                <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800 transition-colors hover:border-zinc-500 relative ${spanClass}">
+                    <button onclick="resizeWidget('${statId}', event)" class="absolute top-3 right-3 text-zinc-600 hover:text-white transition-colors" title="Resize Widget">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                    </button>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2 pr-6">${statDef.label}</p>
                     <p class="text-xl font-bold uppercase tracking-tighter truncate ${statDef.isMono ? 'mono' : ''}">${val}</p>
                 </div>
                 `;
@@ -2298,12 +2319,17 @@
             if(favStocks.length === 0) {
                 container.innerHTML = `<div class="py-10 text-center bg-zinc-900/40 rounded-lg border border-zinc-800 border-dashed"><p class="text-[8px] text-zinc-700 font-bold uppercase tracking-widest">NO FAVORITES SELECTED</p></div>`;
             } else {
-                container.innerHTML = favStocks.map(s => {
+                container.innerHTML = favStocks.map((s, index) => {
                     const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
                     const trendFormatted = Math.abs(s.trend).toFixed(2);
                     const owned = state.shares[s.symbol] || 0;
                     return `
-                    <div class="bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 hover:border-zinc-400 transition-colors">
+                    <div class="bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 hover:border-zinc-400 transition-colors cursor-move"
+                         draggable="true" 
+                         ondragstart="wlDragStart(event, ${index})" 
+                         ondragover="wlDragOver(event)" 
+                         ondragleave="wlDragLeave(event)"
+                         ondrop="wlDrop(event, ${index})">
                         <div class="flex justify-between items-center cursor-pointer mb-2" onclick="openStockModal('${s.symbol}')">
                             <div class="flex items-center gap-2">
                                 <img src="${s.logo}" class="w-5 h-5 rounded-sm bg-white p-0.5" onerror="this.src='https://ui-avatars.com/api/?name=${s.symbol}&background=1a1a1a&color=fff'">
