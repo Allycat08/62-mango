@@ -342,6 +342,13 @@
         body.theme-neon path[fill="white"] { fill: #00ffff; }
         body.theme-neon input { background-color: #1a0033 !important; border-color: #4a0072 !important; color: #00ffff !important; }
         body.theme-neon .chart-container { background: #090014 !important; border-color: #4a0072 !important; }
+
+        /* Highlight style for drag and drop */
+        .drag-over {
+            border-style: dashed !important;
+            border-color: #ffffff !important;
+            opacity: 0.5;
+        }
     </style>
 </head>
 <body class="p-6 max-w-[1400px] mx-auto">
@@ -418,32 +425,23 @@
 
                 <div class="col-span-12 lg:col-span-8 space-y-6">
                     <div class="glass-card p-8">
-                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-4">EMPIRE PROGRESS</p>
+                        <div class="flex justify-between items-center mb-4">
+                            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">EMPIRE PROGRESS</p>
+                            <button onclick="showTab('profile')" class="text-zinc-500 hover:text-white transition-colors" title="Manage Widgets">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+                            </button>
+                        </div>
                         <div class="flex justify-between text-[10px] font-bold mb-2">
                             <span class="text-zinc-400 uppercase tracking-widest">XP TO LVL <span id="next-lvl-val">2</span></span>
                             <span class="mono"><span id="xp-val">0</span> / <span id="xp-req">500</span></span>
                         </div>
-                        <div class="progress-bg mb-10">
+                        <div class="progress-bg mb-8">
                             <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
                         </div>
 
-                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
-                                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">CURRENT RANK</p>
-                                <p class="text-xl font-bold uppercase tracking-tighter" id="stat-rank">Startup</p>
-                            </div>
-                            <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
-                                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">ASSETS OWNED</p>
-                                <p class="text-xl font-bold uppercase tracking-tighter" id="stat-assets">0</p>
-                            </div>
-                            <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
-                                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">ETH BALANCE</p>
-                                <p class="text-xl font-bold uppercase tracking-tighter mono" id="stat-eth">0.00</p>
-                            </div>
-                            <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800">
-                                <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">MULTIPLIER</p>
-                                <p class="text-xl font-bold uppercase tracking-tighter mono" id="stat-mult">1.0x</p>
-                            </div>
+                        <!-- STAT WIDGETS -->
+                        <div id="empire-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <!-- Populated via JS -->
                         </div>
                     </div>
 
@@ -608,6 +606,17 @@
                 </div>
 
                 <div class="col-span-12 lg:col-span-8 space-y-6">
+                    <!-- NEW WIDGET MANAGER -->
+                    <div class="glass-card p-8">
+                        <div class="flex justify-between items-center mb-6">
+                            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">DASHBOARD WIDGETS</p>
+                            <p class="text-[10px] font-bold text-zinc-400" id="widget-count">4/8 ACTIVE</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="widget-manager-container">
+                            <!-- Managed by JS -->
+                        </div>
+                    </div>
+
                     <div class="glass-card p-8">
                         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">UI THEMES</p>
                         <div id="themes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -1076,7 +1085,8 @@
             lastSaveTime: 0,
             education: { enrolledCollegeId: null, classesTaken: 0, degrees:[] },
             ownedThemes:['dark', 'light'],
-            activeTheme: 'dark'
+            activeTheme: 'dark',
+            activeStats:['rank', 'assets', 'eth', 'multiplier']
         };
 
         let activeStock = null;
@@ -1101,8 +1111,29 @@
         if (!state.education) state.education = { enrolledCollegeId: null, classesTaken: 0, degrees:[] };
         
         // Theme init
-        if (!state.ownedThemes) state.ownedThemes = ['dark', 'light'];
+        if (!state.ownedThemes) state.ownedThemes =['dark', 'light'];
         if (!state.activeTheme) state.activeTheme = 'dark';
+        
+        // Stats Init
+        if (!state.activeStats) state.activeStats = ['rank', 'assets', 'eth', 'multiplier'];
+
+        const AVAILABLE_STATS =[
+            { id: 'rank', label: 'Current Rank', isMono: false, getValue: () => RANKS[Math.min(Math.floor(state.level / 5), RANKS.length - 1)] },
+            { id: 'assets', label: 'Assets Owned', isMono: false, getValue: () => state.ownedAssets.length },
+            { id: 'multiplier', label: 'Multiplier', isMono: true, getValue: () => ((CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0]).mult * getDegreeMult()).toFixed(2) + 'x' },
+            { id: 'eth', label: 'ETH Balance', isMono: true, getValue: () => (state.shares['ETH'] || 0).toFixed(2) },
+            { id: 'btc', label: 'BTC Balance', isMono: true, getValue: () => (state.shares['BTC'] || 0).toFixed(4) },
+            { id: 'sol', label: 'SOL Balance', isMono: true, getValue: () => (state.shares['SOL'] || 0).toFixed(2) },
+            { id: 'bnb', label: 'BNB Balance', isMono: true, getValue: () => (state.shares['BNB'] || 0).toFixed(2) },
+            { id: 'aapl', label: 'AAPL Shares', isMono: true, getValue: () => (state.shares['AAPL'] || 0).toFixed(2) },
+            { id: 'nvda', label: 'NVDA Shares', isMono: true, getValue: () => (state.shares['NVDA'] || 0).toFixed(2) },
+            { id: 'msft', label: 'MSFT Shares', isMono: true, getValue: () => (state.shares['MSFT'] || 0).toFixed(2) },
+            { id: 'networth', label: 'Net Worth', isMono: true, getValue: () => '$' + Math.floor(state.netWorth).toLocaleString() },
+            { id: 'cash', label: 'Cash Balance', isMono: true, getValue: () => '$' + Math.floor(state.balance).toLocaleString() },
+            { id: 'revenue', label: 'Hourly Rev', isMono: true, getValue: () => '$' + Math.floor(state.revenue).toLocaleString() },
+            { id: 'level', label: 'Empire Level', isMono: true, getValue: () => state.level },
+            { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length }
+        ];
 
         function saveGame() { 
             state.lastSaveTime = Date.now();
@@ -1312,6 +1343,87 @@
             if (el) el.innerText = val;
         }
 
+        let draggedStatIndex = null;
+        function statDragStart(e, index) {
+            draggedStatIndex = index;
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function statDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drag-over');
+        }
+        function statDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        function statDrop(e, index) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if(draggedStatIndex === null || draggedStatIndex === index) return;
+            const stats = [...state.activeStats];
+            const movedItem = stats.splice(draggedStatIndex, 1)[0];
+            stats.splice(index, 0, movedItem);
+            state.activeStats = stats;
+            saveGame();
+            updateUI();
+        }
+
+        function toggleStatWidget(id) {
+            if (state.activeStats.includes(id)) {
+                state.activeStats = state.activeStats.filter(s => s !== id);
+            } else {
+                if (state.activeStats.length < 8) {
+                    state.activeStats.push(id);
+                }
+            }
+            saveGame();
+            updateUI();
+        }
+
+        function renderEmpireStats() {
+            const grid = document.getElementById('empire-stats-grid');
+            if(!grid) return;
+            grid.innerHTML = state.activeStats.map((statId, index) => {
+                const statDef = AVAILABLE_STATS.find(s => s.id === statId);
+                if(!statDef) return '';
+                const val = statDef.getValue();
+                return `
+                <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800 cursor-move transition-colors hover:border-zinc-500" 
+                     draggable="true" 
+                     ondragstart="statDragStart(event, ${index})" 
+                     ondragover="statDragOver(event)" 
+                     ondragleave="statDragLeave(event)"
+                     ondrop="statDrop(event, ${index})">
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2">${statDef.label}</p>
+                    <p class="text-xl font-bold uppercase tracking-tighter truncate ${statDef.isMono ? 'mono' : ''}">${val}</p>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function renderWidgetManager() {
+            const container = document.getElementById('widget-manager-container');
+            const countEl = document.getElementById('widget-count');
+            if(!container) return;
+
+            if (countEl) {
+                countEl.innerText = `${state.activeStats.length}/8 ACTIVE`;
+                countEl.className = `text-[10px] font-bold uppercase tracking-widest ${state.activeStats.length >= 8 ? 'text-amber-500' : 'text-zinc-400'}`;
+            }
+
+            container.innerHTML = AVAILABLE_STATS.map(stat => {
+                const isActive = state.activeStats.includes(stat.id);
+                return `
+                <div class="flex justify-between items-center bg-zinc-950 p-3 rounded border border-zinc-900">
+                    <span class="text-[10px] font-bold uppercase text-zinc-300">${stat.label}</span>
+                    <button onclick="toggleStatWidget('${stat.id}')" class="text-[9px] font-bold px-3 py-1 rounded transition-colors ${isActive ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'bg-emerald-500/20 text-emerald-500 hover:bg-emerald-500/30'} ${!isActive && state.activeStats.length >= 8 ? 'opacity-30 cursor-not-allowed' : ''}" ${!isActive && state.activeStats.length >= 8 ? 'disabled' : ''}>
+                        ${isActive ? 'REMOVE' : 'ADD'}
+                    </button>
+                </div>
+                `;
+            }).join('');
+        }
+
         function updateUI() {
             if (state.userName) {
                 document.getElementById('onboarding-modal').style.display = 'none';
@@ -1366,12 +1478,8 @@
             const rankIndex = Math.min(Math.floor(state.level / 5), RANKS.length - 1);
             const rankStr = RANKS[rankIndex];
             setUI('rank-display', rankStr);
-            setUI('stat-rank', rankStr);
-            setUI('stat-assets', state.ownedAssets.length);
-            setUI('stat-eth', (state.shares['ETH'] || 0).toFixed(2));
             
             const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
-            setUI('stat-mult', (equipped.mult * degreeMult).toFixed(2) + 'x');
 
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
@@ -1403,6 +1511,9 @@
 
             const compMultText = state.level >= 4 ? "90" : "30";
             setUI('comp-sell-desc', `BUILD, UPGRADE & SELL FOR ${compMultText}% OF INVESTMENTS`);
+
+            renderEmpireStats();
+            renderWidgetManager();
 
             renderWatchlist();
             renderGrids();
