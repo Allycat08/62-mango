@@ -191,7 +191,7 @@
             margin: 0 auto;
             border-left: 1px solid #1a1a1a;
             border-right: 1px solid #1a1a1a;
-            padding: 1.5rem !important;
+            padding: 0 !important;
             overflow-y: auto;
             overflow-x: hidden;
             border-radius: 0;
@@ -207,7 +207,7 @@
                 border: 2px solid #222;
                 border-radius: 40px;
                 box-shadow: 0 20px 80px rgba(0,0,0,0.9);
-                padding: 1.5rem !important;
+                padding: 0 !important;
             }
         }
         .mobile-mode::-webkit-scrollbar { display: none; }
@@ -351,46 +351,50 @@
         }
     </style>
 </head>
-<body class="p-6 max-w-[1400px] mx-auto">
+<body class="max-w-[1400px] mx-auto">
 
-    <header class="flex justify-between items-start mb-12">
-        <div class="flex items-center gap-4">
-            <svg onclick="showBlackMarket()" class="cursor-pointer transition-transform hover:scale-110" width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
-            </svg>
-            <div>
-                <h1 class="text-3xl font-black tracking-tighter leading-none">VERCEL <span class="text-zinc-500">EMPIRE</span></h1>
-                <p class="text-[10px] text-zinc-500 font-bold mt-1 uppercase tracking-widest">LVL <span id="lvl-display">1</span> <span id="rank-display">ENTREPRENEUR</span></p>
-            </div>
-        </div>
-
-        <div class="flex gap-4">
-            <div class="stats-badge flex gap-8 bg-zinc-950 border border-zinc-900 rounded-xl p-4 px-8">
-                <div class="text-center">
-                    <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">NET WORTH</p>
-                    <p class="text-xl font-bold mono" id="nw-display">$0</p>
-                </div>
-                <div class="text-center border-l border-zinc-800 pl-8">
-                    <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">HOURLY REVENUE</p>
-                    <p class="text-xl font-bold mono text-emerald-400" id="hr-display">+$0/hr</p>
+    <!-- STICKY TOP BAR WRAPPER -->
+    <div id="top-bar" class="sticky top-0 z-50 px-6 pt-6 transition-colors duration-300" style="background-color: var(--bg);">
+        <header class="flex justify-between items-start mb-8">
+            <div class="flex items-center gap-4">
+                <svg onclick="showBlackMarket()" class="cursor-pointer transition-transform hover:scale-110" width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
+                </svg>
+                <div>
+                    <h1 class="text-3xl font-black tracking-tighter leading-none">VERCEL <span class="text-zinc-500">EMPIRE</span></h1>
+                    <p class="text-[10px] text-zinc-500 font-bold mt-1 uppercase tracking-widest">LVL <span id="lvl-display">1</span> <span id="rank-display">ENTREPRENEUR</span></p>
                 </div>
             </div>
-        </div>
-    </header>
 
-    <nav class="flex gap-8 border-b border-zinc-900 mb-10 overflow-x-auto whitespace-nowrap">
-        <button onclick="showTab('dashboard')" class="nav-link active" id="btn-dashboard">Dashboard</button>
-        <button onclick="showTab('companies')" class="nav-link" id="btn-companies">Companies</button>
-        <button onclick="showTab('real-estate')" class="nav-link" id="btn-real-estate">Real Estate</button>
-        <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Market</button>
-        <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
-        <button onclick="showTab('trading')" class="nav-link" id="btn-trading">Trading</button>
-        <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
-        <button onclick="showTab('academics')" class="nav-link" id="btn-academics">Academics</button>
-        <button onclick="showTab('profile')" class="nav-link" id="btn-profile">Profile</button>
-    </nav>
+            <div class="flex gap-4">
+                <div class="stats-badge flex gap-8 bg-zinc-950 border border-zinc-900 rounded-xl p-4 px-8 shadow-sm">
+                    <div class="text-center">
+                        <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">NET WORTH</p>
+                        <p class="text-xl font-bold mono" id="nw-display">$0</p>
+                    </div>
+                    <div class="text-center border-l border-zinc-800 pl-8">
+                        <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">HOURLY REVENUE</p>
+                        <p class="text-xl font-bold mono text-emerald-400" id="hr-display">+$0/hr</p>
+                    </div>
+                </div>
+            </div>
+        </header>
 
-    <main>
+        <nav class="flex gap-8 border-b border-zinc-900 pb-2 overflow-x-auto whitespace-nowrap">
+            <button onclick="showTab('dashboard')" class="nav-link active" id="btn-dashboard">Dashboard</button>
+            <button onclick="showTab('companies')" class="nav-link" id="btn-companies">Companies</button>
+            <button onclick="showTab('real-estate')" class="nav-link" id="btn-real-estate">Real Estate</button>
+            <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Market</button>
+            <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
+            <button onclick="showTab('trading')" class="nav-link" id="btn-trading">Trading</button>
+            <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
+            <button onclick="showTab('academics')" class="nav-link" id="btn-academics">Academics</button>
+            <button onclick="showTab('profile')" class="nav-link" id="btn-profile">Profile</button>
+        </nav>
+    </div>
+
+    <!-- MAIN WRAPPER WITH PADDING -->
+    <main class="px-6 pt-10 pb-24">
         <!-- DASHBOARD TAB -->
         <div id="dashboard" class="tab-content active">
             <div class="grid grid-cols-12 gap-6">
@@ -1370,6 +1374,32 @@
             updateUI();
         }
 
+        // Widget Drag and Drop Functions
+        let draggedWidgetIndex = null;
+        function widgetDragStart(e, index) {
+            draggedWidgetIndex = index;
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function widgetDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drag-over');
+        }
+        function widgetDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        function widgetDrop(e, index) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if(draggedWidgetIndex === null || draggedWidgetIndex === index) return;
+            const active = [...state.activeStats];
+            const movedItem = active.splice(draggedWidgetIndex, 1)[0];
+            active.splice(index, 0, movedItem);
+            state.activeStats = active;
+            saveGame();
+            updateUI();
+        }
+
         function toggleStatWidget(id) {
             if (state.activeStats.includes(id)) {
                 state.activeStats = state.activeStats.filter(s => s !== id);
@@ -1411,12 +1441,17 @@
                 const spanClass = spanClasses[colSpanDesktop];
 
                 return `
-                <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800 transition-colors hover:border-zinc-500 relative ${spanClass}">
+                <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800 transition-colors hover:border-zinc-500 relative cursor-move ${spanClass}"
+                     draggable="true"
+                     ondragstart="widgetDragStart(event, ${index})"
+                     ondragover="widgetDragOver(event)"
+                     ondragleave="widgetDragLeave(event)"
+                     ondrop="widgetDrop(event, ${index})">
                     <button onclick="resizeWidget('${statId}', event)" class="absolute top-3 right-3 text-zinc-600 hover:text-white transition-colors" title="Resize Widget">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                     </button>
-                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2 pr-6">${statDef.label}</p>
-                    <p class="text-xl font-bold uppercase tracking-tighter truncate ${statDef.isMono ? 'mono' : ''}">${val}</p>
+                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2 pr-6 pointer-events-none">${statDef.label}</p>
+                    <p class="text-xl font-bold uppercase tracking-tighter truncate pointer-events-none ${statDef.isMono ? 'mono' : ''}">${val}</p>
                 </div>
                 `;
             }).join('');
@@ -2648,6 +2683,9 @@
             const btn = document.getElementById('btn-' + tabId);
             if(btn) btn.classList.add('active');
             if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'academics', 'black-market'].includes(tabId)) setTimeout(updateUI, 10);
+            
+            // Adjust scroll for sticky header visibility
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         setInterval(() => {
@@ -2664,7 +2702,7 @@
                 const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
                 const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
                 s.history.push({ open, close, high, low });
-                if(s.history.length > 50) s.history.shift();
+                if(s.history.length > 50) s.history.history.shift();
             });
             state.lastSaveTime = Date.now();
             updateUI();
@@ -2695,7 +2733,6 @@
             if(e.key === 'Escape') {
                 closeStockModal();
                 closeResetModal();
-                // Notice we specifically don't close auction modal on ESC
             }
         });
         
