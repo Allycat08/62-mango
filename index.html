@@ -971,18 +971,6 @@
             });
         })();
 
-        STOCKS.forEach(s => {
-            let last = s.price;
-            for(let i=0; i<50; i++) {
-                const open = last;
-                const close = parseFloat((last + (Math.random() - 0.5) * (last * 0.05)).toFixed(2));
-                const high = parseFloat((Math.max(open, close) + Math.random() * (last * 0.01)).toFixed(2));
-                const low = parseFloat((Math.min(open, close) - Math.random() * (last * 0.01)).toFixed(2));
-                s.history.push({ open, close, high, low });
-                last = close;
-            }
-        });
-
         const COMPANY_TIERS =["Local", "Small Chain", "Large Chain", "Regional Giant", "Global Conglomerate"];
 
         const COMPANIES =[
@@ -1120,7 +1108,8 @@
             ownedThemes:['dark', 'light'],
             activeTheme: 'dark',
             activeStats:['rank', 'assets', 'eth', 'multiplier'],
-            widgetSizes: {}
+            widgetSizes: {},
+            stockMarket: null
         };
 
         let activeStock = null;
@@ -1151,6 +1140,35 @@
         // Stats Init
         if (!state.activeStats) state.activeStats =['rank', 'assets', 'eth', 'multiplier'];
         if (!state.widgetSizes) state.widgetSizes = {};
+
+        // Merge persistent stock market data if it exists
+        if (state.stockMarket && state.stockMarket.length > 0) {
+            state.stockMarket.forEach(savedStock => {
+                const s = STOCKS.find(x => x.symbol === savedStock.symbol);
+                if (s) {
+                    s.price = savedStock.price;
+                    s.trend = savedStock.trend;
+                    s.history = savedStock.history ||[];
+                    s.isRealTime = savedStock.isRealTime || false;
+                }
+            });
+        }
+
+        // Initialize fallback simulated history for new/unpopulated stocks
+        STOCKS.forEach(s => {
+            if (!s.history || s.history.length === 0) {
+                let last = s.price;
+                s.history =[];
+                for(let i=0; i<50; i++) {
+                    const open = last;
+                    const close = parseFloat((last + (Math.random() - 0.5) * (last * 0.05)).toFixed(2));
+                    const high = parseFloat((Math.max(open, close) + Math.random() * (last * 0.01)).toFixed(2));
+                    const low = parseFloat((Math.min(open, close) - Math.random() * (last * 0.01)).toFixed(2));
+                    s.history.push({ open, close, high, low });
+                    last = close;
+                }
+            }
+        });
 
         const AVAILABLE_STATS =[
             { id: 'rank', label: 'Current Rank', isMono: false, getValue: () => RANKS[Math.min(Math.floor(state.level / 5), RANKS.length - 1)] },
@@ -1214,6 +1232,13 @@
 
         function saveGame() { 
             state.lastSaveTime = Date.now();
+            state.stockMarket = STOCKS.map(s => ({
+                symbol: s.symbol,
+                price: s.price,
+                trend: s.trend,
+                history: s.history,
+                isRealTime: s.isRealTime
+            }));
             localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); 
         }
 
