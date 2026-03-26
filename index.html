@@ -412,7 +412,10 @@
                                     <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
                                 </div>
                                 <h2 class="text-4xl font-black mb-1 tracking-tighter" id="balance-display">$0</h2>
-                                <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
+                                <div class="flex items-center gap-2">
+                                    <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
+                                    <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
+                                </div>
                             </div>
                             <div class="flex justify-between items-end relative z-10">
                                 <p class="text-[11px] text-white/30 font-medium tracking-widest uppercase" id="card-name-display">HOLDER NAME</p>
@@ -1126,7 +1129,7 @@
         const AVAILABLE_STATS =[
             { id: 'rank', label: 'Current Rank', isMono: false, getValue: () => RANKS[Math.min(Math.floor(state.level / 5), RANKS.length - 1)] },
             { id: 'assets', label: 'Assets Owned', isMono: false, getValue: () => state.ownedAssets.length },
-            { id: 'multiplier', label: 'Multiplier', isMono: true, getValue: () => ((CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0]).mult * getDegreeMult()).toFixed(2) + 'x' },
+            { id: 'multiplier', label: 'Total Multiplier', isMono: true, getValue: () => ((CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0]).mult * getDegreeMult()).toFixed(2) + 'x' },
             { id: 'eth', label: 'ETH Balance', isMono: true, getValue: () => (state.shares['ETH'] || 0).toFixed(2) },
             { id: 'btc', label: 'BTC Balance', isMono: true, getValue: () => (state.shares['BTC'] || 0).toFixed(4) },
             { id: 'sol', label: 'SOL Balance', isMono: true, getValue: () => (state.shares['SOL'] || 0).toFixed(2) },
@@ -1548,6 +1551,7 @@
             const gCard = document.getElementById('game-card');
             if(gCard) gCard.className = `debit-card p-8 flex flex-col justify-between ${equipped.class}`;
             setUI('card-tier-label', equipped.name);
+            setUI('card-mult-display', equipped.mult + 'x');
 
             const cdEl = document.getElementById('mint-cooldown');
             if (cdEl) {
