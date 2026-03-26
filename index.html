@@ -64,6 +64,26 @@
         }
         .debit-card:active { transform: scale(0.95) rotateX(10deg); }
         
+        /* Fullscreen Card Modifier */
+        .card-fullscreen-mode {
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 9999 !important;
+            background: rgba(0,0,0,0.85) !important;
+            backdrop-filter: blur(15px) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 2rem !important;
+        }
+        .card-fullscreen-mode .debit-card {
+            width: 100% !important;
+            max-width: 900px !important;
+            height: auto !important;
+            aspect-ratio: 1.58 / 1 !important;
+            transform: none !important;
+        }
+
         .card-glare {
             position: absolute;
             inset: 0;
@@ -402,9 +422,15 @@
                     <div class="card-perspective" id="card-container">
                         <div class="debit-card p-8 flex flex-col justify-between tier-0" id="game-card" onclick="mintMoney(event)">
                             <div class="card-glare" id="card-glare"></div>
+                            
+                            <!-- MAXIMIZE BUTTON -->
+                            <button onclick="toggleCardFullscreen(event)" id="card-max-btn" class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors" title="Toggle Fullscreen">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                            </button>
+
                             <div class="flex justify-between items-start relative z-10">
                                 <div class="card-chip"></div>
-                                <svg width="50" viewBox="0 0 76 65" fill="none" class="opacity-50"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
+                                <svg width="50" viewBox="0 0 76 65" fill="none" class="opacity-50 mr-8"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
                             </div>
                             <div class="relative z-10">
                                 <div class="flex justify-between items-center mb-1">
@@ -412,7 +438,7 @@
                                     <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
                                 </div>
                                 <h2 class="text-4xl font-black mb-1 tracking-tighter" id="balance-display">$0</h2>
-                                <div class="flex items-center gap-2">
+                                <div class="flex items-center gap-2 mt-1">
                                     <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
                                     <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
                                 </div>
@@ -498,7 +524,7 @@
             <section class="mb-12">
                 <div class="flex items-center gap-4 mb-8">
                     <h2 class="text-xl font-black uppercase tracking-tight">CRYPTO EXCHANGE</h2>
-                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded">24/7 TRADING</span>
+                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded">REAL-TIME TRADING</span>
                 </div>
                 <div id="crypto-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </section>
@@ -797,107 +823,107 @@
         ];
 
         const STOCKS =[
-            { symbol: "AAPL", name: "Apple Inc.", price: 170.00, trend: 1.2, history: [], type: 'stock', logo: 'https://logo.clearbit.com/apple.com' },
-            { symbol: "MSFT", name: "Microsoft", price: 400.00, trend: 1.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/microsoft.com' },
-            { symbol: "NVDA", name: "Nvidia Corp", price: 130.00, trend: 5.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nvidia.com' },
-            { symbol: "AMZN", name: "Amazon", price: 175.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/amazon.com' },
-            { symbol: "META", name: "Meta Platforms", price: 480.00, trend: 2.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/meta.com' },
-            { symbol: "GOOGL", name: "Alphabet Inc.", price: 140.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/google.com' },
-            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/tesla.com' },
-            { symbol: "BRK.B", name: "Berkshire Hathaway", price: 405.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/berkshirehathaway.com' },
-            { symbol: "LLY", name: "Eli Lilly", price: 750.00, trend: 3.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/lilly.com' },
-            { symbol: "V", name: "Visa", price: 280.00, trend: 0.9, history:[], type: 'stock', logo: 'https://logo.clearbit.com/visa.com' },
-            { symbol: "JPM", name: "JPMorgan Chase", price: 190.00, trend: 1.0, history:[], type: 'stock', logo: 'https://logo.clearbit.com/jpmorganchase.com' },
-            { symbol: "WMT", name: "Walmart", price: 60.00, trend: 0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/walmart.com' },
-            { symbol: "JNJ", name: "Johnson & Johnson", price: 155.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/jnj.com' },
-            { symbol: "MA", name: "Mastercard", price: 470.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/mastercard.com' },
-            { symbol: "PG", name: "Procter & Gamble", price: 160.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pg.com' },
-            { symbol: "AVGO", name: "Broadcom", price: 160.00, trend: 2.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/broadcom.com' },
-            { symbol: "HD", name: "Home Depot", price: 370.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/homedepot.com' },
-            { symbol: "ORCL", name: "Oracle", price: 125.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/oracle.com' },
-            { symbol: "CVX", name: "Chevron", price: 150.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/chevron.com' },
-            { symbol: "MRK", name: "Merck", price: 125.00, trend: 0.7, history:[], type: 'stock', logo: 'https://logo.clearbit.com/merck.com' },
-            { symbol: "KO", name: "Coca-Cola", price: 60.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/coca-colacompany.com' },
-            { symbol: "PEP", name: "PepsiCo", price: 170.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pepsico.com' },
-            { symbol: "BAC", name: "Bank of America", price: 35.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/bankofamerica.com' },
-            { symbol: "COST", name: "Costco", price: 730.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/costco.com' },
-            { symbol: "MCD", name: "McDonald's", price: 280.00, trend: 0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/mcdonalds.com' },
-            { symbol: "CRM", name: "Salesforce", price: 300.00, trend: 1.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/salesforce.com' },
-            { symbol: "AMD", name: "AMD", price: 180.00, trend: 3.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/amd.com' },
-            { symbol: "NFLX", name: "Netflix", price: 600.00, trend: 2.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/netflix.com' },
-            { symbol: "ADBE", name: "Adobe", price: 500.00, trend: 1.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/adobe.com' },
-            { symbol: "INTC", name: "Intel", price: 40.00, trend: -0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/intel.com' },
-            { symbol: "TXN", name: "Texas Instruments", price: 170.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/ti.com' },
-            { symbol: "QCOM", name: "Qualcomm", price: 165.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/qualcomm.com' },
-            { symbol: "AMAT", name: "Applied Materials", price: 200.00, trend: 1.9, history:[], type: 'stock', logo: 'https://logo.clearbit.com/appliedmaterials.com' },
-            { symbol: "INTU", name: "Intuit", price: 650.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/intuit.com' },
-            { symbol: "IBM", name: "IBM", price: 190.00, trend: 0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/ibm.com' },
-            { symbol: "BA", name: "Boeing", price: 180.00, trend: -1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/boeing.com' },
-            { symbol: "GE", name: "General Electric", price: 160.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/ge.com' },
-            { symbol: "MMM", name: "3M", price: 100.00, trend: -0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/3m.com' },
-            { symbol: "CAT", name: "Caterpillar", price: 340.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/caterpillar.com' },
-            { symbol: "DIS", name: "Walt Disney", price: 110.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/thewaltdisneycompany.com' },
-            { symbol: "C", name: "Citigroup", price: 60.00, trend: 0.7, history:[], type: 'stock', logo: 'https://logo.clearbit.com/citigroup.com' },
-            { symbol: "XOM", name: "ExxonMobil", price: 115.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/exxonmobil.com' },
-            { symbol: "BP", name: "BP", price: 35.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/bp.com' },
-            { symbol: "COP", name: "ConocoPhillips", price: 120.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/conocophillips.com' },
-            { symbol: "SLB", name: "Schlumberger", price: 50.00, trend: 0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/slb.com' },
-            { symbol: "EOG", name: "EOG Resources", price: 130.00, trend: 0.7, history:[], type: 'stock', logo: 'https://logo.clearbit.com/eogresources.com' },
-            { symbol: "MPC", name: "Marathon Petroleum", price: 190.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/marathonpetroleum.com' },
-            { symbol: "PXD", name: "Pioneer Natural", price: 260.00, trend: 0.9, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pxd.com' },
-            { symbol: "OXY", name: "Occidental", price: 65.00, trend: 0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/oxy.com' },
-            { symbol: "VLO", name: "Valero Energy", price: 160.00, trend: 1.0, history:[], type: 'stock', logo: 'https://logo.clearbit.com/valero.com' },
-            { symbol: "PSX", name: "Phillips 66", price: 155.00, trend: 1.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/phillips66.com' },
-            { symbol: "DOW", name: "Dow Inc.", price: 55.00, trend: 0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/dow.com' },
-            { symbol: "NUE", name: "Nucor", price: 190.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/nucor.com' },
-            { symbol: "SQ", name: "Block", price: 80.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/squareup.com' },
-            { symbol: "PYPL", name: "PayPal", price: 65.00, trend: -0.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/paypal.com' },
-            { symbol: "SHOP", name: "Shopify", price: 75.00, trend: 2.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/shopify.com' },
-            { symbol: "COIN", name: "Coinbase", price: 250.00, trend: 4.5, history:[], type: 'stock', logo: 'https://cryptoicons.org/api/icon/btc/200' },
-            { symbol: "HOOD", name: "Robinhood", price: 18.00, trend: 1.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/robinhood.com' },
-            { symbol: "PLTR", name: "Palantir", price: 25.00, trend: 3.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/palantir.com' },
-            { symbol: "RBLX", name: "Roblox", price: 40.00, trend: 1.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/roblox.com' },
-            { symbol: "ROKU", name: "Roku", price: 60.00, trend: -0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/roku.com' },
-            { symbol: "SNAP", name: "Snap", price: 12.00, trend: 0.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/snap.com' },
-            { symbol: "PINS", name: "Pinterest", price: 35.00, trend: 0.9, history:[], type: 'stock', logo: 'https://logo.clearbit.com/pinterest.com' },
-            { symbol: "ZM", name: "Zoom", price: 60.00, trend: -0.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/zoom.us' },
-            { symbol: "SPOT", name: "Spotify", price: 290.00, trend: 1.7, history:[], type: 'stock', logo: 'https://logo.clearbit.com/spotify.com' },
-            { symbol: "DOCU", name: "DocuSign", price: 50.00, trend: 0.1, history:[], type: 'stock', logo: 'https://logo.clearbit.com/docusign.com' },
-            { symbol: "TWLO", name: "Twilio", price: 60.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/twilio.com' },
-            { symbol: "SNOW", name: "Snowflake", price: 160.00, trend: 1.5, history:[], type: 'stock', logo: 'https://logo.clearbit.com/snowflake.com' },
-            { symbol: "DASH", name: "DoorDash", price: 130.00, trend: 1.2, history:[], type: 'stock', logo: 'https://logo.clearbit.com/doordash.com' },
-            { symbol: "ETSY", name: "Etsy", price: 70.00, trend: -0.4, history:[], type: 'stock', logo: 'https://logo.clearbit.com/etsy.com' },
-            { symbol: "UBER", name: "Uber", price: 75.00, trend: 1.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/uber.com' },
-            { symbol: "ABNB", name: "Airbnb", price: 160.00, trend: 1.3, history:[], type: 'stock', logo: 'https://logo.clearbit.com/airbnb.com' },
-            { symbol: "LMT", name: "Lockheed Martin", price: 450.00, trend: 0.8, history:[], type: 'stock', logo: 'https://logo.clearbit.com/lockheedmartin.com' },
-            { symbol: "UNP", name: "Union Pacific", price: 240.00, trend: 0.6, history:[], type: 'stock', logo: 'https://logo.clearbit.com/up.com' },
+            { symbol: "AAPL", name: "Apple Inc.", price: 170.00, trend: 1.2, history: [], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/apple.com' },
+            { symbol: "MSFT", name: "Microsoft", price: 400.00, trend: 1.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/microsoft.com' },
+            { symbol: "NVDA", name: "Nvidia Corp", price: 130.00, trend: 5.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/nvidia.com' },
+            { symbol: "AMZN", name: "Amazon", price: 175.00, trend: 1.1, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/amazon.com' },
+            { symbol: "META", name: "Meta Platforms", price: 480.00, trend: 2.3, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/meta.com' },
+            { symbol: "GOOGL", name: "Alphabet Inc.", price: 140.00, trend: 0.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/google.com' },
+            { symbol: "TSLA", name: "Tesla Motors", price: 175.00, trend: -2.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/tesla.com' },
+            { symbol: "BRK.B", name: "Berkshire Hathaway", price: 405.00, trend: 0.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/berkshirehathaway.com' },
+            { symbol: "LLY", name: "Eli Lilly", price: 750.00, trend: 3.1, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/lilly.com' },
+            { symbol: "V", name: "Visa", price: 280.00, trend: 0.9, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/visa.com' },
+            { symbol: "JPM", name: "JPMorgan Chase", price: 190.00, trend: 1.0, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/jpmorganchase.com' },
+            { symbol: "WMT", name: "Walmart", price: 60.00, trend: 0.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/walmart.com' },
+            { symbol: "JNJ", name: "Johnson & Johnson", price: 155.00, trend: 0.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/jnj.com' },
+            { symbol: "MA", name: "Mastercard", price: 470.00, trend: 1.1, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/mastercard.com' },
+            { symbol: "PG", name: "Procter & Gamble", price: 160.00, trend: 0.3, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/pg.com' },
+            { symbol: "AVGO", name: "Broadcom", price: 160.00, trend: 2.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/broadcom.com' },
+            { symbol: "HD", name: "Home Depot", price: 370.00, trend: 0.6, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/homedepot.com' },
+            { symbol: "ORCL", name: "Oracle", price: 125.00, trend: 1.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/oracle.com' },
+            { symbol: "CVX", name: "Chevron", price: 150.00, trend: 0.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/chevron.com' },
+            { symbol: "MRK", name: "Merck", price: 125.00, trend: 0.7, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/merck.com' },
+            { symbol: "KO", name: "Coca-Cola", price: 60.00, trend: 0.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/coca-colacompany.com' },
+            { symbol: "PEP", name: "PepsiCo", price: 170.00, trend: 0.3, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/pepsico.com' },
+            { symbol: "BAC", name: "Bank of America", price: 35.00, trend: 0.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/bankofamerica.com' },
+            { symbol: "COST", name: "Costco", price: 730.00, trend: 1.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/costco.com' },
+            { symbol: "MCD", name: "McDonald's", price: 280.00, trend: 0.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/mcdonalds.com' },
+            { symbol: "CRM", name: "Salesforce", price: 300.00, trend: 1.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/salesforce.com' },
+            { symbol: "AMD", name: "AMD", price: 180.00, trend: 3.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/amd.com' },
+            { symbol: "NFLX", name: "Netflix", price: 600.00, trend: 2.1, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/netflix.com' },
+            { symbol: "ADBE", name: "Adobe", price: 500.00, trend: 1.6, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/adobe.com' },
+            { symbol: "INTC", name: "Intel", price: 40.00, trend: -0.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/intel.com' },
+            { symbol: "TXN", name: "Texas Instruments", price: 170.00, trend: 0.6, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/ti.com' },
+            { symbol: "QCOM", name: "Qualcomm", price: 165.00, trend: 1.1, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/qualcomm.com' },
+            { symbol: "AMAT", name: "Applied Materials", price: 200.00, trend: 1.9, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/appliedmaterials.com' },
+            { symbol: "INTU", name: "Intuit", price: 650.00, trend: 1.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/intuit.com' },
+            { symbol: "IBM", name: "IBM", price: 190.00, trend: 0.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/ibm.com' },
+            { symbol: "BA", name: "Boeing", price: 180.00, trend: -1.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/boeing.com' },
+            { symbol: "GE", name: "General Electric", price: 160.00, trend: 1.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/ge.com' },
+            { symbol: "MMM", name: "3M", price: 100.00, trend: -0.3, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/3m.com' },
+            { symbol: "CAT", name: "Caterpillar", price: 340.00, trend: 0.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/caterpillar.com' },
+            { symbol: "DIS", name: "Walt Disney", price: 110.00, trend: 0.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/thewaltdisneycompany.com' },
+            { symbol: "C", name: "Citigroup", price: 60.00, trend: 0.7, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/citigroup.com' },
+            { symbol: "XOM", name: "ExxonMobil", price: 115.00, trend: 0.6, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/exxonmobil.com' },
+            { symbol: "BP", name: "BP", price: 35.00, trend: 0.3, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/bp.com' },
+            { symbol: "COP", name: "ConocoPhillips", price: 120.00, trend: 0.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/conocophillips.com' },
+            { symbol: "SLB", name: "Schlumberger", price: 50.00, trend: 0.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/slb.com' },
+            { symbol: "EOG", name: "EOG Resources", price: 130.00, trend: 0.7, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/eogresources.com' },
+            { symbol: "MPC", name: "Marathon Petroleum", price: 190.00, trend: 1.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/marathonpetroleum.com' },
+            { symbol: "PXD", name: "Pioneer Natural", price: 260.00, trend: 0.9, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/pxd.com' },
+            { symbol: "OXY", name: "Occidental", price: 65.00, trend: 0.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/oxy.com' },
+            { symbol: "VLO", name: "Valero Energy", price: 160.00, trend: 1.0, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/valero.com' },
+            { symbol: "PSX", name: "Phillips 66", price: 155.00, trend: 1.1, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/phillips66.com' },
+            { symbol: "DOW", name: "Dow Inc.", price: 55.00, trend: 0.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/dow.com' },
+            { symbol: "NUE", name: "Nucor", price: 190.00, trend: 0.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/nucor.com' },
+            { symbol: "SQ", name: "Block", price: 80.00, trend: 1.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/squareup.com' },
+            { symbol: "PYPL", name: "PayPal", price: 65.00, trend: -0.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/paypal.com' },
+            { symbol: "SHOP", name: "Shopify", price: 75.00, trend: 2.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/shopify.com' },
+            { symbol: "COIN", name: "Coinbase", price: 250.00, trend: 4.5, history:[], type: 'stock', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/btc/200' },
+            { symbol: "HOOD", name: "Robinhood", price: 18.00, trend: 1.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/robinhood.com' },
+            { symbol: "PLTR", name: "Palantir", price: 25.00, trend: 3.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/palantir.com' },
+            { symbol: "RBLX", name: "Roblox", price: 40.00, trend: 1.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/roblox.com' },
+            { symbol: "ROKU", name: "Roku", price: 60.00, trend: -0.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/roku.com' },
+            { symbol: "SNAP", name: "Snap", price: 12.00, trend: 0.3, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/snap.com' },
+            { symbol: "PINS", name: "Pinterest", price: 35.00, trend: 0.9, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/pinterest.com' },
+            { symbol: "ZM", name: "Zoom", price: 60.00, trend: -0.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/zoom.us' },
+            { symbol: "SPOT", name: "Spotify", price: 290.00, trend: 1.7, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/spotify.com' },
+            { symbol: "DOCU", name: "DocuSign", price: 50.00, trend: 0.1, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/docusign.com' },
+            { symbol: "TWLO", name: "Twilio", price: 60.00, trend: 0.6, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/twilio.com' },
+            { symbol: "SNOW", name: "Snowflake", price: 160.00, trend: 1.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/snowflake.com' },
+            { symbol: "DASH", name: "DoorDash", price: 130.00, trend: 1.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/doordash.com' },
+            { symbol: "ETSY", name: "Etsy", price: 70.00, trend: -0.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/etsy.com' },
+            { symbol: "UBER", name: "Uber", price: 75.00, trend: 1.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/uber.com' },
+            { symbol: "ABNB", name: "Airbnb", price: 160.00, trend: 1.3, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/airbnb.com' },
+            { symbol: "LMT", name: "Lockheed Martin", price: 450.00, trend: 0.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/lockheedmartin.com' },
+            { symbol: "UNP", name: "Union Pacific", price: 240.00, trend: 0.6, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/up.com' },
 
-            { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/btc/200' },
-            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/eth/200' },
-            { symbol: "BNB", name: "Binance Coin", price: 580.00, trend: 0.8, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/bnb/200' },
-            { symbol: "SOL", name: "Solana", price: 145.00, trend: 2.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/sol/200' },
-            { symbol: "XRP", name: "XRP", price: 0.62, trend: 0.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/xrp/200' },
-            { symbol: "ADA", name: "Cardano", price: 0.45, trend: -0.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/ada/200' },
-            { symbol: "AVAX", name: "Avalanche", price: 35.00, trend: 1.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/avax/200' },
-            { symbol: "DOGE", name: "Dogecoin", price: 0.16, trend: 3.0, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/doge/200' },
-            { symbol: "DOT", name: "Polkadot", price: 7.20, trend: 0.4, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/dot/200' },
-            { symbol: "TRX", name: "TRON", price: 0.12, trend: 0.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/trx/200' },
-            { symbol: "LINK", name: "Chainlink", price: 14.50, trend: 1.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/link/200' },
-            { symbol: "MATIC", name: "Polygon", price: 0.75, trend: 0.6, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/matic/200' },
-            { symbol: "LTC", name: "Litecoin", price: 82.00, trend: -0.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/ltc/200' },
-            { symbol: "BCH", name: "Bitcoin Cash", price: 480.00, trend: 1.9, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/bch/200' },
-            { symbol: "UNI", name: "Uniswap", price: 10.00, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/uni/200' },
-            { symbol: "ATOM", name: "Cosmos", price: 8.50, trend: 0.5, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/atom/200' },
-            { symbol: "XLM", name: "Stellar", price: 0.11, trend: 0.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/xlm/200' },
-            { symbol: "ICP", name: "Internet Computer", price: 12.00, trend: -0.8, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/icp/200' },
-            { symbol: "APT", name: "Aptos", price: 14.00, trend: 2.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/apt/200' },
-            { symbol: "NEAR", name: "NEAR Protocol", price: 7.00, trend: 1.8, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/near/200' },
-            { symbol: "FIL", name: "Filecoin", price: 6.00, trend: -0.4, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/fil/200' },
-            { symbol: "INJ", name: "Injective", price: 34.00, trend: 3.6, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/inj/200' },
-            { symbol: "STX", name: "Stacks", price: 2.80, trend: 1.4, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/stx/200' },
-            { symbol: "ALGO", name: "Algorand", price: 0.22, trend: 0.1, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/algo/200' },
-            { symbol: "GRT", name: "The Graph", price: 0.30, trend: 0.7, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/grt/200' },
-            { symbol: "RUNE", name: "THORChain", price: 7.50, trend: 1.2, history:[], type: 'crypto', logo: 'https://cryptoicons.org/api/icon/rune/200' }
+            { symbol: "BTC", name: "Bitcoin", price: 65000.00, trend: 0.5, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/btc/200' },
+            { symbol: "ETH", name: "Ethereum", price: 3400.00, trend: 1.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/eth/200' },
+            { symbol: "BNB", name: "Binance Coin", price: 580.00, trend: 0.8, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/bnb/200' },
+            { symbol: "SOL", name: "Solana", price: 145.00, trend: 2.5, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/sol/200' },
+            { symbol: "XRP", name: "XRP", price: 0.62, trend: 0.1, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/xrp/200' },
+            { symbol: "ADA", name: "Cardano", price: 0.45, trend: -0.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/ada/200' },
+            { symbol: "AVAX", name: "Avalanche", price: 35.00, trend: 1.5, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/avax/200' },
+            { symbol: "DOGE", name: "Dogecoin", price: 0.16, trend: 3.0, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/doge/200' },
+            { symbol: "DOT", name: "Polkadot", price: 7.20, trend: 0.4, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/dot/200' },
+            { symbol: "TRX", name: "TRON", price: 0.12, trend: 0.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/trx/200' },
+            { symbol: "LINK", name: "Chainlink", price: 14.50, trend: 1.1, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/link/200' },
+            { symbol: "MATIC", name: "Polygon", price: 0.75, trend: 0.6, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/matic/200' },
+            { symbol: "LTC", name: "Litecoin", price: 82.00, trend: -0.1, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/ltc/200' },
+            { symbol: "BCH", name: "Bitcoin Cash", price: 480.00, trend: 1.9, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/bch/200' },
+            { symbol: "UNI", name: "Uniswap", price: 10.00, trend: 1.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/uni/200' },
+            { symbol: "ATOM", name: "Cosmos", price: 8.50, trend: 0.5, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/atom/200' },
+            { symbol: "XLM", name: "Stellar", price: 0.11, trend: 0.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/xlm/200' },
+            { symbol: "ICP", name: "Internet Computer", price: 12.00, trend: -0.8, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/icp/200' },
+            { symbol: "APT", name: "Aptos", price: 14.00, trend: 2.1, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/apt/200' },
+            { symbol: "NEAR", name: "NEAR Protocol", price: 7.00, trend: 1.8, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/near/200' },
+            { symbol: "FIL", name: "Filecoin", price: 6.00, trend: -0.4, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/fil/200' },
+            { symbol: "INJ", name: "Injective", price: 34.00, trend: 3.6, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/inj/200' },
+            { symbol: "STX", name: "Stacks", price: 2.80, trend: 1.4, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/stx/200' },
+            { symbol: "ALGO", name: "Algorand", price: 0.22, trend: 0.1, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/algo/200' },
+            { symbol: "GRT", name: "The Graph", price: 0.30, trend: 0.7, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/grt/200' },
+            { symbol: "RUNE", name: "THORChain", price: 7.50, trend: 1.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/rune/200' }
         ];
 
         const NFTS =[
@@ -1144,6 +1170,48 @@
             { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length }
         ];
 
+        // Fetch Real-time Yahoo Finance Data
+        async function fetchRealTimeStocks() {
+            try {
+                // Formatting symbols appropriately for Yahoo
+                const symbols = STOCKS.map(s => {
+                    if (s.type === 'crypto') return s.symbol + '-USD';
+                    return s.symbol.replace('.', '-'); // E.g. BRK.B to BRK-B
+                }).join(',');
+
+                const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}`;
+                // Routing through allorigins as a dependable free CORS proxy for client-side API requests
+                const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
+                
+                const res = await fetch(proxyUrl);
+                const data = await res.json();
+                const parsed = JSON.parse(data.contents);
+                
+                if (parsed && parsed.quoteResponse && parsed.quoteResponse.result) {
+                    parsed.quoteResponse.result.forEach(quote => {
+                        let sym = quote.symbol;
+                        // Map back to our internal naming (remove -USD, replace dashes with dots)
+                        if (sym.endsWith('-USD')) sym = sym.replace('-USD', '');
+                        sym = sym.replace('-', '.'); 
+                        
+                        const stock = STOCKS.find(s => s.symbol === sym);
+                        if (stock && quote.regularMarketPrice) {
+                            stock.price = quote.regularMarketPrice;
+                            stock.trend = quote.regularMarketChangePercent;
+                            stock.isRealTime = true; // Let our system know to stop random tick simulation
+                        }
+                    });
+                    updateUI(); // Refresh visual components based on live data
+                }
+            } catch (e) {
+                console.warn("Real-time stocks fetch error - proceeding with simulated market data.", e);
+            }
+        }
+
+        // Run fetch immediately, then every 10 seconds.
+        setTimeout(fetchRealTimeStocks, 500);
+        setInterval(fetchRealTimeStocks, 10000);
+
         function saveGame() { 
             state.lastSaveTime = Date.now();
             localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); 
@@ -1259,9 +1327,27 @@
             updateUI();
             saveGame();
             const card = document.getElementById('game-card');
-            if (card) {
+            if (card && !document.getElementById('card-container').classList.contains('card-fullscreen-mode')) {
                 card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
                 setTimeout(() => { card.style.transform = ''; }, 100);
+            }
+        }
+
+        function toggleCardFullscreen(e) {
+            e.stopPropagation(); // Prevents money from being minted when pressing the button
+            const container = document.getElementById('card-container');
+            const gameCard = document.getElementById('game-card');
+            const btn = e.currentTarget;
+            
+            container.classList.toggle('card-fullscreen-mode');
+            
+            if (container.classList.contains('card-fullscreen-mode')) {
+                // Change icon to X (Close)
+                btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                gameCard.style.transform = ''; // reset tilt
+            } else {
+                // Change back to Maximize Arrows
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>`;
             }
         }
 
@@ -2692,21 +2778,27 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Market Tick Loop
         setInterval(() => {
             state.balance += (state.revenue / 3600);
             STOCKS.forEach(s => {
                 const oldPrice = s.price;
-                const volt = s.type === 'crypto' ? 0.02 : 0.008;
-                s.trend += (Math.random() - 0.5) * 0.2;
-                let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
-                s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
+                
+                // Only simulate if not updated by live API
+                if (!s.isRealTime) {
+                    const volt = s.type === 'crypto' ? 0.02 : 0.008;
+                    s.trend += (Math.random() - 0.5) * 0.2;
+                    let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
+                    s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
+                }
                 
                 const open = oldPrice;
                 const close = s.price;
                 const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
                 const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
                 s.history.push({ open, close, high, low });
-                if(s.history.length > 50) s.history.history.shift();
+                
+                if(s.history.length > 50) s.history.shift();
             });
             state.lastSaveTime = Date.now();
             updateUI();
@@ -2718,6 +2810,9 @@
         const cardGlare = document.getElementById('card-glare');
         if(cardContainer) {
             cardContainer.addEventListener('mousemove', (e) => {
+                // Ignore tilt logic if fullscreen
+                if(cardContainer.classList.contains('card-fullscreen-mode')) return;
+                
                 const rect = cardContainer.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
@@ -2730,13 +2825,20 @@
                 }
             });
             cardContainer.addEventListener('mouseleave', () => {
-                if(gameCard) gameCard.style.transform = 'rotateY(0deg) rotateX(0deg)';
+                if(gameCard && !cardContainer.classList.contains('card-fullscreen-mode')) {
+                    gameCard.style.transform = 'rotateY(0deg) rotateX(0deg)';
+                }
             });
         }
+        
         window.addEventListener('keydown', (e) => {
             if(e.key === 'Escape') {
                 closeStockModal();
                 closeResetModal();
+                // Close fullscreen card if open
+                if (document.getElementById('card-container').classList.contains('card-fullscreen-mode')) {
+                    document.getElementById('card-max-btn').click();
+                }
             }
         });
         
