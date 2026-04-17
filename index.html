@@ -24,7 +24,7 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .mono { font-family: 'JetBrains Mono', monospace; }
+        .mono { font-family: 'Gotham', sans-serif; }
 
         .nav-link {
             font-size: 0.7rem;
@@ -456,6 +456,10 @@
 
             <div class="flex gap-4">
                 <div class="stats-badge flex gap-8 bg-zinc-950 border border-zinc-900 rounded-xl p-4 px-8 shadow-sm">
+                    <div class="text-center hidden" id="top-bar-balance-container">
+                        <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">ACTIVE BALANCE</p>
+                        <p class="text-xl font-bold mono" id="top-balance-display">$0</p>
+                    </div>
                     <div class="text-center">
                         <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">NET WORTH</p>
                         <p class="text-xl font-bold mono" id="nw-display">$0</p>
@@ -1642,6 +1646,32 @@
             updateUI();
         }
 
+        // Wallet Card Drag and Drop
+        let draggedWalletIndex = null;
+        function walletDragStart(e, index) {
+            draggedWalletIndex = index;
+            e.dataTransfer.effectAllowed = 'move';
+        }
+        function walletDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            e.currentTarget.classList.add('drag-over');
+        }
+        function walletDragLeave(e) {
+            e.currentTarget.classList.remove('drag-over');
+        }
+        function walletDrop(e, index) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('drag-over');
+            if(draggedWalletIndex === null || draggedWalletIndex === index) return;
+            const cards = [...state.ownedCards];
+            const movedItem = cards.splice(draggedWalletIndex, 1)[0];
+            cards.splice(index, 0, movedItem);
+            state.ownedCards = cards;
+            saveGame();
+            updateUI();
+        }
+
         function toggleStatWidget(id) {
             if (state.activeStats.includes(id)) {
                 state.activeStats = state.activeStats.filter(s => s !== id);
@@ -1768,6 +1798,7 @@
             state.revenue = (rev - bills) * degreeMult;
 
             setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
+            setUI('top-balance-display', '$' + Math.floor(state.balance).toLocaleString());
             setUI('nw-display', '$' + Math.floor(state.netWorth).toLocaleString());
             setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + Math.floor(state.revenue).toLocaleString() + '/hr');
             setUI('lvl-display', state.level);
@@ -1896,7 +1927,14 @@
                 const isActive = state.equippedCardId === parseInt(id);
                 
                 return `
-                <div class="wallet-card-wrapper ${isActive ? 'active-wallet-card' : ''}" style="z-index: ${index};" onclick="switchCard(${id})">
+                <div class="wallet-card-wrapper ${isActive ? 'active-wallet-card' : ''}" 
+                     style="z-index: ${index};" 
+                     draggable="true"
+                     ondragstart="walletDragStart(event, ${index})"
+                     ondragover="walletDragOver(event)"
+                     ondragleave="walletDragLeave(event)"
+                     ondrop="walletDrop(event, ${index})"
+                     onclick="switchCard(${id})">
                     <div class="debit-card p-4 flex flex-col justify-between shadow-xl ${card.class}" style="aspect-ratio: 1.58/1; border-radius: 12px; border-width: 1px;">
                         <div>
                             <p class="text-[8px] text-white/50 uppercase font-bold tracking-widest mb-1">${card.name}</p>
@@ -2595,7 +2633,7 @@
                                     <div class="glass-card p-4 border ${hasDegree ? 'border-amber-500/50 opacity-50' : 'border-zinc-800'}">
                                         <h4 class="text-[11px] font-black uppercase mb-1">${d.name}</h4>
                                         <p class="text-[9px] text-amber-500 font-bold mb-4 mono">${d.mult}x MULTIPLIER</p>
-                                        <button onclick="graduate('${d.id}')" class="btn-buy" ${hasDegree ? 'disabled' : ''}>${hasDegree ? 'EARNED' : 'GRADUATE'}</button>
+                                        <button onclick="graduate('${d.id}')" class="btn-buy" ${hasDegree ? 'earned' : 'GRADUATE'}</button>
                                     </div>
                                 `
                             }).join('')}
@@ -3011,6 +3049,14 @@
             if(target) target.classList.add('active');
             const btn = document.getElementById('btn-' + tabId);
             if(btn) btn.classList.add('active');
+
+            // Handle Top Bar Balance Visibility
+            const topBal = document.getElementById('top-bar-balance-container');
+            if (topBal) {
+                if (tabId === 'dashboard') topBal.classList.add('hidden');
+                else topBal.classList.remove('hidden');
+            }
+
             if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'academics', 'black-market'].includes(tabId)) setTimeout(updateUI, 10);
             
             // Adjust scroll for sticky header visibility
@@ -3109,7 +3155,6 @@
             const el = document.getElementById('illegitimate-watermark');
             if(el.style.display !== 'block') return;
             const rect = el.getBoundingClientRect();
-            const container = state.isMobile ? document.body : window;
             const winW = state.isMobile ? document.body.clientWidth : window.innerWidth;
             const winH = state.isMobile ? document.body.clientHeight : window.innerHeight;
 
