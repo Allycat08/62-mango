@@ -1,3 +1,6 @@
+ ```html
+--- START OF FILE Paste April 17, 2026 - 11:49PM ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1922,13 +1925,7 @@
             }
         }
 
-       code
-Html
-play_circle
-download
-content_copy
-expand_less
-function switchCard(id) {
+        function switchCard(id) {
             if (state.ownedCards.includes(id) && state.equippedCardId !== id) {
                 state.cardBalances[state.equippedCardId] = state.balance;
                 state.equippedCardId = id;
@@ -1942,9 +1939,6 @@ function switchCard(id) {
         function renderWallet() {
             const wc = document.getElementById('wallet-container');
             if(!wc) return;
-
-            // Preserve horizontal scroll position
-            const savedScroll = wc.scrollLeft;
 
             state.cardBalances[state.equippedCardId] = state.balance;
             
@@ -1975,21 +1969,11 @@ function switchCard(id) {
                 </div>
                 `;
             }).join('');
-
-            // Restore horizontal scroll position
-            wc.scrollLeft = savedScroll;
         }
 
         function renderProfilePortfolio() {
             const container = document.getElementById('profile-portfolio-list');
             if(!container) return;
-
-            // Preserve vertical scroll positions for all inner lists
-            const scrollStates = {};
-            for(let i = 0; i < 5; i++) {
-                const el = document.getElementById('portfolio-scroll-' + i);
-                if (el) scrollStates[i] = el.scrollTop;
-            }
 
             let stockValue = 0;
             Object.entries(state.shares).forEach(([symbol, amount]) => {
@@ -2005,10 +1989,10 @@ function switchCard(id) {
                 { title: 'Digital Assets', items: Object.keys(state.shares).filter(s => state.shares[s] > 0) }
             ];
 
-            container.innerHTML = assetCats.map((cat, idx) => `
+            container.innerHTML = assetCats.map(cat => `
                 <div>
                     <p class="text-[9px] text-zinc-600 font-bold uppercase mb-4 tracking-widest">${cat.title} (${cat.items.length})</p>
-                    <div id="portfolio-scroll-${idx}" class="space-y-2 max-h-48 overflow-y-auto pr-2">
+                    <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
                         ${cat.items.length === 0 ? '<p class="text-[10px] text-zinc-800 font-mono italic">EMPTY SECTION</p>' : cat.items.map(id => {
                             const found = COMPANIES.find(c => c.id === id) || REAL_ESTATE.find(r => r.id === id) ||[...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture, ...ASSETS.blackMarket].find(i => i.id === id);
                             if (found) return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${found.name}</span> <span class="text-[9px] mono text-zinc-600">ID: ${found.id}</span></div>`;
@@ -2017,12 +2001,6 @@ function switchCard(id) {
                     </div>
                 </div>
             `).join('');
-
-            // Restore vertical scroll positions
-            for(let i = 0; i < 5; i++) {
-                const el = document.getElementById('portfolio-scroll-' + i);
-                if (el && scrollStates[i] !== undefined) el.scrollTop = scrollStates[i];
-            }
 
             renderWallet();
         }
@@ -2291,9 +2269,6 @@ function switchCard(id) {
         }
 
         function renderGrids() {
-            const activeEl = document.activeElement;
-            const isTypingInStocks = activeEl && activeEl.tagName === 'INPUT' && activeEl.id && activeEl.id.startsWith('trade-amt-');
-
             const compGrid = document.getElementById('companies-grid');
             if(compGrid) {
                 compGrid.innerHTML = COMPANIES.map(c => {
@@ -2513,7 +2488,7 @@ function switchCard(id) {
             };
 
             const stocksFullGrid = document.getElementById('stocks-full-grid');
-            if (stocksFullGrid && !isTypingInStocks) {
+            if (stocksFullGrid) {
                 if (state.level < 3) {
                     stocksFullGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">REACH LEVEL 3 TO UNLOCK MARKETS</p></div>`;
                 } else {
@@ -2522,7 +2497,7 @@ function switchCard(id) {
             }
 
             const cryptoGrid = document.getElementById('crypto-grid');
-            if (cryptoGrid && !isTypingInStocks) {
+            if (cryptoGrid) {
                 if (state.level < 3) {
                     cryptoGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">CRYPTO UNLOCKS AT LVL 3</p></div>`;
                 } else {
@@ -2758,7 +2733,8 @@ function switchCard(id) {
             saveGame();
         }
 
-        function renderWatchlist() {
+        function renderWatchlist
+        () {
             const container = document.getElementById('watchlist-container');
             if(!container) return;
             if (state.level < 6) {
@@ -2979,7 +2955,6 @@ function switchCard(id) {
                         <span class="text-emerald-500 font-bold">$${Math.floor(b.amount).toLocaleString()}</span>
                     </p>
                 `).join('');
-                log.scrollTop = log.scrollHeight; // Keep scrolled to bottom
             }
         }
 
@@ -3114,7 +3089,6 @@ function switchCard(id) {
             state.balance += (state.revenue / 3600);
             STOCKS.forEach(s => {
                 const oldPrice = s.price;
-                
                 // Only simulate if not updated by live API
                 if (!s.isRealTime) {
                     const volt = s.type === 'crypto' ? 0.02 : 0.008;
