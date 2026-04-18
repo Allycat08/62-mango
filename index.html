@@ -1,3 +1,6 @@
+ ```html
+--- START OF FILE Paste April 17, 2026 - 11:49PM ---
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +21,7 @@
         body {
             background-color: var(--bg);
             color: #ffffff;
-            font-family: 'Inter', sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             transition: background-color 0.3s, color 0.3s;
@@ -437,6 +440,24 @@
             border-color: #ffffff !important;
             opacity: 0.5;
         }
+
+        /* --- CARD PROTECTION FROM THEMES --- */
+        html body .debit-card, html body .debit-card * {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
+        }
+        
+        html body .debit-card { color: #ffffff !important; }
+        html body .debit-card.tier-2 { color: #000000 !important; }
+        html body .debit-card.tier-9 { color: #0f172a !important; }
+        html body .debit-card.tier-14 { color: #000000 !important; }
+
+        html body .debit-card .text-white { color: currentColor !important; }
+        html body .debit-card .text-white\/40 { color: color-mix(in srgb, currentColor 40%, transparent) !important; }
+        html body .debit-card .text-white\/60 { color: color-mix(in srgb, currentColor 60%, transparent) !important; }
+        html body .debit-card .text-white\/50 { color: color-mix(in srgb, currentColor 50%, transparent) !important; }
+        html body .debit-card .text-white\/30 { color: color-mix(in srgb, currentColor 30%, transparent) !important; }
+        html body .debit-card .bg-white\/20 { background-color: color-mix(in srgb, currentColor 20%, transparent) !important; }
+        html body .debit-card path[fill="white"] { fill: currentColor !important; }
     </style>
 </head>
 <body class="max-w-[1400px] mx-auto">
@@ -1498,7 +1519,7 @@
                 gameCard.style.transform = ''; // reset tilt
             } else {
                 // Change back to Maximize Arrows
-                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>`;
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>`;
             }
         }
 
@@ -3068,7 +3089,6 @@
             state.balance += (state.revenue / 3600);
             STOCKS.forEach(s => {
                 const oldPrice = s.price;
-                
                 // Only simulate if not updated by live API
                 if (!s.isRealTime) {
                     const volt = s.type === 'crypto' ? 0.02 : 0.008;
