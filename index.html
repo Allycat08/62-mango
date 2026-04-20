@@ -521,7 +521,7 @@
                             
                             <!-- MAXIMIZE BUTTON -->
                             <button onclick="toggleCardFullscreen(event)" id="card-max-btn" class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors" title="Toggle Fullscreen">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                             </button>
 
                             <div class="flex justify-between items-start relative z-10">
@@ -1830,6 +1830,28 @@
         }
 
         function updateUI() {
+            // --- STATE PRESERVATION START ---
+            const activeElement = document.activeElement;
+            const activeId = activeElement ? activeElement.id : null;
+            let cursorStart = null, cursorEnd = null;
+            if (activeElement && activeElement.tagName === 'INPUT') {
+                try { cursorStart = activeElement.selectionStart; cursorEnd = activeElement.selectionEnd; } catch(e){}
+            }
+
+            const scrollStates = {};
+            document.querySelectorAll('[id]').forEach(el => {
+                if (el.scrollTop > 0 || el.scrollLeft > 0) {
+                    scrollStates[el.id] = { top: el.scrollTop, left: el.scrollLeft };
+                }
+            });
+            const mainScrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
+
+            const inputStates = {};
+            document.querySelectorAll('input[id]').forEach(el => {
+                inputStates[el.id] = el.value;
+            });
+            // --- STATE PRESERVATION END ---
+
             if (state.userName) {
                 document.getElementById('onboarding-modal').style.display = 'none';
             }
@@ -1935,6 +1957,39 @@
             renderThemes();
             applyTheme();
             if(activeStock) updateModalContent();
+
+            // --- STATE RESTORATION START ---
+            Object.keys(inputStates).forEach(id => {
+                const el = document.getElementById(id);
+                if (el && el.type !== 'checkbox' && el.type !== 'radio') {
+                    el.value = inputStates[id];
+                }
+            });
+
+            Object.keys(scrollStates).forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.scrollTop = scrollStates[id].top;
+                    el.scrollLeft = scrollStates[id].left;
+                }
+            });
+
+            if (activeId) {
+                const el = document.getElementById(activeId);
+                if (el) {
+                    el.focus();
+                    if (el.tagName === 'INPUT' && cursorStart !== null) {
+                        try { el.setSelectionRange(cursorStart, cursorEnd); } catch(e){}
+                    }
+                }
+            }
+            
+            if (document.body.classList.contains('mobile-mode')) {
+                document.body.scrollTop = mainScrollTop;
+            } else {
+                window.scrollTo({ top: mainScrollTop, behavior: 'instant' });
+            }
+            // --- STATE RESTORATION END ---
         }
 
         function renderThemes() {
@@ -2049,10 +2104,10 @@
                 { title: 'Digital Assets', items: Object.keys(state.shares).filter(s => state.shares[s] > 0) }
             ];
 
-            container.innerHTML = assetCats.map(cat => `
+            container.innerHTML = assetCats.map((cat, idx) => `
                 <div>
                     <p class="text-[9px] text-zinc-600 font-bold uppercase mb-4 tracking-widest">${cat.title} (${cat.items.length})</p>
-                    <div class="space-y-2 max-h-48 overflow-y-auto pr-2">
+                    <div id="portfolio-cat-scroll-${idx}" class="space-y-2 max-h-48 overflow-y-auto pr-2">
                         ${cat.items.length === 0 ? '<p class="text-[10px] text-zinc-800 font-mono italic">EMPTY SECTION</p>' : cat.items.map(id => {
                             const found = COMPANIES.find(c => c.id === id) || REAL_ESTATE.find(r => r.id === id) ||[...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture, ...ASSETS.blackMarket].find(i => i.id === id);
                             if (found) return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${found.name}</span> <span class="text-[9px] mono text-zinc-600">ID: ${found.id}</span></div>`;
@@ -2400,7 +2455,7 @@
                         let complexUpgradesHtml = '';
                         if (c.customUpgrades) {
                             complexUpgradesHtml = `
-                            <div class="flex-1 overflow-y-auto pr-1 space-y-1 max-h-40 scrollbar-thin shrink-0 border-t border-zinc-900 pt-2 mt-1">
+                            <div id="tech-tree-${c.id}" class="flex-1 overflow-y-auto pr-1 space-y-1 max-h-40 scrollbar-thin shrink-0 border-t border-zinc-900 pt-2 mt-1">
                                 <p class="text-[8px] text-zinc-500 font-bold tracking-widest uppercase mb-1">Company Tech Tree</p>
                                 ${c.customUpgrades.map(u => {
                                     const count = (state.compCustomUpgrades[c.id] || {})[u.id] || 0;
@@ -2409,7 +2464,7 @@
                                     if (isLocked) {
                                         const reqUpgrade = c.customUpgrades.find(x => x.id === u.req.id);
                                         return `<button disabled class="btn-buy opacity-30 text-left px-3 py-2 flex justify-between items-center bg-black/20">
-                                            <span class="text-[9px]">LOCKED</span>
+                                            <span class="text-[9px]">🔒 LOCKED</span>
                                             <span class="text-[8px] opacity-70">Req: ${reqUpgrade.name} Lvl ${u.req.count}</span>
                                         </button>`;
                                     }
@@ -2573,13 +2628,7 @@
                             <input type="number" id="trade-amt-${s.symbol}" step="0.001" min="0.001" value="1.000" class="w-full bg-zinc-900 border border-zinc-800 text-white rounded p-1.5 text-xs mono text-center focus:border-emerald-500 focus:outline-none transition-colors" placeholder="AMOUNT">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="tradeStock('${s.symbol}', true
-                            code
-JavaScript
-download
-content_copy
-expand_less
-)" class="btn-buy" ${state.balance < s.price * 0.001 ? 'disabled' : ''}>BUY</button>
+                            <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price * 0.001 ? 'disabled' : ''}>BUY</button>
                             <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''}>SELL</button>
                         </div>
                     ` : ''}
