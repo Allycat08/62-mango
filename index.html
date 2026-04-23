@@ -63,7 +63,7 @@
             font-family: 'Helvetica Neue', sans-serif;
         }
         .debit-card:active { transform: scale(0.95) rotateX(10deg); }
-        
+
         .card-fullscreen-mode {
             position: fixed !important;
             inset: 0 !important;
@@ -482,55 +482,27 @@
 
         <!-- MARKET TAB -->
         <div id="stocks" class="tab-content">
-            <!-- TOP GAINERS WIDGET -->
-            <div class="mb-10">
-                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-3">GLOBAL TOP GAINERS</p>
-                <div id="top-gainers-widget" class="flex gap-4 overflow-x-auto pb-4 scrollbar-thin">
-                    <!-- Populated via JS -->
-                </div>
-            </div>
-
-            <!-- SUB-TAB NAVIGATION & SORTING -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b border-zinc-900 pb-3">
-                <div class="flex gap-6">
-                    <button onclick="setMarketTab('stocks')" id="subtab-stocks" class="market-subtab-btn text-sm font-black uppercase pb-3 border-b-2 border-white text-white transition-colors">Equities</button>
-                    <button onclick="setMarketTab('crypto')" id="subtab-crypto" class="market-subtab-btn text-sm font-black uppercase pb-3 border-b-2 border-transparent text-zinc-500 hover:text-white transition-colors">Crypto</button>
-                    <button onclick="setMarketTab('nfts')" id="subtab-nfts" class="market-subtab-btn text-sm font-black uppercase pb-3 border-b-2 border-transparent text-zinc-500 hover:text-white transition-colors">NFTs</button>
-                </div>
-                
-                <div id="market-sort-container" class="flex items-center gap-3">
-                    <span class="text-[9px] text-zinc-500 font-bold uppercase tracking-widest">SORT BY:</span>
-                    <select id="market-sort" onchange="changeMarketSort(this.value)" class="bg-zinc-950 border border-zinc-800 text-[10px] font-bold uppercase rounded px-3 py-1.5 text-white outline-none cursor-pointer hover:border-zinc-500 transition-colors">
-                        <option value="trending">Trending (Top %)</option>
-                        <option value="az">A-Z (Alphabetical)</option>
-                        <option value="za">Z-A (Alphabetical)</option>
-                        <option value="price_desc">Expensive to Cheap</option>
-                        <option value="price_asc">Cheap to Expensive</option>
-                        <option value="div_desc">Highest Dividend</option>
-                        <option value="div_asc">Lowest Dividend</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- TAB CONTENTS -->
-            <div id="market-sub-stocks" class="market-sub-tab">
+            <section class="mb-12">
+                <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
                 <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-            </div>
-
-            <div id="market-sub-crypto" class="market-sub-tab hidden">
-                <div class="flex items-center gap-4 mb-6">
-                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded border border-emerald-500/20">REAL-TIME TRADING</span>
+            </section>
+            <section class="mb-12">
+                <div class="flex items-center gap-4 mb-8">
+                    <h2 class="text-xl font-black uppercase tracking-tight">CRYPTO EXCHANGE</h2>
+                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded">REAL-TIME TRADING</span>
                 </div>
                 <div id="crypto-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-            </div>
-
-            <div id="market-sub-nfts" class="market-sub-tab hidden">
-                <div class="flex items-center justify-between mb-6">
-                    <span class="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-[10px] font-bold rounded border border-purple-500/20">TRADE WITH CRYPTO</span>
+            </section>
+            <section class="mb-12">
+                <div class="flex items-center justify-between mb-8">
+                    <div class="flex items-center gap-4">
+                        <h2 class="text-xl font-black uppercase tracking-tight">DIGITAL COLLECTIBLES (NFTs)</h2>
+                        <span class="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-[10px] font-bold rounded">TRADE WITH CRYPTO</span>
+                    </div>
                     <div id="nft-status" class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest"></div>
                 </div>
                 <div id="nft-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-            </div>
+            </section>
         </div>
 
         <!-- COLLECTION TAB -->
@@ -557,7 +529,7 @@
             </div>
             <div id="trading-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
-        
+
         <!-- BLACK MARKET TAB -->
         <div id="black-market" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -593,7 +565,7 @@
                         </div>
                         <h2 class="text-3xl font-black tracking-tighter uppercase" id="profile-name">NAME</h2>
                         <p class="text-[10px] text-emerald-500 font-bold tracking-[0.2em] mb-8" id="profile-rank">STARTUP</p>
-                        
+
                         <div class="text-left space-y-4 border-t border-zinc-900 pt-8 mb-8">
                             <div>
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">TOTAL NET WORTH</p>
@@ -729,7 +701,7 @@
         <div class="w-full max-w-xl glass-card p-8 text-center relative border border-amber-900/50">
             <p class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-2">LIVE AUCTION</p>
             <h2 class="text-2xl font-black uppercase mb-6" id="auction-item-name">ITEM NAME</h2>
-            
+
             <div class="flex justify-between items-center mb-8 px-8 py-4 bg-zinc-950 rounded-lg border border-zinc-900">
                 <div>
                     <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">TIME REMAINING</p>
@@ -811,7 +783,7 @@
         ];
 
         const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign"];
-        
+
         const CARD_TIERS =[
             { id: 0, name: "DEFAULT CARD", price: 0, mult: 1, class: "tier-0" },
             { id: 1, name: "SAPPHIRE PREMIER", price: 50000, mult: 2, class: "tier-1" },
@@ -960,15 +932,9 @@
             { symbol: "RUNE", name: "THORChain", price: 7.50, trend: 1.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/rune/200' }
         ];
 
-        // Seed initial base prices to anchor the global simulation & calculate static dividends
+        // Seed initial base prices to anchor the global simulation
         STOCKS.forEach(s => {
             s.basePrice = s.price;
-            if (s.type === 'stock') {
-                const hash = s.symbol.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-                s.dividend = parseFloat(((hash % 45) / 10).toFixed(1)); 
-            } else {
-                s.dividend = 0;
-            }
         });
 
         const NFTS =[
@@ -1073,7 +1039,7 @@
             const baseP = c.price;
             const baseR = c.rev;
             const baseB = c.bill || 0;
-            
+
             c.customUpgrades = [
                 { id: 'upg1', name: names[0], price: Math.max(100, Math.floor(baseP * 0.1)), priceMult: 1.15, rev: Math.max(10, Math.floor(baseR * 0.1)), bill: Math.floor(baseB * 0.1), max: 20, req: null },
                 { id: 'upg2', name: names[1], price: Math.max(500, Math.floor(baseP * 0.4)), priceMult: 1.18, rev: Math.max(30, Math.floor(baseR * 0.25)), bill: Math.floor(baseB * 0.25), max: 30, req: { id: 'upg1', count: 10 } },
@@ -1185,12 +1151,10 @@
         let currentRECat = 'house';
         let activeAuction = null;
         let currentTab = 'dashboard';
-        let currentMarketTab = 'stocks';
-        let currentMarketSort = 'trending';
 
         const saved = localStorage.getItem('vercel_empire_v12_favs');
         if (saved) state = { ...state, ...JSON.parse(saved) };
-        
+
         if (!state.cardBalances) {
             state.cardBalances = {};
             state.cardBalances[state.equippedCardId] = state.balance;
@@ -1217,6 +1181,9 @@
             state.stockMarket.forEach(savedStock => {
                 const s = STOCKS.find(x => x.symbol === savedStock.symbol);
                 if (s) {
+                    s.price = savedStock.price;
+                    s.trend = savedStock.trend;
+                    s.history = savedStock.history ||[];
                     if (!GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync && !GLOBAL_MARKET_CONFIG.apiUrl) {
                         s.price = savedStock.price;
                         s.trend = savedStock.trend;
@@ -1226,6 +1193,21 @@
                 }
             });
         }
+
+        STOCKS.forEach(s => {
+            if (!s.history || s.history.length === 0) {
+                let last = s.price;
+                s.history =[];
+                for(let i=0; i<50; i++) {
+                    const open = last;
+                    const close = parseFloat((last + (Math.random() - 0.5) * (last * 0.05)).toFixed(2));
+                    const high = parseFloat((Math.max(open, close) + Math.random() * (last * 0.01)).toFixed(2));
+                    const low = parseFloat((Math.min(open, close) - Math.random() * (last * 0.01)).toFixed(2));
+                    s.history.push({ open, close, high, low });
+                    last = close;
+                }
+            }
+        });
 
         const AVAILABLE_STATS =[
             { id: 'rank', label: 'Current Rank', isMono: false, getValue: () => RANKS[Math.min(Math.floor(state.level / 5), RANKS.length - 1)] },
@@ -1343,17 +1325,17 @@
 
                 const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}`;
                 const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
-                
+
                 const res = await fetch(proxyUrl);
                 const data = await res.json();
                 const parsed = JSON.parse(data.contents);
-                
+
                 if (parsed && parsed.quoteResponse && parsed.quoteResponse.result) {
                     parsed.quoteResponse.result.forEach(quote => {
                         let sym = quote.symbol;
                         if (sym.endsWith('-USD')) sym = sym.replace('-USD', '');
                         sym = sym.replace('-', '.'); 
-                        
+
                         const stock = STOCKS.find(s => s.symbol === sym);
                         if (stock && quote.regularMarketPrice) {
                             stock.price = quote.regularMarketPrice;
@@ -1364,6 +1346,7 @@
                     updateUI(false); 
                 }
             } catch (e) {
+                console.warn("Real-time stocks fetch error - proceeding with simulated market data.", e);
                 console.warn("Real-time stocks fetch error - proceeding with simulated global market data.");
             }
         }
@@ -1385,10 +1368,10 @@
                 saveGame();
                 return;
             }
-            
+
             let currentTime = Date.now();
             let isCheating = false;
-            
+
             try {
                 const res = await fetch('https://worldtimeapi.org/api/timezone/Etc/UTC', { cache: 'no-store' });
                 if (res.ok) {
@@ -1410,7 +1393,7 @@
                     logToTerminal(`OFFLINE EARNINGS: $${Math.floor(earned).toLocaleString()}`);
                 }
             }
-            
+
             state.lastSaveTime = currentTime;
             saveGame();
         }
@@ -1469,7 +1452,7 @@
 
             const tier = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
             const amount = 5 * tier.mult * state.level * getDegreeMult();
-            
+
             state.balance += amount;
             const clickXp = 3 + (state.level * 0.2); 
             state.xp += Math.min(clickXp, 15);
@@ -1480,12 +1463,12 @@
             setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
             setUI('top-balance-display', '$' + Math.floor(state.balance).toLocaleString());
             setUI('profile-balance', '$' + Math.floor(state.balance).toLocaleString());
-            
+
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
             const xpBar = document.getElementById('xp-bar');
             if(xpBar) xpBar.style.width = (state.xp / xpReq * 100) + '%';
-            
+
             updateButtonStates();
 
             const card = document.getElementById('game-card');
@@ -1501,7 +1484,7 @@
             const container = document.getElementById('card-container');
             const gameCard = document.getElementById('game-card');
             const btn = e.currentTarget;
-            
+
             container.classList.toggle('card-fullscreen-mode');
             if (container.classList.contains('card-fullscreen-mode')) {
                 btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
@@ -1542,7 +1525,7 @@
                 inv += state.taxiFleet.busses * 1200000;
                 inv += state.taxiFleet.artBusses * 3500000;
             } 
-            
+
             if (c.customUpgrades) {
                 c.customUpgrades.forEach(u => {
                     const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
@@ -1572,7 +1555,7 @@
                 const f = ASSETS.furniture.find(i => i.id === assetId);
                 const nft = NFTS.find(i => i.id === assetId);
                 const bm = ASSETS.blackMarket.find(i => i.id === assetId);
-                
+
                 if (nft) {
                     const cryptoStock = STOCKS.find(s => s.symbol === nft.currency);
                     totalValue += nft.price * (cryptoStock ? cryptoStock.price : 0);
@@ -1754,7 +1737,7 @@
             STOCKS.forEach(s => {
                 const pEl = document.getElementById(`price-val-${s.symbol}`);
                 if(pEl) pEl.innerText = '$' + s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                
+
                 const tEl = document.getElementById(`trend-val-${s.symbol}`);
                 if(tEl) {
                     tEl.innerText = `${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend).toFixed(2)}%`;
@@ -1782,7 +1765,7 @@
 
         function fastTickUpdate() {
             calculateNetWorth();
-            
+
             let rev = 0; let bills = 0;
             state.ownedAssets.forEach(id => {
                 const c = COMPANIES.find(x => x.id === id);
@@ -1812,15 +1795,6 @@
                 }
             });
 
-            // Dividend earnings applied to revenue calculation
-            Object.entries(state.shares).forEach(([symbol, amount]) => {
-                const stock = STOCKS.find(s => s.symbol === symbol);
-                if (stock && stock.dividend && amount > 0) {
-                    // Dividends pay out the % yield based on the total held dollar value per hour
-                    rev += (stock.price * amount) * (stock.dividend / 100);
-                }
-            });
-            
             state.revenue = (rev - bills) * getDegreeMult();
 
             setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
@@ -1829,64 +1803,12 @@
             setUI('nw-display', '$' + Math.floor(state.netWorth).toLocaleString());
             setUI('profile-nw', '$' + Math.floor(state.netWorth).toLocaleString());
             setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + Math.floor(state.revenue).toLocaleString() + '/hr');
-            
+
             tickStocksUI();
             updateButtonStates();
 
             if (activeStock) updateModalContent();
             if (activeAuction) updateAuctionUI();
-        }
-
-        // MARKET SORT FUNCTION
-        function getSortedStocks(type) {
-            let list = STOCKS.filter(s => s.type === type);
-            switch(currentMarketSort) {
-                case 'az': list.sort((a,b) => a.symbol.localeCompare(b.symbol)); break;
-                case 'za': list.sort((a,b) => b.symbol.localeCompare(a.symbol)); break;
-                case 'price_desc': list.sort((a,b) => b.price - a.price); break;
-                case 'price_asc': list.sort((a,b) => a.price - b.price); break;
-                case 'div_desc': list.sort((a,b) => (b.dividend || 0) - (a.dividend || 0)); break;
-                case 'div_asc': list.sort((a,b) => (a.dividend || 0) - (b.dividend || 0)); break;
-                case 'trending': default: list.sort((a,b) => b.trend - a.trend); break;
-            }
-            return list;
-        }
-
-        function setMarketTab(tab) {
-            currentMarketTab = tab;
-            document.querySelectorAll('.market-subtab-btn').forEach(b => {
-                b.classList.remove('border-white', 'text-white');
-                b.classList.add('border-transparent', 'text-zinc-500');
-            });
-            const activeBtn = document.getElementById(`subtab-${tab}`);
-            if (activeBtn) {
-                activeBtn.classList.remove('border-transparent', 'text-zinc-500');
-                activeBtn.classList.add('border-white', 'text-white');
-            }
-
-            document.querySelectorAll('.market-sub-tab').forEach(t => t.classList.add('hidden'));
-            const activeContent = document.getElementById(`market-sub-${tab}`);
-            if (activeContent) activeContent.classList.remove('hidden');
-            
-            const sortContainer = document.getElementById('market-sort-container');
-            if (sortContainer) {
-                if (tab === 'nfts') sortContainer.classList.add('hidden');
-                else sortContainer.classList.remove('hidden');
-            }
-            
-            // Redraw charts explicitly when switching sub-tabs
-            if (tab !== 'nfts') {
-                setTimeout(() => {
-                    STOCKS.filter(s => s.type === (tab === 'crypto' ? 'crypto' : 'stock')).forEach(s => {
-                        drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
-                    });
-                }, 10);
-            }
-        }
-
-        function changeMarketSort(val) {
-            currentMarketSort = val;
-            updateUI(true);
         }
 
         function updateUI(full = true) {
@@ -1917,22 +1839,22 @@
 
             setUI('lvl-display', state.level);
             setUI('card-name-display', state.userName || "HOLDER NAME");
-            
+
             const rankIndex = Math.min(Math.floor(state.level / 5), RANKS.length - 1);
             const rankStr = RANKS[rankIndex];
             setUI('rank-display', rankStr);
             setUI('profile-name', state.userName);
             setUI('profile-rank', rankStr);
-            
+
             const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
             setUI('xp-req', Math.floor(xpReq));
             setUI('next-lvl-val', state.level + 1);
-            
+
             const xpBar = document.getElementById('xp-bar');
             if(xpBar) xpBar.style.width = (state.xp / xpReq * 100) + '%';
-            
+
             const gCard = document.getElementById('game-card');
             if(gCard) gCard.className = `debit-card p-8 flex flex-col justify-between ${equipped.class}`;
             setUI('card-tier-label', equipped.name);
@@ -1976,7 +1898,7 @@
                     }
                 }
             }
-            
+
             if (document.body.classList.contains('mobile-mode')) {
                 document.body.scrollTop = mainScrollTop;
             } else {
@@ -2048,12 +1970,12 @@
             if(!wc) return;
 
             state.cardBalances[state.equippedCardId] = state.balance;
-            
+
             wc.innerHTML = state.ownedCards.map((id, index) => {
                 const card = CARD_TIERS.find(t => t.id === parseInt(id));
                 const bal = state.cardBalances[id] || 0;
                 const isActive = state.equippedCardId === parseInt(id);
-                
+
                 return `
                 <div class="wallet-card-wrapper ${isActive ? 'active-wallet-card' : ''}" style="z-index: ${index};" 
                      draggable="true" ondragstart="walletDragStart(event, ${index})" ondragover="walletDragOver(event)" ondragleave="walletDragLeave(event)" ondrop="walletDrop(event, ${index})" onclick="switchCard(${id})">
@@ -2111,14 +2033,14 @@
             canvas.height = viewH * 2;
             ctx.scale(2, 2);
             ctx.clearRect(0, 0, viewW, viewH);
-            
+
             const padding = 10;
             const minPrice = Math.min(...history.map(h => h.low)) * 0.98;
             const maxPrice = Math.max(...history.map(h => h.high)) * 1.02;
             const priceRange = maxPrice - minPrice;
             const barWidth = (viewW - padding * 2) / history.length;
             const getY = (price) => viewH - ((price - minPrice) / priceRange) * viewH;
-            
+
             if (type === 'candlestick') {
                 history.forEach((h, i) => {
                     const isBull = h.close >= h.open;
@@ -2198,7 +2120,7 @@
             const fromSel = document.getElementById('transfer-from');
             const toSel = document.getElementById('transfer-to');
             fromSel.innerHTML = ''; toSel.innerHTML = '';
-            
+
             state.cardBalances[state.equippedCardId] = state.balance;
 
             state.ownedCards.forEach(id => {
@@ -2226,7 +2148,7 @@
             if (fromBal >= amt) {
                 state.cardBalances[fromId] -= amt;
                 state.cardBalances[toId] = (state.cardBalances[toId] || 0) + amt;
-                
+
                 if (state.equippedCardId === fromId) state.balance = state.cardBalances[fromId];
                 if (state.equippedCardId === toId) state.balance = state.cardBalances[toId];
 
@@ -2255,19 +2177,19 @@
         function sellCompany(id) {
             const c = COMPANIES.find(x => x.id === id);
             if (!c || !state.ownedAssets.includes(id)) return;
-            
+
             const investment = calcCompanyInvestment(c, id);
             const compMult = state.level >= 4 ? 0.9 : 0.3;
             const returnAmount = Math.floor(investment * compMult);
-            
+
             state.balance += returnAmount;
             state.ownedAssets = state.ownedAssets.filter(a => a !== id);
-            
+
             if (c.customFleet) state.taxiFleet = { cars: 1, busses: 0, artBusses: 0 };
             if (c.customUpgrades) { if (state.compCustomUpgrades && state.compCustomUpgrades[id]) delete state.compCustomUpgrades[id]; }
-            
+
             delete state.compTiers[id]; delete state.compOutlets[id];
-            
+
             logToTerminal(`SOLD COMPANY: ${c.name} FOR $${returnAmount.toLocaleString()} (${compMult * 100}% OF INVESTMENTS)`);
             updateUI(true);
             saveGame();
@@ -2308,7 +2230,7 @@
                 const isOwned = state.ownedAssets.includes(i.id);
                 const btcBalance = state.shares['BTC'] || 0;
                 let actionHtml = '';
-                
+
                 if (!isOwned) {
                     actionHtml = `<button onclick="buyBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2 !border-red-900/50 !text-red-500 hover:!bg-red-500 hover:!text-white" ${btcBalance < i.priceBtc ? 'disabled' : ''} data-btc-cost="${i.priceBtc}">BUY (₿${i.priceBtc.toFixed(2)})</button>`;
                 } else {
@@ -2354,7 +2276,7 @@
                 compGrid.innerHTML = COMPANIES.map(c => {
                     const isOwned = state.ownedAssets.includes(c.id);
                     let itemRev = 0; let itemBill = c.bill || 0;
-                    
+
                     const tierIdx = state.compTiers[c.id] || 0;
                     const outlets = state.compOutlets[c.id] || 1;
                     itemRev += (c.rev * Math.pow(3, tierIdx)) * outlets;
@@ -2364,7 +2286,7 @@
                         itemRev += (state.taxiFleet.cars * 17500) + (state.taxiFleet.busses * 140000) + (state.taxiFleet.artBusses * 475000);
                         itemBill += (state.taxiFleet.cars * 500) + (state.taxiFleet.busses * 4000) + (state.taxiFleet.artBusses * 15000);
                     } 
-                    
+
                     if (c.customUpgrades) {
                         c.customUpgrades.forEach(u => {
                             const count = (state.compCustomUpgrades[c.id] || {})[u.id] || 0;
@@ -2372,7 +2294,7 @@
                             itemBill += count * (u.bill || 0);
                         });
                     }
-                    
+
                     const profit = itemRev - itemBill;
                     let actionsHtml = '';
                     if (!isOwned) {
@@ -2380,7 +2302,7 @@
                     } else {
                         const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
                         const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
-                        
+
                         let baseActions = `
                         <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
                             <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''} ${tierIdx >= 4 ? '' : `data-cost="${nextTierPrice}"`}>
@@ -2506,19 +2428,55 @@
                 }).join('');
             }
 
-            // Top Gainers Widget Injection
-            const topGainersWidget = document.getElementById('top-gainers-widget');
-            if (topGainersWidget) {
-                const topGainers = [...STOCKS].sort((a, b) => b.trend - a.trend).slice(0, 6);
-                topGainersWidget.innerHTML = topGainers.map(s => `
-                    <div class="glass-card p-4 min-w-[160px] flex-shrink-0 cursor-pointer border-emerald-900/30 hover:border-emerald-500/50 transition-colors" onclick="openStockModal('${s.symbol}')">
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-black text-xs uppercase">${s.symbol}</span>
-                            <span class="text-[10px] font-bold text-emerald-500">▲ ${s.trend.toFixed(2)}%</span>
+            const bankGrid = document.getElementById('bank-grid');
+            if(bankGrid) {
+                bankGrid.innerHTML = CARD_TIERS.map(t => {
+                    const isOwned = state.ownedCards && state.ownedCards.includes(t.id);
+                    const isEquipped = state.equippedCardId === t.id;
+
+                    let btnStr = '';
+                    if (isEquipped) {
+                        btnStr = `<button class="btn-buy opacity-50 cursor-not-allowed" disabled>EQUIPPED</button>`;
+                    } else if (isOwned) {
+                        btnStr = `<button onclick="equipCard(${t.id})" class="btn-buy bg-zinc-800 text-white">EQUIP CARD</button>`;
+                    } else {
+                        btnStr = `<button onclick="buyCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">$${t.price.toLocaleString()}</button>`;
+                    }
+
+                    return `
+                        <div class="glass-card p-8 border-white/5">
+                            <div class="h-40 rounded-xl mb-6 ${t.class}"></div>
+
+<div class="h-40 rounded-xl mb-6 ${t.class}"></div>
+                            <h3 class="text-2xl font-black uppercase mb-1">${t.name}</h3>
+                            <p class="text-xs text-zinc-500 font-bold mb-8">${t.mult}x MULTIPLIER</p>
+                            ${btnStr}
+                        </div>`;
+                }).join('');
+            }
+
+            const collGrid = document.getElementById('coll-grid');
+            if (collGrid) {
+                const items = ASSETS[currentCollectionCat] ||[];
+                collGrid.innerHTML = items.map(i => {
+                    const isOwned = state.ownedAssets.includes(i.id);
+                    let actionHtml = '';
+                    if (!isOwned) {
+                        actionHtml = `<button onclick="buyCollectionAsset('${i.id}', ${i.price})" class="btn-buy mt-2" ${state.balance < i.price ? 'disabled' : ''} data-cost="${i.price}">BUY</button>`;
+                    } else {
+                        actionHtml = `<button class="btn-buy mt-2 opacity-50 cursor-not-allowed" disabled>OWNED</button>`;
+                    }
+
+                    return `
+                    <div class="glass-card p-4 flex flex-col justify-between">
+                        <div>
+                            <img src="${i.img}" class="item-img mb-4">
+                            <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
+                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${i.price.toLocaleString()}</p>
                         </div>
-                        <p class="mono text-sm font-bold">$${s.price.toLocaleString(undefined, {minimumFractionDigits:2, maximumFractionDigits:2})}</p>
-                    </div>
-                `).join('');
+                        ${actionHtml}
+                    </div>`;
+                }).join('');
             }
 
             const renderStockCard = (s) => {
@@ -2526,7 +2484,6 @@
                 const isFav = state.favorites.includes(s.symbol);
                 const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 const trendAbs = Math.abs(s.trend).toFixed(2);
-                const divStr = s.dividend > 0 ? `<p class="text-[8px] text-zinc-500 font-bold uppercase mt-1">DIV YIELD: <span class="text-emerald-500">${s.dividend}% / HR</span></p>` : '';
                 return `
                 <div class="glass-card p-6 relative flex flex-col">
                     <button onclick="toggleFavorite('${s.symbol}', event)" class="favorite-btn ${isFav ? 'active' : ''}">
@@ -2538,7 +2495,6 @@
                             <div>
                                 <h3 class="text-xl font-black tracking-tighter">${s.symbol}</h3>
                                 <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
-                                ${divStr}
                             </div>
                         </div>
                         <div class="text-right">
@@ -2570,7 +2526,7 @@
                 if (state.level < 3) {
                     stocksFullGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">REACH LEVEL 3 TO UNLOCK MARKETS</p></div>`;
                 } else {
-                    stocksFullGrid.innerHTML = getSortedStocks('stock').map(renderStockCard).join('');
+                    stocksFullGrid.innerHTML = STOCKS.filter(s => s.type === 'stock').map(renderStockCard).join('');
                 }
             }
 
@@ -2579,7 +2535,7 @@
                 if (state.level < 3) {
                     cryptoGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">CRYPTO UNLOCKS AT LVL 3</p></div>`;
                 } else {
-                    cryptoGrid.innerHTML = getSortedStocks('crypto').map(renderStockCard).join('');
+                    cryptoGrid.innerHTML = STOCKS.filter(s => s.type === 'crypto').map(renderStockCard).join('');
                 }
             }
 
@@ -2609,8 +2565,8 @@
             }
 
             // Draw initial charts only if tab is active (Optimization)
-            if (currentTab === 'stocks' && currentMarketTab !== 'nfts') {
-                STOCKS.filter(s => s.type === (currentMarketTab === 'crypto' ? 'crypto' : 'stock')).forEach(s => {
+            if (currentTab === 'stocks') {
+                STOCKS.forEach(s => {
                     drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
                 });
             }
@@ -2861,7 +2817,7 @@
         function tradeStock(symbol, isBuy) {
             if (state.level < 3) return;
             const stock = STOCKS.find(s => s.symbol === symbol);
-            
+
             let inputEl = document.getElementById(`trade-amt-${symbol}`);
             let inputAmt = inputEl ? parseFloat(inputEl.value) : 1;
             if (isNaN(inputAmt) || inputAmt <= 0) inputAmt = 1;
@@ -2869,7 +2825,7 @@
             if (isBuy) {
                 let amount = inputAmt;
                 if (state.tradeMax) amount = Math.floor((state.balance / stock.price) * 1000) / 1000;
-                
+
                 if (amount > 0 && state.balance >= (stock.price * amount)) {
                     state.balance -= (stock.price * amount);
                     state.shares[symbol] = (state.shares[symbol] || 0) + amount;
@@ -2879,7 +2835,7 @@
                 let amount = inputAmt;
                 if (state.tradeMax) amount = state.shares[symbol] || 0;
                 if (amount > (state.shares[symbol] || 0)) amount = state.shares[symbol] || 0;
-                
+
                 if (amount > 0 && (state.shares[symbol] || 0) >= amount) {
                     state.balance += (stock.price * amount);
                     state.shares[symbol] -= amount;
@@ -2931,7 +2887,7 @@
             if (!c || !c.customUpgrades) return;
             const u = c.customUpgrades.find(x => x.id === uId);
             if (!u) return;
-            
+
             const count = (state.compCustomUpgrades[cId] || {})[uId] || 0;
             if (u.req) {
                 const reqCount = (state.compCustomUpgrades[cId] || {})[u.req.id] || 0;
@@ -2966,12 +2922,12 @@
             if (state.level < 4) return;
             const item = ASSETS[cat].find(i => i.id === id);
             if (!item || !state.ownedAssets.includes(id)) return;
-            
+
             const price = getCollectionSellPrice(id, item.price);
             state.balance += price;
             state.ownedAssets = state.ownedAssets.filter(a => a !== id);
             delete state.collectionOwnedTime[id];
-            
+
             logToTerminal(`SOLD COLLECTION: ${item.name} FOR $${price.toLocaleString()}`);
             updateUI(true);
             saveGame();
@@ -3000,7 +2956,7 @@
                         const increase = item.price * (Math.random() * 0.15 + 0.02);
                         let nextBid = activeAuction.currentBid + increase;
                         if (nextBid > item.price * 5) nextBid = item.price * 5;
-                        
+
                         activeAuction.currentBid = nextBid;
                         activeAuction.bids.unshift({ name: "Bidder" + Math.floor(Math.random() * 9000 + 1000), amount: nextBid, msg: 'Placed a bid' });
                         if (activeAuction.bids.length > 15) activeAuction.bids.pop();
@@ -3017,7 +2973,7 @@
             const sec = activeAuction.timer % 60;
             setUI('auction-time', `${min}:${sec < 10 ? '0' : ''}${sec}`);
             setUI('auction-price', '$' + Math.floor(activeAuction.currentBid).toLocaleString());
-            
+
             const log = document.getElementById('auction-log');
             if (log) {
                 log.innerHTML = activeAuction.bids.map(b => `
@@ -3033,14 +2989,14 @@
         function finishAuction() {
             if (!activeAuction) return;
             clearInterval(activeAuction.interval);
-            
+
             const finalPrice = Math.floor(activeAuction.currentBid);
             state.balance += finalPrice;
             state.ownedAssets = state.ownedAssets.filter(a => a !== activeAuction.id);
             delete state.collectionOwnedTime[activeAuction.id];
-            
+
             logToTerminal(`AUCTION ENDED: ${activeAuction.item.name} SOLD FOR $${finalPrice.toLocaleString()}`);
-            
+
             document.getElementById('auction-modal').style.display = 'none';
             activeAuction = null;
             updateUI(true);
@@ -3077,7 +3033,7 @@
                 logToTerminal(`${id.toUpperCase()} OPENED OUTLET #${count+1}`);
                 updateUI(true);
                 saveGame();
-}
+            }
         }
 
         function toggleRental(id) {
@@ -3162,9 +3118,25 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Optimized Background Loop (Only math, delegating DOM updates to fastTickUpdate)
         // Optimized Background Loop (Executes the math for the Global System & Updates UI)
         setInterval(() => {
             state.balance += (state.revenue / 3600);
+            STOCKS.forEach(s => {
+                const oldPrice = s.price;
+                if (!s.isRealTime) {
+                    const volt = s.type === 'crypto' ? 0.02 : 0.008;
+                    s.trend += (Math.random() - 0.5) * 0.2;
+                    let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
+                    s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
+                }
+                const open = oldPrice;
+                const close = s.price;
+                const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
+                const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
+                s.history.push({ open, close, high, low });
+                if(s.history.length > 50) s.history.shift();
+            });
             
             // Step 1: Manage Global Sync Math (Either Algorithmic or True Backend API)
             if (GLOBAL_MARKET_CONFIG.apiUrl) {
@@ -3222,7 +3194,7 @@
                 }
             });
         }
-        
+
         window.addEventListener('keydown', (e) => {
             if(e.key === 'Escape') {
                 closeStockModal();
@@ -3233,7 +3205,7 @@
                 }
             }
         });
-        
+
         function applyCheat() {
             const val = parseFloat(document.getElementById('cheat-input').value);
             if (!isNaN(val) && val > 0) {
@@ -3295,13 +3267,13 @@
             }
             applyMobileMode();
             if (state.isCheater) activateCheatMode();
-            
+
             // Run global sync once on load immediately 
             if (GLOBAL_MARKET_CONFIG.apiUrl) await syncGlobalMarketBackend();
             else if (GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync) updateGlobalSimulatedMarket();
 
             await checkOfflineEarnings();
-            
+
             updateUI(true);
             filterCollection('jewelry');
             filterRealEstate('house');
