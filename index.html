@@ -758,6 +758,20 @@
     </div>
 
     <script>
+        // GLOBAL MARKET CONFIGURATION
+        const GLOBAL_MARKET_CONFIG = {
+            // OPTION 1: True Global Backend (Firebase, JSONBin, Supabase, Custom API)
+            // Replace this with your API endpoint to literally save/sync market data across all users 
+            // from a central database. Example: "https://your-api.com/stocks"
+            apiUrl: "", 
+
+            // OPTION 2: Serverless Global Algorithmic Sync (Fallback / Backend-less)
+            // If true and no API is provided above, the game uses a deterministic global clock 
+            // (based on Unix time) to calculate organic market trends. This guarantees every user 
+            // around the world sees the exact same stock prices at the same time, without needing a server!
+            useAlgorithmicGlobalSync: true 
+        };
+
         const THEMES =[
             { id: 'dark', name: 'Dark Mode', price: 0, class: 'theme-dark' },
             { id: 'light', name: 'Light Mode', price: 0, class: 'theme-light' },
@@ -917,6 +931,11 @@
             { symbol: "GRT", name: "The Graph", price: 0.30, trend: 0.7, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/grt/200' },
             { symbol: "RUNE", name: "THORChain", price: 7.50, trend: 1.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/rune/200' }
         ];
+
+        // Seed initial base prices to anchor the global simulation
+        STOCKS.forEach(s => {
+            s.basePrice = s.price;
+        });
 
         const NFTS =[
             { id: 'nft1', name: "Bored Ape #402", price: 65, currency: 'ETH', img: "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=400", volatility: 0.15 },
@@ -1157,32 +1176,20 @@
         if (!state.activeStats) state.activeStats =['rank', 'assets', 'eth', 'multiplier'];
         if (!state.widgetSizes) state.widgetSizes = {};
 
+        // Load personal stock history if algorithmic sync isn't enabled
         if (state.stockMarket && state.stockMarket.length > 0) {
             state.stockMarket.forEach(savedStock => {
                 const s = STOCKS.find(x => x.symbol === savedStock.symbol);
                 if (s) {
-                    s.price = savedStock.price;
-                    s.trend = savedStock.trend;
-                    s.history = savedStock.history ||[];
+                    if (!GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync && !GLOBAL_MARKET_CONFIG.apiUrl) {
+                        s.price = savedStock.price;
+                        s.trend = savedStock.trend;
+                        s.history = savedStock.history ||[];
+                    }
                     s.isRealTime = savedStock.isRealTime || false;
                 }
             });
         }
-
-        STOCKS.forEach(s => {
-            if (!s.history || s.history.length === 0) {
-                let last = s.price;
-                s.history =[];
-                for(let i=0; i<50; i++) {
-                    const open = last;
-                    const close = parseFloat((last + (Math.random() - 0.5) * (last * 0.05)).toFixed(2));
-                    const high = parseFloat((Math.max(open, close) + Math.random() * (last * 0.01)).toFixed(2));
-                    const low = parseFloat((Math.min(open, close) - Math.random() * (last * 0.01)).toFixed(2));
-                    s.history.push({ open, close, high, low });
-                    last = close;
-                }
-            }
-        });
 
         const AVAILABLE_STATS =[
             { id: 'rank', label: 'Current Rank', isMono: false, getValue: () => RANKS[Math.min(Math.floor(state.level / 5), RANKS.length - 1)] },
@@ -1202,6 +1209,95 @@
             { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length }
         ];
 
+        // --- GLOBAL MARKET SYNC FUNCTIONS ---
+
+        // 1. Math-Based Serverless Sync: Deterministically calculate market movements using global Unix time
+        function updateGlobalSimulatedMarket() {
+            const now = Date.now();
+            const currentSec = Math.floor(now / 1000);
+            
+            STOCKS.forEach(s => {
+                if (s.isRealTime) return; // Ignore if Yahoo Finance fetches successfully
+                
+                const hash = s.symbol.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
+                s.history = [];
+                let lastPrice = s.basePrice;
+
+                // Rebuild the last 50 seconds visually using identical seed factors
+                for (let i = 50; i >= 0; i--) {
+                    const t = currentSec - i;
+                    const volatility = s.type === 'crypto' ? 3.0 : 1.2;
+                    
+                    // Different overlapping sine waves based perfectly on world clock
+                    const wave1 = Math.sin(t / 3600 + hash) * 0.4;
+                    const wave2 = Math.sin(t / 600 + hash * 1.5) * 0.25;
+                    const wave3 = Math.sin(t / 60 + hash * 2.2) * 0.15;
+                    
+                    const noiseSeed = Math.sin(t * 10.1 + hash) * 10000;
+                    const noise = (noiseSeed - Math.floor(noiseSeed) - 0.5) * 0.1;
+                    
+                    const mult = Math.max(0.05, 1 + ((wave1 + wave2 + wave3 + noise) * volatility));
+                    const calcPrice = parseFloat((s.basePrice * mult).toFixed(2));
+                    
+                    if (i === 0) {
+                        s.price = calcPrice;
+                        if (s.history.length > 0) {
+                            s.trend = ((calcPrice - s.history[0].open) / s.history[0].open) * 100;
+                        }
+                    } else {
+                        const open = lastPrice;
+                        const close = calcPrice;
+                        const jitter = Math.abs(noise * s.basePrice * 0.5);
+                        const high = Math.max(open, close) + jitter;
+                        const low = Math.min(open, close) - jitter;
+                        s.history.push({ open, close, high, low });
+                        lastPrice = close;
+                    }
+                }
+            });
+        }
+
+        // 2. REST API Backend Sync: Manually pushing and pulling from a real database endpoint
+        async function syncGlobalMarketBackend() {
+            if (!GLOBAL_MARKET_CONFIG.apiUrl || GLOBAL_MARKET_CONFIG.apiUrl.includes("your-api")) return;
+            try {
+                const res = await fetch(GLOBAL_MARKET_CONFIG.apiUrl);
+                const data = await res.json();
+                const payload = data.record || data; // Adapts for standard JSONBins
+
+                if (payload && payload.timestamp && (Date.now() - payload.timestamp < 30000)) {
+                    STOCKS.forEach(s => {
+                        const remoteStock = payload.stocks.find(rs => rs.symbol === s.symbol);
+                        if (remoteStock && !s.isRealTime) {
+                            s.price = remoteStock.price;
+                            s.trend = remoteStock.trend;
+                            s.history = remoteStock.history;
+                        }
+                    });
+                } else {
+                    await pushGlobalMarketBackend();
+                }
+            } catch(e) {
+                console.warn("Global API Sync failed. Ensure CORS and URL are configured.", e);
+            }
+        }
+
+        async function pushGlobalMarketBackend() {
+            if (!GLOBAL_MARKET_CONFIG.apiUrl || GLOBAL_MARKET_CONFIG.apiUrl.includes("your-api")) return;
+            const payload = {
+                timestamp: Date.now(),
+                stocks: STOCKS.map(s => ({ symbol: s.symbol, price: s.price, trend: s.trend, history: s.history }))
+            };
+            try {
+                await fetch(GLOBAL_MARKET_CONFIG.apiUrl, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+            } catch(e) {}
+        }
+        
+        // 3. Real-Life Market Sync: Fetch true global stocks from Yahoo API
         async function fetchRealTimeStocks() {
             try {
                 const symbols = STOCKS.map(s => {
@@ -1232,7 +1328,7 @@
                     updateUI(false); 
                 }
             } catch (e) {
-                console.warn("Real-time stocks fetch error - proceeding with simulated market data.", e);
+                console.warn("Real-time stocks fetch error - proceeding with simulated global market data.");
             }
         }
 
@@ -2330,7 +2426,8 @@
 
                     return `
                         <div class="glass-card p-8 border-white/5">
-                            <div class="h-40 rounded-xl mb-6 ${t.class}"></div>
+
+<div class="h-40 rounded-xl mb-6 ${t.class}"></div>
                             <h3 class="text-2xl font-black uppercase mb-1">${t.name}</h3>
                             <p class="text-xs text-zinc-500 font-bold mb-8">${t.mult}x MULTIPLIER</p>
                             ${btnStr}
@@ -3001,24 +3098,34 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Optimized Background Loop (Only math, delegating DOM updates to fastTickUpdate)
+        // Optimized Background Loop (Executes the math for the Global System & Updates UI)
         setInterval(() => {
             state.balance += (state.revenue / 3600);
-            STOCKS.forEach(s => {
-                const oldPrice = s.price;
-                if (!s.isRealTime) {
-                    const volt = s.type === 'crypto' ? 0.02 : 0.008;
-                    s.trend += (Math.random() - 0.5) * 0.2;
-                    let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
-                    s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
-                }
-                const open = oldPrice;
-                const close = s.price;
-                const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
-                const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
-                s.history.push({ open, close, high, low });
-                if(s.history.length > 50) s.history.shift();
-            });
+            
+            // Step 1: Manage Global Sync Math (Either Algorithmic or True Backend API)
+            if (GLOBAL_MARKET_CONFIG.apiUrl) {
+                syncGlobalMarketBackend(); 
+            } else if (GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync) {
+                updateGlobalSimulatedMarket();
+            } else {
+                // Fallback to local isolated randomizer if the user turns everything off
+                STOCKS.forEach(s => {
+                    const oldPrice = s.price;
+                    if (!s.isRealTime) {
+                        const volt = s.type === 'crypto' ? 0.02 : 0.008;
+                        s.trend += (Math.random() - 0.5) * 0.2;
+                        let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
+                        s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
+                    }
+                    const open = oldPrice;
+                    const close = s.price;
+                    const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
+                    const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
+                    s.history.push({ open, close, high, low });
+                    if(s.history.length > 50) s.history.shift();
+                });
+            }
+
             state.lastSaveTime = Date.now();
             fastTickUpdate(); 
             saveGame();
@@ -3125,6 +3232,10 @@
             applyMobileMode();
             if (state.isCheater) activateCheatMode();
             
+            // Run global sync once on load immediately 
+            if (GLOBAL_MARKET_CONFIG.apiUrl) await syncGlobalMarketBackend();
+            else if (GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync) updateGlobalSimulatedMarket();
+
             await checkOfflineEarnings();
             
             updateUI(true);
