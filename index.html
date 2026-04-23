@@ -1,25 +1,3 @@
-Here is the heavily optimized version of the Vercel Empire game.
-
-Key Optimizations Made:
-
-1.  Uncoupled Core UI Updates: You were experiencing lag when clicking because
-    the game was regenerating the entire HTML DOM (the lists, the companies, the
-    stocks, the profiles) every single time you clicked to mint money. This has
-    been refactored. Now, clicking only updates the specific text numbers (like
-    balance and XP) causing zero layout thrashing.
-2.  Tick-Loop Enhancements: The 1-second passive market loop used to also
-    rebuild the entire DOM. Now, it operates on a lightweight fastTickUpdate()
-    logic that only swaps text values by ID and limits canvas chart redrawing to
-    only when the Stocks tab is visible.
-3.  Data-Bound Buttons: Buy and Sell buttons now dynamically monitor your
-    balance and enable/disable themselves via CSS selector queries, rather than
-    requiring the whole page to reload.
-4.  Animation Debouncing: The 3D credit card tilt effect was piling up
-    animations on rapid clicks. This has been debounced so it remains smooth
-    even if you click at 20+ CPS.
-
-Replace the entirety of your file with this:
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
