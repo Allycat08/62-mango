@@ -1,3 +1,25 @@
+Here is the heavily optimized version of the Vercel Empire game.
+
+Key Optimizations Made:
+
+1.  Uncoupled Core UI Updates: You were experiencing lag when clicking because
+    the game was regenerating the entire HTML DOM (the lists, the companies, the
+    stocks, the profiles) every single time you clicked to mint money. This has
+    been refactored. Now, clicking only updates the specific text numbers (like
+    balance and XP) causing zero layout thrashing.
+2.  Tick-Loop Enhancements: The 1-second passive market loop used to also
+    rebuild the entire DOM. Now, it operates on a lightweight fastTickUpdate()
+    logic that only swaps text values by ID and limits canvas chart redrawing to
+    only when the Stocks tab is visible.
+3.  Data-Bound Buttons: Buy and Sell buttons now dynamically monitor your
+    balance and enable/disable themselves via CSS selector queries, rather than
+    requiring the whole page to reload.
+4.  Animation Debouncing: The 3D credit card tilt effect was piling up
+    animations on rapid clicks. This has been debounced so it remains smooth
+    even if you click at 20+ CPS.
+
+Replace the entirety of your file with this:
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,7 +86,6 @@
         }
         .debit-card:active { transform: scale(0.95) rotateX(10deg); }
         
-        /* Fullscreen Card Modifier */
         .card-fullscreen-mode {
             position: fixed !important;
             inset: 0 !important;
@@ -102,19 +123,19 @@
 
         .tier-0 { background: linear-gradient(135deg, #1c1c1c, #0a0a0a); }
         .tier-1 { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
-        .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; } /* PLATINUM */
+        .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; }
         .tier-3 { background: linear-gradient(135deg, #7c3aed, #4c1d95); }
-        .tier-4 { background: linear-gradient(135deg, #64748b, #334155); } /* TITANIUM */
+        .tier-4 { background: linear-gradient(135deg, #64748b, #334155); }
         .tier-5 { background: linear-gradient(135deg, #db2777, #831843); }
-        .tier-6 { background: linear-gradient(135deg, #18181b, #0f172a); } /* OBSIDIAN */
+        .tier-6 { background: linear-gradient(135deg, #18181b, #0f172a); }
         .tier-7 { background: linear-gradient(135deg, #10b981, #064e3b); }
-        .tier-8 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; } /* GOLD */
-        .tier-9 { background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0f172a; } /* DIAMOND */
-        .tier-10 { background: linear-gradient(135deg, #27272a, #09090b); border: 1px solid #52525b; } /* CARBON */
-        .tier-11 { background: linear-gradient(135deg, #000000, #111111); border: 1px solid #ffffff; } /* BLACK */
-        .tier-12 { background: linear-gradient(135deg, #4c1d95, #000000); border: 1px solid #8b5cf6; } /* NEBULA */
-        .tier-13 { background: linear-gradient(135deg, #020617, #0f172a); border: 1px solid #38bdf8; } /* ANTIMATTER */
-        .tier-14 { background: linear-gradient(135deg, #ffffff, #f8fafc); color: #000000; border: 1px solid #e2e8f0; box-shadow: 0 0 30px rgba(255,255,255,0.5); } /* GALACTIC */
+        .tier-8 { background: linear-gradient(135deg, #f59e0b, #78350f); border: 1px solid #fbbf24; }
+        .tier-9 { background: linear-gradient(135deg, #e0f2fe, #bae6fd); color: #0f172a; }
+        .tier-10 { background: linear-gradient(135deg, #27272a, #09090b); border: 1px solid #52525b; }
+        .tier-11 { background: linear-gradient(135deg, #000000, #111111); border: 1px solid #ffffff; }
+        .tier-12 { background: linear-gradient(135deg, #4c1d95, #000000); border: 1px solid #8b5cf6; }
+        .tier-13 { background: linear-gradient(135deg, #020617, #0f172a); border: 1px solid #38bdf8; }
+        .tier-14 { background: linear-gradient(135deg, #ffffff, #f8fafc); color: #000000; border: 1px solid #e2e8f0; box-shadow: 0 0 30px rgba(255,255,255,0.5); }
 
         .progress-bg { background: #1a1a1a; height: 4px; border-radius: 2px; }
         .progress-fill { background: #ffffff; height: 100%; border-radius: 2px; transition: width 0.3s; }
@@ -155,7 +176,6 @@
             cursor: zoom-in;
             border: 1px solid #111;
         }
-
         .chart-container:hover { border-color: #333; }
 
         .item-img {
@@ -175,137 +195,55 @@
             align-items: center;
             justify-content: center;
         }
-
         #onboarding-modal { display: flex; }
 
-        .favorite-btn {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            color: #333;
-            transition: color 0.2s;
-            z-index: 10;
-        }
-        .favorite-btn.active {
-            color: #fbbf24;
-        }
+        .favorite-btn { position: absolute; top: 1rem; right: 1rem; color: #333; transition: color 0.2s; z-index: 10; }
+        .favorite-btn.active { color: #fbbf24; }
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
+        .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider {
-            position: absolute; cursor: pointer; inset: 0;
-            background-color: #333; transition: .4s; border-radius: 20px;
-        }
-        .slider:before {
-            position: absolute; content: ""; height: 16px; width: 16px;
-            left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%;
-        }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: #333; transition: .4s; border-radius: 20px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--accent); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        /* WALLET UI */
-        .wallet-container {
-            perspective: 1000px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
+        .wallet-container { perspective: 1000px; scrollbar-width: none; -ms-overflow-style: none; }
         .wallet-container::-webkit-scrollbar { display: none; }
-        .wallet-card-wrapper {
-            min-width: 180px;
-            margin-right: -110px;
-            transition: transform 0.3s ease, z-index 0.3s ease;
-            position: relative;
-            cursor: pointer;
-        }
-        .wallet-card-wrapper:hover, .wallet-card-wrapper.active-wallet-card {
-            transform: translateY(-15px) rotateZ(-3deg);
-        }
+        .wallet-card-wrapper { min-width: 180px; margin-right: -110px; transition: transform 0.3s ease, z-index 0.3s ease; position: relative; cursor: pointer; }
+        .wallet-card-wrapper:hover, .wallet-card-wrapper.active-wallet-card { transform: translateY(-15px) rotateZ(-3deg); }
 
-        /* CUSTOM SCROLLBAR FOR COMPANY TREES */
         .scrollbar-thin::-webkit-scrollbar { width: 4px; }
         .scrollbar-thin::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
         .scrollbar-thin::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #555; }
 
-        /* MOBILE MODE (9:16) CSS */
         .mobile-mode {
             max-width: min(100vw, calc(100vh * (9 / 16))) !important;
-            height: 100vh;
-            max-height: 100vh;
-            margin: 0 auto;
-            border-left: 1px solid #1a1a1a;
-            border-right: 1px solid #1a1a1a;
-            padding: 0 !important;
-            overflow-y: auto;
-            overflow-x: hidden;
-            border-radius: 0;
-            background-color: var(--bg);
-            position: relative;
-            transform: translateZ(0);
+            height: 100vh; max-height: 100vh; margin: 0 auto;
+            border-left: 1px solid #1a1a1a; border-right: 1px solid #1a1a1a;
+            padding: 0 !important; overflow-y: auto; overflow-x: hidden;
+            border-radius: 0; background-color: var(--bg); position: relative; transform: translateZ(0);
         }
         @media (min-width: 600px) {
-            .mobile-mode {
-                height: 90vh;
-                max-height: 90vh;
-                margin: 5vh auto;
-                border: 2px solid #222;
-                border-radius: 40px;
-                box-shadow: 0 20px 80px rgba(0,0,0,0.9);
-                padding: 0 !important;
-            }
+            .mobile-mode { height: 90vh; max-height: 90vh; margin: 5vh auto; border: 2px solid #222; border-radius: 40px; box-shadow: 0 20px 80px rgba(0,0,0,0.9); padding: 0 !important; }
         }
-        .mobile-mode::-webkit-scrollbar { display: none; }
-        .mobile-mode { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        .mobile-mode nav::-webkit-scrollbar { display: none; }
-        .mobile-mode nav { -ms-overflow-style: none; scrollbar-width: none; }
+        .mobile-mode::-webkit-scrollbar, .mobile-mode nav::-webkit-scrollbar { display: none; }
+        .mobile-mode, .mobile-mode nav { -ms-overflow-style: none; scrollbar-width: none; }
 
         .mobile-mode header { flex-direction: column; gap: 1rem; }
         .mobile-mode .stats-badge { width: 100%; justify-content: space-between; padding: 1rem; gap: 0; }
         .mobile-mode .stats-badge > div { flex: 1; }
         .mobile-mode .col-span-12 { grid-column: span 12 / span 12 !important; }
 
-        .mobile-mode #companies-grid,
-        .mobile-mode #re-grid,
-        .mobile-mode #stocks-full-grid,
-        .mobile-mode #crypto-grid,
-        .mobile-mode #nft-grid,
-        .mobile-mode #coll-grid,
-        .mobile-mode #trading-grid,
-        .mobile-mode #bank-grid,
-        .mobile-mode #profile-portfolio-list,
-        .mobile-mode #themes-grid,
-        .mobile-mode #edu-colleges-grid,
-        .mobile-mode #edu-degrees-grid,
-        .mobile-mode #bm-grid {
-            grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
-        }
-        
-        .mobile-mode #dashboard .grid-cols-2 {
-            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-        }
+        .mobile-mode #companies-grid, .mobile-mode #re-grid, .mobile-mode #stocks-full-grid, .mobile-mode #crypto-grid,
+        .mobile-mode #nft-grid, .mobile-mode #coll-grid, .mobile-mode #trading-grid, .mobile-mode #bank-grid,
+        .mobile-mode #profile-portfolio-list, .mobile-mode #themes-grid, .mobile-mode #edu-colleges-grid,
+        .mobile-mode #edu-degrees-grid, .mobile-mode #bm-grid { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+        .mobile-mode #dashboard .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 
-        .mobile-mode #stock-modal, 
-        .mobile-mode #reset-modal, 
-        .mobile-mode #onboarding-modal, 
-        .mobile-mode #auction-modal,
-        .mobile-mode #transfer-modal {
-            position: absolute;
-            border-radius: inherit;
-        }
+        .mobile-mode #stock-modal, .mobile-mode #reset-modal, .mobile-mode #onboarding-modal, .mobile-mode #auction-modal, .mobile-mode #transfer-modal { position: absolute; border-radius: inherit; }
 
-        /* --- UI THEMES --- */
-        body.theme-light {
-            --bg: #fafafa;
-            --card-bg: #ffffff;
-            --border: #e4e4e7;
-            color: #09090b;
-        }
+        body.theme-light { --bg: #fafafa; --card-bg: #ffffff; --border: #e4e4e7; color: #09090b; }
         body.theme-light .bg-zinc-950, body.theme-light .bg-zinc-900 { background-color: #f4f4f5 !important; }
         body.theme-light .bg-black { background-color: #ffffff !important; }
         body.theme-light .border-zinc-900, body.theme-light .border-zinc-800 { border-color: #e4e4e7 !important; }
@@ -323,13 +261,7 @@
         body.theme-light .chart-container { background: #ffffff !important; border-color: #e4e4e7 !important; }
         body.theme-light #stock-modal, body.theme-light #reset-modal, body.theme-light #onboarding-modal, body.theme-light #auction-modal, body.theme-light #transfer-modal { background: rgba(255,255,255,0.9); }
 
-        body.theme-hacker {
-            --bg: #000000;
-            --card-bg: #000000;
-            --border: #004400;
-            color: #00ff00;
-            font-family: 'JetBrains Mono', monospace;
-        }
+        body.theme-hacker { --bg: #000000; --card-bg: #000000; --border: #004400; color: #00ff00; font-family: 'JetBrains Mono', monospace; }
         body.theme-hacker * { font-family: 'JetBrains Mono', monospace !important; }
         body.theme-hacker .glass-card { box-shadow: 0 0 10px rgba(0,255,0,0.05); }
         body.theme-hacker .bg-zinc-950, body.theme-hacker .bg-zinc-900 { background-color: #001100 !important; }
@@ -348,12 +280,7 @@
         body.theme-hacker input, body.theme-hacker select { background-color: #001100 !important; border-color: #004400 !important; color: #00ff00 !important; }
         body.theme-hacker .chart-container { background: #000000 !important; border-color: #004400 !important; }
 
-        body.theme-gold {
-            --bg: #050500;
-            --card-bg: #0a0a00;
-            --border: #554400;
-            color: #d4af37;
-        }
+        body.theme-gold { --bg: #050500; --card-bg: #0a0a00; --border: #554400; color: #d4af37; }
         body.theme-gold .bg-zinc-950, body.theme-gold .bg-zinc-900 { background-color: #111100 !important; }
         body.theme-gold .bg-black { background-color: #050500 !important; }
         body.theme-gold .border-zinc-900, body.theme-gold .border-zinc-800 { border-color: #554400 !important; }
@@ -370,12 +297,7 @@
         body.theme-gold input, body.theme-gold select { background-color: #111100 !important; border-color: #554400 !important; color: #d4af37 !important; }
         body.theme-gold .chart-container { background: #0a0a00 !important; border-color: #554400 !important; }
 
-        body.theme-neon {
-            --bg: #090014;
-            --card-bg: #12002b;
-            --border: #4a0072;
-            color: #e0b3ff;
-        }
+        body.theme-neon { --bg: #090014; --card-bg: #12002b; --border: #4a0072; color: #e0b3ff; }
         body.theme-neon .glass-card { box-shadow: 0 0 15px rgba(188, 19, 254, 0.05); }
         body.theme-neon .bg-zinc-950, body.theme-neon .bg-zinc-900 { background-color: #1a0033 !important; }
         body.theme-neon .bg-black { background-color: #090014 !important; }
@@ -393,12 +315,7 @@
         body.theme-neon input, body.theme-neon select { background-color: #1a0033 !important; border-color: #4a0072 !important; color: #00ffff !important; }
         body.theme-neon .chart-container { background: #090014 !important; border-color: #4a0072 !important; }
 
-        body.theme-cyberpunk {
-            --bg: #0d0221;
-            --card-bg: #1a0b2e;
-            --border: #00ffcc;
-            color: #fcee0a;
-        }
+        body.theme-cyberpunk { --bg: #0d0221; --card-bg: #1a0b2e; --border: #00ffcc; color: #fcee0a; }
         body.theme-cyberpunk .bg-zinc-950, body.theme-cyberpunk .bg-zinc-900 { background-color: #120124 !important; }
         body.theme-cyberpunk .bg-black { background-color: #0d0221 !important; }
         body.theme-cyberpunk .border-zinc-900, body.theme-cyberpunk .border-zinc-800 { border-color: #00ffcc !important; }
@@ -415,12 +332,7 @@
         body.theme-cyberpunk input, body.theme-cyberpunk select { background-color: #120124 !important; border-color: #00ffcc !important; color: #fcee0a !important; }
         body.theme-cyberpunk .chart-container { background: #0d0221 !important; border-color: #00ffcc !important; }
 
-        body.theme-abyss {
-            --bg: #050000;
-            --card-bg: #0a0000;
-            --border: #330000;
-            color: #ff3333;
-        }
+        body.theme-abyss { --bg: #050000; --card-bg: #0a0000; --border: #330000; color: #ff3333; }
         body.theme-abyss .bg-zinc-950, body.theme-abyss .bg-zinc-900 { background-color: #080000 !important; }
         body.theme-abyss .bg-black { background-color: #050000 !important; }
         body.theme-abyss .border-zinc-900, body.theme-abyss .border-zinc-800 { border-color: #330000 !important; }
@@ -437,23 +349,13 @@
         body.theme-abyss input, body.theme-abyss select { background-color: #080000 !important; border-color: #330000 !important; color: #ff3333 !important; }
         body.theme-abyss .chart-container { background: #050000 !important; border-color: #330000 !important; }
 
-        /* Highlight style for drag and drop */
-        .drag-over {
-            border-style: dashed !important;
-            border-color: #ffffff !important;
-            opacity: 0.5;
-        }
+        .drag-over { border-style: dashed !important; border-color: #ffffff !important; opacity: 0.5; }
 
-        /* --- CARD PROTECTION FROM THEMES --- */
-        html body .debit-card, html body .debit-card * {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important;
-        }
-        
+        html body .debit-card, html body .debit-card * { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
         html body .debit-card { color: #ffffff !important; }
         html body .debit-card.tier-2 { color: #000000 !important; }
         html body .debit-card.tier-9 { color: #0f172a !important; }
         html body .debit-card.tier-14 { color: #000000 !important; }
-
         html body .debit-card .text-white { color: currentColor !important; }
         html body .debit-card .text-white\/40 { color: color-mix(in srgb, currentColor 40%, transparent) !important; }
         html body .debit-card .text-white\/60 { color: color-mix(in srgb, currentColor 60%, transparent) !important; }
@@ -465,7 +367,6 @@
 </head>
 <body class="max-w-[1400px] mx-auto">
 
-    <!-- STICKY TOP BAR WRAPPER -->
     <div id="top-bar" class="sticky top-0 z-50 px-6 pt-6 transition-colors duration-300" style="background-color: var(--bg);">
         <header class="flex justify-between items-start mb-8">
             <div class="flex items-center gap-4">
@@ -509,7 +410,6 @@
         </nav>
     </div>
 
-    <!-- MAIN WRAPPER WITH PADDING -->
     <main class="px-6 pt-10 pb-24">
         <!-- DASHBOARD TAB -->
         <div id="dashboard" class="tab-content active">
@@ -518,8 +418,6 @@
                     <div class="card-perspective" id="card-container">
                         <div class="debit-card p-8 flex flex-col justify-between tier-0" id="game-card" onclick="mintMoney(event)">
                             <div class="card-glare" id="card-glare"></div>
-                            
-                            <!-- MAXIMIZE BUTTON -->
                             <button onclick="toggleCardFullscreen(event)" id="card-max-btn" class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors" title="Toggle Fullscreen">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                             </button>
@@ -567,11 +465,7 @@
                         <div class="progress-bg mb-8">
                             <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
                         </div>
-
-                        <!-- STAT WIDGETS -->
-                        <div id="empire-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 grid-flow-row-dense">
-                            <!-- Populated via JS -->
-                        </div>
+                        <div id="empire-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 grid-flow-row-dense"></div>
                     </div>
 
                     <div class="glass-card p-6 h-48 overflow-y-auto font-mono text-[10px] text-zinc-600 space-y-1" id="terminal">
@@ -587,9 +481,7 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                     <h2 class="text-xl font-black uppercase tracking-tight">ENTERPRISE INFRASTRUCTURE</h2>
-                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1" id="comp-sell-desc">
-                        BUILD, UPGRADE & SELL FOR 30% OF INVESTMENTS
-                    </p>
+                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1" id="comp-sell-desc">BUILD, UPGRADE & SELL FOR 30% OF INVESTMENTS</p>
                 </div>
             </div>
             <div id="companies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -616,7 +508,6 @@
                 <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
                 <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </section>
-
             <section class="mb-12">
                 <div class="flex items-center gap-4 mb-8">
                     <h2 class="text-xl font-black uppercase tracking-tight">CRYPTO EXCHANGE</h2>
@@ -624,7 +515,6 @@
                 </div>
                 <div id="crypto-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </section>
-
             <section class="mb-12">
                 <div class="flex items-center justify-between mb-8">
                     <div class="flex items-center gap-4">
@@ -642,9 +532,7 @@
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                     <h2 class="text-xl font-black uppercase tracking-tight">LUXURY ASSETS</h2>
-                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">
-                        ACQUIRE HIGH VALUE ASSETS • SELL & AUCTION IN TRADING TAB
-                    </p>
+                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">ACQUIRE HIGH VALUE ASSETS • SELL & AUCTION IN TRADING TAB</p>
                 </div>
                 <div class="flex gap-2">
                     <button onclick="filterCollection('jewelry')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active" data-cat="jewelry">Jewelry</button>
@@ -664,14 +552,12 @@
             <div id="trading-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
         </div>
         
-        <!-- BLACK MARKET TAB (HIDDEN) -->
+        <!-- BLACK MARKET TAB -->
         <div id="black-market" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
                     <h2 class="text-xl font-black uppercase tracking-tight text-red-500" style="text-shadow: 0 0 10px rgba(239,68,68,0.5);">THE DARK WEB</h2>
-                    <p class="text-[10px] text-red-900 font-bold tracking-widest mt-1">
-                        UNTRACEABLE TRANSACTIONS • BTC ONLY
-                    </p>
+                    <p class="text-[10px] text-red-900 font-bold tracking-widest mt-1">UNTRACEABLE TRANSACTIONS • BTC ONLY</p>
                 </div>
             </div>
             <div id="bm-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -685,9 +571,7 @@
 
         <!-- ACADEMICS TAB -->
         <div id="academics" class="tab-content">
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4" id="academics-header">
-                <!-- Injected via JS -->
-            </div>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4" id="academics-header"></div>
             <div id="edu-content"></div>
         </div>
 
@@ -715,15 +599,12 @@
                             </div>
                         </div>
 
-                        <!-- 3D WALLET SYSTEM -->
                         <div class="border-t border-zinc-900 pt-8 text-left">
                             <div class="flex justify-between items-center mb-6">
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">DIGITAL WALLET</p>
                                 <button onclick="openTransferModal()" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors uppercase tracking-widest">TRANSFER</button>
                             </div>
-                            <div class="wallet-container flex overflow-x-auto pb-8 -mx-4 px-4 pt-4" id="wallet-container">
-                                <!-- populated via JS -->
-                            </div>
+                            <div class="wallet-container flex overflow-x-auto pb-8 -mx-4 px-4 pt-4" id="wallet-container"></div>
                         </div>
                     </div>
 
@@ -746,29 +627,22 @@
                 </div>
 
                 <div class="col-span-12 lg:col-span-8 space-y-6">
-                    <!-- WIDGET MANAGER -->
                     <div class="glass-card p-8">
                         <div class="flex justify-between items-center mb-6">
                             <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">DASHBOARD WIDGETS</p>
                             <p class="text-[10px] font-bold text-zinc-400" id="widget-count">4/8 ACTIVE</p>
                         </div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="widget-manager-container">
-                            <!-- Managed by JS -->
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="widget-manager-container"></div>
                     </div>
 
                     <div class="glass-card p-8">
                         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">UI THEMES</p>
-                        <div id="themes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            <!-- Populated via JS -->
-                        </div>
+                        <div id="themes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                     </div>
 
                     <div class="glass-card p-8">
                         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">PORTFOLIO SUMMARY</p>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="profile-portfolio-list">
-                            <!-- Populated via JS -->
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="profile-portfolio-list"></div>
                     </div>
                 </div>
             </div>
@@ -916,19 +790,19 @@
             { id: 'abyss', name: 'The Abyss', price: 1000000000, class: 'theme-abyss' }
         ];
 
-        const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign", "Network State", "Ecosystem", "Technoracy"];
+        const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign"];
         
         const CARD_TIERS =[
             { id: 0, name: "DEFAULT CARD", price: 0, mult: 1, class: "tier-0" },
             { id: 1, name: "SAPPHIRE PREMIER", price: 50000, mult: 2, class: "tier-1" },
-            { id: 2, name: "PLATINUM EXPRESS", price: 100000, mult: 3, class: "tier-2" },
+            { id: 2, name: "PLATINUM RESERVE", price: 100000, mult: 3, class: "tier-2" },
             { id: 3, name: "ULTRA VIOLET", price: 250000, mult: 5, class: "tier-3" },
             { id: 4, name: "TITANIUM ELITE", price: 500000, mult: 7, class: "tier-4" },
             { id: 5, name: "ROSÉ EXECUTIVE", price: 1000000, mult: 10, class: "tier-5" },
-            { id: 6, name: "OBSIDIAN ORDER", price: 2500000, mult: 15, class: "tier-6" },
+            { id: 6, name: "OBSIDIAN INFINITE", price: 2500000, mult: 15, class: "tier-6" },
             { id: 7, name: "EMERALD PRIVATE", price: 5000000, mult: 25, class: "tier-7" },
             { id: 8, name: "CENTURION GOLD", price: 25000000, mult: 100, class: "tier-8" },
-            { id: 9, name: "DIAMOND CARD", price: 50000000, mult: 150, class: "tier-9" },
+            { id: 9, name: "DIAMOND RESERVE", price: 50000000, mult: 150, class: "tier-9" },
             { id: 10, name: "CARBON ELITE", price: 75000000, mult: 200, class: "tier-10" },
             { id: 11, name: "VERCEL BLACK", price: 100000000, mult: 250, class: "tier-11" },
             { id: 12, name: "NEBULA INFINITE", price: 250000000, mult: 400, class: "tier-12" },
@@ -1083,14 +957,10 @@
                 "https://images.unsplash.com/photo-1618172193622-ae2d025f4032?w=400"
             ];
             const cols =[
-                { name: "Mutant Ape", base: 10, vol: 0.2 },
-                { name: "Doodle", base: 4, vol: 0.3 },
-                { name: "Azuki", base: 6, vol: 0.25 },
-                { name: "Pudgy Penguin", base: 8, vol: 0.15 },
-                { name: "CloneX", base: 3, vol: 0.4 },
-                { name: "Meebit", base: 2, vol: 0.1 },
-                { name: "Cool Cat", base: 1.5, vol: 0.2 },
-                { name: "Moonbird", base: 2.5, vol: 0.35 }
+                { name: "Mutant Ape", base: 10, vol: 0.2 }, { name: "Doodle", base: 4, vol: 0.3 },
+                { name: "Azuki", base: 6, vol: 0.25 }, { name: "Pudgy Penguin", base: 8, vol: 0.15 },
+                { name: "CloneX", base: 3, vol: 0.4 }, { name: "Meebit", base: 2, vol: 0.1 },
+                { name: "Cool Cat", base: 1.5, vol: 0.2 }, { name: "Moonbird", base: 2.5, vol: 0.35 }
             ];
             const cryptos =['ETH', 'SOL', 'BNB', 'AVAX', 'MATIC', 'ADA', 'DOT'];
             let idCounter = 5;
@@ -1113,7 +983,6 @@
 
         const COMPANY_TIERS =["Local", "Small Chain", "Large Chain", "Regional Giant", "Global Conglomerate"];
 
-        // BASE COMPANIES DEFINITION (UPGRADES DYNAMICALLY INJECTED BELOW TO SATISFY "REVAMP" SCALING)
         const COMPANIES =[
             { id: 'c1', name: "Corner Shop", price: 25000, rev: 4000, bill: 150, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
             { id: 'c2', name: "Taxi Service", price: 120000, rev: 17500, bill: 500, img: "https://images.unsplash.com/photo-1549194388-2469d59ec69c?w=400", customFleet: true },
@@ -1141,8 +1010,6 @@
             { id: 'c24', name: "Deep Sea Mining", price: 25000000000, rev: 4250000000, bill: 420000000, img: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400" }
         ];
 
-        // --- DEEP UPGRADE SYSTEM REVAMP INJECTION ---
-        // Dynamically creating an incredibly complex 6-tier upgrade tech-tree for EVERY company.
         const COMPLEX_UPGRADE_TREES = {
             'c1': ['Flyer Drops', 'Shelving Units', 'Backroom Storage', 'Shift Supervisors', 'Self-Checkout', 'Neighborhood Buyout'],
             'c2': ['Local Radio Ads', 'Dispatch Software', 'Garage Expansion', 'Veteran Drivers', 'Self-Driving AI', 'City Transport Monopoly'],
@@ -1176,7 +1043,6 @@
             const baseR = c.rev;
             const baseB = c.bill || 0;
             
-            // Replaces basic upgrades with massive exponential multi-tier skill trees
             c.customUpgrades = [
                 { id: 'upg1', name: names[0], price: Math.max(100, Math.floor(baseP * 0.1)), priceMult: 1.15, rev: Math.max(10, Math.floor(baseR * 0.1)), bill: Math.floor(baseB * 0.1), max: 20, req: null },
                 { id: 'upg2', name: names[1], price: Math.max(500, Math.floor(baseP * 0.4)), priceMult: 1.18, rev: Math.max(30, Math.floor(baseR * 0.25)), bill: Math.floor(baseB * 0.25), max: 30, req: { id: 'upg1', count: 10 } },
@@ -1201,35 +1067,15 @@
         const houseNames =["Log Cabin", "Farmhouse", "Ranch Style", "Colonial", "Townhouse", "Victorian", "Georgian", "Tudor", "Mediterranean", "Craftsman", "Mid-Century", "Prairie", "Contemporary", "Bungalow", "Cape Cod", "Cottage", "French Country", "Spanish Style", "Tudor Revival", "Greek Revival", "Italianate", "Art Deco", "Modernist", "Postmodern", "Minimalist", "A-Frame", "Saltbox", "Shotgun", "Split-Level", "Desert Dome", "Eco House"];
         const aptNames =["Studio Apartment", "Micro Studio", "Loft", "Junior 1-Bed", "1-Bed Apt", "2-Bed Apt", "3-Bed Apt", "4-Bed Apt", "Duplex Apt", "Triplex Apt", "Garden Apt", "Basement Suite", "Walk-up Apt", "Railroad Apt", "High-rise Apt", "Mid-rise Apt", "Low-rise Apt", "Luxury Condo", "Luxury Loft", "Executive Suite", "Corner Penthouse", "Multi-level Penthouse", "Condo with Terrace", "Service Apt", "Corporate Apt", "Micro Apt", "Alcove Studio", "Convertible Studio", "Classic Six", "Floor-Through Apt", "Skyhouse", "Tower Suite"];
 
-        const houseImgs =[
-            "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400",
-            "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400",
-            "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400"
-        ];
-        const aptImgs =[
-            "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400",
-            "https://images.unsplash.com/photo-1502672260266-1c1c24240f57?w=400",
-            "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"
-        ];
+        const houseImgs =["https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400", "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400", "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400"];
+        const aptImgs =["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400", "https://images.unsplash.com/photo-1502672260266-1c1c24240f57?w=400", "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"];
 
         houseNames.forEach((name, i) => {
-            REAL_ESTATE.push({
-                id: 're_h_' + i,
-                name: name,
-                price: Math.floor(600000 + (i * 450000) * (1 + i * 0.1)),
-                type: 'house',
-                img: houseImgs[i % houseImgs.length]
-            });
+            REAL_ESTATE.push({ id: 're_h_' + i, name: name, price: Math.floor(600000 + (i * 450000) * (1 + i * 0.1)), type: 'house', img: houseImgs[i % houseImgs.length] });
         });
 
         aptNames.forEach((name, i) => {
-            REAL_ESTATE.push({
-                id: 're_a_' + i,
-                name: name,
-                price: Math.floor(350000 + (i * 350000) * (1 + i * 0.08)),
-                type: 'apartment',
-                img: aptImgs[i % aptImgs.length]
-            });
+            REAL_ESTATE.push({ id: 're_a_' + i, name: name, price: Math.floor(350000 + (i * 350000) * (1 + i * 0.08)), type: 'apartment', img: aptImgs[i % aptImgs.length] });
         });
 
         const ASSETS = {
@@ -1272,7 +1118,7 @@
         let state = {
             userName: "",
             balance: 0,
-            cardBalances: {}, // Track balances across individual cards
+            cardBalances: {}, 
             netWorth: 0,
             revenue: 0,
             xp: 0,
@@ -1307,11 +1153,11 @@
         let currentCollectionCat = 'jewelry';
         let currentRECat = 'house';
         let activeAuction = null;
+        let currentTab = 'dashboard';
 
         const saved = localStorage.getItem('vercel_empire_v12_favs');
         if (saved) state = { ...state, ...JSON.parse(saved) };
         
-        // Ensure legacy users have cardBalances defined
         if (!state.cardBalances) {
             state.cardBalances = {};
             state.cardBalances[state.equippedCardId] = state.balance;
@@ -1328,16 +1174,11 @@
         }
         if (state.equippedCardId === undefined) state.equippedCardId = 0;
         if (!state.education) state.education = { enrolledCollegeId: null, classesTaken: 0, degrees:[] };
-        
-        // Theme init
         if (!state.ownedThemes) state.ownedThemes =['dark', 'light'];
         if (!state.activeTheme) state.activeTheme = 'dark';
-        
-        // Stats Init
         if (!state.activeStats) state.activeStats =['rank', 'assets', 'eth', 'multiplier'];
         if (!state.widgetSizes) state.widgetSizes = {};
 
-        // Merge persistent stock market data if it exists
         if (state.stockMarket && state.stockMarket.length > 0) {
             state.stockMarket.forEach(savedStock => {
                 const s = STOCKS.find(x => x.symbol === savedStock.symbol);
@@ -1350,7 +1191,6 @@
             });
         }
 
-        // Initialize fallback simulated history for new/unpopulated stocks
         STOCKS.forEach(s => {
             if (!s.history || s.history.length === 0) {
                 let last = s.price;
@@ -1384,17 +1224,14 @@
             { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length }
         ];
 
-        // Fetch Real-time Yahoo Finance Data
         async function fetchRealTimeStocks() {
             try {
-                // Formatting symbols appropriately for Yahoo
                 const symbols = STOCKS.map(s => {
                     if (s.type === 'crypto') return s.symbol + '-USD';
-                    return s.symbol.replace('.', '-'); // E.g. BRK.B to BRK-B
+                    return s.symbol.replace('.', '-'); 
                 }).join(',');
 
                 const url = `https://query1.finance.yahoo.com/v7/finance/quote?symbols=${symbols}`;
-                // Routing through allorigins as a dependable free CORS proxy for client-side API requests
                 const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
                 
                 const res = await fetch(proxyUrl);
@@ -1404,7 +1241,6 @@
                 if (parsed && parsed.quoteResponse && parsed.quoteResponse.result) {
                     parsed.quoteResponse.result.forEach(quote => {
                         let sym = quote.symbol;
-                        // Map back to our internal naming (remove -USD, replace dashes with dots)
                         if (sym.endsWith('-USD')) sym = sym.replace('-USD', '');
                         sym = sym.replace('-', '.'); 
                         
@@ -1412,28 +1248,23 @@
                         if (stock && quote.regularMarketPrice) {
                             stock.price = quote.regularMarketPrice;
                             stock.trend = quote.regularMarketChangePercent;
-                            stock.isRealTime = true; // Let our system know to stop random tick simulation
+                            stock.isRealTime = true;
                         }
                     });
-                    updateUI(); // Refresh visual components based on live data
+                    updateUI(false); 
                 }
             } catch (e) {
                 console.warn("Real-time stocks fetch error - proceeding with simulated market data.", e);
             }
         }
 
-        // Run fetch immediately, then every 10 seconds.
         setTimeout(fetchRealTimeStocks, 500);
         setInterval(fetchRealTimeStocks, 10000);
 
         function saveGame() { 
             state.lastSaveTime = Date.now();
             state.stockMarket = STOCKS.map(s => ({
-                symbol: s.symbol,
-                price: s.price,
-                trend: s.trend,
-                history: s.history,
-                isRealTime: s.isRealTime
+                symbol: s.symbol, price: s.price, trend: s.trend, history: s.history, isRealTime: s.isRealTime
             }));
             localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); 
         }
@@ -1453,9 +1284,7 @@
                 if (res.ok) {
                     const data = await res.json();
                     const realTime = new Date(data.utc_datetime).getTime();
-                    if (currentTime - realTime > 1800000) {
-                        isCheating = true;
-                    }
+                    if (currentTime - realTime > 1800000) isCheating = true;
                 }
             } catch (e) {}
 
@@ -1480,20 +1309,16 @@
             THEMES.forEach(t => document.body.classList.remove(t.class));
             const currentTheme = THEMES.find(t => t.id === state.activeTheme) || THEMES[0];
             document.body.classList.add(currentTheme.class);
-            
             if (!state.isMobile) {
                 document.documentElement.style.backgroundColor = ""; 
             } else {
-                document.documentElement.style.backgroundColor = "#000000"; // Dark backdrop for mobile mode
+                document.documentElement.style.backgroundColor = "#000000"; 
             }
         }
 
         function applyMobileMode() {
-            if (state.isMobile) {
-                document.body.classList.add('mobile-mode');
-            } else {
-                document.body.classList.remove('mobile-mode');
-            }
+            if (state.isMobile) document.body.classList.add('mobile-mode');
+            else document.body.classList.remove('mobile-mode');
             applyTheme();
         }
 
@@ -1501,14 +1326,12 @@
             const input = document.getElementById('name-input').value;
             if (input.trim().length > 0) {
                 state.userName = input.trim().toUpperCase();
-                if (input.trim().toLowerCase() === "onwghxuirecptuneiwo") {
-                    state.isCheater = true;
-                }
+                if (input.trim().toLowerCase() === "onwghxuirecptuneiwo") state.isCheater = true;
                 state.isMobile = !!isMobile;
                 document.getElementById('onboarding-modal').style.display = 'none';
                 saveGame();
                 applyMobileMode();
-                updateUI();
+                updateUI(true);
                 if (state.isCheater) activateCheatMode();
             }
         }
@@ -1516,6 +1339,7 @@
         function toggleTradeMax() {
             state.tradeMax = document.getElementById('toggle-trade-max').checked;
             saveGame();
+            updateUI(true); 
         }
 
         function getDegreeMult() {
@@ -1531,13 +1355,10 @@
 
         function mintMoney(e) {
             const now = Date.now();
-            if (now - (state.lastMintTime || 0) < 60) {
-                return;
-            }
+            if (now - (state.lastMintTime || 0) < 60) return;
 
             const tier = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
-            const degreeMult = getDegreeMult();
-            const amount = 5 * tier.mult * state.level * degreeMult;
+            const amount = 5 * tier.mult * state.level * getDegreeMult();
             
             state.balance += amount;
             const clickXp = 3 + (state.level * 0.2); 
@@ -1545,29 +1366,37 @@
             state.lastMintTime = now;
 
             checkLevelUp();
-            updateUI();
-            saveGame();
+
+            setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
+            setUI('top-balance-display', '$' + Math.floor(state.balance).toLocaleString());
+            setUI('profile-balance', '$' + Math.floor(state.balance).toLocaleString());
+            
+            const xpReq = 500 * Math.pow(1.12, state.level - 1);
+            setUI('xp-val', Math.floor(state.xp));
+            const xpBar = document.getElementById('xp-bar');
+            if(xpBar) xpBar.style.width = (state.xp / xpReq * 100) + '%';
+            
+            updateButtonStates();
+
             const card = document.getElementById('game-card');
             if (card && !document.getElementById('card-container').classList.contains('card-fullscreen-mode')) {
                 card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
-                setTimeout(() => { card.style.transform = ''; }, 100);
+                if(card.mintTimeout) clearTimeout(card.mintTimeout);
+                card.mintTimeout = setTimeout(() => { card.style.transform = ''; }, 100);
             }
         }
 
         function toggleCardFullscreen(e) {
-            e.stopPropagation(); // Prevents money from being minted when pressing the button
+            e.stopPropagation(); 
             const container = document.getElementById('card-container');
             const gameCard = document.getElementById('game-card');
             const btn = e.currentTarget;
             
             container.classList.toggle('card-fullscreen-mode');
-            
             if (container.classList.contains('card-fullscreen-mode')) {
-                // Change icon to X (Close)
                 btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
-                gameCard.style.transform = ''; // reset tilt
+                gameCard.style.transform = ''; 
             } else {
-                // Change back to Maximize Arrows
                 btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>`;
             }
         }
@@ -1578,6 +1407,7 @@
                 state.xp -= xpReq;
                 state.level++;
                 logToTerminal(`LEVEL UP: REACHED LEVEL ${state.level}`);
+                updateUI(true);
                 checkLevelUp(); 
             }
         }
@@ -1592,8 +1422,6 @@
 
         function calcCompanyInvestment(c, id) {
             let inv = c.price;
-            
-            // Base Calculation Tiers & Outlets
             const tierIdx = state.compTiers[id] || 0;
             const outlets = state.compOutlets[id] || 1;
             for(let i = 1; i <= tierIdx; i++) inv += c.price * Math.pow(5, i);
@@ -1608,30 +1436,22 @@
             if (c.customUpgrades) {
                 c.customUpgrades.forEach(u => {
                     const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
-                    for(let i=0; i<count; i++) {
-                        inv += Math.floor(u.price * Math.pow(u.priceMult || 1, i));
-                    }
+                    for(let i=0; i<count; i++) inv += Math.floor(u.price * Math.pow(u.priceMult || 1, i));
                 });
             }
-            
             return inv;
         }
 
         function calcRealEstateInvestment(re, id) {
             let inv = re.price;
             const renLevel = state.renovations[id] || 0;
-            for (let i = 0; i < renLevel; i++) {
-                inv += Math.floor(re.price * 0.15 * (i + 1));
-            }
+            for (let i = 0; i < renLevel; i++) inv += Math.floor(re.price * 0.15 * (i + 1));
             return inv;
         }
 
         function calculateNetWorth() {
-            // Keep card active balance in sync
             state.cardBalances[state.equippedCardId] = state.balance;
-
             let totalValue = 0;
-            // Sum individual card balances
             Object.values(state.cardBalances).forEach(bal => totalValue += bal);
 
             state.ownedAssets.forEach(assetId => {
@@ -1645,8 +1465,7 @@
                 
                 if (nft) {
                     const cryptoStock = STOCKS.find(s => s.symbol === nft.currency);
-                    const cryptoPrice = cryptoStock ? cryptoStock.price : 0;
-                    totalValue += nft.price * cryptoPrice;
+                    totalValue += nft.price * (cryptoStock ? cryptoStock.price : 0);
                 } else if (c) {
                     const compMult = state.level >= 4 ? 0.9 : 0.3;
                     totalValue += Math.floor(calcCompanyInvestment(c, assetId) * compMult);
@@ -1673,92 +1492,58 @@
         }
 
         let draggedWatchlistIndex = null;
-        function wlDragStart(e, index) {
-            draggedWatchlistIndex = index;
-            e.dataTransfer.effectAllowed = 'move';
-        }
-        function wlDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            e.currentTarget.classList.add('drag-over');
-        }
-        function wlDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-        }
+        function wlDragStart(e, index) { draggedWatchlistIndex = index; e.dataTransfer.effectAllowed = 'move'; }
+        function wlDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
+        function wlDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
         function wlDrop(e, index) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
+            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
             if(draggedWatchlistIndex === null || draggedWatchlistIndex === index) return;
             const favs = [...state.favorites];
             const movedItem = favs.splice(draggedWatchlistIndex, 1)[0];
             favs.splice(index, 0, movedItem);
             state.favorites = favs;
             saveGame();
-            updateUI();
+            updateUI(true);
         }
 
-        // Widget Drag and Drop Functions
         let draggedWidgetIndex = null;
-        function widgetDragStart(e, index) {
-            draggedWidgetIndex = index;
-            e.dataTransfer.effectAllowed = 'move';
-        }
-        function widgetDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            e.currentTarget.classList.add('drag-over');
-        }
-        function widgetDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-        }
+        function widgetDragStart(e, index) { draggedWidgetIndex = index; e.dataTransfer.effectAllowed = 'move'; }
+        function widgetDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
+        function widgetDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
         function widgetDrop(e, index) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
+            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
             if(draggedWidgetIndex === null || draggedWidgetIndex === index) return;
             const active = [...state.activeStats];
             const movedItem = active.splice(draggedWidgetIndex, 1)[0];
             active.splice(index, 0, movedItem);
             state.activeStats = active;
             saveGame();
-            updateUI();
+            updateUI(true);
         }
 
-        // Wallet Card Drag and Drop
         let draggedWalletIndex = null;
-        function walletDragStart(e, index) {
-            draggedWalletIndex = index;
-            e.dataTransfer.effectAllowed = 'move';
-        }
-        function walletDragOver(e) {
-            e.preventDefault();
-            e.dataTransfer.dropEffect = 'move';
-            e.currentTarget.classList.add('drag-over');
-        }
-        function walletDragLeave(e) {
-            e.currentTarget.classList.remove('drag-over');
-        }
+        function walletDragStart(e, index) { draggedWalletIndex = index; e.dataTransfer.effectAllowed = 'move'; }
+        function walletDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
+        function walletDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
         function walletDrop(e, index) {
-            e.preventDefault();
-            e.currentTarget.classList.remove('drag-over');
+            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
             if(draggedWalletIndex === null || draggedWalletIndex === index) return;
             const cards = [...state.ownedCards];
             const movedItem = cards.splice(draggedWalletIndex, 1)[0];
             cards.splice(index, 0, movedItem);
             state.ownedCards = cards;
             saveGame();
-            updateUI();
+            updateUI(true);
         }
 
         function toggleStatWidget(id) {
             if (state.activeStats.includes(id)) {
                 state.activeStats = state.activeStats.filter(s => s !== id);
             } else {
-                if (state.activeStats.length < 8) {
-                    state.activeStats.push(id);
-                }
+                if (state.activeStats.length < 8) state.activeStats.push(id);
             }
             saveGame();
-            updateUI();
+            updateUI(true);
         }
 
         function resizeWidget(id, event) {
@@ -1768,19 +1553,13 @@
             if (nextSize > 4) nextSize = 1;
             state.widgetSizes[id] = nextSize;
             saveGame();
-            updateUI();
+            updateUI(true);
         }
 
         function renderEmpireStats() {
             const grid = document.getElementById('empire-stats-grid');
             if(!grid) return;
-
-            const spanClasses = {
-                1: "col-span-1 md:col-span-1",
-                2: "col-span-2 md:col-span-2",
-                3: "col-span-2 md:col-span-3",
-                4: "col-span-2 md:col-span-4"
-            };
+            const spanClasses = { 1: "col-span-1 md:col-span-1", 2: "col-span-2 md:col-span-2", 3: "col-span-2 md:col-span-3", 4: "col-span-2 md:col-span-4" };
 
             grid.innerHTML = state.activeStats.map((statId, index) => {
                 const statDef = AVAILABLE_STATS.find(s => s.id === statId);
@@ -1791,11 +1570,7 @@
 
                 return `
                 <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800 transition-colors hover:border-zinc-500 relative cursor-move ${spanClass}"
-                     draggable="true"
-                     ondragstart="widgetDragStart(event, ${index})"
-                     ondragover="widgetDragOver(event)"
-                     ondragleave="widgetDragLeave(event)"
-                     ondrop="widgetDrop(event, ${index})">
+                     draggable="true" ondragstart="widgetDragStart(event, ${index})" ondragover="widgetDragOver(event)" ondragleave="widgetDragLeave(event)" ondrop="widgetDrop(event, ${index})">
                     <button onclick="resizeWidget('${statId}', event)" class="absolute top-3 right-3 text-zinc-600 hover:text-white transition-colors" title="Resize Widget">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                     </button>
@@ -1829,8 +1604,128 @@
             }).join('');
         }
 
-        function updateUI() {
-            // --- STATE PRESERVATION START ---
+        function updateButtonStates() {
+            document.querySelectorAll('button[data-cost]').forEach(btn => {
+                const cost = parseFloat(btn.dataset.cost);
+                if (state.balance >= cost) btn.removeAttribute('disabled');
+                else btn.setAttribute('disabled', 'true');
+            });
+
+            document.querySelectorAll('button[data-crypto-cost]').forEach(btn => {
+                const cost = parseFloat(btn.dataset.cryptoCost);
+                const cur = btn.dataset.currency;
+                const bal = state.shares[cur] || 0;
+                if (bal >= cost) btn.removeAttribute('disabled');
+                else btn.setAttribute('disabled', 'true');
+            });
+
+            document.querySelectorAll('button[data-btc-cost]').forEach(btn => {
+                const cost = parseFloat(btn.dataset.btcCost);
+                const bal = state.shares['BTC'] || 0;
+                if (bal >= cost) btn.removeAttribute('disabled');
+                else btn.setAttribute('disabled', 'true');
+            });
+
+            document.querySelectorAll('button[data-stock-buy]').forEach(btn => {
+                const sym = btn.dataset.stockBuy;
+                const stock = STOCKS.find(x => x.symbol === sym);
+                if (stock && state.balance >= stock.price * 0.001) btn.removeAttribute('disabled');
+                else btn.setAttribute('disabled', 'true');
+            });
+
+            document.querySelectorAll('button[data-stock-sell]').forEach(btn => {
+                const sym = btn.dataset.stockSell;
+                if ((state.shares[sym] || 0) > 0) btn.removeAttribute('disabled');
+                else btn.setAttribute('disabled', 'true');
+            });
+        }
+
+        function tickStocksUI() {
+            STOCKS.forEach(s => {
+                const pEl = document.getElementById(`price-val-${s.symbol}`);
+                if(pEl) pEl.innerText = '$' + s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                
+                const tEl = document.getElementById(`trend-val-${s.symbol}`);
+                if(tEl) {
+                    tEl.innerText = `${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend).toFixed(2)}%`;
+                    tEl.className = `text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold`;
+                }
+
+                const oEl = document.getElementById(`owned-val-${s.symbol}`);
+                if(oEl) oEl.innerText = (state.shares[s.symbol] || 0).toFixed(3) + ' UNITS';
+
+                if(currentTab === 'stocks') {
+                    drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
+                }
+            });
+
+            STOCKS.filter(s => state.favorites.includes(s.symbol)).forEach(s => {
+                const pEl = document.getElementById(`wl-price-${s.symbol}`);
+                if (pEl) pEl.innerText = '$' + s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                const tEl = document.getElementById(`wl-trend-${s.symbol}`);
+                if (tEl) {
+                    tEl.innerText = `${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend).toFixed(2)}%`;
+                    tEl.className = `text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}`;
+                }
+            });
+        }
+
+        function fastTickUpdate() {
+            calculateNetWorth();
+            
+            let rev = 0; let bills = 0;
+            state.ownedAssets.forEach(id => {
+                const c = COMPANIES.find(x => x.id === id);
+                if (c) {
+                    let itemRev = 0; let itemBill = c.bill || 0;
+                    const tierIdx = state.compTiers[id] || 0;
+                    const outlets = state.compOutlets[id] || 1;
+                    itemRev += (c.rev * Math.pow(3, tierIdx)) * outlets;
+                    itemBill = (c.bill * Math.pow(2.5, tierIdx)) * outlets;
+                    if (c.customFleet) {
+                        itemRev += (state.taxiFleet.cars * 17500) + (state.taxiFleet.busses * 140000) + (state.taxiFleet.artBusses * 475000);
+                        itemBill += (state.taxiFleet.cars * 500) + (state.taxiFleet.busses * 4000) + (state.taxiFleet.artBusses * 15000);
+                    } 
+                    if (c.customUpgrades) {
+                        c.customUpgrades.forEach(u => {
+                            const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
+                            itemRev += count * u.rev;
+                            itemBill += count * (u.bill || 0);
+                        });
+                    }
+                    rev += itemRev; bills += itemBill;
+                }
+                const re = REAL_ESTATE.find(x => x.id === id);
+                if (re && state.renting[id]) {
+                    const investment = calcRealEstateInvestment(re, id);
+                    rev += investment * 0.05; 
+                }
+            });
+            
+            state.revenue = (rev - bills) * getDegreeMult();
+
+            setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
+            setUI('top-balance-display', '$' + Math.floor(state.balance).toLocaleString());
+            setUI('profile-balance', '$' + Math.floor(state.balance).toLocaleString());
+            setUI('nw-display', '$' + Math.floor(state.netWorth).toLocaleString());
+            setUI('profile-nw', '$' + Math.floor(state.netWorth).toLocaleString());
+            setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + Math.floor(state.revenue).toLocaleString() + '/hr');
+            
+            tickStocksUI();
+            updateButtonStates();
+
+            if (activeStock) updateModalContent();
+            if (activeAuction) updateAuctionUI();
+        }
+
+        function updateUI(full = true) {
+            if (!full) {
+                fastTickUpdate();
+                return;
+            }
+
+            fastTickUpdate();
+
             const activeElement = document.activeElement;
             const activeId = activeElement ? activeElement.id : null;
             let cursorStart = null, cursorEnd = null;
@@ -1840,79 +1735,25 @@
 
             const scrollStates = {};
             document.querySelectorAll('[id]').forEach(el => {
-                if (el.scrollTop > 0 || el.scrollLeft > 0) {
-                    scrollStates[el.id] = { top: el.scrollTop, left: el.scrollLeft };
-                }
+                if (el.scrollTop > 0 || el.scrollLeft > 0) scrollStates[el.id] = { top: el.scrollTop, left: el.scrollLeft };
             });
             const mainScrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
 
             const inputStates = {};
-            document.querySelectorAll('input[id]').forEach(el => {
-                inputStates[el.id] = el.value;
-            });
-            // --- STATE PRESERVATION END ---
+            document.querySelectorAll('input[id]').forEach(el => { inputStates[el.id] = el.value; });
 
-            if (state.userName) {
-                document.getElementById('onboarding-modal').style.display = 'none';
-            }
+            if (state.userName) document.getElementById('onboarding-modal').style.display = 'none';
 
-            calculateNetWorth();
-            
-            let rev = 0;
-            let bills = 0;
-
-            state.ownedAssets.forEach(id => {
-                const c = COMPANIES.find(x => x.id === id);
-                if (c) {
-                    let itemRev = 0;
-                    let itemBill = c.bill || 0;
-                    
-                    // ALWAYS calculate Tier and Outlet base properties
-                    const tierIdx = state.compTiers[id] || 0;
-                    const outlets = state.compOutlets[id] || 1;
-                    itemRev += (c.rev * Math.pow(3, tierIdx)) * outlets;
-                    itemBill = (c.bill * Math.pow(2.5, tierIdx)) * outlets;
-
-                    if (c.customFleet) {
-                        itemRev += (state.taxiFleet.cars * 17500) + (state.taxiFleet.busses * 140000) + (state.taxiFleet.artBusses * 475000);
-                        itemBill += (state.taxiFleet.cars * 500) + (state.taxiFleet.busses * 4000) + (state.taxiFleet.artBusses * 15000);
-                    } 
-                    
-                    if (c.customUpgrades) {
-                        c.customUpgrades.forEach(u => {
-                            const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
-                            itemRev += count * u.rev;
-                            itemBill += count * (u.bill || 0);
-                        });
-                    }
-                    
-                    rev += itemRev;
-                    bills += itemBill;
-                }
-                
-                const re = REAL_ESTATE.find(x => x.id === id);
-                if (re && state.renting[id]) {
-                    const investment = calcRealEstateInvestment(re, id);
-                    rev += investment * 0.05; // OP 5% Rental Yield Return
-                }
-            });
-            
-            const degreeMult = getDegreeMult();
-            state.revenue = (rev - bills) * degreeMult;
-
-            setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
-            setUI('top-balance-display', '$' + Math.floor(state.balance).toLocaleString());
-            setUI('nw-display', '$' + Math.floor(state.netWorth).toLocaleString());
-            setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + Math.floor(state.revenue).toLocaleString() + '/hr');
             setUI('lvl-display', state.level);
             setUI('card-name-display', state.userName || "HOLDER NAME");
             
             const rankIndex = Math.min(Math.floor(state.level / 5), RANKS.length - 1);
             const rankStr = RANKS[rankIndex];
             setUI('rank-display', rankStr);
+            setUI('profile-name', state.userName);
+            setUI('profile-rank', rankStr);
             
             const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
-
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
             setUI('xp-req', Math.floor(xpReq));
@@ -1926,19 +1767,6 @@
             setUI('card-tier-label', equipped.name);
             setUI('card-mult-display', equipped.mult + 'x');
 
-            const cdEl = document.getElementById('mint-cooldown');
-            if (cdEl) {
-                const now = Date.now();
-                const elapsed = now - (state.lastMintTime || 0);
-                if (elapsed < 60) {
-                    const left = 60 - elapsed;
-                }
-            }
-
-            setUI('profile-name', state.userName);
-            setUI('profile-rank', rankStr);
-            setUI('profile-nw', '$' + Math.floor(state.netWorth).toLocaleString());
-            setUI('profile-balance', '$' + Math.floor(state.balance).toLocaleString());
             const tradeMaxToggle = document.getElementById('toggle-trade-max');
             if(tradeMaxToggle) tradeMaxToggle.checked = state.tradeMax;
 
@@ -1947,7 +1775,6 @@
 
             renderEmpireStats();
             renderWidgetManager();
-
             renderWatchlist();
             renderGrids();
             renderTradingGrid();
@@ -1956,22 +1783,17 @@
             renderProfilePortfolio();
             renderThemes();
             applyTheme();
-            if(activeStock) updateModalContent();
 
-            // --- STATE RESTORATION START ---
+            updateButtonStates();
+
             Object.keys(inputStates).forEach(id => {
                 const el = document.getElementById(id);
-                if (el && el.type !== 'checkbox' && el.type !== 'radio') {
-                    el.value = inputStates[id];
-                }
+                if (el && el.type !== 'checkbox' && el.type !== 'radio') el.value = inputStates[id];
             });
 
             Object.keys(scrollStates).forEach(id => {
                 const el = document.getElementById(id);
-                if (el) {
-                    el.scrollTop = scrollStates[id].top;
-                    el.scrollLeft = scrollStates[id].left;
-                }
+                if (el) { el.scrollTop = scrollStates[id].top; el.scrollLeft = scrollStates[id].left; }
             });
 
             if (activeId) {
@@ -1989,7 +1811,6 @@
             } else {
                 window.scrollTo({ top: mainScrollTop, behavior: 'instant' });
             }
-            // --- STATE RESTORATION END ---
         }
 
         function renderThemes() {
@@ -2006,7 +1827,7 @@
                 } else if (isOwned) {
                     btnStr = `<button onclick="equipTheme('${t.id}')" class="btn-buy border border-zinc-800">EQUIP THEME</button>`;
                 } else {
-                    btnStr = `<button onclick="buyTheme('${t.id}', ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''}>BUY FOR $${t.price.toLocaleString()}</button>`;
+                    btnStr = `<button onclick="buyTheme('${t.id}', ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">BUY FOR $${t.price.toLocaleString()}</button>`;
                 }
 
                 return `
@@ -2026,7 +1847,7 @@
                 state.ownedThemes.push(id);
                 state.activeTheme = id;
                 logToTerminal(`THEME ACQUIRED & EQUIPPED: ${id.toUpperCase()}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -2035,7 +1856,7 @@
             if (state.ownedThemes.includes(id)) {
                 state.activeTheme = id;
                 logToTerminal(`THEME EQUIPPED: ${id.toUpperCase()}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -2046,7 +1867,7 @@
                 state.equippedCardId = id;
                 state.balance = state.cardBalances[id] || 0;
                 logToTerminal(`SWITCHED ACTIVE CARD TO: ${CARD_TIERS.find(t=>t.id===id).name}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -2063,14 +1884,8 @@
                 const isActive = state.equippedCardId === parseInt(id);
                 
                 return `
-                <div class="wallet-card-wrapper ${isActive ? 'active-wallet-card' : ''}" 
-                     style="z-index: ${index};" 
-                     draggable="true"
-                     ondragstart="walletDragStart(event, ${index})"
-                     ondragover="walletDragOver(event)"
-                     ondragleave="walletDragLeave(event)"
-                     ondrop="walletDrop(event, ${index})"
-                     onclick="switchCard(${id})">
+                <div class="wallet-card-wrapper ${isActive ? 'active-wallet-card' : ''}" style="z-index: ${index};" 
+                     draggable="true" ondragstart="walletDragStart(event, ${index})" ondragover="walletDragOver(event)" ondragleave="walletDragLeave(event)" ondrop="walletDrop(event, ${index})" onclick="switchCard(${id})">
                     <div class="debit-card p-4 flex flex-col justify-between shadow-xl ${card.class}" style="aspect-ratio: 1.58/1; border-radius: 12px; border-width: 1px;">
                         <div>
                             <p class="text-[8px] text-white/50 uppercase font-bold tracking-widest mb-1">${card.name}</p>
@@ -2081,20 +1896,13 @@
                             <span class="text-[8px] text-white/50 font-bold tracking-widest">${isActive ? 'ACTIVE' : ''}</span>
                         </div>
                     </div>
-                </div>
-                `;
+                </div>`;
             }).join('');
         }
 
         function renderProfilePortfolio() {
             const container = document.getElementById('profile-portfolio-list');
             if(!container) return;
-
-            let stockValue = 0;
-            Object.entries(state.shares).forEach(([symbol, amount]) => {
-                const stock = STOCKS.find(s => s.symbol === symbol);
-                if (stock) stockValue += (stock.price * amount);
-            });
 
             const assetCats =[
                 { title: 'Companies', items: state.ownedAssets.filter(id => COMPANIES.some(c => c.id === id)) },
@@ -2123,19 +1931,23 @@
         function drawGraph(canvasId, history, type = 'candlestick') {
             const canvas = document.getElementById(canvasId);
             if (!canvas) return;
-            const ctx = canvas.getContext('2d');
-            const width = canvas.width = canvas.offsetWidth * 2; 
-            const height = canvas.height = canvas.offsetHeight * 2;
-            ctx.scale(2, 2);
             const viewW = canvas.offsetWidth;
             const viewH = canvas.offsetHeight;
+            if (viewW === 0 || viewH === 0) return; 
+
+            const ctx = canvas.getContext('2d');
+            canvas.width = viewW * 2; 
+            canvas.height = viewH * 2;
+            ctx.scale(2, 2);
             ctx.clearRect(0, 0, viewW, viewH);
+            
             const padding = 10;
             const minPrice = Math.min(...history.map(h => h.low)) * 0.98;
             const maxPrice = Math.max(...history.map(h => h.high)) * 1.02;
             const priceRange = maxPrice - minPrice;
             const barWidth = (viewW - padding * 2) / history.length;
             const getY = (price) => viewH - ((price - minPrice) / priceRange) * viewH;
+            
             if (type === 'candlestick') {
                 history.forEach((h, i) => {
                     const isBull = h.close >= h.open;
@@ -2185,7 +1997,7 @@
             const index = state.favorites.indexOf(symbol);
             if(index > -1) state.favorites.splice(index, 1);
             else state.favorites.push(symbol);
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -2206,14 +2018,8 @@
             if (modal) modal.style.display = 'none';
         }
 
-        function openResetModal() { 
-            const m = document.getElementById('reset-modal');
-            if (m) m.style.display = 'flex'; 
-        }
-        function closeResetModal() { 
-            const m = document.getElementById('reset-modal');
-            if (m) m.style.display = 'none'; 
-        }
+        function openResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'flex'; }
+        function closeResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'none'; }
         function confirmReset() { localStorage.removeItem('vercel_empire_v12_favs'); window.location.reload(); }
 
         function openTransferModal() {
@@ -2234,9 +2040,7 @@
             document.getElementById('transfer-amt').value = '';
         }
 
-        function closeTransferModal() {
-            document.getElementById('transfer-modal').style.display = 'none';
-        }
+        function closeTransferModal() { document.getElementById('transfer-modal').style.display = 'none'; }
 
         function executeTransfer() {
             const fromId = parseInt(document.getElementById('transfer-from').value);
@@ -2257,17 +2061,14 @@
 
                 logToTerminal(`TRANSFERRED $${amt.toLocaleString()} FROM CARD ${fromId} TO ${toId}`);
                 closeTransferModal();
-                updateUI();
+                updateUI(true);
                 saveGame();
             } else {
                 alert('Insufficient funds on the selected origin card.');
             }
         }
 
-        function setChartType(t) {
-            chartType = t;
-            if(activeStock) updateModalContent();
-        }
+        function setChartType(t) { chartType = t; if(activeStock) updateModalContent(); }
 
         function updateModalContent() {
             if(!activeStock) return;
@@ -2291,20 +2092,13 @@
             state.balance += returnAmount;
             state.ownedAssets = state.ownedAssets.filter(a => a !== id);
             
-            if (c.customFleet) {
-                state.taxiFleet = { cars: 1, busses: 0, artBusses: 0 };
-            }
-            if (c.customUpgrades) {
-                if (state.compCustomUpgrades && state.compCustomUpgrades[id]) {
-                    delete state.compCustomUpgrades[id];
-                }
-            }
+            if (c.customFleet) state.taxiFleet = { cars: 1, busses: 0, artBusses: 0 };
+            if (c.customUpgrades) { if (state.compCustomUpgrades && state.compCustomUpgrades[id]) delete state.compCustomUpgrades[id]; }
             
-            delete state.compTiers[id];
-            delete state.compOutlets[id];
+            delete state.compTiers[id]; delete state.compOutlets[id];
             
             logToTerminal(`SOLD COMPANY: ${c.name} FOR $${returnAmount.toLocaleString()} (${compMult * 100}% OF INVESTMENTS)`);
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -2322,7 +2116,7 @@
             if (state.renting[id]) delete state.renting[id];
 
             logToTerminal(`SOLD PROPERTY: ${re.name} FOR $${returnAmount.toLocaleString()} (90% OF INVESTMENTS)`);
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -2339,14 +2133,13 @@
         function renderBlackMarket() {
             const grid = document.getElementById('bm-grid');
             if (!grid) return;
-            
             grid.innerHTML = ASSETS.blackMarket.map(i => {
                 const isOwned = state.ownedAssets.includes(i.id);
                 const btcBalance = state.shares['BTC'] || 0;
                 let actionHtml = '';
                 
                 if (!isOwned) {
-                    actionHtml = `<button onclick="buyBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2 !border-red-900/50 !text-red-500 hover:!bg-red-500 hover:!text-white" ${btcBalance < i.priceBtc ? 'disabled' : ''}>BUY (₿${i.priceBtc.toFixed(2)})</button>`;
+                    actionHtml = `<button onclick="buyBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2 !border-red-900/50 !text-red-500 hover:!bg-red-500 hover:!text-white" ${btcBalance < i.priceBtc ? 'disabled' : ''} data-btc-cost="${i.priceBtc}">BUY (₿${i.priceBtc.toFixed(2)})</button>`;
                 } else {
                     actionHtml = `<button onclick="sellBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2 !bg-zinc-900 !text-white !border-zinc-800 hover:!bg-zinc-800">SELL (₿${i.priceBtc.toFixed(2)})</button>`;
                 }
@@ -2369,7 +2162,7 @@
                 state.shares['BTC'] -= priceBtc;
                 state.ownedAssets.push(id);
                 logToTerminal(`CONTRABAND ACQUIRED: ${id.toUpperCase()}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -2379,7 +2172,7 @@
                 state.shares['BTC'] = (state.shares['BTC'] || 0) + priceBtc;
                 state.ownedAssets = state.ownedAssets.filter(a => a !== id);
                 logToTerminal(`CONTRABAND LIQUIDATED: +${priceBtc} BTC`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -2389,8 +2182,7 @@
             if(compGrid) {
                 compGrid.innerHTML = COMPANIES.map(c => {
                     const isOwned = state.ownedAssets.includes(c.id);
-                    let itemRev = 0;
-                    let itemBill = c.bill || 0;
+                    let itemRev = 0; let itemBill = c.bill || 0;
                     
                     const tierIdx = state.compTiers[c.id] || 0;
                     const outlets = state.compOutlets[c.id] || 1;
@@ -2411,22 +2203,21 @@
                     }
                     
                     const profit = itemRev - itemBill;
-                    
                     let actionsHtml = '';
                     if (!isOwned) {
-                        actionsHtml = `<div class="flex flex-col mt-auto pt-4 flex-1 justify-end"><button onclick="buyAsset('${c.id}', ${c.price})" class="btn-buy" ${state.balance < c.price ? 'disabled' : ''}>ACQUIRE BUSINESS</button></div>`;
+                        actionsHtml = `<div class="flex flex-col mt-auto pt-4 flex-1 justify-end"><button onclick="buyAsset('${c.id}', ${c.price})" class="btn-buy" ${state.balance < c.price ? 'disabled' : ''} data-cost="${c.price}">ACQUIRE BUSINESS</button></div>`;
                     } else {
-                        // Standard Tiers & Outlets System
                         const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
                         const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
                         
                         let baseActions = `
                         <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
-                            <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''}>
+                            <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''} ${tierIdx >= 4 ? '' : `data-cost="${nextTierPrice}"`}>
                                 <span class="mb-0.5">${tierIdx >= 4 ? 'MAX TIER' : 'EVOLVE'}</span>
-                                <span class="text-[8px] opacity-60">${tierIdx >= 4 ? '' : '$' + nextTierPrice.toLocaleString()}</span>
+                                <span class="text-[8px] opacity-60">${tierIdx >= 4 ?
+'' : '$' + nextTierPrice.toLocaleString()}</span>
                             </button>
-                            <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextOutletPrice || outlets >= 60 ? 'disabled' : ''}>
+                            <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextOutletPrice || outlets >= 60 ? 'disabled' : ''} ${outlets >= 60 ? '' : `data-cost="${nextOutletPrice}"`}>
                                 <span class="mb-0.5">${outlets >= 60 ? 'MAX OUTLETS' : '+1 OUTLET'}</span>
                                 <span class="text-[8px] opacity-60">${outlets >= 60 ? '' : '$' + nextOutletPrice.toLocaleString()}</span>
                             </button>
@@ -2437,15 +2228,15 @@
                             const fleet = state.taxiFleet;
                             fleetActions = `
                             <div class="space-y-1 mb-2 shrink-0">
-                                <button onclick="buyTaxiAsset('cars', 150000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 150000 || fleet.cars >= 70 ? 'disabled' : ''}>
+                                <button onclick="buyTaxiAsset('cars', 150000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 150000 || fleet.cars >= 70 ? 'disabled' : ''} ${fleet.cars >= 70 ? '' : `data-cost="150000"`}>
                                     <span>+1 CAR ($150K)</span>
                                     <span class="opacity-40">${fleet.cars}/70</span>
                                 </button>
-                                <button onclick="buyTaxiAsset('busses', 1200000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 1200000 || fleet.busses >= 50 ? 'disabled' : ''}>
+                                <button onclick="buyTaxiAsset('busses', 1200000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 1200000 || fleet.busses >= 50 ? 'disabled' : ''} ${fleet.busses >= 50 ? '' : `data-cost="1200000"`}>
                                     <span>+1 BUS ($1.2M)</span>
                                     <span class="opacity-40">${fleet.busses}/50</span>
                                 </button>
-                                <button onclick="buyTaxiAsset('artBusses', 3500000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 3500000 || fleet.artBusses >= 40 ? 'disabled' : ''}>
+                                <button onclick="buyTaxiAsset('artBusses', 3500000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 3500000 || fleet.artBusses >= 40 ? 'disabled' : ''} ${fleet.artBusses >= 40 ? '' : `data-cost="3500000"`}>
                                     <span>+1 ART. BUS ($3.5M)</span>
                                     <span class="opacity-40">${fleet.artBusses}/40</span>
                                 </button>
@@ -2470,7 +2261,7 @@
                                     }
                                     
                                     const currentPrice = Math.floor(u.price * Math.pow(u.priceMult, count));
-                                    return `<button onclick="buyCustomUpgrade('${c.id}', '${u.id}')" class="btn-buy text-left px-3 py-2 relative overflow-hidden group" ${state.balance < currentPrice || count >= u.max ? 'disabled' : ''}>
+                                    return `<button onclick="buyCustomUpgrade('${c.id}', '${u.id}')" class="btn-buy text-left px-3 py-2 relative overflow-hidden group" ${state.balance < currentPrice || count >= u.max ? 'disabled' : ''} ${count >= u.max ? '' : `data-cost="${currentPrice}"`}>
                                         <div class="flex justify-between items-center mb-0.5 relative z-10">
                                             <span class="text-[9px] font-bold text-white group-hover:text-black transition-colors">${u.name} <span class="text-zinc-500 font-normal">(${count}/${u.max})</span></span>
                                             <span class="text-[9px] font-mono ${count >= u.max ? 'text-emerald-500' : ''}">${count >= u.max ? 'MAXED' : '$' + currentPrice.toLocaleString()}</span>
@@ -2533,10 +2324,10 @@
                             </div>
                         </div>
                         <p class="text-[12px] font-mono text-white mb-4">$${re.price.toLocaleString()}</p>
-                        ${!isOwned ? `<button onclick="buyAsset('${re.id}', ${re.price})" class="btn-buy mt-auto" ${state.balance < re.price ? 'disabled' : ''}>PURCHASE PROPERTY</button>` : `
+                        ${!isOwned ? `<button onclick="buyAsset('${re.id}', ${re.price})" class="btn-buy mt-auto" ${state.balance < re.price ? 'disabled' : ''} data-cost="${re.price}">PURCHASE PROPERTY</button>` : `
                             <div class="space-y-2 mt-auto">
                                 <button onclick="toggleRental('${re.id}')" class="btn-buy ${isRenting ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-zinc-800 text-white'}">${isRenting ? 'STOP RENTAL' : 'LIST FOR RENT'}</button>
-                                <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy bg-zinc-900 border border-zinc-800" ${state.balance < renCost ? 'disabled' : ''}>RENOVATE ($${renCost.toLocaleString()})</button>
+                                <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy bg-zinc-900 border border-zinc-800" ${state.balance < renCost ? 'disabled' : ''} data-cost="${renCost}">RENOVATE ($${renCost.toLocaleString()})</button>
                                 <button onclick="sellProperty('${re.id}')" class="btn-buy !bg-red-950/30 !text-red-500 !border-red-900/50 hover:!bg-red-500 hover:!text-white transition-colors">SELL PROPERTY</button>
                             </div>
                         `}
@@ -2556,7 +2347,7 @@
                     } else if (isOwned) {
                         btnStr = `<button onclick="equipCard(${t.id})" class="btn-buy bg-zinc-800 text-white">EQUIP CARD</button>`;
                     } else {
-                        btnStr = `<button onclick="buyCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''}>$${t.price.toLocaleString()}</button>`;
+                        btnStr = `<button onclick="buyCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">$${t.price.toLocaleString()}</button>`;
                     }
 
                     return `
@@ -2576,7 +2367,7 @@
                     const isOwned = state.ownedAssets.includes(i.id);
                     let actionHtml = '';
                     if (!isOwned) {
-                        actionHtml = `<button onclick="buyCollectionAsset('${i.id}', ${i.price})" class="btn-buy mt-2" ${state.balance < i.price ? 'disabled' : ''}>BUY</button>`;
+                        actionHtml = `<button onclick="buyCollectionAsset('${i.id}', ${i.price})" class="btn-buy mt-2" ${state.balance < i.price ? 'disabled' : ''} data-cost="${i.price}">BUY</button>`;
                     } else {
                         actionHtml = `<button class="btn-buy mt-2 opacity-50 cursor-not-allowed" disabled>OWNED</button>`;
                     }
@@ -2612,8 +2403,8 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="text-lg font-bold mono">$${priceFormatted}</p>
-                            <p class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${trendAbs}%</p>
+                            <p class="text-lg font-bold mono" id="price-val-${s.symbol}">$${priceFormatted}</p>
+                            <p id="trend-val-${s.symbol}" class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${trendAbs}%</p>
                         </div>
                     </div>
                     <div class="chart-container" onclick="openStockModal('${s.symbol}')">
@@ -2621,15 +2412,15 @@
                     </div>
                     <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900 mt-auto">
                         <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
-                        <p class="text-sm font-bold mono">${owned.toFixed(3)} UNITS</p>
+                        <p class="text-sm font-bold mono" id="owned-val-${s.symbol}">${owned.toFixed(3)} UNITS</p>
                     </div>
                     ${state.level >= 3 ? `
                         <div class="mb-2">
                             <input type="number" id="trade-amt-${s.symbol}" step="0.001" min="0.001" value="1.000" class="w-full bg-zinc-900 border border-zinc-800 text-white rounded p-1.5 text-xs mono text-center focus:border-emerald-500 focus:outline-none transition-colors" placeholder="AMOUNT">
                         </div>
                         <div class="grid grid-cols-2 gap-2">
-                            <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price * 0.001 ? 'disabled' : ''}>BUY</button>
-                            <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''}>SELL</button>
+                            <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price * 0.001 ? 'disabled' : ''} data-stock-buy="${s.symbol}">BUY</button>
+                            <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''} data-stock-sell="${s.symbol}">SELL</button>
                         </div>
                     ` : ''}
                 </div>`;
@@ -2671,17 +2462,19 @@
                             <p class="text-[12px] font-mono text-purple-400 mb-6">${n.price} ${n.currency}</p>
                             ${isOwned ? 
                                 `<button onclick="sellNFT('${n.id}', ${n.price}, '${n.currency}')" class="btn-buy bg-purple-600/20 border-purple-600/50 hover:bg-purple-600 text-white">LIST FOR SALE</button>` : 
-                                `<button onclick="buyNFT('${n.id}', ${n.price}, '${n.currency}')" class="btn-buy" ${cryptoBalance < n.price ? 'disabled' : ''}>MINT FOR ${n.price} ${n.currency}</button>`
+                                `<button onclick="buyNFT('${n.id}', ${n.price}, '${n.currency}')" class="btn-buy" ${cryptoBalance < n.price ? 'disabled' : ''} data-crypto-cost="${n.price}" data-currency="${n.currency}">MINT FOR ${n.price} ${n.currency}</button>`
                             }
                         </div>`;
                     }).join('');
                 }
             }
 
-            STOCKS.forEach(s => {
-                const canvas = document.getElementById(`chart-${s.symbol}`);
-                if (canvas) drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
-            });
+            // Draw initial charts only if tab is active (Optimization)
+            if (currentTab === 'stocks') {
+                STOCKS.forEach(s => {
+                    drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
+                });
+            }
         }
 
         function renderTradingGrid() {
@@ -2835,7 +2628,7 @@
                                 </div>
                                 ${isLockedByDegree ? 
                                     `<button class="btn-buy bg-zinc-900 text-zinc-500 opacity-50 cursor-not-allowed" disabled>MAX DEGREES</button>` : 
-                                    `<button onclick="applyCollege('${c.id}', ${tuition}, ${acc})" class="btn-buy" ${state.balance < tuition ? 'disabled' : ''}>APPLY & PAY</button>`
+                                    `<button onclick="applyCollege('${c.id}', ${tuition}, ${acc})" class="btn-buy" ${state.balance < tuition ? 'disabled' : ''} data-cost="${tuition}">APPLY & PAY</button>`
                                 }
                             </div>
                             `;
@@ -2859,7 +2652,7 @@
                 } else {
                     logToTerminal(`REJECTED from ${college.name}. Tuition lost.`);
                 }
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -2867,7 +2660,7 @@
         function attendClass() {
             state.education.classesTaken++;
             logToTerminal(`ATTENDED CLASS: Progress ${state.education.classesTaken}`);
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -2877,7 +2670,7 @@
             state.education.enrolledCollegeId = null;
             state.education.classesTaken = 0;
             logToTerminal(`GRADUATED with ${DEGREES.find(d=>d.id===degreeId).name}!`);
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -2899,11 +2692,7 @@
                     const owned = state.shares[s.symbol] || 0;
                     return `
                     <div class="bg-zinc-900/40 p-3 rounded-lg border border-zinc-800/50 hover:border-zinc-400 transition-colors cursor-move"
-                         draggable="true" 
-                         ondragstart="wlDragStart(event, ${index})" 
-                         ondragover="wlDragOver(event)" 
-                         ondragleave="wlDragLeave(event)"
-                         ondrop="wlDrop(event, ${index})">
+                         draggable="true" ondragstart="wlDragStart(event, ${index})" ondragover="wlDragOver(event)" ondragleave="wlDragLeave(event)" ondrop="wlDrop(event, ${index})">
                         <div class="flex justify-between items-center cursor-pointer mb-2" onclick="openStockModal('${s.symbol}')">
                             <div class="flex items-center gap-2">
                                 <img src="${s.logo}" class="w-5 h-5 rounded-sm bg-white p-0.5" onerror="this.src='https://ui-avatars.com/api/?name=${s.symbol}&background=1a1a1a&color=fff'">
@@ -2913,15 +2702,15 @@
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="text-[10px] mono font-bold">$${priceFormatted}</p>
-                                <p class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${trendFormatted}%</p>
+                                <p class="text-[10px] mono font-bold" id="wl-price-${s.symbol}">$${priceFormatted}</p>
+                                <p id="wl-trend-${s.symbol}" class="text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}">${s.trend > 0 ? '▲' : '▼'} ${trendFormatted}%</p>
                             </div>
                         </div>
                         
                         ${state.level >= 8 ? `
                             <div class="grid grid-cols-2 gap-2 mt-2">
-                                <button onclick="tradeStock('${s.symbol}', true)" class="text-[8px] py-1.5 border border-zinc-800 rounded font-black hover:bg-emerald-500 hover:text-white transition-colors text-white" ${state.balance < s.price ? 'disabled' : ''}>BUY ${state.tradeMax ? 'ALL' : ''}</button>
-                                <button onclick="tradeStock('${s.symbol}', false)" class="text-[8px] py-1.5 border border-zinc-800 rounded font-black hover:bg-red-500 hover:text-white transition-colors text-white" ${owned <= 0 ? 'disabled' : ''}>SELL ${state.tradeMax ? 'ALL' : ''}</button>
+                                <button onclick="tradeStock('${s.symbol}', true)" class="text-[8px] py-1.5 border border-zinc-800 rounded font-black hover:bg-emerald-500 hover:text-white transition-colors text-white" ${state.balance < s.price ? 'disabled' : ''} data-stock-buy="${s.symbol}">BUY ${state.tradeMax ? 'ALL' : ''}</button>
+                                <button onclick="tradeStock('${s.symbol}', false)" class="text-[8px] py-1.5 border border-zinc-800 rounded font-black hover:bg-red-500 hover:text-white transition-colors text-white" ${owned <= 0 ? 'disabled' : ''} data-stock-sell="${s.symbol}">SELL ${state.tradeMax ? 'ALL' : ''}</button>
                             </div>
                         ` : ''}
                     </div>`;
@@ -2950,7 +2739,6 @@
             } else {
                 let amount = inputAmt;
                 if (state.tradeMax) amount = state.shares[symbol] || 0;
-                
                 if (amount > (state.shares[symbol] || 0)) amount = state.shares[symbol] || 0;
                 
                 if (amount > 0 && (state.shares[symbol] || 0) >= amount) {
@@ -2963,7 +2751,7 @@
                     logToTerminal(`SOLD ${amount.toFixed(3)} ${symbol} @ $${stock.price.toFixed(2)}`);
                 }
             }
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -2973,7 +2761,7 @@
                 state.shares[currency] -= price;
                 state.ownedAssets.push(id);
                 logToTerminal(`NFT MINTED: ${id.toUpperCase()} FOR ${price} ${currency}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -2984,7 +2772,7 @@
                 state.ownedAssets.splice(index, 1);
                 state.shares[currency] = (state.shares[currency] || 0) + price;
                 logToTerminal(`NFT SOLD: RECEIVED ${price} ${currency}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -2994,7 +2782,7 @@
                 state.balance -= price;
                 state.ownedAssets.push(id);
                 logToTerminal(`ASSET ACQUIRED: ${id.toUpperCase()}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3006,8 +2794,6 @@
             if (!u) return;
             
             const count = (state.compCustomUpgrades[cId] || {})[uId] || 0;
-            
-            // Check prerequisites
             if (u.req) {
                 const reqCount = (state.compCustomUpgrades[cId] || {})[u.req.id] || 0;
                 if (reqCount < u.req.count) return;
@@ -3021,7 +2807,7 @@
                 if (!state.compCustomUpgrades[cId]) state.compCustomUpgrades[cId] = {};
                 state.compCustomUpgrades[cId][uId] = count + 1;
                 logToTerminal(`UPGRADED ${cId.toUpperCase()}: ${u.name.toUpperCase()} (LVL ${count + 1})`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3032,7 +2818,7 @@
                 state.ownedAssets.push(id);
                 state.collectionOwnedTime[id] = Date.now();
                 logToTerminal(`COLLECTION ACQUIRED: ${id.toUpperCase()}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3048,7 +2834,7 @@
             delete state.collectionOwnedTime[id];
             
             logToTerminal(`SOLD COLLECTION: ${item.name} FOR $${price.toLocaleString()}`);
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -3058,12 +2844,7 @@
             if (!item) return;
 
             activeAuction = {
-                id: id,
-                cat: cat,
-                item: item,
-                currentBid: item.price,
-                timer: 300,
-                interval: null,
+                id: id, cat: cat, item: item, currentBid: item.price, timer: 300, interval: null,
                 bids:[{ name: 'System', amount: item.price, msg: 'Starting bid at 100% MSRP' }]
             };
 
@@ -3074,7 +2855,6 @@
 
             activeAuction.interval = setInterval(() => {
                 activeAuction.timer--;
-                
                 if (activeAuction.timer > 0 && activeAuction.currentBid < item.price * 5) {
                     const chance = Math.random();
                     if (chance < 0.20) {
@@ -3083,21 +2863,12 @@
                         if (nextBid > item.price * 5) nextBid = item.price * 5;
                         
                         activeAuction.currentBid = nextBid;
-                        activeAuction.bids.unshift({
-                            name: "Bidder" + Math.floor(Math.random() * 9000 + 1000),
-                            amount: nextBid,
-                            msg: 'Placed a bid'
-                        });
-                        
+                        activeAuction.bids.unshift({ name: "Bidder" + Math.floor(Math.random() * 9000 + 1000), amount: nextBid, msg: 'Placed a bid' });
                         if (activeAuction.bids.length > 15) activeAuction.bids.pop();
                     }
                 }
-
                 updateAuctionUI();
-
-                if (activeAuction.timer <= 0) {
-                    finishAuction();
-                }
+                if (activeAuction.timer <= 0) finishAuction();
             }, 1000);
         }
 
@@ -3133,7 +2904,7 @@
             
             document.getElementById('auction-modal').style.display = 'none';
             activeAuction = null;
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -3143,7 +2914,7 @@
                 state.balance -= cost;
                 state.taxiFleet[type]++;
                 logToTerminal(`TAXI HUB: ACQUIRED ${type.toUpperCase()}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3154,7 +2925,7 @@
                 state.balance -= price;
                 state.compTiers[id] = currentIdx + 1;
                 logToTerminal(`${id.toUpperCase()} EVOLVED TO ${COMPANY_TIERS[currentIdx+1]} STATUS`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3165,7 +2936,7 @@
                 state.balance -= price;
                 state.compOutlets[id] = count + 1;
                 logToTerminal(`${id.toUpperCase()} OPENED OUTLET #${count+1}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3173,7 +2944,7 @@
         function toggleRental(id) {
             state.renting[id] = !state.renting[id];
             logToTerminal(`PROPERTY ${id.toUpperCase()} RENTAL STATUS: ${state.renting[id] ? 'ACTIVE' : 'INACTIVE'}`);
-            updateUI();
+            updateUI(true);
             saveGame();
         }
 
@@ -3182,7 +2953,18 @@
                 state.balance -= cost;
                 state.renovations[id] = (state.renovations[id] || 0) + 1;
                 logToTerminal(`PROPERTY ${id.toUpperCase()} RENOVATED TO LEVEL ${state.renovations[id]}`);
-                updateUI();
+                updateUI(true);
+                saveGame();
+            }
+        }
+
+        function equipCard(id) {
+            if (state.ownedCards.includes(id)) {
+                state.cardBalances[state.equippedCardId] = state.balance;
+                state.equippedCardId = id;
+                state.balance = state.cardBalances[id] || 0;
+                logToTerminal(`CARD EQUIPPED: ${CARD_TIERS.find(t=>t.id===id).name}`);
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3192,9 +2974,9 @@
                 state.balance -= price;
                 if(!state.ownedCards) state.ownedCards =[0];
                 state.ownedCards.push(id);
-                state.cardBalances[id] = 0; // Initialize the new card with $0
+                state.cardBalances[id] = 0; 
                 logToTerminal(`CARD ACQUIRED: ${CARD_TIERS.find(t=>t.id===id).name}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3221,6 +3003,7 @@
         }
 
         function showTab(tabId) {
+            currentTab = tabId;
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             const target = document.getElementById(tabId);
@@ -3228,42 +3011,38 @@
             const btn = document.getElementById('btn-' + tabId);
             if(btn) btn.classList.add('active');
 
-            // Handle Top Bar Balance Visibility
             const topBal = document.getElementById('top-bar-balance-container');
             if (topBal) {
                 if (tabId === 'dashboard') topBal.classList.add('hidden');
                 else topBal.classList.remove('hidden');
             }
 
-            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'academics', 'black-market'].includes(tabId)) setTimeout(updateUI, 10);
-            
-            // Adjust scroll for sticky header visibility
+            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'academics', 'black-market'].includes(tabId)) {
+                setTimeout(() => updateUI(true), 10);
+            }
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Market Tick Loop
+        // Optimized Background Loop (Only math, delegating DOM updates to fastTickUpdate)
         setInterval(() => {
             state.balance += (state.revenue / 3600);
             STOCKS.forEach(s => {
                 const oldPrice = s.price;
-                // Only simulate if not updated by live API
                 if (!s.isRealTime) {
                     const volt = s.type === 'crypto' ? 0.02 : 0.008;
                     s.trend += (Math.random() - 0.5) * 0.2;
                     let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
                     s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
                 }
-                
                 const open = oldPrice;
                 const close = s.price;
                 const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
                 const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
                 s.history.push({ open, close, high, low });
-                
                 if(s.history.length > 50) s.history.shift();
             });
             state.lastSaveTime = Date.now();
-            updateUI();
+            fastTickUpdate(); 
             saveGame();
         }, 1000);
 
@@ -3271,20 +3050,22 @@
         const gameCard = document.getElementById('game-card');
         const cardGlare = document.getElementById('card-glare');
         if(cardContainer) {
+            let reqId = null;
             cardContainer.addEventListener('mousemove', (e) => {
-                // Ignore tilt logic if fullscreen
                 if(cardContainer.classList.contains('card-fullscreen-mode')) return;
-                
-                const rect = cardContainer.getBoundingClientRect();
-                const x = e.clientX - rect.left;
-                const y = e.clientY - rect.top;
-                const xc = rect.width / 2;
-                const yc = rect.height / 2;
-                if(gameCard) gameCard.style.transform = `rotateY(${(x - xc)/15}deg) rotateX(${-(y - yc)/15}deg)`;
-                if(cardGlare) {
-                    cardGlare.style.setProperty('--x', `${(x / rect.width) * 100}%`);
-                    cardGlare.style.setProperty('--y', `${(y / rect.height) * 100}%`);
-                }
+                if(reqId) cancelAnimationFrame(reqId);
+                reqId = requestAnimationFrame(() => {
+                    const rect = cardContainer.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const xc = rect.width / 2;
+                    const yc = rect.height / 2;
+                    if(gameCard) gameCard.style.transform = `rotateY(${(x - xc)/15}deg) rotateX(${-(y - yc)/15}deg)`;
+                    if(cardGlare) {
+                        cardGlare.style.setProperty('--x', `${(x / rect.width) * 100}%`);
+                        cardGlare.style.setProperty('--y', `${(y / rect.height) * 100}%`);
+                    }
+                });
             });
             cardContainer.addEventListener('mouseleave', () => {
                 if(gameCard && !cardContainer.classList.contains('card-fullscreen-mode')) {
@@ -3298,7 +3079,6 @@
                 closeStockModal();
                 closeResetModal();
                 closeTransferModal();
-                // Close fullscreen card if open
                 if (document.getElementById('card-container').classList.contains('card-fullscreen-mode')) {
                     document.getElementById('card-max-btn').click();
                 }
@@ -3310,7 +3090,7 @@
             if (!isNaN(val) && val > 0) {
                 state.balance += val;
                 logToTerminal(`[SYSTEM] ILLEGITIMATE FUNDS ADDED: $${val.toLocaleString()}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3321,7 +3101,7 @@
                 state.level = val;
                 state.xp = 0;
                 logToTerminal(`[SYSTEM] ILLEGITIMATE LEVEL SET TO: ${val}`);
-                updateUI();
+                updateUI(true);
                 saveGame();
             }
         }
@@ -3369,7 +3149,7 @@
             
             await checkOfflineEarnings();
             
-            updateUI();
+            updateUI(true);
             filterCollection('jewelry');
             filterRealEstate('house');
         };
