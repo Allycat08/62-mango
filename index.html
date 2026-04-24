@@ -121,6 +121,9 @@
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
+        .market-sub-content { display: none; }
+        .market-sub-content.active { display: block; }
+
         .glass-card {
             background: var(--card-bg);
             border: 1px solid var(--border);
@@ -190,7 +193,7 @@
         .wallet-card-wrapper { min-width: 180px; margin-right: -110px; transition: transform 0.3s ease, z-index 0.3s ease; position: relative; cursor: pointer; }
         .wallet-card-wrapper:hover, .wallet-card-wrapper.active-wallet-card { transform: translateY(-15px) rotateZ(-3deg); }
 
-        .scrollbar-thin::-webkit-scrollbar { width: 4px; }
+        .scrollbar-thin::-webkit-scrollbar { width: 4px; height: 4px; }
         .scrollbar-thin::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); border-radius: 4px; }
         .scrollbar-thin::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #555; }
@@ -482,18 +485,48 @@
 
         <!-- MARKET TAB -->
         <div id="stocks" class="tab-content">
-            <section class="mb-12">
+            <!-- TOP PERFORMERS WIDGET -->
+            <div class="glass-card p-6 mb-8">
+                <h3 class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-4">Market Top Performers</h3>
+                <div id="top-performers-grid" class="flex gap-4 overflow-x-auto pb-2 scrollbar-thin"></div>
+            </div>
+
+            <!-- TABS & FILTERS -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-zinc-900 pb-2">
+                <nav class="flex gap-8 overflow-x-auto whitespace-nowrap">
+                    <button onclick="showMarketSubTab('regular')" class="nav-link market-nav-link active" id="btn-market-regular">Regular Stocks</button>
+                    <button onclick="showMarketSubTab('crypto')" class="nav-link market-nav-link" id="btn-market-crypto">Crypto</button>
+                    <button onclick="showMarketSubTab('nft')" class="nav-link market-nav-link" id="btn-market-nft">NFTs</button>
+                </nav>
+                <div class="flex items-center gap-2 w-full md:w-auto" id="market-filters-container">
+                    <span class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">SORT BY:</span>
+                    <select id="market-sort" onchange="updateUI(true)" class="bg-zinc-900 border border-zinc-800 text-xs text-white font-mono rounded px-2 py-1 focus:outline-none focus:border-emerald-500">
+                        <option value="trend-desc">Top Trending</option>
+                        <option value="name-asc">A-Z</option>
+                        <option value="name-desc">Z-A</option>
+                        <option value="price-desc">Expensive to Cheap</option>
+                        <option value="price-asc">Cheap to Expensive</option>
+                        <option value="div-desc">Highest Dividend</option>
+                        <option value="div-asc">Lowest Dividend</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- SUB-TABS CONTENT -->
+            <div id="market-regular" class="market-sub-content active">
                 <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
                 <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-            </section>
-            <section class="mb-12">
+            </div>
+            
+            <div id="market-crypto" class="market-sub-content">
                 <div class="flex items-center gap-4 mb-8">
                     <h2 class="text-xl font-black uppercase tracking-tight">CRYPTO EXCHANGE</h2>
                     <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded">REAL-TIME TRADING</span>
                 </div>
                 <div id="crypto-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-            </section>
-            <section class="mb-12">
+            </div>
+            
+            <div id="market-nft" class="market-sub-content">
                 <div class="flex items-center justify-between mb-8">
                     <div class="flex items-center gap-4">
                         <h2 class="text-xl font-black uppercase tracking-tight">DIGITAL COLLECTIBLES (NFTs)</h2>
@@ -502,7 +535,7 @@
                     <div id="nft-status" class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest"></div>
                 </div>
                 <div id="nft-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
-            </section>
+            </div>
         </div>
 
         <!-- COLLECTION TAB -->
@@ -793,7 +826,7 @@
             { id: 5, name: "ROSÉ EXECUTIVE", price: 1000000, mult: 10, class: "tier-5" },
             { id: 6, name: "OBSIDIAN INFINITE", price: 2500000, mult: 15, class: "tier-6" },
             { id: 7, name: "EMERALD PRIVATE", price: 5000000, mult: 25, class: "tier-7" },
-            { id: 8, name: "CENTURION GOLD", price: 25000000, mult: 100, class: "tier-8" },
+            { id: 8, name: "CENTURION GOLD", price: 2500000, mult: 100, class: "tier-8" },
             { id: 9, name: "DIAMOND RESERVE", price: 50000000, mult: 150, class: "tier-9" },
             { id: 10, name: "CARBON ELITE", price: 75000000, mult: 200, class: "tier-10" },
             { id: 11, name: "VERCEL BLACK", price: 100000000, mult: 250, class: "tier-11" },
@@ -935,6 +968,11 @@
         // Seed initial base prices to anchor the global simulation
         STOCKS.forEach(s => {
             s.basePrice = s.price;
+            if (s.type === 'stock') {
+                s.dividend = parseFloat((Math.random() * 4 + 0.5).toFixed(2));
+            } else {
+                s.dividend = 0;
+            }
         });
 
         const NFTS =[
@@ -1151,6 +1189,7 @@
         let currentRECat = 'house';
         let activeAuction = null;
         let currentTab = 'dashboard';
+        let currentMarketTab = 'regular';
 
         const saved = localStorage.getItem('vercel_empire_v12_favs');
         if (saved) state = { ...state, ...JSON.parse(saved) };
@@ -1350,14 +1389,13 @@
                 console.warn("Real-time stocks fetch error - proceeding with simulated global market data.");
             }
         }
-
-        setTimeout(fetchRealTimeStocks, 500);
+setTimeout(fetchRealTimeStocks, 500);
         setInterval(fetchRealTimeStocks, 10000);
 
         function saveGame() { 
             state.lastSaveTime = Date.now();
             state.stockMarket = STOCKS.map(s => ({
-                symbol: s.symbol, price: s.price, trend: s.trend, history: s.history, isRealTime: s.isRealTime
+                symbol: s.symbol, price: s.price, trend: s.trend, history: s.history, isRealTime: s.isRealTime, dividend: s.dividend
             }));
             localStorage.setItem('vercel_empire_v12_favs', JSON.stringify(state)); 
         }
@@ -1747,8 +1785,12 @@
                 const oEl = document.getElementById(`owned-val-${s.symbol}`);
                 if(oEl) oEl.innerText = (state.shares[s.symbol] || 0).toFixed(3) + ' UNITS';
 
-                if(currentTab === 'stocks') {
-                    drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
+                // Check active tabs accurately
+                if (currentTab === 'stocks') {
+                    if ((currentMarketTab === 'regular' && s.type === 'stock') || 
+                        (currentMarketTab === 'crypto' && s.type === 'crypto')) {
+                        drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
+                    }
                 }
             });
 
@@ -2270,7 +2312,31 @@
             }
         }
 
+        function renderTopPerformers() {
+            const container = document.getElementById('top-performers-grid');
+            if (!container) return;
+            if (state.level < 3) {
+                container.innerHTML = `<p class="text-xs text-zinc-600 font-mono">Unlock markets at Level 3</p>`;
+                return;
+            }
+
+            const topStocks = [...STOCKS].filter(s => s.type !== 'crypto').sort((a, b) => b.trend - a.trend).slice(0, 5);
+            container.innerHTML = topStocks.map(s => {
+                return `
+                <div class="min-w-[150px] p-3 bg-zinc-950 border border-zinc-800 rounded-lg shrink-0 cursor-pointer hover:border-zinc-600 transition-colors" onclick="openStockModal('${s.symbol}')">
+                    <div class="flex justify-between items-center mb-1">
+                        <span class="text-[10px] font-black">${s.symbol}</span>
+                        <span class="text-[9px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'}${Math.abs(s.trend).toFixed(2)}%</span>
+                    </div>
+                    <p class="text-xs font-bold mono">$${s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
+                </div>
+                `;
+            }).join('');
+        }
+
         function renderGrids() {
+            renderTopPerformers();
+
             const compGrid = document.getElementById('companies-grid');
             if(compGrid) {
                 compGrid.innerHTML = COMPANIES.map(c => {
@@ -2307,8 +2373,7 @@
                         <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
                             <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''} ${tierIdx >= 4 ? '' : `data-cost="${nextTierPrice}"`}>
                                 <span class="mb-0.5">${tierIdx >= 4 ? 'MAX TIER' : 'EVOLVE'}</span>
-                                <span class="text-[8px] opacity-60">${tierIdx >= 4 ?
-'' : '$' + nextTierPrice.toLocaleString()}</span>
+                                <span class="text-[8px] opacity-60">${tierIdx >= 4 ? '' : '$' + nextTierPrice.toLocaleString()}</span>
                             </button>
                             <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextOutletPrice || outlets >= 60 ? 'disabled' : ''} ${outlets >= 60 ? '' : `data-cost="${nextOutletPrice}"`}>
                                 <span class="mb-0.5">${outlets >= 60 ? 'MAX OUTLETS' : '+1 OUTLET'}</span>
@@ -2446,8 +2511,6 @@
                     return `
                         <div class="glass-card p-8 border-white/5">
                             <div class="h-40 rounded-xl mb-6 ${t.class}"></div>
-
-<div class="h-40 rounded-xl mb-6 ${t.class}"></div>
                             <h3 class="text-2xl font-black uppercase mb-1">${t.name}</h3>
                             <p class="text-xs text-zinc-500 font-bold mb-8">${t.mult}x MULTIPLIER</p>
                             ${btnStr}
@@ -2505,9 +2568,16 @@
                     <div class="chart-container" onclick="openStockModal('${s.symbol}')">
                         <canvas id="chart-${s.symbol}" class="w-full h-full"></canvas>
                     </div>
-                    <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900 mt-auto">
-                        <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
-                        <p class="text-sm font-bold mono" id="owned-val-${s.symbol}">${owned.toFixed(3)} UNITS</p>
+                    <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900 mt-auto flex justify-between items-center">
+                        <div>
+                            <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
+                            <p class="text-sm font-bold mono" id="owned-val-${s.symbol}">${owned.toFixed(3)} UNITS</p>
+                        </div>
+                        ${s.type === 'stock' ? `
+                        <div class="text-right">
+                            <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">DIVIDEND</p>
+                            <p class="text-sm font-bold mono text-emerald-500">${s.dividend}%</p>
+                        </div>` : ''}
                     </div>
                     ${state.level >= 3 ? `
                         <div class="mb-2">
@@ -2526,7 +2596,21 @@
                 if (state.level < 3) {
                     stocksFullGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">REACH LEVEL 3 TO UNLOCK MARKETS</p></div>`;
                 } else {
-                    stocksFullGrid.innerHTML = STOCKS.filter(s => s.type === 'stock').map(renderStockCard).join('');
+                    const sortVal = document.getElementById('market-sort').value;
+                    let sortedStocks = STOCKS.filter(s => s.type === 'stock');
+                    
+                    sortedStocks.sort((a, b) => {
+                        if (sortVal === 'trend-desc') return b.trend - a.trend;
+                        if (sortVal === 'name-asc') return a.symbol.localeCompare(b.symbol);
+                        if (sortVal === 'name-desc') return b.symbol.localeCompare(a.symbol);
+                        if (sortVal === 'price-desc') return b.price - a.price;
+                        if (sortVal === 'price-asc') return a.price - b.price;
+                        if (sortVal === 'div-desc') return (b.dividend || 0) - (a.dividend || 0);
+                        if (sortVal === 'div-asc') return (a.dividend || 0) - (b.dividend || 0);
+                        return 0;
+                    });
+                    
+                    stocksFullGrid.innerHTML = sortedStocks.map(renderStockCard).join('');
                 }
             }
 
@@ -2567,7 +2651,10 @@
             // Draw initial charts only if tab is active (Optimization)
             if (currentTab === 'stocks') {
                 STOCKS.forEach(s => {
-                    drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
+                    if ((currentMarketTab === 'regular' && s.type === 'stock') || 
+                        (currentMarketTab === 'crypto' && s.type === 'crypto')) {
+                        drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
+                    }
                 });
             }
         }
@@ -3118,7 +3205,20 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Optimized Background Loop (Only math, delegating DOM updates to fastTickUpdate)
+        function showMarketSubTab(tabId) {
+            currentMarketTab = tabId;
+            document.querySelectorAll('.market-sub-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.market-nav-link').forEach(l => l.classList.remove('active'));
+            const target = document.getElementById('market-' + tabId);
+            if(target) target.classList.add('active');
+            const btn = document.getElementById('btn-market-' + tabId);
+            if(btn) btn.classList.add('active');
+            
+            if (currentTab === 'stocks') {
+                setTimeout(() => updateUI(true), 10);
+            }
+        }
+
         // Optimized Background Loop (Executes the math for the Global System & Updates UI)
         setInterval(() => {
             state.balance += (state.revenue / 3600);
