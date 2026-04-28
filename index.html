@@ -224,6 +224,7 @@
 
         .mobile-mode #stock-modal, .mobile-mode #reset-modal, .mobile-mode #onboarding-modal, .mobile-mode #auction-modal, .mobile-mode #transfer-modal { position: absolute; border-radius: inherit; }
 
+        /* Existing Theme Overrides */
         body.theme-light { --bg: #fafafa; --card-bg: #ffffff; --border: #e4e4e7; color: #09090b; }
         body.theme-light .bg-zinc-950, body.theme-light .bg-zinc-900 { background-color: #f4f4f5 !important; }
         body.theme-light .bg-black { background-color: #ffffff !important; }
@@ -241,6 +242,60 @@
         body.theme-light input, body.theme-light select { background-color: #ffffff !important; border-color: #e4e4e7 !important; color: #09090b !important; }
         body.theme-light .chart-container { background: #ffffff !important; border-color: #e4e4e7 !important; }
         body.theme-light #stock-modal, body.theme-light #reset-modal, body.theme-light #onboarding-modal, body.theme-light #auction-modal, body.theme-light #transfer-modal { background: rgba(255,255,255,0.9); }
+
+        body.theme-corporate { --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; color: #0f172a; }
+        body.theme-corporate .glass-card { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
+        body.theme-corporate .bg-zinc-950, body.theme-corporate .bg-zinc-900 { background-color: #f1f5f9 !important; }
+        body.theme-corporate .bg-black { background-color: #ffffff !important; }
+        body.theme-corporate .border-zinc-900, body.theme-corporate .border-zinc-800 { border-color: #e2e8f0 !important; }
+        body.theme-corporate .text-white { color: #0f172a !important; }
+        body.theme-corporate .text-zinc-500, body.theme-corporate .text-zinc-600, body.theme-corporate .text-zinc-400 { color: #64748b !important; }
+        body.theme-corporate .nav-link { color: #94a3b8; }
+        body.theme-corporate .nav-link.active { color: #0f172a; }
+        body.theme-corporate .nav-link.active::after { background: #3b82f6; }
+        body.theme-corporate .btn-buy { background: #ffffff; color: #0f172a; border-color: #e2e8f0; }
+        body.theme-corporate .btn-buy:hover:not(:disabled) { background: #0f172a; color: #ffffff; }
+        body.theme-corporate .progress-bg { background: #e2e8f0; }
+        body.theme-corporate .progress-fill { background: #3b82f6; }
+        body.theme-corporate path[fill="white"] { fill: #0f172a; }
+        body.theme-corporate input, body.theme-corporate select { background-color: #ffffff !important; border-color: #e2e8f0 !important; color: #0f172a !important; }
+        body.theme-corporate .chart-container { background: #ffffff !important; border-color: #e2e8f0 !important; }
+
+        body.theme-arctic { --bg: #f0f9ff; --card-bg: #ffffff; --border: #bae6fd; color: #0c4a6e; }
+        body.theme-arctic .glass-card { box-shadow: 0 4px 10px rgba(186,230,253,0.3); }
+        body.theme-arctic .bg-zinc-950, body.theme-arctic .bg-zinc-900 { background-color: #e0f2fe !important; }
+        body.theme-arctic .bg-black { background-color: #ffffff !important; }
+        body.theme-arctic .border-zinc-900, body.theme-arctic .border-zinc-800 { border-color: #bae6fd !important; }
+        body.theme-arctic .text-white { color: #0c4a6e !important; }
+        body.theme-arctic .text-zinc-500, body.theme-arctic .text-zinc-600, body.theme-arctic .text-zinc-400 { color: #0284c7 !important; }
+        body.theme-arctic .nav-link { color: #7dd3fc; }
+        body.theme-arctic .nav-link.active { color: #0c4a6e; }
+        body.theme-arctic .nav-link.active::after { background: #0284c7; }
+        body.theme-arctic .btn-buy { background: #ffffff; color: #0c4a6e; border-color: #bae6fd; }
+        body.theme-arctic .btn-buy:hover:not(:disabled) { background: #0c4a6e; color: #ffffff; }
+        body.theme-arctic .progress-bg { background: #bae6fd; }
+        body.theme-arctic .progress-fill { background: #0284c7; }
+        body.theme-arctic path[fill="white"] { fill: #0c4a6e; }
+        body.theme-arctic input, body.theme-arctic select { background-color: #ffffff !important; border-color: #bae6fd !important; color: #0c4a6e !important; }
+        body.theme-arctic .chart-container { background: #ffffff !important; border-color: #bae6fd !important; }
+
+        body.theme-pastel { --bg: #fffbf0; --card-bg: #ffffff; --border: #fef08a; color: #854d0e; }
+        body.theme-pastel .glass-card { box-shadow: 0 4px 12px rgba(254,240,138,0.2); }
+        body.theme-pastel .bg-zinc-950, body.theme-pastel .bg-zinc-900 { background-color: #fef9c3 !important; }
+        body.theme-pastel .bg-black { background-color: #ffffff !important; }
+        body.theme-pastel .border-zinc-900, body.theme-pastel .border-zinc-800 { border-color: #fef08a !important; }
+        body.theme-pastel .text-white { color: #854d0e !important; }
+        body.theme-pastel .text-zinc-500, body.theme-pastel .text-zinc-600, body.theme-pastel .text-zinc-400 { color: #ca8a04 !important; }
+        body.theme-pastel .nav-link { color: #facc15; }
+        body.theme-pastel .nav-link.active { color: #854d0e; }
+        body.theme-pastel .nav-link.active::after { background: #eab308; }
+        body.theme-pastel .btn-buy { background: #ffffff; color: #854d0e; border-color: #fef08a; }
+        body.theme-pastel .btn-buy:hover:not(:disabled) { background: #854d0e; color: #ffffff; }
+        body.theme-pastel .progress-bg { background: #fef08a; }
+        body.theme-pastel .progress-fill { background: #ca8a04; }
+        body.theme-pastel path[fill="white"] { fill: #854d0e; }
+        body.theme-pastel input, body.theme-pastel select { background-color: #ffffff !important; border-color: #fef08a !important; color: #854d0e !important; }
+        body.theme-pastel .chart-container { background: #ffffff !important; border-color: #fef08a !important; }
 
         body.theme-hacker { --bg: #000000; --card-bg: #000000; --border: #004400; color: #00ff00; font-family: 'JetBrains Mono', monospace; }
         body.theme-hacker * { font-family: 'JetBrains Mono', monospace !important; }
@@ -432,6 +487,29 @@
                 </div>
 
                 <div class="col-span-12 lg:col-span-8 space-y-6">
+                    <!-- DASHBOARD STOCK WIDGET (LVL 19+) -->
+                    <div class="glass-card p-6 hidden" id="dashboard-stock-widget">
+                        <div class="flex justify-between items-center mb-4">
+                            <div class="flex items-center gap-2">
+                                <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">LIVE MARKET TRACKER</p>
+                                <span class="px-2 py-0.5 bg-amber-500/10 text-amber-500 text-[8px] font-bold rounded">LVL 19 UNLOCK</span>
+                            </div>
+                            <select id="dashboard-stock-select" onchange="changeDashboardStock()" class="bg-zinc-900 border border-zinc-800 text-xs text-white font-mono rounded px-2 py-1 focus:outline-none focus:border-emerald-500"></select>
+                        </div>
+                        <div class="flex justify-between items-end mb-2" onclick="openStockModal(state.dashboardStock)" style="cursor: pointer;">
+                            <div>
+                                <h3 class="text-2xl font-black tracking-tighter" id="dash-stock-symbol">AAPL</h3>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-lg font-bold mono" id="dash-stock-price">$0.00</p>
+                                <p class="text-[10px] mono font-bold" id="dash-stock-trend">+0.00%</p>
+                            </div>
+                        </div>
+                        <div class="chart-container h-[100px] cursor-default" onclick="openStockModal(state.dashboardStock)">
+                            <canvas id="dash-stock-chart" class="w-full h-full"></canvas>
+                        </div>
+                    </div>
+
                     <div class="glass-card p-8">
                         <div class="flex justify-between items-center mb-4">
                             <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">EMPIRE PROGRESS</p>
@@ -647,13 +725,24 @@
                     </div>
 
                     <div class="glass-card p-8">
-                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">UI THEMES</p>
+                        <div class="flex justify-between items-center mb-6">
+                            <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">UI THEMES</p>
+                            <div class="flex gap-2">
+                                <button onclick="setThemeTab('light')" id="btn-theme-light" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest">LIGHT</button>
+                                <button onclick="setThemeTab('dark')" id="btn-theme-dark" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-white text-black transition-colors uppercase tracking-widest">DARK</button>
+                            </div>
+                        </div>
                         <div id="themes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
                     </div>
 
                     <div class="glass-card p-8">
                         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">PORTFOLIO SUMMARY</p>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8" id="profile-portfolio-list"></div>
+                    </div>
+
+                    <div class="glass-card p-8">
+                        <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">MILESTONES & ACHIEVEMENTS</p>
+                        <div id="achievements-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-64 overflow-y-auto pr-2 scrollbar-thin"></div>
                     </div>
                 </div>
             </div>
@@ -793,26 +882,21 @@
     <script>
         // GLOBAL MARKET CONFIGURATION
         const GLOBAL_MARKET_CONFIG = {
-            // OPTION 1: True Global Backend (Firebase, JSONBin, Supabase, Custom API)
-            // Replace this with your API endpoint to literally save/sync market data across all users 
-            // from a central database. Example: "https://your-api.com/stocks"
             apiUrl: "", 
-
-            // OPTION 2: Serverless Global Algorithmic Sync (Fallback / Backend-less)
-            // If true and no API is provided above, the game uses a deterministic global clock 
-            // (based on Unix time) to calculate organic market trends. This guarantees every user 
-            // around the world sees the exact same stock prices at the same time, without needing a server!
             useAlgorithmicGlobalSync: true 
         };
 
         const THEMES =[
-            { id: 'dark', name: 'Dark Mode', price: 0, class: 'theme-dark' },
-            { id: 'light', name: 'Light Mode', price: 0, class: 'theme-light' },
-            { id: 'hacker', name: 'Terminal Hacker', price: 1000000, class: 'theme-hacker' },
-            { id: 'neon', name: 'Neon Cyber', price: 5000000, class: 'theme-neon' },
-            { id: 'gold', name: 'Billionaire Gold', price: 50000000, class: 'theme-gold' },
-            { id: 'cyberpunk', name: 'Cyberpunk 2067', price: 250000000, class: 'theme-cyberpunk' },
-            { id: 'abyss', name: 'The Abyss', price: 1000000000, class: 'theme-abyss' }
+            { id: 'dark', name: 'Dark Mode', price: 0, class: 'theme-dark', type: 'dark' },
+            { id: 'light', name: 'Light Mode', price: 0, class: 'theme-light', type: 'light' },
+            { id: 'corporate', name: 'Corporate White', price: 500000, class: 'theme-corporate', type: 'light' },
+            { id: 'arctic', name: 'Arctic Ice', price: 2000000, class: 'theme-arctic', type: 'light' },
+            { id: 'pastel', name: 'Soft Pastel', price: 2000000, class: 'theme-pastel', type: 'light' },
+            { id: 'hacker', name: 'Terminal Hacker', price: 1000000, class: 'theme-hacker', type: 'dark' },
+            { id: 'neon', name: 'Neon Cyber', price: 5000000, class: 'theme-neon', type: 'dark' },
+            { id: 'gold', name: 'Billionaire Gold', price: 50000000, class: 'theme-gold', type: 'dark' },
+            { id: 'cyberpunk', name: 'Cyberpunk 2067', price: 250000000, class: 'theme-cyberpunk', type: 'dark' },
+            { id: 'abyss', name: 'The Abyss', price: 1000000000, class: 'theme-abyss', type: 'dark' }
         ];
 
         const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign"];
@@ -1150,6 +1234,17 @@
             ]
         };
 
+        const ACHIEVEMENTS = [
+            { id: 'ach1', name: 'First Steps', desc: 'Reach Level 5', check: () => state.level >= 5 },
+            { id: 'ach2', name: 'Vercel Executive', desc: 'Reach Level 10', check: () => state.level >= 10 },
+            { id: 'ach3', name: 'Market Watcher', desc: 'Unlock the Stock Market (Lvl 3)', check: () => state.level >= 3 },
+            { id: 'ach4', name: 'Millionaire', desc: 'Reach $1,000,000 Net Worth', check: () => state.netWorth >= 1000000 },
+            { id: 'ach5', name: 'Billionaire', desc: 'Reach $1,000,000,000 Net Worth', check: () => state.netWorth >= 1000000000 },
+            { id: 'ach6', name: 'Real Estate Mogul', desc: 'Own 5 Properties', check: () => state.ownedAssets.filter(id => REAL_ESTATE.some(re => re.id === id)).length >= 5 },
+            { id: 'ach7', name: 'Corporate Raider', desc: 'Own 5 Companies', check: () => state.ownedAssets.filter(id => COMPANIES.some(c => c.id === id)).length >= 5 },
+            { id: 'ach8', name: 'Academic Scholar', desc: 'Earn 3 Degrees', check: () => state.education.degrees.length >= 3 }
+        ];
+
         let state = {
             userName: "",
             balance: 0,
@@ -1180,7 +1275,9 @@
             activeTheme: 'dark',
             activeStats:['rank', 'assets', 'eth', 'multiplier'],
             widgetSizes: {},
-            stockMarket: null
+            stockMarket: null,
+            achievements: [],
+            dashboardStock: 'AAPL'
         };
 
         let activeStock = null;
@@ -1190,6 +1287,7 @@
         let activeAuction = null;
         let currentTab = 'dashboard';
         let currentMarketTab = 'regular';
+        let currentThemeTab = 'dark';
 
         const saved = localStorage.getItem('vercel_empire_v12_favs');
         if (saved) state = { ...state, ...JSON.parse(saved) };
@@ -1214,8 +1312,9 @@
         if (!state.activeTheme) state.activeTheme = 'dark';
         if (!state.activeStats) state.activeStats =['rank', 'assets', 'eth', 'multiplier'];
         if (!state.widgetSizes) state.widgetSizes = {};
+        if (!state.achievements) state.achievements = [];
+        if (!state.dashboardStock) state.dashboardStock = 'AAPL';
 
-        // Load personal stock history if algorithmic sync isn't enabled
         if (state.stockMarket && state.stockMarket.length > 0) {
             state.stockMarket.forEach(savedStock => {
                 const s = STOCKS.find(x => x.symbol === savedStock.symbol);
@@ -1266,26 +1365,21 @@
             { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length }
         ];
 
-        // --- GLOBAL MARKET SYNC FUNCTIONS ---
-
-        // 1. Math-Based Serverless Sync: Deterministically calculate market movements using global Unix time
         function updateGlobalSimulatedMarket() {
             const now = Date.now();
             const currentSec = Math.floor(now / 1000);
             
             STOCKS.forEach(s => {
-                if (s.isRealTime) return; // Ignore if Yahoo Finance fetches successfully
+                if (s.isRealTime) return; 
                 
                 const hash = s.symbol.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
                 s.history = [];
                 let lastPrice = s.basePrice;
 
-                // Rebuild the last 50 seconds visually using identical seed factors
                 for (let i = 50; i >= 0; i--) {
                     const t = currentSec - i;
                     const volatility = s.type === 'crypto' ? 3.0 : 1.2;
                     
-                    // Different overlapping sine waves based perfectly on world clock
                     const wave1 = Math.sin(t / 3600 + hash) * 0.4;
                     const wave2 = Math.sin(t / 600 + hash * 1.5) * 0.25;
                     const wave3 = Math.sin(t / 60 + hash * 2.2) * 0.15;
@@ -1314,13 +1408,12 @@
             });
         }
 
-        // 2. REST API Backend Sync: Manually pushing and pulling from a real database endpoint
         async function syncGlobalMarketBackend() {
             if (!GLOBAL_MARKET_CONFIG.apiUrl || GLOBAL_MARKET_CONFIG.apiUrl.includes("your-api")) return;
             try {
                 const res = await fetch(GLOBAL_MARKET_CONFIG.apiUrl);
                 const data = await res.json();
-                const payload = data.record || data; // Adapts for standard JSONBins
+                const payload = data.record || data; 
 
                 if (payload && payload.timestamp && (Date.now() - payload.timestamp < 30000)) {
                     STOCKS.forEach(s => {
@@ -1354,7 +1447,6 @@
             } catch(e) {}
         }
         
-        // 3. Real-Life Market Sync: Fetch true global stocks from Yahoo API
         async function fetchRealTimeStocks() {
             try {
                 const symbols = STOCKS.map(s => {
@@ -1385,11 +1477,10 @@
                     updateUI(false); 
                 }
             } catch (e) {
-                console.warn("Real-time stocks fetch error - proceeding with simulated market data.", e);
-                console.warn("Real-time stocks fetch error - proceeding with simulated global market data.");
+                console.warn("Real-time stocks fetch error - proceeding with simulated market data.");
             }
         }
-setTimeout(fetchRealTimeStocks, 500);
+        setTimeout(fetchRealTimeStocks, 500);
         setInterval(fetchRealTimeStocks, 10000);
 
         function saveGame() { 
@@ -1436,6 +1527,35 @@ setTimeout(fetchRealTimeStocks, 500);
             saveGame();
         }
 
+        function checkAchievements() {
+            let newlyUnlocked = false;
+            ACHIEVEMENTS.forEach(ach => {
+                if (!state.achievements.includes(ach.id) && ach.check()) {
+                    state.achievements.push(ach.id);
+                    logToTerminal(`🏆 ACHIEVEMENT UNLOCKED: ${ach.name}`);
+                    newlyUnlocked = true;
+                }
+            });
+            if (newlyUnlocked) {
+                renderAchievements();
+                saveGame();
+            }
+        }
+
+        function renderAchievements() {
+            const grid = document.getElementById('achievements-grid');
+            if(!grid) return;
+            grid.innerHTML = ACHIEVEMENTS.map(ach => {
+                const isUnlocked = state.achievements.includes(ach.id);
+                return `
+                <div class="p-3 rounded border ${isUnlocked ? 'bg-emerald-900/20 border-emerald-500/50 text-emerald-400' : 'bg-zinc-950 border-zinc-900 text-zinc-600'}">
+                    <p class="text-[10px] font-black uppercase mb-1">${ach.name}</p>
+                    <p class="text-[9px] font-bold uppercase tracking-widest ${isUnlocked ? 'text-emerald-600' : 'text-zinc-700'}">${ach.desc}</p>
+                </div>
+                `;
+            }).join('');
+        }
+
         function applyTheme() {
             THEMES.forEach(t => document.body.classList.remove(t.class));
             const currentTheme = THEMES.find(t => t.id === state.activeTheme) || THEMES[0];
@@ -1445,6 +1565,20 @@ setTimeout(fetchRealTimeStocks, 500);
             } else {
                 document.documentElement.style.backgroundColor = "#000000"; 
             }
+        }
+
+        function setThemeTab(tab) {
+            currentThemeTab = tab;
+            const btnLight = document.getElementById('btn-theme-light');
+            const btnDark = document.getElementById('btn-theme-dark');
+            if(tab === 'light') {
+                btnLight.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-white text-black transition-colors uppercase tracking-widest";
+                btnDark.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest";
+            } else {
+                btnDark.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-white text-black transition-colors uppercase tracking-widest";
+                btnLight.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest";
+            }
+            renderThemes();
         }
 
         function applyMobileMode() {
@@ -1785,7 +1919,6 @@ setTimeout(fetchRealTimeStocks, 500);
                 const oEl = document.getElementById(`owned-val-${s.symbol}`);
                 if(oEl) oEl.innerText = (state.shares[s.symbol] || 0).toFixed(3) + ' UNITS';
 
-                // Check active tabs accurately
                 if (currentTab === 'stocks') {
                     if ((currentMarketTab === 'regular' && s.type === 'stock') || 
                         (currentMarketTab === 'crypto' && s.type === 'crypto')) {
@@ -1803,6 +1936,29 @@ setTimeout(fetchRealTimeStocks, 500);
                     tEl.className = `text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}`;
                 }
             });
+
+            if (state.level >= 19) {
+                const dashWidget = document.getElementById('dashboard-stock-widget');
+                if (dashWidget) dashWidget.classList.remove('hidden');
+
+                const dashSymbol = state.dashboardStock;
+                const s = STOCKS.find(x => x.symbol === dashSymbol);
+                if (s) {
+                    setUI('dash-stock-symbol', s.symbol);
+                    setUI('dash-stock-price', '$' + s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
+                    const tEl = document.getElementById('dash-stock-trend');
+                    if (tEl) {
+                        tEl.innerText = `${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend).toFixed(2)}%`;
+                        tEl.className = `text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold`;
+                    }
+                    if (currentTab === 'dashboard') {
+                        drawGraph('dash-stock-chart', s.history, 'line');
+                    }
+                }
+            } else {
+                const dashWidget = document.getElementById('dashboard-stock-widget');
+                if (dashWidget) dashWidget.classList.add('hidden');
+            }
         }
 
         function fastTickUpdate() {
@@ -1851,6 +2007,26 @@ setTimeout(fetchRealTimeStocks, 500);
 
             if (activeStock) updateModalContent();
             if (activeAuction) updateAuctionUI();
+
+            checkAchievements();
+        }
+
+        function renderDashboardStockSelect() {
+            const sel = document.getElementById('dashboard-stock-select');
+            if (!sel) return;
+            if (sel.children.length === 0) {
+                sel.innerHTML = STOCKS.map(s => `<option value="${s.symbol}">${s.symbol}</option>`).join('');
+            }
+            sel.value = state.dashboardStock;
+        }
+
+        function changeDashboardStock() {
+            const sel = document.getElementById('dashboard-stock-select');
+            if (sel) {
+                state.dashboardStock = sel.value;
+                saveGame();
+                updateUI(true);
+            }
         }
 
         function updateUI(full = true) {
@@ -1916,6 +2092,8 @@ setTimeout(fetchRealTimeStocks, 500);
             renderBlackMarket();
             renderEducation();
             renderProfilePortfolio();
+            renderDashboardStockSelect();
+            renderAchievements();
             renderThemes();
             applyTheme();
 
@@ -1952,7 +2130,9 @@ setTimeout(fetchRealTimeStocks, 500);
             const grid = document.getElementById('themes-grid');
             if (!grid) return;
 
-            grid.innerHTML = THEMES.map(t => {
+            const filteredThemes = THEMES.filter(t => t.type === currentThemeTab);
+
+            grid.innerHTML = filteredThemes.map(t => {
                 const isOwned = state.ownedThemes.includes(t.id);
                 const isEquipped = state.activeTheme === t.id;
 
@@ -1962,7 +2142,7 @@ setTimeout(fetchRealTimeStocks, 500);
                 } else if (isOwned) {
                     btnStr = `<button onclick="equipTheme('${t.id}')" class="btn-buy border border-zinc-800">EQUIP THEME</button>`;
                 } else {
-                    btnStr = `<button onclick="buyTheme('${t.id}', ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">BUY FOR $${t.price.toLocaleString()}</button>`;
+                    btnStr = `<button onclick="buyTheme('${t.id}', ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">BUY FOR ${t.price === 0 ? 'FREE' : '$' + t.price.toLocaleString()}</button>`;
                 }
 
                 return `
@@ -2491,7 +2671,7 @@ setTimeout(fetchRealTimeStocks, 500);
                         `}
                     </div>`;
                 }).join('');
-            }
+}
 
             const bankGrid = document.getElementById('bank-grid');
             if(bankGrid) {
@@ -3219,7 +3399,6 @@ setTimeout(fetchRealTimeStocks, 500);
             }
         }
 
-        // Optimized Background Loop (Executes the math for the Global System & Updates UI)
         setInterval(() => {
             state.balance += (state.revenue / 3600);
             STOCKS.forEach(s => {
@@ -3238,13 +3417,11 @@ setTimeout(fetchRealTimeStocks, 500);
                 if(s.history.length > 50) s.history.shift();
             });
             
-            // Step 1: Manage Global Sync Math (Either Algorithmic or True Backend API)
             if (GLOBAL_MARKET_CONFIG.apiUrl) {
                 syncGlobalMarketBackend(); 
             } else if (GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync) {
                 updateGlobalSimulatedMarket();
             } else {
-                // Fallback to local isolated randomizer if the user turns everything off
                 STOCKS.forEach(s => {
                     const oldPrice = s.price;
                     if (!s.isRealTime) {
@@ -3368,7 +3545,6 @@ setTimeout(fetchRealTimeStocks, 500);
             applyMobileMode();
             if (state.isCheater) activateCheatMode();
 
-            // Run global sync once on load immediately 
             if (GLOBAL_MARKET_CONFIG.apiUrl) await syncGlobalMarketBackend();
             else if (GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync) updateGlobalSimulatedMarket();
 
@@ -3377,6 +3553,7 @@ setTimeout(fetchRealTimeStocks, 500);
             updateUI(true);
             filterCollection('jewelry');
             filterRealEstate('house');
+            setThemeTab('dark');
         };
         document.addEventListener('contextmenu', event => event.preventDefault());
     </script>
