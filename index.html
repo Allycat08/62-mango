@@ -1532,7 +1532,7 @@
             ACHIEVEMENTS.forEach(ach => {
                 if (!state.achievements.includes(ach.id) && ach.check()) {
                     state.achievements.push(ach.id);
-                    logToTerminal(`🏆 ACHIEVEMENT UNLOCKED: ${ach.name}`);
+                    logToTerminal(`ACHIEVEMENT UNLOCKED: ${ach.name}`);
                     newlyUnlocked = true;
                 }
             });
