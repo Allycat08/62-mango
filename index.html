@@ -224,7 +224,6 @@
 
         .mobile-mode #stock-modal, .mobile-mode #reset-modal, .mobile-mode #onboarding-modal, .mobile-mode #auction-modal, .mobile-mode #transfer-modal { position: absolute; border-radius: inherit; }
 
-        /* Existing Themes */
         body.theme-light { --bg: #fafafa; --card-bg: #ffffff; --border: #e4e4e7; color: #09090b; }
         body.theme-light .bg-zinc-950, body.theme-light .bg-zinc-900 { background-color: #f4f4f5 !important; }
         body.theme-light .bg-black { background-color: #ffffff !important; }
@@ -320,7 +319,6 @@
         body.theme-abyss .nav-link.active::after { background: #ff0000; box-shadow: 0 0 5px #ff0000; }
         body.theme-abyss .progress-fill { background: #ff0000; box-shadow: 0 0 8px #ff0000; }
 
-        /* NEW THEMES - DARK */
         body.theme-midnight { --bg: #08001a; --card-bg: #11002b; --border: #330066; color: #d9b3ff; }
         body.theme-midnight .glass-card { box-shadow: 0 4px 15px rgba(51, 0, 102, 0.2); }
         body.theme-midnight .bg-zinc-950, body.theme-midnight .bg-zinc-900 { background-color: #1a0040 !important; }
@@ -349,7 +347,6 @@
         body.theme-deepspace .nav-link.active::after { background: #6699ff; }
         body.theme-deepspace .progress-fill { background: #6699ff; }
 
-        /* NEW THEMES - LIGHT */
         body.theme-solar { --bg: #fffbf0; --card-bg: #fff5d6; --border: #ffd666; color: #8c5900; }
         body.theme-solar .bg-zinc-950, body.theme-solar .bg-zinc-900 { background-color: #ffebad !important; }
         body.theme-solar .bg-black { background-color: #fffbf0 !important; }
@@ -411,15 +408,15 @@
                 <div class="stats-badge flex gap-8 bg-zinc-950 border border-zinc-900 rounded-xl p-4 px-8 shadow-sm">
                     <div class="text-center hidden" id="top-bar-balance-container">
                         <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">ACTIVE BALANCE</p>
-                        <p class="text-xl font-bold mono" id="top-balance-display">$0</p>
+                        <p class="text-xl font-bold mono max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="top-balance-display">$0</p>
                     </div>
                     <div class="text-center">
                         <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">NET WORTH</p>
-                        <p class="text-xl font-bold mono" id="nw-display">$0</p>
+                        <p class="text-xl font-bold mono max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="nw-display">$0</p>
                     </div>
                     <div class="text-center border-l border-zinc-800 pl-8">
                         <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">HOURLY REVENUE</p>
-                        <p class="text-xl font-bold mono text-emerald-400" id="hr-display">+$0/hr</p>
+                        <p class="text-xl font-bold mono text-emerald-400 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="hr-display">+$0/hr</p>
                     </div>
                 </div>
             </div>
@@ -459,7 +456,7 @@
                                     <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">ACTIVE BALANCE</p>
                                     <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
                                 </div>
-                                <h2 class="text-4xl font-black mb-1 tracking-tighter" id="balance-display">$0</h2>
+                                <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap" id="balance-display">$0</h2>
                                 <div class="flex items-center gap-2 mt-1">
                                     <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
                                     <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
@@ -479,7 +476,6 @@
                 </div>
 
                 <div class="col-span-12 lg:col-span-8 space-y-6">
-                    <!-- DASHBOARD STOCK WIDGET (LVL 19+) -->
                     <div class="glass-card p-6 hidden" id="dashboard-stock-widget">
                         <div class="flex justify-between items-center mb-4">
                             <div class="flex items-center gap-2">
@@ -555,13 +551,11 @@
 
         <!-- MARKET TAB -->
         <div id="stocks" class="tab-content">
-            <!-- TOP PERFORMERS WIDGET -->
             <div class="glass-card p-6 mb-8">
                 <h3 class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-4">Market Top Performers</h3>
                 <div id="top-performers-grid" class="flex gap-4 overflow-x-auto pb-2 scrollbar-thin"></div>
             </div>
 
-            <!-- TABS & FILTERS -->
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-zinc-900 pb-2">
                 <nav class="flex gap-8 overflow-x-auto whitespace-nowrap">
                     <button onclick="showMarketSubTab('regular')" class="nav-link market-nav-link active" id="btn-market-regular">Regular Stocks</button>
@@ -582,7 +576,6 @@
                 </div>
             </div>
 
-            <!-- SUB-TABS CONTENT -->
             <div id="market-regular" class="market-sub-content active">
                 <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
                 <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
@@ -683,11 +676,11 @@
                         <div class="text-left space-y-4 border-t border-zinc-900 pt-8 mb-8">
                             <div>
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">TOTAL NET WORTH</p>
-                                <p class="text-2xl font-black mono" id="profile-nw">$0</p>
+                                <p class="text-2xl font-black mono max-w-full overflow-hidden text-ellipsis whitespace-nowrap" id="profile-nw">$0</p>
                             </div>
                             <div>
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">CASH ON ACTIVE CARD</p>
-                                <p class="text-lg font-bold mono text-zinc-400" id="profile-balance">$0</p>
+                                <p class="text-lg font-bold mono text-zinc-400 max-w-full overflow-hidden text-ellipsis whitespace-nowrap" id="profile-balance">$0</p>
                             </div>
                         </div>
 
@@ -838,7 +831,7 @@
                 </div>
                 <div class="text-right">
                     <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">CURRENT BID</p>
-                    <p class="text-3xl font-black mono text-emerald-400" id="auction-price">$0</p>
+                    <p class="text-3xl font-black mono text-emerald-400 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="auction-price">$0</p>
                 </div>
             </div>
 
@@ -894,8 +887,12 @@
         };
 
         function formatLargeNumber(num) {
+            if (num > 999999999999999) {
+                return Math.floor(num / 1000000000000).toLocaleString() + "T...";
+            }
             return Math.floor(num).toLocaleString();
         }
+
         const THEMES =[
             { id: 'dark', name: 'Dark Mode', price: 0, class: 'theme-dark', type: 'dark' },
             { id: 'light', name: 'Light Mode', price: 0, class: 'theme-light', type: 'light' },
@@ -1188,82 +1185,84 @@
         });
 
         const REAL_ESTATE =[
-            { id: 're0a', name: "Abandoned Storage Locker", price: 5000, type: 'apartment', img: "https://images.unsplash.com/photo-1614030424754-24d0eacc9abc?w=400" },
-            { id: 're0b', name: "Foreclosed Trailer", price: 15000, type: 'house', img: "https://images.unsplash.com/photo-1563242044-f9ce25ba40c9?w=400" },
-            { id: 're1', name: "Cozy Tiny House", price: 450000, type: 'house', img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400" },
-            { id: 're2', name: "Modern Suburban Home", price: 3200000, type: 'house', img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400" },
-            { id: 're3', name: "Luxury Villa", price: 15000000, type: 'house', img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400" },
-            { id: 're4', name: "Glass Beach Mansion", price: 85000000, type: 'house', img: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400" },
-            { id: 're5', name: "City Center Penthouse", price: 42000000, type: 'apartment', img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=400" },
-            { id: 're6', name: "Private Island Villa", price: 250000000, type: 'house', img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400" }
+            { id: 're0a', name: "Abandoned Storage Locker", price: 5000, type: 'apartment', img: "https://loremflickr.com/400/225/storage,locker?lock=1" },
+            { id: 're0b', name: "Foreclosed Trailer", price: 15000, type: 'house', img: "https://loremflickr.com/400/225/trailer,home?lock=2" },
+            { id: 're1', name: "Cozy Tiny House", price: 450000, type: 'house', img: "https://loremflickr.com/400/225/tiny,house?lock=3" },
+            { id: 're2', name: "Modern Suburban Home", price: 3200000, type: 'house', img: "https://loremflickr.com/400/225/suburban,house?lock=4" },
+            { id: 're3', name: "Luxury Villa", price: 15000000, type: 'house', img: "https://loremflickr.com/400/225/villa?lock=5" },
+            { id: 're4', name: "Glass Beach Mansion", price: 85000000, type: 'house', img: "https://loremflickr.com/400/225/beach,mansion?lock=6" },
+            { id: 're5', name: "City Center Penthouse", price: 42000000, type: 'apartment', img: "https://loremflickr.com/400/225/penthouse?lock=7" },
+            { id: 're6', name: "Private Island Villa", price: 250000000, type: 'house', img: "https://loremflickr.com/400/225/private,island?lock=8" }
         ];
 
         const houseNames =["Log Cabin", "Farmhouse", "Ranch Style", "Colonial", "Townhouse", "Victorian", "Georgian", "Tudor", "Mediterranean", "Craftsman", "Mid-Century", "Prairie", "Contemporary", "Bungalow", "Cape Cod", "Cottage", "French Country", "Spanish Style", "Tudor Revival", "Greek Revival", "Italianate", "Art Deco", "Modernist", "Postmodern", "Minimalist", "A-Frame", "Saltbox", "Shotgun", "Split-Level", "Desert Dome", "Eco House"];
         const aptNames =["Studio Apartment", "Micro Studio", "Loft", "Junior 1-Bed", "1-Bed Apt", "2-Bed Apt", "3-Bed Apt", "4-Bed Apt", "Duplex Apt", "Triplex Apt", "Garden Apt", "Basement Suite", "Walk-up Apt", "Railroad Apt", "High-rise Apt", "Mid-rise Apt", "Low-rise Apt", "Luxury Condo", "Luxury Loft", "Executive Suite", "Corner Penthouse", "Multi-level Penthouse", "Condo with Terrace", "Service Apt", "Corporate Apt", "Micro Apt", "Alcove Studio", "Convertible Studio", "Classic Six", "Floor-Through Apt", "Skyhouse", "Tower Suite"];
 
-        const houseImgs =["https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400", "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400", "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400"];
-        const aptImgs =["https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400", "https://images.unsplash.com/photo-1502672260266-1c1c24240f57?w=400", "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400"];
-
         houseNames.forEach((name, i) => {
-            REAL_ESTATE.push({ id: 're_h_' + i, name: name, price: Math.floor(600000 + (i * 450000) * (1 + i * 0.1)), type: 'house', img: houseImgs[i % houseImgs.length] });
+            REAL_ESTATE.push({ id: 're_h_' + i, name: name, price: Math.floor(600000 + (i * 450000) * (1 + i * 0.1)), type: 'house', img: `https://loremflickr.com/400/225/house,exterior?lock=${i+10}` });
         });
 
         aptNames.forEach((name, i) => {
-            REAL_ESTATE.push({ id: 're_a_' + i, name: name, price: Math.floor(350000 + (i * 350000) * (1 + i * 0.08)), type: 'apartment', img: aptImgs[i % aptImgs.length] });
+            REAL_ESTATE.push({ id: 're_a_' + i, name: name, price: Math.floor(350000 + (i * 350000) * (1 + i * 0.08)), type: 'apartment', img: `https://loremflickr.com/400/225/apartment,building?lock=${i+100}` });
         });
 
         const ASSETS = {
             jewelry:[
-                { id: 'j1', name: "Rolex Submariner", price: 12000, img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400" },
-                { id: 'j2', name: "Diamond Chain", price: 85000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" },
-                { id: 'j3', name: "Patek Philippe Nautilus", price: 145000, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400" },
-                { id: 'j4', name: "Cartier Love Bracelet", price: 25000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" },
-                { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
-                { id: 'j6', name: "Emerald Necklace", price: 850000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" },
-                { id: 'j7', name: "Platinum Signet Ring", price: 1250000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
-                { id: 'j8', name: "Ruby Teardrop Pendant", price: 2500000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" },
-                { id: 'j9', name: "Vercel Sovereign Crown", price: 10000000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" },
-                { id: 'j10', name: "Obsidian Cufflinks", price: 500000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" }
+                { id: 'j1', name: "Rolex Submariner", price: 12000, img: "" },
+                { id: 'j2', name: "Diamond Chain", price: 85000, img: "" },
+                { id: 'j3', name: "Patek Philippe Nautilus", price: 145000, img: "" },
+                { id: 'j4', name: "Cartier Love Bracelet", price: 25000, img: "" },
+                { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "" },
+                { id: 'j6', name: "Emerald Necklace", price: 850000, img: "" },
+                { id: 'j7', name: "Platinum Signet Ring", price: 1250000, img: "" },
+                { id: 'j8', name: "Ruby Teardrop Pendant", price: 2500000, img: "" },
+                { id: 'j9', name: "Vercel Sovereign Crown", price: 10000000, img: "" },
+                { id: 'j10', name: "Obsidian Cufflinks", price: 500000, img: "" }
             ],
             cars:[
-                { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" },
-                { id: 'car2', name: "Ferrari SF90", price: 550000, img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400" },
-                { id: 'car3', name: "Lamborghini Aventador", price: 450000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
-                { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
-                { id: 'car5', name: "Aston Martin Valkyrie", price: 3200000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
-                { id: 'car6', name: "McLaren P1", price: 1500000, img: "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400" },
-                { id: 'car7', name: "Rolls Royce Phantom", price: 450000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
-                { id: 'car8', name: "Koenigsegg Jesko", price: 3500000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
-                { id: 'car9', name: "Pagani Huayra", price: 2800000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
-                { id: 'car10', name: "Bentley Continental", price: 250000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" }
+                { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "" },
+                { id: 'car2', name: "Ferrari SF90", price: 550000, img: "" },
+                { id: 'car3', name: "Lamborghini Aventador", price: 450000, img: "" },
+                { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "" },
+                { id: 'car5', name: "Aston Martin Valkyrie", price: 3200000, img: "" },
+                { id: 'car6', name: "McLaren P1", price: 1500000, img: "" },
+                { id: 'car7', name: "Rolls Royce Phantom", price: 450000, img: "" },
+                { id: 'car8', name: "Koenigsegg Jesko", price: 3500000, img: "" },
+                { id: 'car9', name: "Pagani Huayra", price: 2800000, img: "" },
+                { id: 'car10', name: "Bentley Continental", price: 250000, img: "" }
             ],
             furniture:[
-                { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" },
-                { id: 'f2', name: "Chesterfield Sofa", price: 8500, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" },
-                { id: 'f3', name: "Marble Dining Table", price: 15000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
-                { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
-                { id: 'f5', name: "Mahogany Desk", price: 12000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" },
-                { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400" },
-                { id: 'f7', name: "Antique Grand Piano", price: 120000, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" },
-                { id: 'f8', name: "Gold-leaf Mirror", price: 45000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
-                { id: 'f9', name: "Persian Silk Rug", price: 85000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
-                { id: 'f10', name: "Crystal Dining Set", price: 25000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" }
+                { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "" },
+                { id: 'f2', name: "Chesterfield Sofa", price: 8500, img: "" },
+                { id: 'f3', name: "Marble Dining Table", price: 15000, img: "" },
+                { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "" },
+                { id: 'f5', name: "Mahogany Desk", price: 12000, img: "" },
+                { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "" },
+                { id: 'f7', name: "Antique Grand Piano", price: 120000, img: "" },
+                { id: 'f8', name: "Gold-leaf Mirror", price: 45000, img: "" },
+                { id: 'f9', name: "Persian Silk Rug", price: 85000, img: "" },
+                { id: 'f10', name: "Crystal Dining Set", price: 25000, img: "" }
             ],
             blackMarket:[
-                { id: 'bm1', name: "Ghost Gun Cache", priceBtc: 0.15, img: "https://images.unsplash.com/photo-1595590424283-b8f1784cb2c8?w=400" },
-                { id: 'bm2', name: "Industrial Carcinogens", priceBtc: 0.35, img: "https://images.unsplash.com/photo-1583569584489-31e21b023f5b?w=400" },
-                { id: 'bm3', name: "EMP Devices", priceBtc: 0.75, img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" },
-                { id: 'bm4', name: "Stolen Art Masterpieces", priceBtc: 1.5, img: "https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?w=400" },
-                { id: 'bm5', name: "Military Attack Drones", priceBtc: 3.5, img: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=400" },
-                { id: 'bm6', name: "Zero-Day Exploits DB", priceBtc: 8.0, img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400" },
-                { id: 'bm7', name: "Enriched Uranium Rods", priceBtc: 15.0, img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400" },
-                { id: 'bm8', name: "Offshore Shell Company", priceBtc: 40.0, img: "https://images.unsplash.com/photo-1611016146313-263a9486df18?w=400" },
-                { id: 'bm9', name: "Cyber-Warfare Suite", priceBtc: 25.0, img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400" },
-                { id: 'bm10', name: "Classified Govt Docs", priceBtc: 55.0, img: "https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?w=400" },
-                { id: 'bm11', name: "Orbital Strike Code", priceBtc: 150.0, img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" },
-                { id: 'bm12', name: "Synthetic Virus Strain", priceBtc: 300.0, img: "https://images.unsplash.com/photo-1583569584489-31e21b023f5b?w=400" }
+                { id: 'bm1', name: "Ghost Gun Cache", priceBtc: 0.15, img: "" },
+                { id: 'bm2', name: "Industrial Carcinogens", priceBtc: 0.35, img: "" },
+                { id: 'bm3', name: "EMP Devices", priceBtc: 0.75, img: "" },
+                { id: 'bm4', name: "Stolen Art Masterpieces", priceBtc: 1.5, img: "" },
+                { id: 'bm5', name: "Military Attack Drones", priceBtc: 3.5, img: "" },
+                { id: 'bm6', name: "Zero-Day Exploits DB", priceBtc: 8.0, img: "" },
+                { id: 'bm7', name: "Enriched Uranium Rods", priceBtc: 15.0, img: "" },
+                { id: 'bm8', name: "Offshore Shell Company", priceBtc: 40.0, img: "" },
+                { id: 'bm9', name: "Cyber-Warfare Suite", priceBtc: 25.0, img: "" },
+                { id: 'bm10', name: "Classified Govt Docs", priceBtc: 55.0, img: "" },
+                { id: 'bm11', name: "Orbital Strike Code", priceBtc: 150.0, img: "" },
+                { id: 'bm12', name: "Synthetic Virus Strain", priceBtc: 300.0, img: "" }
             ]
         };
+
+        ASSETS.jewelry.forEach((item, i) => item.img = `https://loremflickr.com/400/225/jewelry,watch?lock=${i+200}`);
+        ASSETS.cars.forEach((item, i) => item.img = `https://loremflickr.com/400/225/sportscar?lock=${i+300}`);
+        ASSETS.furniture.forEach((item, i) => item.img = `https://loremflickr.com/400/225/luxury,furniture?lock=${i+400}`);
+        ASSETS.blackMarket.forEach((item, i) => item.img = `https://loremflickr.com/400/225/box,metal?lock=${i+500}`);
 
         const getShareCounts = () => Object.values(state.shares || {});
         const getCardBals = () => Object.values(state.cardBalances || {});
@@ -1273,7 +1272,6 @@
         const getOutletCounts = () => COMPANIES.map(c => state.compOutlets[c.id] || (state.ownedAssets.includes(c.id) ? 1 : 0));
 
         const ACHIEVEMENTS = [
-            // NET WORTH
             { id: 'ach_nw_0', name: 'Hello World', desc: 'First time playing', check: () => true },
             { id: 'ach_nw_1', name: 'STACK', desc: 'Reach $1,000 Net Worth', check: () => state.netWorth >= 1000 },
             { id: 'ach_nw_2', name: 'DOUBLE STACK', desc: 'Reach $2,000 Net Worth', check: () => state.netWorth >= 2000 },
@@ -1294,14 +1292,12 @@
             { id: 'ach_nw_17', name: 'NONILLIONAIRE', desc: 'Reach $1 Nonillion Net Worth', check: () => state.netWorth >= 1e30 },
             { id: 'ach_nw_18', name: 'DECILLIONAIRE', desc: 'Reach $1 Decillion Net Worth', check: () => state.netWorth >= 1e33 },
 
-            // BUYING COMPANIES
             { id: 'ach_co_1', name: 'Startup Founder', desc: 'Buy 1 Company', check: () => getCompCount() >= 1 },
             { id: 'ach_co_2', name: 'Growing Enterprise', desc: 'Buy 2 Companies', check: () => getCompCount() >= 2 },
             { id: 'ach_co_5', name: 'Business Group', desc: 'Buy 5 Companies', check: () => getCompCount() >= 5 },
             { id: 'ach_co_10', name: 'Corporate Tycoon', desc: 'Buy 10 Companies', check: () => getCompCount() >= 10 },
             { id: 'ach_co_all', name: 'Monopoly Mind', desc: 'Buy ALL Companies', check: () => getCompCount() >= COMPANIES.length },
 
-            // REAL ESTATE
             { id: 'ach_re_1', name: 'First Keys', desc: 'Buy 1 Property', check: () => getRECount() >= 1 },
             { id: 'ach_re_2', name: 'Landlord', desc: 'Buy 2 Properties', check: () => getRECount() >= 2 },
             { id: 'ach_re_5', name: 'Property Manager', desc: 'Buy 5 Properties', check: () => getRECount() >= 5 },
@@ -1309,7 +1305,6 @@
             { id: 'ach_re_20', name: 'Housing Crisis', desc: 'Buy 20 Properties', check: () => getRECount() >= 20 },
             { id: 'ach_re_all', name: 'Global Landlord', desc: 'Buy ALL Properties', check: () => getRECount() >= REAL_ESTATE.length },
 
-            // SELLING COMPANIES
             { id: 'ach_sell_30k', name: 'Flipping a Profit', desc: 'Earn 30,000 from selling companies', check: () => state.totalCompanySellEarnings >= 30000 },
             { id: 'ach_sell_50k', name: 'Serial Entrepreneur', desc: 'Earn 50,000 from selling companies', check: () => state.totalCompanySellEarnings >= 50000 },
             { id: 'ach_sell_250k', name: 'Quarter-Mil Flip', desc: 'Earn 250,000 from selling companies', check: () => state.totalCompanySellEarnings >= 250000 },
@@ -1324,7 +1319,6 @@
             { id: 'ach_sell_250b', name: 'Economy Mover', desc: 'Earn 250,000,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 250000000000 },
             { id: 'ach_sell_1t', name: 'Trillion Dollar Exit', desc: 'Earn 1,000,000,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 1000000000000 },
 
-            // STOCK SHARES (ANY 1 STOCK)
             { id: 'ach_stk_1', name: 'Dipping Toes', desc: 'Bought 1 share of any stock', check: () => getShareCounts().some(s => s >= 1) },
             { id: 'ach_stk_2', name: 'Double Down', desc: 'Bought 2 shares of any stock', check: () => getShareCounts().some(s => s >= 2) },
             { id: 'ach_stk_3', name: 'Three\'s Company', desc: 'Bought 3 shares of any stock', check: () => getShareCounts().some(s => s >= 3) },
@@ -1336,25 +1330,21 @@
             { id: 'ach_stk_1b', name: 'Billionaire Board Member', desc: 'Bought 1,000,000,000 shares of any stock', check: () => getShareCounts().some(s => s >= 1000000000) },
             { id: 'ach_stk_1t', name: 'Trillionaire Majority', desc: 'Bought 1,000,000,000,000 shares of any stock', check: () => getShareCounts().some(s => s >= 1000000000000) },
 
-            // STOCK SHARES (3 STOCKS)
             { id: 'ach_stk_3x_2', name: 'Diversifying', desc: 'Bought 2 shares of 3 stocks', check: () => getShareCounts().filter(s => s >= 2).length >= 3 },
             { id: 'ach_stk_3x_1k', name: 'Solid Portfolio', desc: 'Bought 1,000 shares of 3 stocks', check: () => getShareCounts().filter(s => s >= 1000).length >= 3 },
             { id: 'ach_stk_3x_1b', name: 'Market Maker', desc: 'Bought 1,000,000,000 shares of 3 stocks', check: () => getShareCounts().filter(s => s >= 1000000000).length >= 3 },
             { id: 'ach_stk_3x_1t', name: 'Index Fund Master', desc: 'Bought 1,000,000,000,000 shares of 3 stocks', check: () => getShareCounts().filter(s => s >= 1000000000000).length >= 3 },
 
-            // STOCK SHARES (20 STOCKS)
             { id: 'ach_stk_20x_2', name: 'Broad Market', desc: 'Bought 2 shares of 20 stocks', check: () => getShareCounts().filter(s => s >= 2).length >= 20 },
             { id: 'ach_stk_20x_1k', name: 'Hedge Fund Manager', desc: 'Bought 1,000 shares of 20 stocks', check: () => getShareCounts().filter(s => s >= 1000).length >= 20 },
             { id: 'ach_stk_20x_1b', name: 'Global Asset Manager', desc: 'Bought 1,000,000,000 shares of 20 stocks', check: () => getShareCounts().filter(s => s >= 1000000000).length >= 20 },
             { id: 'ach_stk_20x_1t', name: 'Wall Street Sovereign', desc: 'Bought 1,000,000,000,000 shares of 20 stocks', check: () => getShareCounts().filter(s => s >= 1000000000000).length >= 20 },
 
-            // STOCK SHARES (ALL STOCKS)
             { id: 'ach_stk_all_2', name: 'Own The Market', desc: 'Bought 2 shares of all stocks', check: () => getShareCounts().filter(s => s >= 2).length >= STOCKS.length },
             { id: 'ach_stk_all_1k', name: 'Institutional Investor', desc: 'Bought 1,000 shares of all stocks', check: () => getShareCounts().filter(s => s >= 1000).length >= STOCKS.length },
             { id: 'ach_stk_all_1b', name: 'BlackRock Rival', desc: 'Bought 1,000,000,000 shares of all stocks', check: () => getShareCounts().filter(s => s >= 1000000000).length >= STOCKS.length },
             { id: 'ach_stk_all_1t', name: 'Omnipresent Entity', desc: 'SPECIAL AWARD: Bought 1,000,000,000,000 shares of all stocks', check: () => getShareCounts().filter(s => s >= 1000000000000).length >= STOCKS.length },
 
-            // COMPANY OUTLETS
             { id: 'ach_out_1_1', name: 'First Branch', desc: '1 outlet in any company', check: () => getOutletCounts().some(o => o >= 1) },
             { id: 'ach_out_1_2', name: 'Expansion', desc: '2 outlets in any company', check: () => getOutletCounts().some(o => o >= 2) },
             { id: 'ach_out_1_3', name: 'Growing Reach', desc: '3 outlets in any company', check: () => getOutletCounts().some(o => o >= 3) },
@@ -1367,16 +1357,13 @@
             { id: 'ach_out_20_60', name: 'National Conglomerate', desc: '60 outlets (Max) in 20 companies', check: () => getOutletCounts().filter(o => o >= 60).length >= 20 },
             { id: 'ach_out_all_60', name: 'Global Megacorp', desc: '60 outlets (Max) in ALL companies', check: () => getOutletCounts().filter(o => o >= 60).length >= COMPANIES.length },
 
-            // CARDS
             { id: 'ach_card_inf', name: 'Infinite Liquidity', desc: 'Balance of over 1,000,000,000,000 on EACH card', check: () => state.ownedCards.length === CARD_TIERS.length && getCardBals().length === CARD_TIERS.length && getCardBals().every(b => b >= 1000000000000) },
 
-            // SECRET ACHIEVEMENTS
             { id: 'ach_sec_whoops', name: 'Whoops', desc: 'Go Bankrupt (Balance < $1 after level 3)', check: () => state.level >= 3 && state.balance < 1 },
             { id: 'ach_sec_hacker', name: 'Hacker Man', desc: 'Use the Dev Console', check: () => state.isCheater },
             { id: 'ach_sec_nightowl', name: 'Night Owl', desc: 'Play between 2 AM and 4 AM', check: () => new Date().getHours() >= 2 && new Date().getHours() <= 4 },
             { id: 'ach_sec_clicker', name: 'Clicker', desc: 'Click the card 1,000 times', check: () => state.cardClicks >= 1000 },
 
-            // COLLECTIONS
             { id: 'ach_coll_5', name: 'Collector', desc: 'Own 5 Collection Items', check: () => getCollCount() >= 5 },
             { id: 'ach_coll_20', name: 'Curator', desc: 'Own 20 Collection Items', check: () => getCollCount() >= 20 }
         ];
@@ -1505,6 +1492,51 @@
             { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length }
         ];
 
+        let sysAudioCtx = null;
+        function playSysSound(type) {
+            try {
+                if (!sysAudioCtx) {
+                    sysAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                }
+                if (sysAudioCtx.state === 'suspended') sysAudioCtx.resume();
+                if (sysAudioCtx.state === 'suspended') return;
+
+                const osc = sysAudioCtx.createOscillator();
+                const gain = sysAudioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(sysAudioCtx.destination);
+                
+                const t = sysAudioCtx.currentTime;
+                if (type === 'hover') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(800, t);
+                    gain.gain.setValueAtTime(0.015, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+                    osc.start(t);
+                    osc.stop(t + 0.05);
+                } else if (type === 'click') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(500, t);
+                    osc.frequency.exponentialRampToValueAtTime(300, t + 0.05);
+                    gain.gain.setValueAtTime(0.05, t);
+                    gain.gain.exponentialRampToValueAtTime(0.001, t + 0.05);
+                    osc.start(t);
+                    osc.stop(t + 0.05);
+                }
+            } catch(e) {}
+        }
+
+        document.addEventListener('mouseover', (e) => {
+            if (e.target.closest('button') || e.target.closest('.nav-link') || e.target.closest('.debit-card') || e.target.closest('.re-filter-btn') || e.target.closest('.coll-filter-btn')) {
+                playSysSound('hover');
+            }
+        });
+        document.addEventListener('mousedown', (e) => {
+            if (e.target.closest('button') || e.target.closest('.nav-link') || e.target.closest('.debit-card') || e.target.closest('.re-filter-btn') || e.target.closest('.coll-filter-btn')) {
+                playSysSound('click');
+            }
+        });
+
         function updateGlobalSimulatedMarket() {
             const now = Date.now();
             const currentSec = Math.floor(now / 1000);
@@ -1527,13 +1559,10 @@
                     const noiseSeed = Math.sin(t * 10.1 + hash) * 10000;
                     const noise = (noiseSeed - Math.floor(noiseSeed) - 0.5) * 0.1;
                     
-                    const mult = Math.max(0.05, 1 + ((wave1 + wave2 + wave3 + noise) * volatility));
+                    const mult = Math.max(0.15, 1 + ((wave1 + wave2 + wave3 + noise) * volatility));
+                    const minP = s.basePrice * 0.15;
                     let calcPrice = parseFloat((s.basePrice * mult).toFixed(2));
-                    
-                    if (calcPrice <= 1.5) {
-                        calcPrice = (s.basePrice || 10) * (0.5 + Math.random());
-                        if (i === 0) s.trend = Math.abs(s.trend) + 5;
-                    }
+                    if (calcPrice < minP) calcPrice = minP + Math.random() * (s.basePrice * 0.1);
                     
                     if (i === 0) {
                         s.price = calcPrice;
@@ -1856,8 +1885,10 @@
         function calcRealEstateInvestment(re, id) {
             let inv = re.price;
             const renLevel = state.renovations[id] || 0;
-            for (let i = 0; i < renLevel; i++) inv += Math.floor(re.price * 0.15 * (i + 1));
-            return inv;
+            if (renLevel > 0) {
+                inv += re.price * 0.15 * (renLevel * (renLevel + 1)) / 2;
+            }
+            return Math.floor(inv);
         }
 
         function calculateNetWorth() {
@@ -2107,41 +2138,70 @@
             }
         }
 
+        let isAssetMapsInit = false;
+        let cMap = new Map();
+        let rMap = new Map();
+
         function fastTickUpdate() {
+            if (!isAssetMapsInit) {
+                COMPANIES.forEach(c => cMap.set(c.id, c));
+                REAL_ESTATE.forEach(r => rMap.set(r.id, r));
+                isAssetMapsInit = true;
+            }
+            
             calculateNetWorth();
 
             let rev = 0; let bills = 0;
-            state.ownedAssets.forEach(id => {
-                const c = COMPANIES.find(x => x.id === id);
+            const tFleet = state.taxiFleet;
+            const multP3 = [1, 3, 9, 27, 81];
+            const multP2_5 = [1, 2.5, 6.25, 15.625, 39.0625];
+
+            for (let i = 0; i < state.ownedAssets.length; i++) {
+                const id = state.ownedAssets[i];
+                const c = cMap.get(id);
                 if (c) {
                     let itemRev = 0; let itemBill = c.bill || 0;
                     const tierIdx = state.compTiers[id] || 0;
                     const outlets = state.compOutlets[id] || 1;
-                    itemRev += (c.rev * Math.pow(3, tierIdx)) * outlets;
-                    itemBill = (c.bill * Math.pow(2.5, tierIdx)) * outlets;
+                    
+                    itemRev += (c.rev * (multP3[tierIdx] || Math.pow(3, tierIdx))) * outlets;
+                    itemBill = (c.bill * (multP2_5[tierIdx] || Math.pow(2.5, tierIdx))) * outlets;
+                    
                     if (c.customFleet) {
-                        itemRev += (state.taxiFleet.cars * 17500) + (state.taxiFleet.busses * 140000) + (state.taxiFleet.artBusses * 475000);
-                        itemBill += (state.taxiFleet.cars * 500) + (state.taxiFleet.busses * 4000) + (state.taxiFleet.artBusses * 15000);
+                        itemRev += (tFleet.cars * 17500) + (tFleet.busses * 140000) + (tFleet.artBusses * 475000);
+                        itemBill += (tFleet.cars * 500) + (tFleet.busses * 4000) + (tFleet.artBusses * 15000);
                     } 
-                    if (c.customUpgrades) {
-                        c.customUpgrades.forEach(u => {
-                            const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
-                            itemRev += count * u.rev;
-                            itemBill += count * (u.bill || 0);
-                        });
+                    if (c.customUpgrades && state.compCustomUpgrades[id]) {
+                        const upgs = state.compCustomUpgrades[id];
+                        for (let j = 0; j < c.customUpgrades.length; j++) {
+                            const u = c.customUpgrades[j];
+                            const count = upgs[u.id] || 0;
+                            if (count > 0) {
+                                itemRev += count * u.rev;
+                                itemBill += count * (u.bill || 0);
+                            }
+                        }
                     }
                     rev += itemRev; bills += itemBill;
+                } else {
+                    const re = rMap.get(id);
+                    if (re && state.renting[id]) {
+                        let inv = re.price;
+                        const renLevel = state.renovations[id] || 0;
+                        if (renLevel > 0) {
+                            inv += re.price * 0.15 * (renLevel * (renLevel + 1)) / 2;
+                        }
+                        rev += Math.floor(inv) * 0.05; 
+                    }
                 }
-                const re = REAL_ESTATE.find(x => x.id === id);
-                if (re && state.renting[id]) {
-                    const investment = calcRealEstateInvestment(re, id);
-                    rev += investment * 0.05; 
-                }
-            });
+            }
 
             state.revenue = (rev - bills) * getDegreeMult();
 
-            setUI('balance-display', '$' + formatLargeNumber(state.balance));
+            setUI('balance-display', formatLargeNumber(state.balance));
+            const bbDisp = document.getElementById('balance-display');
+            if(bbDisp && !bbDisp.innerText.startsWith('$')) bbDisp.innerText = '$' + bbDisp.innerText;
+            
             setUI('top-balance-display', '$' + formatLargeNumber(state.balance));
             setUI('profile-balance', '$' + formatLargeNumber(state.balance));
             setUI('nw-display', '$' + formatLargeNumber(state.netWorth));
@@ -2350,7 +2410,7 @@
                     <div class="debit-card p-4 flex flex-col justify-between shadow-xl ${card.class}" style="aspect-ratio: 1.58/1; border-radius: 12px; border-width: 1px;">
                         <div>
                             <p class="text-[8px] text-white/50 uppercase font-bold tracking-widest mb-1">${card.name}</p>
-                            <p class="text-sm font-black text-white truncate">$${formatLargeNumber(bal)}</p>
+                            <p class="text-sm font-black text-white truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap">$${formatLargeNumber(bal)}</p>
                         </div>
                         <div class="flex justify-between items-end">
                             <div class="card-chip w-6 h-4 rounded"></div>
@@ -2479,7 +2539,8 @@
             if (modal) modal.style.display = 'none';
         }
 
-        function openResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'flex'; }
+        function openResetModal
+        () { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'flex'; }
         function closeResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'none'; }
         function confirmReset() { localStorage.removeItem('vercel_empire_v12_favs'); window.location.reload(); }
 
@@ -2520,7 +2581,7 @@
                 if (state.equippedCardId === fromId) state.balance = state.cardBalances[fromId];
                 if (state.equippedCardId === toId) state.balance = state.cardBalances[toId];
 
-                logToTerminal(`TRANSFERRED $${amt.toLocaleString()} FROM CARD ${fromId} TO ${toId}`);
+                logToTerminal(`TRANSFERRED $${formatLargeNumber(amt)} FROM CARD ${fromId} TO ${toId}`);
                 closeTransferModal();
                 updateUI(true);
                 saveGame();
@@ -2559,16 +2620,14 @@
 
             delete state.compTiers[id]; delete state.compOutlets[id];
 
-            logToTerminal(`SOLD COMPANY: ${c.name} FOR $${returnAmount.toLocaleString()} (${compMult * 100}% OF INVESTMENTS)`);
+            logToTerminal(`SOLD COMPANY: ${c.name} FOR $${formatLargeNumber(returnAmount)} (${compMult * 100}% OF INVESTMENTS)`);
             updateUI(true);
             saveGame();
         }
 
         function sellProperty(id) {
             const re = REAL_ESTATE.find(x => x.id === id);
-            if (!re || !state.ownedAssets
-
-.includes(id)) return;
+            if (!re || !state.ownedAssets.includes(id)) return;
 
             const investment = calcRealEstateInvestment(re, id);
             const returnAmount = Math.floor(investment * 0.9);
@@ -2579,7 +2638,7 @@
             if (state.renovations[id]) delete state.renovations[id];
             if (state.renting[id]) delete state.renting[id];
 
-            logToTerminal(`SOLD PROPERTY: ${re.name} FOR $${returnAmount.toLocaleString()} (90% OF INVESTMENTS)`);
+            logToTerminal(`SOLD PROPERTY: ${re.name} FOR $${formatLargeNumber(returnAmount)} (90% OF INVESTMENTS)`);
             updateUI(true);
             saveGame();
         }
@@ -2702,11 +2761,11 @@
                         <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
                             <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''} ${tierIdx >= 4 ? '' : `data-cost="${nextTierPrice}"`}>
                                 <span class="mb-0.5">${tierIdx >= 4 ? 'MAX TIER' : 'EVOLVE'}</span>
-                                <span class="text-[8px] opacity-60">${tierIdx >= 4 ? '' : '$' + nextTierPrice.toLocaleString()}</span>
+                                <span class="text-[8px] opacity-60">${tierIdx >= 4 ? '' : '$' + formatLargeNumber(nextTierPrice)}</span>
                             </button>
                             <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextOutletPrice || outlets >= 60 ? 'disabled' : ''} ${outlets >= 60 ? '' : `data-cost="${nextOutletPrice}"`}>
                                 <span class="mb-0.5">${outlets >= 60 ? 'MAX OUTLETS' : '+1 OUTLET'}</span>
-                                <span class="text-[8px] opacity-60">${outlets >= 60 ? '' : '$' + nextOutletPrice.toLocaleString()}</span>
+                                <span class="text-[8px] opacity-60">${outlets >= 60 ? '' : '$' + formatLargeNumber(nextOutletPrice)}</span>
                             </button>
                         </div>`;
 
@@ -2751,9 +2810,9 @@
                                     return `<button onclick="buyCustomUpgrade('${c.id}', '${u.id}')" class="btn-buy text-left px-3 py-2 relative overflow-hidden group" ${state.balance < currentPrice || count >= u.max ? 'disabled' : ''} ${count >= u.max ? '' : `data-cost="${currentPrice}"`}>
                                         <div class="flex justify-between items-center mb-0.5 relative z-10">
                                             <span class="text-[9px] font-bold text-white group-hover:text-black transition-colors">${u.name} <span class="text-zinc-500 font-normal">(${count}/${u.max})</span></span>
-                                            <span class="text-[9px] font-mono ${count >= u.max ? 'text-emerald-500' : ''}">${count >= u.max ? 'MAXED' : '$' + currentPrice.toLocaleString()}</span>
+                                            <span class="text-[9px] font-mono ${count >= u.max ? 'text-emerald-500' : ''}">${count >= u.max ? 'MAXED' : '$' + formatLargeNumber(currentPrice)}</span>
                                         </div>
-                                        <div class="text-[8px] text-emerald-500 relative z-10 group-hover:text-emerald-700 transition-colors">+ $${u.rev.toLocaleString()}/hr</div>
+                                        <div class="text-[8px] text-emerald-500 relative z-10 group-hover:text-emerald-700 transition-colors">+ $${formatLargeNumber(u.rev)}/hr</div>
                                         <div class="absolute bottom-0 left-0 h-[2px] bg-emerald-500 transition-all z-0" style="width: ${(count/u.max)*100}%"></div>
                                     </button>`;
                                 }).join('')}
@@ -2777,13 +2836,13 @@
                             <div class="flex justify-between items-start mb-2">
                                 <div>
                                     <h3 class="font-black uppercase text-xs tracking-tight">${COMPANY_TIERS[tierIdx] + ' '}${c.name}</h3>
-                                    <p class="text-[10px] font-bold ${profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">${profit >= 0 ? '+' : ''}$${Math.floor(profit).toLocaleString()}/HR PROFIT</p>
-                                    <p class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">REV: $${Math.floor(itemRev).toLocaleString()} | BILLS: $${Math.floor(itemBill).toLocaleString()}</p>
+                                    <p class="text-[10px] font-bold ${profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">${profit >= 0 ? '+' : ''}$${formatLargeNumber(Math.floor(profit))}/HR PROFIT</p>
+                                    <p class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">REV: $${formatLargeNumber(Math.floor(itemRev))} | BILLS: $${formatLargeNumber(Math.floor(itemBill))}</p>
                                 </div>
                                 <span class="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">${outlets} OUTLETS</span>
                             </div>
                             <div class="flex justify-between items-center mb-1">
-                                <p class="text-[11px] font-mono text-zinc-400">$${c.price.toLocaleString()}</p>
+                                <p class="text-[11px] font-mono text-zinc-400">$${formatLargeNumber(c.price)}</p>
                                 ${isOwned ? `<span class="text-[9px] text-zinc-500 font-bold px-2 py-0.5 bg-zinc-900 border border-zinc-800 rounded">PORTFOLIO</span>` : ''}
                             </div>
                         </div>
@@ -2810,11 +2869,11 @@
                                 <p class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mb-2">REAL ESTATE ${renLevel > 0 ? `• Lvl ${renLevel}` : ''}</p>
                             </div>
                         </div>
-                        <p class="text-[12px] font-mono text-white mb-4">$${re.price.toLocaleString()}</p>
+                        <p class="text-[12px] font-mono text-white mb-4">$${formatLargeNumber(re.price)}</p>
                         ${!isOwned ? `<button onclick="buyAsset('${re.id}', ${re.price})" class="btn-buy mt-auto" ${state.balance < re.price ? 'disabled' : ''} data-cost="${re.price}">PURCHASE PROPERTY</button>` : `
                             <div class="space-y-2 mt-auto">
                                 <button onclick="toggleRental('${re.id}')" class="btn-buy ${isRenting ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-zinc-800 text-white'}">${isRenting ? 'STOP RENTAL' : 'LIST FOR RENT'}</button>
-                                <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy bg-zinc-900 border border-zinc-800" ${state.balance < renCost ? 'disabled' : ''} data-cost="${renCost}">RENOVATE ($${renCost.toLocaleString()})</button>
+                                <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy bg-zinc-900 border border-zinc-800" ${state.balance < renCost ? 'disabled' : ''} data-cost="${renCost}">RENOVATE ($${formatLargeNumber(renCost)})</button>
                                 <button onclick="sellProperty('${re.id}')" class="btn-buy !bg-red-950/30 !text-red-500 !border-red-900/50 hover:!bg-red-500 hover:!text-white transition-colors">SELL PROPERTY</button>
                             </div>
                         `}
@@ -2834,7 +2893,7 @@
                     } else if (isOwned) {
                         btnStr = `<button onclick="equipCard(${t.id})" class="btn-buy bg-zinc-800 text-white">EQUIP CARD</button>`;
                     } else {
-                        btnStr = `<button onclick="buyCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">$${t.price.toLocaleString()}</button>`;
+                        btnStr = `<button onclick="buyCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">$${formatLargeNumber(t.price)}</button>`;
                     }
 
                     return `
@@ -2864,7 +2923,7 @@
                         <div>
                             <img src="${i.img}" class="item-img mb-4">
                             <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
-                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${i.price.toLocaleString()}</p>
+                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${formatLargeNumber(i.price)}</p>
                         </div>
                         ${actionHtml}
                     </div>`;
@@ -3647,13 +3706,16 @@
                     if (!s.isRealTime) {
                         const volt = s.type === 'crypto' ? 0.02 : 0.008;
                         s.trend += (Math.random() - 0.5) * 0.2;
-                        let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
-                        s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
                         
-                        if (s.price <= 1.5) {
-                            s.price = (s.basePrice || 10) * (0.5 + Math.random());
-                            s.trend = Math.abs(s.trend) + 5;
+                        const minAllowed = s.basePrice * 0.15;
+                        let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
+                        
+                        if (newPrice < minAllowed) {
+                            newPrice = minAllowed + Math.random() * (s.basePrice * 0.1);
+                            s.trend = Math.abs(s.trend) + 1.0; 
                         }
+                        
+                        s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
                     }
                     const open = oldPrice;
                     const close = s.price;
