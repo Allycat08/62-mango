@@ -891,11 +891,8 @@
         };
 
         function formatLargeNumber(num) {
-            if (num >= 1e15) return (num / 1e15).toFixed(2) + 'Qu';
-            if (num >= 1e12) return (num / 1e12).toFixed(2) + 't';
             return Math.floor(num).toLocaleString();
         }
-
         const THEMES =[
             { id: 'dark', name: 'Dark Mode', price: 0, class: 'theme-dark', type: 'dark' },
             { id: 'light', name: 'Light Mode', price: 0, class: 'theme-light', type: 'light' },
