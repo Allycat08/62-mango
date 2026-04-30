@@ -1,3 +1,10 @@
+Here is the completely updated code with the massive new achievement list, new
+themes, new collection items, and the peer-to-peer (P2P) trading system
+integrated directly into the Trading tab.
+
+I've also updated the logic in sellCompany to properly track your lifetime
+company sale earnings so the new selling achievements trigger correctly.
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -224,7 +231,7 @@
 
         .mobile-mode #stock-modal, .mobile-mode #reset-modal, .mobile-mode #onboarding-modal, .mobile-mode #auction-modal, .mobile-mode #transfer-modal { position: absolute; border-radius: inherit; }
 
-        /* Existing Theme Overrides */
+        /* Existing Themes */
         body.theme-light { --bg: #fafafa; --card-bg: #ffffff; --border: #e4e4e7; color: #09090b; }
         body.theme-light .bg-zinc-950, body.theme-light .bg-zinc-900 { background-color: #f4f4f5 !important; }
         body.theme-light .bg-black { background-color: #ffffff !important; }
@@ -241,7 +248,6 @@
         body.theme-light path[fill="white"] { fill: #09090b; }
         body.theme-light input, body.theme-light select { background-color: #ffffff !important; border-color: #e4e4e7 !important; color: #09090b !important; }
         body.theme-light .chart-container { background: #ffffff !important; border-color: #e4e4e7 !important; }
-        body.theme-light #stock-modal, body.theme-light #reset-modal, body.theme-light #onboarding-modal, body.theme-light #auction-modal, body.theme-light #transfer-modal { background: rgba(255,255,255,0.9); }
 
         body.theme-corporate { --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; color: #0f172a; }
         body.theme-corporate .glass-card { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
@@ -249,17 +255,9 @@
         body.theme-corporate .bg-black { background-color: #ffffff !important; }
         body.theme-corporate .border-zinc-900, body.theme-corporate .border-zinc-800 { border-color: #e2e8f0 !important; }
         body.theme-corporate .text-white { color: #0f172a !important; }
-        body.theme-corporate .text-zinc-500, body.theme-corporate .text-zinc-600, body.theme-corporate .text-zinc-400 { color: #64748b !important; }
-        body.theme-corporate .nav-link { color: #94a3b8; }
-        body.theme-corporate .nav-link.active { color: #0f172a; }
+        body.theme-corporate .text-zinc-500 { color: #64748b !important; }
         body.theme-corporate .nav-link.active::after { background: #3b82f6; }
-        body.theme-corporate .btn-buy { background: #ffffff; color: #0f172a; border-color: #e2e8f0; }
-        body.theme-corporate .btn-buy:hover:not(:disabled) { background: #0f172a; color: #ffffff; }
-        body.theme-corporate .progress-bg { background: #e2e8f0; }
         body.theme-corporate .progress-fill { background: #3b82f6; }
-        body.theme-corporate path[fill="white"] { fill: #0f172a; }
-        body.theme-corporate input, body.theme-corporate select { background-color: #ffffff !important; border-color: #e2e8f0 !important; color: #0f172a !important; }
-        body.theme-corporate .chart-container { background: #ffffff !important; border-color: #e2e8f0 !important; }
 
         body.theme-arctic { --bg: #f0f9ff; --card-bg: #ffffff; --border: #bae6fd; color: #0c4a6e; }
         body.theme-arctic .glass-card { box-shadow: 0 4px 10px rgba(186,230,253,0.3); }
@@ -267,17 +265,9 @@
         body.theme-arctic .bg-black { background-color: #ffffff !important; }
         body.theme-arctic .border-zinc-900, body.theme-arctic .border-zinc-800 { border-color: #bae6fd !important; }
         body.theme-arctic .text-white { color: #0c4a6e !important; }
-        body.theme-arctic .text-zinc-500, body.theme-arctic .text-zinc-600, body.theme-arctic .text-zinc-400 { color: #0284c7 !important; }
-        body.theme-arctic .nav-link { color: #7dd3fc; }
-        body.theme-arctic .nav-link.active { color: #0c4a6e; }
+        body.theme-arctic .text-zinc-500 { color: #0284c7 !important; }
         body.theme-arctic .nav-link.active::after { background: #0284c7; }
-        body.theme-arctic .btn-buy { background: #ffffff; color: #0c4a6e; border-color: #bae6fd; }
-        body.theme-arctic .btn-buy:hover:not(:disabled) { background: #0c4a6e; color: #ffffff; }
-        body.theme-arctic .progress-bg { background: #bae6fd; }
         body.theme-arctic .progress-fill { background: #0284c7; }
-        body.theme-arctic path[fill="white"] { fill: #0c4a6e; }
-        body.theme-arctic input, body.theme-arctic select { background-color: #ffffff !important; border-color: #bae6fd !important; color: #0c4a6e !important; }
-        body.theme-arctic .chart-container { background: #ffffff !important; border-color: #bae6fd !important; }
 
         body.theme-pastel { --bg: #fffbf0; --card-bg: #ffffff; --border: #fef08a; color: #854d0e; }
         body.theme-pastel .glass-card { box-shadow: 0 4px 12px rgba(254,240,138,0.2); }
@@ -285,17 +275,9 @@
         body.theme-pastel .bg-black { background-color: #ffffff !important; }
         body.theme-pastel .border-zinc-900, body.theme-pastel .border-zinc-800 { border-color: #fef08a !important; }
         body.theme-pastel .text-white { color: #854d0e !important; }
-        body.theme-pastel .text-zinc-500, body.theme-pastel .text-zinc-600, body.theme-pastel .text-zinc-400 { color: #ca8a04 !important; }
-        body.theme-pastel .nav-link { color: #facc15; }
-        body.theme-pastel .nav-link.active { color: #854d0e; }
+        body.theme-pastel .text-zinc-500 { color: #ca8a04 !important; }
         body.theme-pastel .nav-link.active::after { background: #eab308; }
-        body.theme-pastel .btn-buy { background: #ffffff; color: #854d0e; border-color: #fef08a; }
-        body.theme-pastel .btn-buy:hover:not(:disabled) { background: #854d0e; color: #ffffff; }
-        body.theme-pastel .progress-bg { background: #fef08a; }
         body.theme-pastel .progress-fill { background: #ca8a04; }
-        body.theme-pastel path[fill="white"] { fill: #854d0e; }
-        body.theme-pastel input, body.theme-pastel select { background-color: #ffffff !important; border-color: #fef08a !important; color: #854d0e !important; }
-        body.theme-pastel .chart-container { background: #ffffff !important; border-color: #fef08a !important; }
 
         body.theme-hacker { --bg: #000000; --card-bg: #000000; --border: #004400; color: #00ff00; font-family: 'JetBrains Mono', monospace; }
         body.theme-hacker * { font-family: 'JetBrains Mono', monospace !important; }
@@ -304,34 +286,18 @@
         body.theme-hacker .bg-black { background-color: #000000 !important; }
         body.theme-hacker .border-zinc-900, body.theme-hacker .border-zinc-800 { border-color: #004400 !important; }
         body.theme-hacker .text-white { color: #00ff00 !important; }
-        body.theme-hacker .text-zinc-500, body.theme-hacker .text-zinc-600, body.theme-hacker .text-zinc-400 { color: #00aa00 !important; }
-        body.theme-hacker .nav-link { color: #00aa00; }
-        body.theme-hacker .nav-link.active { color: #00ff00; }
+        body.theme-hacker .text-zinc-500 { color: #00aa00 !important; }
         body.theme-hacker .nav-link.active::after { background: #00ff00; }
-        body.theme-hacker .btn-buy { background: #001100; color: #00ff00; border-color: #004400; }
-        body.theme-hacker .btn-buy:hover:not(:disabled) { background: #00ff00; color: #000000; }
-        body.theme-hacker .progress-bg { background: #003300; }
         body.theme-hacker .progress-fill { background: #00ff00; }
-        body.theme-hacker path[fill="white"] { fill: #00ff00; }
-        body.theme-hacker input, body.theme-hacker select { background-color: #001100 !important; border-color: #004400 !important; color: #00ff00 !important; }
-        body.theme-hacker .chart-container { background: #000000 !important; border-color: #004400 !important; }
 
         body.theme-gold { --bg: #050500; --card-bg: #0a0a00; --border: #554400; color: #d4af37; }
         body.theme-gold .bg-zinc-950, body.theme-gold .bg-zinc-900 { background-color: #111100 !important; }
         body.theme-gold .bg-black { background-color: #050500 !important; }
         body.theme-gold .border-zinc-900, body.theme-gold .border-zinc-800 { border-color: #554400 !important; }
         body.theme-gold .text-white { color: #d4af37 !important; }
-        body.theme-gold .text-zinc-500, body.theme-gold .text-zinc-600, body.theme-gold .text-zinc-400 { color: #aa9955 !important; }
-        body.theme-gold .nav-link { color: #aa9955; }
-        body.theme-gold .nav-link.active { color: #d4af37; }
+        body.theme-gold .text-zinc-500 { color: #aa9955 !important; }
         body.theme-gold .nav-link.active::after { background: #d4af37; }
-        body.theme-gold .btn-buy { background: #111100; color: #d4af37; border-color: #554400; }
-        body.theme-gold .btn-buy:hover:not(:disabled) { background: #d4af37; color: #000000; }
-        body.theme-gold .progress-bg { background: #332200; }
         body.theme-gold .progress-fill { background: #d4af37; }
-        body.theme-gold path[fill="white"] { fill: #d4af37; }
-        body.theme-gold input, body.theme-gold select { background-color: #111100 !important; border-color: #554400 !important; color: #d4af37 !important; }
-        body.theme-gold .chart-container { background: #0a0a00 !important; border-color: #554400 !important; }
 
         body.theme-neon { --bg: #090014; --card-bg: #12002b; --border: #4a0072; color: #e0b3ff; }
         body.theme-neon .glass-card { box-shadow: 0 0 15px rgba(188, 19, 254, 0.05); }
@@ -339,51 +305,84 @@
         body.theme-neon .bg-black { background-color: #090014 !important; }
         body.theme-neon .border-zinc-900, body.theme-neon .border-zinc-800 { border-color: #4a0072 !important; }
         body.theme-neon .text-white { color: #00ffff !important; }
-        body.theme-neon .text-zinc-500, body.theme-neon .text-zinc-600, body.theme-neon .text-zinc-400 { color: #bc13fe !important; }
-        body.theme-neon .nav-link { color: #bc13fe; }
-        body.theme-neon .nav-link.active { color: #00ffff; text-shadow: 0 0 5px rgba(0,255,255,0.5); }
+        body.theme-neon .text-zinc-500 { color: #bc13fe !important; }
         body.theme-neon .nav-link.active::after { background: #00ffff; box-shadow: 0 0 5px #00ffff; }
-        body.theme-neon .btn-buy { background: #1a0033; color: #00ffff; border-color: #4a0072; }
-        body.theme-neon .btn-buy:hover:not(:disabled) { background: #00ffff; color: #090014; box-shadow: 0 0 10px #00ffff; }
-        body.theme-neon .progress-bg { background: #330066; }
         body.theme-neon .progress-fill { background: #00ffff; box-shadow: 0 0 8px #00ffff; }
-        body.theme-neon path[fill="white"] { fill: #00ffff; }
-        body.theme-neon input, body.theme-neon select { background-color: #1a0033 !important; border-color: #4a0072 !important; color: #00ffff !important; }
-        body.theme-neon .chart-container { background: #090014 !important; border-color: #4a0072 !important; }
 
         body.theme-cyberpunk { --bg: #0d0221; --card-bg: #1a0b2e; --border: #00ffcc; color: #fcee0a; }
         body.theme-cyberpunk .bg-zinc-950, body.theme-cyberpunk .bg-zinc-900 { background-color: #120124 !important; }
         body.theme-cyberpunk .bg-black { background-color: #0d0221 !important; }
         body.theme-cyberpunk .border-zinc-900, body.theme-cyberpunk .border-zinc-800 { border-color: #00ffcc !important; }
         body.theme-cyberpunk .text-white { color: #fcee0a !important; }
-        body.theme-cyberpunk .text-zinc-500, body.theme-cyberpunk .text-zinc-600, body.theme-cyberpunk .text-zinc-400 { color: #ff0055 !important; }
-        body.theme-cyberpunk .nav-link { color: #ff0055; }
-        body.theme-cyberpunk .nav-link.active { color: #00ffcc; text-shadow: 0 0 5px rgba(0,255,204,0.5); }
+        body.theme-cyberpunk .text-zinc-500 { color: #ff0055 !important; }
         body.theme-cyberpunk .nav-link.active::after { background: #00ffcc; box-shadow: 0 0 5px #00ffcc; }
-        body.theme-cyberpunk .btn-buy { background: #120124; color: #00ffcc; border-color: #00ffcc; }
-        body.theme-cyberpunk .btn-buy:hover:not(:disabled) { background: #00ffcc; color: #0d0221; box-shadow: 0 0 10px #00ffcc; }
-        body.theme-cyberpunk .progress-bg { background: #1a0b2e; }
         body.theme-cyberpunk .progress-fill { background: #ff0055; box-shadow: 0 0 8px #ff0055; }
-        body.theme-cyberpunk path[fill="white"] { fill: #fcee0a; }
-        body.theme-cyberpunk input, body.theme-cyberpunk select { background-color: #120124 !important; border-color: #00ffcc !important; color: #fcee0a !important; }
-        body.theme-cyberpunk .chart-container { background: #0d0221 !important; border-color: #00ffcc !important; }
 
         body.theme-abyss { --bg: #050000; --card-bg: #0a0000; --border: #330000; color: #ff3333; }
         body.theme-abyss .bg-zinc-950, body.theme-abyss .bg-zinc-900 { background-color: #080000 !important; }
         body.theme-abyss .bg-black { background-color: #050000 !important; }
         body.theme-abyss .border-zinc-900, body.theme-abyss .border-zinc-800 { border-color: #330000 !important; }
         body.theme-abyss .text-white { color: #ff0000 !important; }
-        body.theme-abyss .text-zinc-500, body.theme-abyss .text-zinc-600, body.theme-abyss .text-zinc-400 { color: #990000 !important; }
-        body.theme-abyss .nav-link { color: #990000; }
-        body.theme-abyss .nav-link.active { color: #ff0000; text-shadow: 0 0 5px rgba(255,0,0,0.5); }
+        body.theme-abyss .text-zinc-500 { color: #990000 !important; }
         body.theme-abyss .nav-link.active::after { background: #ff0000; box-shadow: 0 0 5px #ff0000; }
-        body.theme-abyss .btn-buy { background: #080000; color: #ff3333; border-color: #330000; }
-        body.theme-abyss .btn-buy:hover:not(:disabled) { background: #ff0000; color: #000000; box-shadow: 0 0 10px #ff0000; }
-        body.theme-abyss .progress-bg { background: #110000; }
         body.theme-abyss .progress-fill { background: #ff0000; box-shadow: 0 0 8px #ff0000; }
-        body.theme-abyss path[fill="white"] { fill: #ff0000; }
-        body.theme-abyss input, body.theme-abyss select { background-color: #080000 !important; border-color: #330000 !important; color: #ff3333 !important; }
-        body.theme-abyss .chart-container { background: #050000 !important; border-color: #330000 !important; }
+
+        /* NEW THEMES - DARK */
+        body.theme-midnight { --bg: #08001a; --card-bg: #11002b; --border: #330066; color: #d9b3ff; }
+        body.theme-midnight .glass-card { box-shadow: 0 4px 15px rgba(51, 0, 102, 0.2); }
+        body.theme-midnight .bg-zinc-950, body.theme-midnight .bg-zinc-900 { background-color: #1a0040 !important; }
+        body.theme-midnight .bg-black { background-color: #08001a !important; }
+        body.theme-midnight .border-zinc-900, body.theme-midnight .border-zinc-800 { border-color: #330066 !important; }
+        body.theme-midnight .text-white { color: #ffffff !important; }
+        body.theme-midnight .text-zinc-500 { color: #b366ff !important; }
+        body.theme-midnight .nav-link.active::after { background: #b366ff; }
+        body.theme-midnight .progress-fill { background: #b366ff; }
+
+        body.theme-blood { --bg: #140000; --card-bg: #240000; --border: #660000; color: #ff9999; }
+        body.theme-blood .bg-zinc-950, body.theme-blood .bg-zinc-900 { background-color: #330000 !important; }
+        body.theme-blood .bg-black { background-color: #140000 !important; }
+        body.theme-blood .border-zinc-900, body.theme-blood .border-zinc-800 { border-color: #660000 !important; }
+        body.theme-blood .text-white { color: #ffcccc !important; }
+        body.theme-blood .text-zinc-500 { color: #cc0000 !important; }
+        body.theme-blood .nav-link.active::after { background: #ff3333; }
+        body.theme-blood .progress-fill { background: #ff3333; }
+
+        body.theme-deepspace { --bg: #00020d; --card-bg: #00051a; --border: #001a4d; color: #99bbff; }
+        body.theme-deepspace .bg-zinc-950, body.theme-deepspace .bg-zinc-900 { background-color: #000a33 !important; }
+        body.theme-deepspace .bg-black { background-color: #00020d !important; }
+        body.theme-deepspace .border-zinc-900, body.theme-deepspace .border-zinc-800 { border-color: #001a4d !important; }
+        body.theme-deepspace .text-white { color: #e6f0ff !important; }
+        body.theme-deepspace .text-zinc-500 { color: #3366cc !important; }
+        body.theme-deepspace .nav-link.active::after { background: #6699ff; }
+        body.theme-deepspace .progress-fill { background: #6699ff; }
+
+        /* NEW THEMES - LIGHT */
+        body.theme-solar { --bg: #fffbf0; --card-bg: #fff5d6; --border: #ffd666; color: #8c5900; }
+        body.theme-solar .bg-zinc-950, body.theme-solar .bg-zinc-900 { background-color: #ffebad !important; }
+        body.theme-solar .bg-black { background-color: #fffbf0 !important; }
+        body.theme-solar .border-zinc-900, body.theme-solar .border-zinc-800 { border-color: #ffd666 !important; }
+        body.theme-solar .text-white { color: #593900 !important; }
+        body.theme-solar .text-zinc-500 { color: #d48806 !important; }
+        body.theme-solar .nav-link.active::after { background: #faad14; }
+        body.theme-solar .progress-fill { background: #faad14; }
+
+        body.theme-mint { --bg: #f0fff5; --card-bg: #e6ffed; --border: #99ffbb; color: #006622; }
+        body.theme-mint .bg-zinc-950, body.theme-mint .bg-zinc-900 { background-color: #ccffdd !important; }
+        body.theme-mint .bg-black { background-color: #f0fff5 !important; }
+        body.theme-mint .border-zinc-900, body.theme-mint .border-zinc-800 { border-color: #99ffbb !important; }
+        body.theme-mint .text-white { color: #003311 !important; }
+        body.theme-mint .text-zinc-500 { color: #00cc44 !important; }
+        body.theme-mint .nav-link.active::after { background: #00e64d; }
+        body.theme-mint .progress-fill { background: #00e64d; }
+
+        body.theme-cotton { --bg: #fff0f5; --card-bg: #ffe6f2; --border: #ffb3d9; color: #99004d; }
+        body.theme-cotton .bg-zinc-950, body.theme-cotton .bg-zinc-900 { background-color: #ffcce6 !important; }
+        body.theme-cotton .bg-black { background-color: #fff0f5 !important; }
+        body.theme-cotton .border-zinc-900, body.theme-cotton .border-zinc-800 { border-color: #ffb3d9 !important; }
+        body.theme-cotton .text-white { color: #4d0026 !important; }
+        body.theme-cotton .text-zinc-500 { color: #ff3399 !important; }
+        body.theme-cotton .nav-link.active::after { background: #ff66b3; }
+        body.theme-cotton .progress-fill { background: #ff66b3; }
 
         .drag-over { border-style: dashed !important; border-color: #ffffff !important; opacity: 0.5; }
 
@@ -528,7 +527,7 @@
                     </div>
 
                     <div class="glass-card p-6 h-48 overflow-y-auto font-mono text-[10px] text-zinc-600 space-y-1" id="terminal">
-                        <p class="text-zinc-400">> Vercel Empire v41.1.1</p>
+                        <p class="text-zinc-400">> Vercel Empire v41.1.2</p>
                         <p class="text-emerald-500">> Welcome Back.</p>
                     </div>
                 </div>
@@ -634,6 +633,17 @@
 
         <!-- TRADING TAB -->
         <div id="trading" class="tab-content">
+            <div class="glass-card p-6 mb-8 border-emerald-900/50 flex flex-col md:flex-row gap-4 items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-black uppercase text-emerald-500 tracking-tight">PEER-TO-PEER EXCHANGE</h3>
+                    <p class="text-[10px] text-zinc-400 font-bold tracking-widest mt-1">TRADE ASSETS WITH OTHER PLAYERS</p>
+                </div>
+                <div class="flex gap-2 w-full md:w-auto">
+                    <input type="text" id="p2p-import-code" placeholder="PASTE TRADE CODE" class="bg-zinc-900 border border-zinc-800 rounded px-4 py-2 text-xs font-mono text-white focus:outline-none focus:border-emerald-500 w-full md:w-64">
+                    <button onclick="importP2PTrade()" class="btn-buy !w-auto px-6 bg-emerald-600/20 text-emerald-500 border-emerald-600/50 hover:bg-emerald-500 hover:text-white shrink-0">RECEIVE</button>
+                </div>
+            </div>
+            
             <div class="flex justify-between items-center mb-8">
                 <h2 class="text-xl font-black uppercase tracking-tight text-amber-500">VBAY MARKETPLACE</h2>
                 <p class="text-[10px] text-zinc-500 font-bold tracking-widest">YOUR LISTINGS</p>
@@ -903,7 +913,13 @@
             { id: 'neon', name: 'Neon Cyber', price: 5000000, class: 'theme-neon', type: 'dark' },
             { id: 'gold', name: 'Billionaire Gold', price: 50000000, class: 'theme-gold', type: 'dark' },
             { id: 'cyberpunk', name: 'Cyberpunk 2067', price: 250000000, class: 'theme-cyberpunk', type: 'dark' },
-            { id: 'abyss', name: 'The Abyss', price: 1000000000, class: 'theme-abyss', type: 'dark' }
+            { id: 'abyss', name: 'The Abyss', price: 1000000000, class: 'theme-abyss', type: 'dark' },
+            { id: 'midnight', name: 'Midnight Purple', price: 2000000, class: 'theme-midnight', type: 'dark' },
+            { id: 'blood', name: 'Crimson Blood', price: 5000000, class: 'theme-blood', type: 'dark' },
+            { id: 'deepspace', name: 'Deep Space', price: 10000000, class: 'theme-deepspace', type: 'dark' },
+            { id: 'solar', name: 'Solar Flare', price: 2000000, class: 'theme-solar', type: 'light' },
+            { id: 'mint', name: 'Mint Breeze', price: 5000000, class: 'theme-mint', type: 'light' },
+            { id: 'cotton', name: 'Cotton Candy', price: 10000000, class: 'theme-cotton', type: 'light' }
         ];
 
         const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign"];
@@ -1110,7 +1126,7 @@
 
         const COMPANIES =[
             { id: 'c1', name: "Corner Shop", price: 25000, rev: 4000, bill: 150, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
-            { id: 'c2', name: "Taxi Service", price: 120000, rev: 17500, bill: 500, img: "https://https://images.unsplash.com/photo-1628947733273-cdae71c9bfd3?w=400", customFleet: true },
+            { id: 'c2', name: "Taxi Service", price: 120000, rev: 17500, bill: 500, img: "https://images.unsplash.com/photo-1628947733273-cdae71c9bfd3?w=400", customFleet: true },
             { id: 'c3', name: "E-Com Brand", price: 350000, rev: 60000, bill: 3000, img: "https://images.unsplash.com/photo-1472851294608-062f824d29cc?w=400" },
             { id: 'c4', name: "Ad Agency", price: 1500000, rev: 275000, bill: 12000, img: "https://images.unsplash.com/photo-1542744094-24638eff58bb?w=400" },
             { id: 'c5', name: "SaaS Enterprise", price: 7500000, rev: 1400000, bill: 80000, img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400" },
@@ -1210,7 +1226,11 @@
                 { id: 'j3', name: "Patek Philippe Nautilus", price: 145000, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400" },
                 { id: 'j4', name: "Cartier Love Bracelet", price: 25000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" },
                 { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
-                { id: 'j6', name: "Emerald Necklace", price: 850000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" }
+                { id: 'j6', name: "Emerald Necklace", price: 850000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" },
+                { id: 'j7', name: "Platinum Signet Ring", price: 1250000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
+                { id: 'j8', name: "Ruby Teardrop Pendant", price: 2500000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" },
+                { id: 'j9', name: "Vercel Sovereign Crown", price: 10000000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" },
+                { id: 'j10', name: "Obsidian Cufflinks", price: 500000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" }
             ],
             cars:[
                 { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" },
@@ -1218,7 +1238,11 @@
                 { id: 'car3', name: "Lamborghini Aventador", price: 450000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
                 { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
                 { id: 'car5', name: "Aston Martin Valkyrie", price: 3200000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
-                { id: 'car6', name: "McLaren P1", price: 1500000, img: "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400" }
+                { id: 'car6', name: "McLaren P1", price: 1500000, img: "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400" },
+                { id: 'car7', name: "Rolls Royce Phantom", price: 450000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
+                { id: 'car8', name: "Koenigsegg Jesko", price: 3500000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
+                { id: 'car9', name: "Pagani Huayra", price: 2800000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
+                { id: 'car10', name: "Bentley Continental", price: 250000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" }
             ],
             furniture:[
                 { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" },
@@ -1226,7 +1250,11 @@
                 { id: 'f3', name: "Marble Dining Table", price: 15000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
                 { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
                 { id: 'f5', name: "Mahogany Desk", price: 12000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" },
-                { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400" }
+                { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400" },
+                { id: 'f7', name: "Antique Grand Piano", price: 120000, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" },
+                { id: 'f8', name: "Gold-leaf Mirror", price: 45000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
+                { id: 'f9', name: "Persian Silk Rug", price: 85000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
+                { id: 'f10', name: "Crystal Dining Set", price: 25000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" }
             ],
             blackMarket:[
                 { id: 'bm1', name: "Ghost Gun Cache", priceBtc: 0.15, img: "https://images.unsplash.com/photo-1595590424283-b8f1784cb2c8?w=400" },
@@ -1236,19 +1264,128 @@
                 { id: 'bm5', name: "Military Attack Drones", priceBtc: 3.5, img: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=400" },
                 { id: 'bm6', name: "Zero-Day Exploits DB", priceBtc: 8.0, img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400" },
                 { id: 'bm7', name: "Enriched Uranium Rods", priceBtc: 15.0, img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400" },
-                { id: 'bm8', name: "Offshore Shell Company", priceBtc: 40.0, img: "https://images.unsplash.com/photo-1611016146313-263a9486df18?w=400" }
+                { id: 'bm8', name: "Offshore Shell Company", priceBtc: 40.0, img: "https://images.unsplash.com/photo-1611016146313-263a9486df18?w=400" },
+                { id: 'bm9', name: "Cyber-Warfare Suite", priceBtc: 25.0, img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400" },
+                { id: 'bm10', name: "Classified Govt Docs", priceBtc: 55.0, img: "https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?w=400" },
+                { id: 'bm11', name: "Orbital Strike Code", priceBtc: 150.0, img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" },
+                { id: 'bm12', name: "Synthetic Virus Strain", priceBtc: 300.0, img: "https://images.unsplash.com/photo-1583569584489-31e21b023f5b?w=400" }
             ]
         };
 
+        const getShareCounts = () => Object.values(state.shares || {});
+        const getCardBals = () => Object.values(state.cardBalances || {});
+        const getCompCount = () => state.ownedAssets.filter(id => COMPANIES.some(c => c.id === id)).length;
+        const getRECount = () => state.ownedAssets.filter(id => REAL_ESTATE.some(r => r.id === id)).length;
+        const getCollCount = () => state.ownedAssets.filter(id => [...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture, ...ASSETS.blackMarket].some(i => i.id === id)).length;
+        const getOutletCounts = () => COMPANIES.map(c => state.compOutlets[c.id] || (state.ownedAssets.includes(c.id) ? 1 : 0));
+
         const ACHIEVEMENTS = [
-            { id: 'ach1', name: 'First Steps', desc: 'Reach Level 5', check: () => state.level >= 5 },
-            { id: 'ach2', name: 'Vercel Executive', desc: 'Reach Level 10', check: () => state.level >= 10 },
-            { id: 'ach3', name: 'Market Watcher', desc: 'Unlock the Stock Market (Lvl 3)', check: () => state.level >= 3 },
-            { id: 'ach4', name: 'Millionaire', desc: 'Reach $1,000,000 Net Worth', check: () => state.netWorth >= 1000000 },
-            { id: 'ach5', name: 'Billionaire', desc: 'Reach $1,000,000,000 Net Worth', check: () => state.netWorth >= 1000000000 },
-            { id: 'ach6', name: 'Real Estate Mogul', desc: 'Own 5 Properties', check: () => state.ownedAssets.filter(id => REAL_ESTATE.some(re => re.id === id)).length >= 5 },
-            { id: 'ach7', name: 'Corporate Raider', desc: 'Own 5 Companies', check: () => state.ownedAssets.filter(id => COMPANIES.some(c => c.id === id)).length >= 5 },
-            { id: 'ach8', name: 'Academic Scholar', desc: 'Earn 3 Degrees', check: () => state.education.degrees.length >= 3 }
+            // NET WORTH
+            { id: 'ach_nw_0', name: 'Hello World', desc: 'First time playing', check: () => true },
+            { id: 'ach_nw_1', name: 'STACK', desc: 'Reach $1,000 Net Worth', check: () => state.netWorth >= 1000 },
+            { id: 'ach_nw_2', name: 'DOUBLE STACK', desc: 'Reach $2,000 Net Worth', check: () => state.netWorth >= 2000 },
+            { id: 'ach_nw_3', name: '010K', desc: 'Reach $10,000 Net Worth', check: () => state.netWorth >= 10000 },
+            { id: 'ach_nw_4', name: '100 GRAND', desc: 'Reach $100,000 Net Worth', check: () => state.netWorth >= 100000 },
+            { id: 'ach_nw_5', name: 'LYART 500', desc: 'Reach $500,000 Net Worth', check: () => state.netWorth >= 500000 },
+            { id: 'ach_nw_6', name: 'A MILLI', desc: 'Reach $1,000,000 Net Worth', check: () => state.netWorth >= 1000000 },
+            { id: 'ach_nw_7', name: 'MILLIS', desc: 'Reach $2,000,000 Net Worth', check: () => state.netWorth >= 2000000 },
+            { id: 'ach_nw_8', name: 'BILLIONAIRE GOLD', desc: 'Reach $50,000,000 Net Worth', check: () => state.netWorth >= 50000000 },
+            { id: 'ach_nw_9', name: '100M', desc: 'Reach $100,000,000 Net Worth', check: () => state.netWorth >= 100000000 },
+            { id: 'ach_nw_10', name: 'BILLION-AIR', desc: 'Reach $1,000,000,000 Net Worth', check: () => state.netWorth >= 1000000000 },
+            { id: 'ach_nw_11', name: 'BETTER THAN REDOLENCE', desc: 'Reach $1 Trillion Net Worth', check: () => state.netWorth >= 1e12 },
+            { id: 'ach_nw_12', name: 'QUADILLIONAIRE', desc: 'Reach $1 Quadrillion Net Worth', check: () => state.netWorth >= 1e15 },
+            { id: 'ach_nw_13', name: 'QUINTILLIONAIRE', desc: 'Reach $1 Quintillion Net Worth', check: () => state.netWorth >= 1e18 },
+            { id: 'ach_nw_14', name: 'SEXTILLIONAIRE', desc: 'Reach $1 Sextillion Net Worth', check: () => state.netWorth >= 1e21 },
+            { id: 'ach_nw_15', name: 'SEPTILLIONAIRE', desc: 'Reach $1 Septillion Net Worth', check: () => state.netWorth >= 1e24 },
+            { id: 'ach_nw_16', name: 'OCTILLIONAIRE', desc: 'Reach $1 Octillion Net Worth', check: () => state.netWorth >= 1e27 },
+            { id: 'ach_nw_17', name: 'NONILLIONAIRE', desc: 'Reach $1 Nonillion Net Worth', check: () => state.netWorth >= 1e30 },
+            { id: 'ach_nw_18', name: 'DECILLIONAIRE', desc: 'Reach $1 Decillion Net Worth', check: () => state.netWorth >= 1e33 },
+
+            // BUYING COMPANIES
+            { id: 'ach_co_1', name: 'Startup Founder', desc: 'Buy 1 Company', check: () => getCompCount() >= 1 },
+            { id: 'ach_co_2', name: 'Growing Enterprise', desc: 'Buy 2 Companies', check: () => getCompCount() >= 2 },
+            { id: 'ach_co_5', name: 'Business Group', desc: 'Buy 5 Companies', check: () => getCompCount() >= 5 },
+            { id: 'ach_co_10', name: 'Corporate Tycoon', desc: 'Buy 10 Companies', check: () => getCompCount() >= 10 },
+            { id: 'ach_co_all', name: 'Monopoly Mind', desc: 'Buy ALL Companies', check: () => getCompCount() >= COMPANIES.length },
+
+            // REAL ESTATE
+            { id: 'ach_re_1', name: 'First Keys', desc: 'Buy 1 Property', check: () => getRECount() >= 1 },
+            { id: 'ach_re_2', name: 'Landlord', desc: 'Buy 2 Properties', check: () => getRECount() >= 2 },
+            { id: 'ach_re_5', name: 'Property Manager', desc: 'Buy 5 Properties', check: () => getRECount() >= 5 },
+            { id: 'ach_re_10', name: 'Real Estate Tycoon', desc: 'Buy 10 Properties', check: () => getRECount() >= 10 },
+            { id: 'ach_re_20', name: 'Housing Crisis', desc: 'Buy 20 Properties', check: () => getRECount() >= 20 },
+            { id: 'ach_re_all', name: 'Global Landlord', desc: 'Buy ALL Properties', check: () => getRECount() >= REAL_ESTATE.length },
+
+            // SELLING COMPANIES
+            { id: 'ach_sell_30k', name: 'Flipping a Profit', desc: 'Earn 30,000 from selling companies', check: () => state.totalCompanySellEarnings >= 30000 },
+            { id: 'ach_sell_50k', name: 'Serial Entrepreneur', desc: 'Earn 50,000 from selling companies', check: () => state.totalCompanySellEarnings >= 50000 },
+            { id: 'ach_sell_250k', name: 'Quarter-Mil Flip', desc: 'Earn 250,000 from selling companies', check: () => state.totalCompanySellEarnings >= 250000 },
+            { id: 'ach_sell_1m', name: 'Million Dollar Exit', desc: 'Earn 1,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 1000000 },
+            { id: 'ach_sell_5m', name: 'Five Mil Selloff', desc: 'Earn 5,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 5000000 },
+            { id: 'ach_sell_75m', name: 'Venture Capitalist', desc: 'Earn 75,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 75000000 },
+            { id: 'ach_sell_150m', name: 'Corporate Raider', desc: 'Earn 150,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 150000000 },
+            { id: 'ach_sell_600m', name: 'Mega Flip', desc: 'Earn 600,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 600000000 },
+            { id: 'ach_sell_1b', name: 'Billion Dollar Exit', desc: 'Earn 1,000,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 1000000000 },
+            { id: 'ach_sell_5b', name: 'Tech Giant Buyout', desc: 'Earn 5,000,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 5000000000 },
+            { id: 'ach_sell_50b', name: 'Market Shaker', desc: 'Earn 50,000,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 50000000000 },
+            { id: 'ach_sell_250b', name: 'Economy Mover', desc: 'Earn 250,000,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 250000000000 },
+            { id: 'ach_sell_1t', name: 'Trillion Dollar Exit', desc: 'Earn 1,000,000,000,000 from selling companies', check: () => state.totalCompanySellEarnings >= 1000000000000 },
+
+            // STOCK SHARES (ANY 1 STOCK)
+            { id: 'ach_stk_1', name: 'Dipping Toes', desc: 'Bought 1 share of any stock', check: () => getShareCounts().some(s => s >= 1) },
+            { id: 'ach_stk_2', name: 'Double Down', desc: 'Bought 2 shares of any stock', check: () => getShareCounts().some(s => s >= 2) },
+            { id: 'ach_stk_3', name: 'Three\'s Company', desc: 'Bought 3 shares of any stock', check: () => getShareCounts().some(s => s >= 3) },
+            { id: 'ach_stk_5', name: 'High Five', desc: 'Bought 5 shares of any stock', check: () => getShareCounts().some(s => s >= 5) },
+            { id: 'ach_stk_8', name: 'Crazy Eights', desc: 'Bought 8 shares of any stock', check: () => getShareCounts().some(s => s >= 8) },
+            { id: 'ach_stk_10', name: 'Dime Bag', desc: 'Bought 10 shares of any stock', check: () => getShareCounts().some(s => s >= 10) },
+            { id: 'ach_stk_100', name: 'Century Mark', desc: 'Bought 100 shares of any stock', check: () => getShareCounts().some(s => s >= 100) },
+            { id: 'ach_stk_1k', name: 'Kilo-Share', desc: 'Bought 1,000 shares of any stock', check: () => getShareCounts().some(s => s >= 1000) },
+            { id: 'ach_stk_1b', name: 'Billionaire Board Member', desc: 'Bought 1,000,000,000 shares of any stock', check: () => getShareCounts().some(s => s >= 1000000000) },
+            { id: 'ach_stk_1t', name: 'Trillionaire Majority', desc: 'Bought 1,000,000,000,000 shares of any stock', check: () => getShareCounts().some(s => s >= 1000000000000) },
+
+            // STOCK SHARES (3 STOCKS)
+            { id: 'ach_stk_3x_2', name: 'Diversifying', desc: 'Bought 2 shares of 3 stocks', check: () => getShareCounts().filter(s => s >= 2).length >= 3 },
+            { id: 'ach_stk_3x_1k', name: 'Solid Portfolio', desc: 'Bought 1,000 shares of 3 stocks', check: () => getShareCounts().filter(s => s >= 1000).length >= 3 },
+            { id: 'ach_stk_3x_1b', name: 'Market Maker', desc: 'Bought 1,000,000,000 shares of 3 stocks', check: () => getShareCounts().filter(s => s >= 1000000000).length >= 3 },
+            { id: 'ach_stk_3x_1t', name: 'Index Fund Master', desc: 'Bought 1,000,000,000,000 shares of 3 stocks', check: () => getShareCounts().filter(s => s >= 1000000000000).length >= 3 },
+
+            // STOCK SHARES (20 STOCKS)
+            { id: 'ach_stk_20x_2', name: 'Broad Market', desc: 'Bought 2 shares of 20 stocks', check: () => getShareCounts().filter(s => s >= 2).length >= 20 },
+            { id: 'ach_stk_20x_1k', name: 'Hedge Fund Manager', desc: 'Bought 1,000 shares of 20 stocks', check: () => getShareCounts().filter(s => s >= 1000).length >= 20 },
+            { id: 'ach_stk_20x_1b', name: 'Global Asset Manager', desc: 'Bought 1,000,000,000 shares of 20 stocks', check: () => getShareCounts().filter(s => s >= 1000000000).length >= 20 },
+            { id: 'ach_stk_20x_1t', name: 'Wall Street Sovereign', desc: 'Bought 1,000,000,000,000 shares of 20 stocks', check: () => getShareCounts().filter(s => s >= 1000000000000).length >= 20 },
+
+            // STOCK SHARES (ALL STOCKS)
+            { id: 'ach_stk_all_2', name: 'Own The Market', desc: 'Bought 2 shares of all stocks', check: () => getShareCounts().filter(s => s >= 2).length >= STOCKS.length },
+            { id: 'ach_stk_all_1k', name: 'Institutional Investor', desc: 'Bought 1,000 shares of all stocks', check: () => getShareCounts().filter(s => s >= 1000).length >= STOCKS.length },
+            { id: 'ach_stk_all_1b', name: 'BlackRock Rival', desc: 'Bought 1,000,000,000 shares of all stocks', check: () => getShareCounts().filter(s => s >= 1000000000).length >= STOCKS.length },
+            { id: 'ach_stk_all_1t', name: 'Omnipresent Entity', desc: 'SPECIAL AWARD: Bought 1,000,000,000,000 shares of all stocks', check: () => getShareCounts().filter(s => s >= 1000000000000).length >= STOCKS.length },
+
+            // COMPANY OUTLETS
+            { id: 'ach_out_1_1', name: 'First Branch', desc: '1 outlet in any company', check: () => getOutletCounts().some(o => o >= 1) },
+            { id: 'ach_out_1_2', name: 'Expansion', desc: '2 outlets in any company', check: () => getOutletCounts().some(o => o >= 2) },
+            { id: 'ach_out_1_3', name: 'Growing Reach', desc: '3 outlets in any company', check: () => getOutletCounts().some(o => o >= 3) },
+            { id: 'ach_out_1_5', name: 'Regional Network', desc: '5 outlets in any company', check: () => getOutletCounts().some(o => o >= 5) },
+            { id: 'ach_out_1_8', name: 'Multi-State', desc: '8 outlets in any company', check: () => getOutletCounts().some(o => o >= 8) },
+            { id: 'ach_out_1_10', name: 'Franchise', desc: '10 outlets in any company', check: () => getOutletCounts().some(o => o >= 10) },
+            { id: 'ach_out_1_20', name: 'Corporate Chain', desc: '20 outlets in any company', check: () => getOutletCounts().some(o => o >= 20) },
+            { id: 'ach_out_1_60', name: 'Local Monopoly', desc: '60 outlets (Max) in 1 company', check: () => getOutletCounts().filter(o => o >= 60).length >= 1 },
+            { id: 'ach_out_3_60', name: 'Tri-State Domination', desc: '60 outlets (Max) in 3 companies', check: () => getOutletCounts().filter(o => o >= 60).length >= 3 },
+            { id: 'ach_out_20_60', name: 'National Conglomerate', desc: '60 outlets (Max) in 20 companies', check: () => getOutletCounts().filter(o => o >= 60).length >= 20 },
+            { id: 'ach_out_all_60', name: 'Global Megacorp', desc: '60 outlets (Max) in ALL companies', check: () => getOutletCounts().filter(o => o >= 60).length >= COMPANIES.length },
+
+            // CARDS
+            { id: 'ach_card_inf', name: 'Infinite Liquidity', desc: 'Balance of over 1,000,000,000,000 on EACH card', check: () => state.ownedCards.length === CARD_TIERS.length && getCardBals().length === CARD_TIERS.length && getCardBals().every(b => b >= 1000000000000) },
+
+            // SECRET ACHIEVEMENTS
+            { id: 'ach_sec_whoops', name: 'Whoops', desc: 'Go Bankrupt (Balance < $1 after level 3)', check: () => state.level >= 3 && state.balance < 1 },
+            { id: 'ach_sec_hacker', name: 'Hacker Man', desc: 'Use the Dev Console', check: () => state.isCheater },
+            { id: 'ach_sec_nightowl', name: 'Night Owl', desc: 'Play between 2 AM and 4 AM', check: () => new Date().getHours() >= 2 && new Date().getHours() <= 4 },
+            { id: 'ach_sec_clicker', name: 'Clicker', desc: 'Click the card 1,000 times', check: () => state.cardClicks >= 1000 },
+
+            // COLLECTIONS
+            { id: 'ach_coll_5', name: 'Collector', desc: 'Own 5 Collection Items', check: () => getCollCount() >= 5 },
+            { id: 'ach_coll_20', name: 'Curator', desc: 'Own 20 Collection Items', check: () => getCollCount() >= 20 }
         ];
 
         let state = {
@@ -1283,7 +1420,9 @@
             widgetSizes: {},
             stockMarket: null,
             achievements: [],
-            dashboardStock: 'AAPL'
+            dashboardStock: 'AAPL',
+            totalCompanySellEarnings: 0,
+            cardClicks: 0
         };
 
         let activeStock = null;
@@ -1320,6 +1459,8 @@
         if (!state.widgetSizes) state.widgetSizes = {};
         if (!state.achievements) state.achievements = [];
         if (!state.dashboardStock) state.dashboardStock = 'AAPL';
+        if (!state.totalCompanySellEarnings) state.totalCompanySellEarnings = 0;
+        if (!state.cardClicks) state.cardClicks = 0;
 
         if (state.stockMarket && state.stockMarket.length > 0) {
             state.stockMarket.forEach(savedStock => {
@@ -1559,7 +1700,7 @@
             grid.innerHTML = ACHIEVEMENTS.map(ach => {
                 const isUnlocked = state.achievements.includes(ach.id);
                 return `
-                <div class="p-3 rounded border ${isUnlocked ? 'bg-emerald-900/20 border-emerald-500/50 text-emerald-400' : 'bg-zinc-950 border-zinc-900 text-zinc-600'}">
+                <div class="p-3 rounded border flex flex-col justify-center ${isUnlocked ? 'bg-emerald-900/20 border-emerald-500/50 text-emerald-400' : 'bg-zinc-950 border-zinc-900 text-zinc-600'}">
                     <p class="text-[10px] font-black uppercase mb-1">${ach.name}</p>
                     <p class="text-[9px] font-bold uppercase tracking-widest ${isUnlocked ? 'text-emerald-600' : 'text-zinc-700'}">${ach.desc}</p>
                 </div>
@@ -1640,6 +1781,7 @@
             const clickXp = 3 + (state.level * 0.2); 
             state.xp += Math.min(clickXp, 15);
             state.lastMintTime = now;
+            state.cardClicks++;
 
             checkLevelUp();
 
@@ -2416,6 +2558,7 @@
             const returnAmount = Math.floor(investment * compMult);
 
             state.balance += returnAmount;
+            state.totalCompanySellEarnings = (state.totalCompanySellEarnings || 0) + returnAmount;
             state.ownedAssets = state.ownedAssets.filter(a => a !== id);
 
             if (c.customFleet) state.taxiFleet = { cars: 1, busses: 0, artBusses: 0 };
@@ -2430,7 +2573,9 @@
 
         function sellProperty(id) {
             const re = REAL_ESTATE.find(x => x.id === id);
-            if (!re || !state.ownedAssets.includes(id)) return;
+            if (!re || !state.ownedAssets
+
+.includes(id)) return;
 
             const investment = calcRealEstateInvestment(re, id);
             const returnAmount = Math.floor(investment * 0.9);
@@ -2682,7 +2827,7 @@
                         `}
                     </div>`;
                 }).join('');
-}
+            }
 
             const bankGrid = document.getElementById('bank-grid');
             if(bankGrid) {
@@ -2849,6 +2994,56 @@
             }
         }
 
+        function exportP2PTrade(id, price, name) {
+            const payload = {
+                type: 'VERCEL_P2P',
+                id: id,
+                price: price,
+                name: name,
+                hash: btoa(id + price + "VERCEL_SECURE")
+            };
+            const code = btoa(JSON.stringify(payload));
+            navigator.clipboard.writeText(code).then(() => {
+                alert(`P2P Trade Code for ${name} copied to clipboard! Send this code to a friend.`);
+                logToTerminal(`P2P LISTING CREATED: ${name}`);
+            }).catch(() => {
+                prompt("Copy this P2P Trade Code:", code);
+            });
+        }
+
+        function importP2PTrade() {
+            const input = document.getElementById('p2p-import-code').value.trim();
+            if (!input) return;
+            
+            try {
+                const parsed = JSON.parse(atob(input));
+                if (parsed.type === 'VERCEL_P2P' && parsed.hash === btoa(parsed.id + parsed.price + "VERCEL_SECURE")) {
+                    if (state.ownedAssets.includes(parsed.id)) {
+                        alert("You already own this asset!");
+                        return;
+                    }
+                    if (state.balance >= parsed.price) {
+                        const confirmTrade = confirm(`Accept P2P Transfer: ${parsed.name} for $${formatLargeNumber(parsed.price)}?`);
+                        if (confirmTrade) {
+                            state.balance -= parsed.price;
+                            state.ownedAssets.push(parsed.id);
+                            document.getElementById('p2p-import-code').value = '';
+                            logToTerminal(`P2P TRADE COMPLETE: RECEIVED ${parsed.name}`);
+                            updateUI(true);
+                            saveGame();
+                            alert("Trade successful! Asset added to your collection.");
+                        }
+                    } else {
+                        alert(`Insufficient funds. You need $${formatLargeNumber(parsed.price)} to accept this trade.`);
+                    }
+                } else {
+                    alert("Invalid trade code.");
+                }
+            } catch (e) {
+                alert("Failed to parse trade code. Make sure you copied it correctly.");
+            }
+        }
+
         function renderTradingGrid() {
             const tradingGrid = document.getElementById('trading-grid');
             if (!tradingGrid) return;
@@ -2880,15 +3075,18 @@
                             <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
                             <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${formatLargeNumber(i.price)}</p>
                         </div>
-                        <div class="grid grid-cols-2 gap-2 mt-2">
-                            <button onclick="sellCollection('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center bg-zinc-900 text-white" ${!canSell ? 'disabled' : ''}>
-                                <span class="mb-0.5 font-black">${canSell ? 'SELL' : 'LVL 4'}</span>
-                                <span class="opacity-60">${canSell ? '$'+formatLargeNumber(sellPrice) : 'REQUIRED'}</span>
-                            </button>
-                            <button onclick="openAuctionModal('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center ${canAuction ? '!bg-amber-950/30 !text-amber-500 !border-amber-900/50 hover:!bg-amber-500 hover:!text-white' : 'bg-zinc-900 text-white'}" ${!canAuction ? 'disabled' : ''}>
-                                <span class="mb-0.5 font-black">${canAuction ? 'AUCTION' : 'LVL 12'}</span>
-                                <span class="opacity-60">${canAuction ? 'START BID' : 'REQUIRED'}</span>
-                            </button>
+                        <div class="flex flex-col gap-2 mt-2">
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="sellCollection('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center bg-zinc-900 text-white" ${!canSell ? 'disabled' : ''}>
+                                    <span class="mb-0.5 font-black">${canSell ? 'SELL TO MARKET' : 'LVL 4'}</span>
+                                    <span class="opacity-60">${canSell ? '$'+formatLargeNumber(sellPrice) : 'REQUIRED'}</span>
+                                </button>
+                                <button onclick="openAuctionModal('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center ${canAuction ? '!bg-amber-950/30 !text-amber-500 !border-amber-900/50 hover:!bg-amber-500 hover:!text-white' : 'bg-zinc-900 text-white'}" ${!canAuction ? 'disabled' : ''}>
+                                    <span class="mb-0.5 font-black">${canAuction ? 'AUCTION' : 'LVL 12'}</span>
+                                    <span class="opacity-60">${canAuction ? 'START BID' : 'REQUIRED'}</span>
+                                </button>
+                            </div>
+                            <button onclick="exportP2PTrade('${i.id}', ${i.price}, '${i.name}')" class="btn-buy w-full text-[8px] py-2 bg-emerald-900/20 text-emerald-500 border border-emerald-900/50 hover:bg-emerald-500 hover:text-white">GENERATE P2P TRANSFER CODE</button>
                         </div>
                     </div>`;
                 }).join('');
@@ -3116,9 +3314,7 @@
                 if (amount > 0 && (state.shares[symbol] || 0) >= amount) {
                     state.balance += (stock.price * amount);
                     state.shares[symbol] -= amount;
-                    if(state
-
-.shares[symbol] < 0.001) { 
+                    if(state.shares[symbol] < 0.001) { 
                         state.balance += (stock.price * state.shares[symbol]);
                         state.shares[symbol] = 0;
                     }
@@ -3451,7 +3647,6 @@
             
             tickCounter++;
             
-            // Wait for 120 seconds (2 mins) to update the stocks
             if (tickCounter >= 120) {
                 tickCounter = 0;
                 STOCKS.forEach(s => {
