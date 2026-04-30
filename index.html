@@ -886,6 +886,12 @@
             useAlgorithmicGlobalSync: true 
         };
 
+        function formatLargeNumber(num) {
+            if (num >= 1e15) return (num / 1e15).toFixed(2) + 'Qu';
+            if (num >= 1e12) return (num / 1e12).toFixed(2) + 't';
+            return Math.floor(num).toLocaleString();
+        }
+
         const THEMES =[
             { id: 'dark', name: 'Dark Mode', price: 0, class: 'theme-dark', type: 'dark' },
             { id: 'light', name: 'Light Mode', price: 0, class: 'theme-light', type: 'light' },
@@ -1002,7 +1008,7 @@
             { symbol: "SQ", name: "Block", price: 80.00, trend: 1.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/squareup.com' },
             { symbol: "PYPL", name: "PayPal", price: 65.00, trend: -0.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/paypal.com' },
             { symbol: "SHOP", name: "Shopify", price: 75.00, trend: 2.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/shopify.com' },
-            { symbol: "COIN", name: "Coinbase", price: 250.00, trend: 4.5, history:[], type: 'stock', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/btc/200' },
+            { symbol: "COIN", name: "Coinbase", price: 250.00, trend: 4.5, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/btc/200' },
             { symbol: "HOOD", name: "Robinhood", price: 18.00, trend: 1.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/robinhood.com' },
             { symbol: "PLTR", name: "Palantir", price: 25.00, trend: 3.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/palantir.com' },
             { symbol: "RBLX", name: "Roblox", price: 40.00, trend: 1.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/roblox.com' },
@@ -1049,7 +1055,6 @@
             { symbol: "RUNE", name: "THORChain", price: 7.50, trend: 1.2, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/rune/200' }
         ];
 
-        // Seed initial base prices to anchor the global simulation
         STOCKS.forEach(s => {
             s.basePrice = s.price;
             if (s.type === 'stock') {
@@ -1358,9 +1363,9 @@
             { id: 'aapl', label: 'AAPL Shares', isMono: true, getValue: () => (state.shares['AAPL'] || 0).toFixed(2) },
             { id: 'nvda', label: 'NVDA Shares', isMono: true, getValue: () => (state.shares['NVDA'] || 0).toFixed(2) },
             { id: 'msft', label: 'MSFT Shares', isMono: true, getValue: () => (state.shares['MSFT'] || 0).toFixed(2) },
-            { id: 'networth', label: 'Net Worth', isMono: true, getValue: () => '$' + Math.floor(state.netWorth).toLocaleString() },
-            { id: 'cash', label: 'Cash Balance', isMono: true, getValue: () => '$' + Math.floor(state.balance).toLocaleString() },
-            { id: 'revenue', label: 'Hourly Rev', isMono: true, getValue: () => '$' + Math.floor(state.revenue).toLocaleString() },
+            { id: 'networth', label: 'Net Worth', isMono: true, getValue: () => '$' + formatLargeNumber(state.netWorth) },
+            { id: 'cash', label: 'Cash Balance', isMono: true, getValue: () => '$' + formatLargeNumber(state.balance) },
+            { id: 'revenue', label: 'Hourly Rev', isMono: true, getValue: () => '$' + formatLargeNumber(state.revenue) },
             { id: 'level', label: 'Empire Level', isMono: true, getValue: () => state.level },
             { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length }
         ];
@@ -1388,7 +1393,12 @@
                     const noise = (noiseSeed - Math.floor(noiseSeed) - 0.5) * 0.1;
                     
                     const mult = Math.max(0.05, 1 + ((wave1 + wave2 + wave3 + noise) * volatility));
-                    const calcPrice = parseFloat((s.basePrice * mult).toFixed(2));
+                    let calcPrice = parseFloat((s.basePrice * mult).toFixed(2));
+                    
+                    if (calcPrice <= 1.5) {
+                        calcPrice = (s.basePrice || 10) * (0.5 + Math.random());
+                        if (i === 0) s.trend = Math.abs(s.trend) + 5;
+                    }
                     
                     if (i === 0) {
                         s.price = calcPrice;
@@ -1481,7 +1491,7 @@
             }
         }
         setTimeout(fetchRealTimeStocks, 500);
-        setInterval(fetchRealTimeStocks, 10000);
+        setInterval(fetchRealTimeStocks, 120000);
 
         function saveGame() { 
             state.lastSaveTime = Date.now();
@@ -1519,7 +1529,7 @@
                     const elapsedHours = elapsed / 3600000;
                     const earned = state.revenue * elapsedHours;
                     state.balance += earned;
-                    logToTerminal(`OFFLINE EARNINGS: $${Math.floor(earned).toLocaleString()}`);
+                    logToTerminal(`OFFLINE EARNINGS: $${formatLargeNumber(Math.floor(earned))}`);
                 }
             }
 
@@ -1632,9 +1642,9 @@
 
             checkLevelUp();
 
-            setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
-            setUI('top-balance-display', '$' + Math.floor(state.balance).toLocaleString());
-            setUI('profile-balance', '$' + Math.floor(state.balance).toLocaleString());
+            setUI('balance-display', '$' + formatLargeNumber(state.balance));
+            setUI('top-balance-display', '$' + formatLargeNumber(state.balance));
+            setUI('profile-balance', '$' + formatLargeNumber(state.balance));
 
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
             setUI('xp-val', Math.floor(state.xp));
@@ -1995,12 +2005,12 @@
 
             state.revenue = (rev - bills) * getDegreeMult();
 
-            setUI('balance-display', '$' + Math.floor(state.balance).toLocaleString());
-            setUI('top-balance-display', '$' + Math.floor(state.balance).toLocaleString());
-            setUI('profile-balance', '$' + Math.floor(state.balance).toLocaleString());
-            setUI('nw-display', '$' + Math.floor(state.netWorth).toLocaleString());
-            setUI('profile-nw', '$' + Math.floor(state.netWorth).toLocaleString());
-            setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + Math.floor(state.revenue).toLocaleString() + '/hr');
+            setUI('balance-display', '$' + formatLargeNumber(state.balance));
+            setUI('top-balance-display', '$' + formatLargeNumber(state.balance));
+            setUI('profile-balance', '$' + formatLargeNumber(state.balance));
+            setUI('nw-display', '$' + formatLargeNumber(state.netWorth));
+            setUI('profile-nw', '$' + formatLargeNumber(state.netWorth));
+            setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + formatLargeNumber(state.revenue) + '/hr');
 
             tickStocksUI();
             updateButtonStates();
@@ -2204,7 +2214,7 @@
                     <div class="debit-card p-4 flex flex-col justify-between shadow-xl ${card.class}" style="aspect-ratio: 1.58/1; border-radius: 12px; border-width: 1px;">
                         <div>
                             <p class="text-[8px] text-white/50 uppercase font-bold tracking-widest mb-1">${card.name}</p>
-                            <p class="text-sm font-black text-white truncate">$${Math.floor(bal).toLocaleString()}</p>
+                            <p class="text-sm font-black text-white truncate">$${formatLargeNumber(bal)}</p>
                         </div>
                         <div class="flex justify-between items-end">
                             <div class="card-chip w-6 h-4 rounded"></div>
@@ -2348,7 +2358,7 @@
             state.ownedCards.forEach(id => {
                 const card = CARD_TIERS.find(t => t.id === parseInt(id));
                 const bal = state.cardBalances[id] || 0;
-                const optStr = `<option value="${id}">${card.name} ($${Math.floor(bal).toLocaleString()})</option>`;
+                const optStr = `<option value="${id}">${card.name} ($${formatLargeNumber(bal)})</option>`;
                 fromSel.innerHTML += optStr;
                 toSel.innerHTML += optStr;
             });
@@ -2790,7 +2800,9 @@
                         return 0;
                     });
                     
-                    stocksFullGrid.innerHTML = sortedStocks.map(renderStockCard).join('');
+                    stocksFullGrid.innerHTML
+
+= sortedStocks.map(renderStockCard).join('');
                 }
             }
 
@@ -2828,7 +2840,6 @@
                 }
             }
 
-            // Draw initial charts only if tab is active (Optimization)
             if (currentTab === 'stocks') {
                 STOCKS.forEach(s => {
                     if ((currentMarketTab === 'regular' && s.type === 'stock') || 
@@ -2868,16 +2879,16 @@
                         <div>
                             <img src="${i.img}" class="item-img mb-4">
                             <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
-                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${i.price.toLocaleString()}</p>
+                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${formatLargeNumber(i.price)}</p>
                         </div>
                         <div class="grid grid-cols-2 gap-2 mt-2">
                             <button onclick="sellCollection('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center bg-zinc-900 text-white" ${!canSell ? 'disabled' : ''}>
                                 <span class="mb-0.5 font-black">${canSell ? 'SELL' : 'LVL 4'}</span>
-                                <span class="opacity-60">${canSell ? '$'+sellPrice.toLocaleString() : 'REQUIRED'}</span>
+                                <span class="opacity-60">${canSell ? '$'+formatLargeNumber(sellPrice) : 'REQUIRED'}</span>
                             </button>
                             <button onclick="openAuctionModal('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center ${canAuction ? '!bg-amber-950/30 !text-amber-500 !border-amber-900/50 hover:!bg-amber-500 hover:!text-white' : 'bg-zinc-900 text-white'}" ${!canAuction ? 'disabled' : ''}>
                                 <span class="mb-0.5 font-black">${canAuction ? 'AUCTION' : 'LVL 12'}</span>
-                                <span class="opacity-60">${canAuction ? 'W.I.P. but still workx' : 'REQUIRED'}</span>
+                                <span class="opacity-60">${canAuction ? 'START BID' : 'REQUIRED'}</span>
                             </button>
                         </div>
                     </div>`;
@@ -2986,7 +2997,7 @@
                                         <span>Classes Req.</span>
                                         <span>${c.req}</span>
                                     </div>
-                                    <p class="text-[12px] font-mono text-white mb-6">Tuition: $${tuition.toLocaleString()}</p>
+                                    <p class="text-[12px] font-mono text-white mb-6">Tuition: $${formatLargeNumber(tuition)}</p>
                                 </div>
                                 ${isLockedByDegree ? 
                                     `<button class="btn-buy bg-zinc-900 text-zinc-500 opacity-50 cursor-not-allowed" disabled>MAX DEGREES</button>` : 
@@ -3195,7 +3206,7 @@
             state.ownedAssets = state.ownedAssets.filter(a => a !== id);
             delete state.collectionOwnedTime[id];
 
-            logToTerminal(`SOLD COLLECTION: ${item.name} FOR $${price.toLocaleString()}`);
+            logToTerminal(`SOLD COLLECTION: ${item.name} FOR $${formatLargeNumber(price)}`);
             updateUI(true);
             saveGame();
         }
@@ -3239,7 +3250,7 @@
             const min = Math.floor(activeAuction.timer / 60);
             const sec = activeAuction.timer % 60;
             setUI('auction-time', `${min}:${sec < 10 ? '0' : ''}${sec}`);
-            setUI('auction-price', '$' + Math.floor(activeAuction.currentBid).toLocaleString());
+            setUI('auction-price', '$' + formatLargeNumber(Math.floor(activeAuction.currentBid)));
 
             const log = document.getElementById('auction-log');
             if (log) {
@@ -3247,7 +3258,7 @@
                     <p class="text-[10px] mono">
                         <span class="text-zinc-500">${b.name}</span> 
                         <span class="text-zinc-700">${b.msg || ''}</span> 
-                        <span class="text-emerald-500 font-bold">$${Math.floor(b.amount).toLocaleString()}</span>
+                        <span class="text-emerald-500 font-bold">$${formatLargeNumber(Math.floor(b.amount))}</span>
                     </p>
                 `).join('');
             }
@@ -3262,7 +3273,7 @@
             state.ownedAssets = state.ownedAssets.filter(a => a !== activeAuction.id);
             delete state.collectionOwnedTime[activeAuction.id];
 
-            logToTerminal(`AUCTION ENDED: ${activeAuction.item.name} SOLD FOR $${finalPrice.toLocaleString()}`);
+            logToTerminal(`AUCTION ENDED: ${activeAuction.item.name} SOLD FOR $${formatLargeNumber(finalPrice)}`);
 
             document.getElementById('auction-modal').style.display = 'none';
             activeAuction = null;
@@ -3399,29 +3410,14 @@
             }
         }
 
+        let tickCounter = 0;
         setInterval(() => {
             state.balance += (state.revenue / 3600);
-            STOCKS.forEach(s => {
-                const oldPrice = s.price;
-                if (!s.isRealTime) {
-                    const volt = s.type === 'crypto' ? 0.02 : 0.008;
-                    s.trend += (Math.random() - 0.5) * 0.2;
-                    let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
-                    s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
-                }
-                const open = oldPrice;
-                const close = s.price;
-                const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
-                const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
-                s.history.push({ open, close, high, low });
-                if(s.history.length > 50) s.history.shift();
-            });
             
-            if (GLOBAL_MARKET_CONFIG.apiUrl) {
-                syncGlobalMarketBackend(); 
-            } else if (GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync) {
-                updateGlobalSimulatedMarket();
-            } else {
+            tickCounter++;
+            
+            if (tickCounter >= 120) {
+                tickCounter = 0;
                 STOCKS.forEach(s => {
                     const oldPrice = s.price;
                     if (!s.isRealTime) {
@@ -3429,6 +3425,11 @@
                         s.trend += (Math.random() - 0.5) * 0.2;
                         let newPrice = s.price + (Math.random() - 0.5) * (s.price * volt);
                         s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
+                        
+                        if (s.price <= 1.5) {
+                            s.price = (s.basePrice || 10) * (0.5 + Math.random());
+                            s.trend = Math.abs(s.trend) + 5;
+                        }
                     }
                     const open = oldPrice;
                     const close = s.price;
@@ -3437,10 +3438,19 @@
                     s.history.push({ open, close, high, low });
                     if(s.history.length > 50) s.history.shift();
                 });
+                
+                if (GLOBAL_MARKET_CONFIG.apiUrl) {
+                    syncGlobalMarketBackend(); 
+                } else if (GLOBAL_MARKET_CONFIG.useAlgorithmicGlobalSync) {
+                    updateGlobalSimulatedMarket();
+                }
+                
+                updateUI(true);
+            } else {
+                fastTickUpdate(); 
             }
 
             state.lastSaveTime = Date.now();
-            fastTickUpdate(); 
             saveGame();
         }, 1000);
 
@@ -3487,7 +3497,7 @@
             const val = parseFloat(document.getElementById('cheat-input').value);
             if (!isNaN(val) && val > 0) {
                 state.balance += val;
-                logToTerminal(`[SYSTEM] ILLEGITIMATE FUNDS ADDED: $${val.toLocaleString()}`);
+                logToTerminal(`[SYSTEM] ILLEGITIMATE FUNDS ADDED: $${formatLargeNumber(val)}`);
                 updateUI(true);
                 saveGame();
             }
