@@ -709,7 +709,11 @@
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <button onclick="openResetModal()" class="w-full mt-10 py-3 border border-red-900/30 bg-red-950/20 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded hover:bg-red-500 hover:text-white transition-all">
+                        <div class="grid grid-cols-2 gap-2 mt-6">
+                            <button onclick="exportSave()" class="btn-buy border border-zinc-800 bg-zinc-900 hover:bg-white hover:text-black">EXPORT SAVE</button>
+                            <button onclick="importSave()" class="btn-buy border border-zinc-800 bg-zinc-900 hover:bg-white hover:text-black">IMPORT SAVE</button>
+                        </div>
+                        <button onclick="openResetModal()" class="w-full mt-4 py-3 border border-red-900/30 bg-red-950/20 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded hover:bg-red-500 hover:text-white transition-all">
                             Reset Empire Data
                         </button>
                     </div>
@@ -2800,9 +2804,7 @@
                         return 0;
                     });
                     
-                    stocksFullGrid.innerHTML
-
-= sortedStocks.map(renderStockCard).join('');
+                    stocksFullGrid.innerHTML = sortedStocks.map(renderStockCard).join('');
                 }
             }
 
@@ -3117,7 +3119,9 @@
                 if (amount > 0 && (state.shares[symbol] || 0) >= amount) {
                     state.balance += (stock.price * amount);
                     state.shares[symbol] -= amount;
-                    if(state.shares[symbol] < 0.001) { 
+                    if(state
+
+.shares[symbol] < 0.001) { 
                         state.balance += (stock.price * state.shares[symbol]);
                         state.shares[symbol] = 0;
                     }
@@ -3410,12 +3414,47 @@
             }
         }
 
+        function exportSave() {
+            try {
+                const saveString = btoa(JSON.stringify(state));
+                navigator.clipboard.writeText(saveString).then(() => {
+                    alert("Save code copied to clipboard! Save this text somewhere safe so you can play at home.");
+                    logToTerminal("SAVE EXPORTED TO CLIPBOARD");
+                }).catch(() => {
+                    prompt("Please copy your save code below:", saveString);
+                    logToTerminal("SAVE EXPORTED");
+                });
+            } catch(e) {
+                alert("Error exporting save data.");
+            }
+        }
+
+        function importSave() {
+            const input = prompt("Paste your save code here:");
+            if (input && input.trim() !== '') {
+                try {
+                    const parsed = JSON.parse(atob(input));
+                    if (parsed && parsed.level !== undefined && parsed.balance !== undefined) {
+                        state = parsed;
+                        saveGame();
+                        alert("Save successfully imported! Reloading...");
+                        window.location.reload();
+                    } else {
+                        alert("Invalid save code detected.");
+                    }
+                } catch(e) {
+                    alert("Failed to import save. Make sure you copied the entire code correctly.");
+                }
+            }
+        }
+
         let tickCounter = 0;
         setInterval(() => {
             state.balance += (state.revenue / 3600);
             
             tickCounter++;
             
+            // Wait for 120 seconds (2 mins) to update the stocks
             if (tickCounter >= 120) {
                 tickCounter = 0;
                 STOCKS.forEach(s => {
