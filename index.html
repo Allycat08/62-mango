@@ -83,6 +83,15 @@
             transform: none !important;
         }
 
+        .fade-on-fullscreen {
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        .card-fullscreen-mode .debit-card .fade-on-fullscreen {
+            opacity: 0 !important;
+            transform: scale(0.95);
+            pointer-events: none !important;
+        }
+
         .card-glare {
             position: absolute;
             inset: 0;
@@ -447,11 +456,11 @@
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
                             </button>
 
-                            <div class="flex justify-between items-start relative z-10">
+                            <div class="flex justify-between items-start relative z-10 fade-on-fullscreen">
                                 <div class="card-chip"></div>
                                 <svg width="50" viewBox="0 0 76 65" fill="none" class="opacity-50 mr-8"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
                             </div>
-                            <div class="relative z-10">
+                            <div class="relative z-10 fade-on-fullscreen">
                                 <div class="flex justify-between items-center mb-1">
                                     <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">ACTIVE BALANCE</p>
                                     <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
@@ -462,7 +471,7 @@
                                     <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
                                 </div>
                             </div>
-                            <div class="flex justify-between items-end relative z-10">
+                            <div class="flex justify-between items-end relative z-10 fade-on-fullscreen">
                                 <p class="text-[11px] text-white/30 font-medium tracking-widest uppercase" id="card-name-display">HOLDER NAME</p>
                                 <p class="text-[11px] text-white/30 font-bold uppercase tracking-widest">DEBIT</p>
                             </div>
@@ -1561,7 +1570,7 @@
                     
                     const mult = Math.max(0.15, 1 + ((wave1 + wave2 + wave3 + noise) * volatility));
                     const minP = s.basePrice * 0.15;
-                    let calcPrice = parseFloat((s.basePrice * mult).toFixed(2));
+                    let calcPrice = parseFloat((s.basePrice * mult).toFixed(4));
                     if (calcPrice < minP) calcPrice = minP + Math.random() * (s.basePrice * 0.1);
                     
                     if (i === 0) {
@@ -1658,7 +1667,6 @@
         setInterval(fetchRealTimeStocks, 120000);
 
         function saveGame() { 
-            state.lastSaveTime = Date.now();
             state.stockMarket = STOCKS.map(s => ({
                 symbol: s.symbol, price: s.price, trend: s.trend, history: s.history, isRealTime: s.isRealTime, dividend: s.dividend
             }));
@@ -1701,15 +1709,25 @@
             saveGame();
         }
 
+        let pendingAchievements = null;
+        function initAchievements() {
+            pendingAchievements = ACHIEVEMENTS.filter(a => !state.achievements.includes(a.id));
+        }
+
         function checkAchievements() {
+            if (!pendingAchievements) initAchievements();
+            if (pendingAchievements.length === 0) return;
+            
             let newlyUnlocked = false;
-            ACHIEVEMENTS.forEach(ach => {
-                if (!state.achievements.includes(ach.id) && ach.check()) {
+            for (let i = pendingAchievements.length - 1; i >= 0; i--) {
+                const ach = pendingAchievements[i];
+                if (ach.check()) {
                     state.achievements.push(ach.id);
                     logToTerminal(`ACHIEVEMENT UNLOCKED: ${ach.name}`);
                     newlyUnlocked = true;
+                    pendingAchievements.splice(i, 1);
                 }
-            });
+            }
             if (newlyUnlocked) {
                 renderAchievements();
                 saveGame();
@@ -2539,8 +2557,7 @@
             if (modal) modal.style.display = 'none';
         }
 
-        function openResetModal
-        () { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'flex'; }
+        function openResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'flex'; }
         function closeResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'none'; }
         function confirmReset() { localStorage.removeItem('vercel_empire_v12_favs'); window.location.reload(); }
 
@@ -2573,7 +2590,9 @@
 
             state.cardBalances[state.equippedCardId] = state.balance;
 
-            const fromBal = state.cardBalances[fromId] || 0;
+            const fromBal = state.
+            
+cardBalances[fromId] || 0;
             if (fromBal >= amt) {
                 state.cardBalances[fromId] -= amt;
                 state.cardBalances[toId] = (state.cardBalances[toId] || 0) + amt;
@@ -3715,12 +3734,12 @@
                             s.trend = Math.abs(s.trend) + 1.0; 
                         }
                         
-                        s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
+                        s.price = Math.max(0.0001, parseFloat(newPrice.toFixed(4)));
                     }
                     const open = oldPrice;
                     const close = s.price;
-                    const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
-                    const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
+                    const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(4));
+                    const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(4));
                     s.history.push({ open, close, high, low });
                     if(s.history.length > 50) s.history.shift();
                 });
@@ -3736,8 +3755,10 @@
                 fastTickUpdate(); 
             }
 
-            state.lastSaveTime = Date.now();
-            saveGame();
+            if (tickCounter % 10 === 0) {
+                state.lastSaveTime = Date.now();
+                saveGame();
+            }
         }, 1000);
 
         const cardContainer = document.getElementById('card-container');
