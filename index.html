@@ -65,16 +65,17 @@
         .debit-card:active { transform: scale(0.95) rotateX(10deg); }
 
         .card-fullscreen-mode {
-            position: fixed !important;
-            inset: 0 !important;
-            z-index: 9999 !important;
-            background: rgba(0,0,0,0.85) !important;
-            backdrop-filter: blur(15px) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            padding: 2rem !important;
-        }
+    position: fixed !important;
+    inset: 0 !important;
+    z-index: 9999 !important;
+    background: rgba(0,0,0,0.85) !important;
+    backdrop-filter: blur(15px) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 2rem !important;
+    perspective: none !important; 
+}
         .card-fullscreen-mode .debit-card {
             width: 100% !important;
             max-width: 900px !important;
@@ -449,34 +450,37 @@
         <div id="dashboard" class="tab-content active">
             <div class="grid grid-cols-12 gap-6">
                 <div class="col-span-12 lg:col-span-4">
-                    <div class="card-perspective" id="card-container">
-                        <div class="debit-card p-8 flex flex-col justify-between tier-0" id="game-card" onclick="mintMoney(event)">
-                            <div class="card-glare" id="card-glare"></div>
-                            <button onclick="toggleCardFullscreen(event)" id="card-max-btn" class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors" title="Toggle Fullscreen">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
-                            </button>
+                  <div class="card-perspective" id="card-container">
+    <div class="debit-card p-8 flex flex-col justify-between tier-0" id="game-card" onclick="mintMoney(event)">
+        <div class="card-glare" id="card-glare"></div>
+        <button onclick="toggleCardFullscreen(event)" id="card-max-btn" class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors" title="Toggle Fullscreen">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+        </button>
 
-                            <div class="flex justify-between items-start relative z-10 fade-on-fullscreen">
-                                <div class="card-chip"></div>
-                                <svg width="50" viewBox="0 0 76 65" fill="none" class="opacity-50 mr-8"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
-                            </div>
-                            <div class="relative z-10 fade-on-fullscreen">
-                                <div class="flex justify-between items-center mb-1">
-                                    <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">ACTIVE BALANCE</p>
-                                    <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
-                                </div>
-                                <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap" id="balance-display">$0</h2>
-                                <div class="flex items-center gap-2 mt-1">
-                                    <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
-                                    <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
-                                </div>
-                            </div>
-                            <div class="flex justify-between items-end relative z-10 fade-on-fullscreen">
-                                <p class="text-[11px] text-white/30 font-medium tracking-widest uppercase" id="card-name-display">HOLDER NAME</p>
-                                <p class="text-[11px] text-white/30 font-bold uppercase tracking-widest">DEBIT</p>
-                            </div>
-                        </div>
-                    </div>
+        <!-- NOTE THE fade-on-fullscreen CLASS ON THESE 3 DIVS -->
+        <div class="flex justify-between items-start relative z-10 fade-on-fullscreen">
+            <div class="card-chip"></div>
+            <svg width="50" viewBox="0 0 76 65" fill="none" class="opacity-50 mr-8"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
+        </div>
+        
+        <div class="relative z-10 fade-on-fullscreen">
+            <div class="flex justify-between items-center mb-1">
+                <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">ACTIVE BALANCE</p>
+                <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
+            </div>
+            <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap" id="balance-display">$0</h2>
+            <div class="flex items-center gap-2 mt-1">
+                <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
+                <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
+            </div>
+        </div>
+        
+        <div class="flex justify-between items-end relative z-10 fade-on-fullscreen">
+            <p class="text-[11px] text-white/30 font-medium tracking-widest uppercase" id="card-name-display">HOLDER NAME</p>
+            <p class="text-[11px] text-white/30 font-bold uppercase tracking-widest">DEBIT</p>
+        </div>
+    </div>
+</div>
 
                     <div class="glass-card mt-6 p-6">
                         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">QUICK WATCHLIST</p>
@@ -1844,20 +1848,22 @@
             }
         }
 
-        function toggleCardFullscreen(e) {
-            e.stopPropagation(); 
-            const container = document.getElementById('card-container');
-            const gameCard = document.getElementById('game-card');
-            const btn = e.currentTarget;
+       function toggleCardFullscreen(e) {
+    if(e) e.stopPropagation(); 
+    const container = document.getElementById('card-container');
+    const gameCard = document.getElementById('game-card');
+    const btn = document.getElementById('card-max-btn');
 
-            container.classList.toggle('card-fullscreen-mode');
-            if (container.classList.contains('card-fullscreen-mode')) {
-                btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
-                gameCard.style.transform = ''; 
-            } else {
-                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>`;
-            }
-        }
+    container.classList.toggle('card-fullscreen-mode');
+    if (container.classList.contains('card-fullscreen-mode')) {
+]
+        btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+        gameCard.style.transform = ''; 
+    } else {
+        
+        btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>`;
+    }
+}
 
         function checkLevelUp() {
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
