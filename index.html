@@ -64,35 +64,6 @@
         }
         .debit-card:active { transform: scale(0.95) rotateX(10deg); }
 
-        .card-fullscreen-mode {
-    position: fixed !important;
-    inset: 0 !important;
-    z-index: 9999 !important;
-    background: rgba(0,0,0,0.85) !important;
-    backdrop-filter: blur(15px) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 2rem !important;
-    perspective: none !important; 
-}
-        .card-fullscreen-mode .debit-card {
-            width: 100% !important;
-            max-width: 900px !important;
-            height: auto !important;
-            aspect-ratio: 1.58 / 1 !important;
-            transform: none !important;
-        }
-
-        .fade-on-fullscreen {
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-        .card-fullscreen-mode .debit-card .fade-on-fullscreen {
-            opacity: 0 !important;
-            transform: scale(0.95);
-            pointer-events: none !important;
-        }
-
         .card-glare {
             position: absolute;
             inset: 0;
@@ -450,37 +421,34 @@
         <div id="dashboard" class="tab-content active">
             <div class="grid grid-cols-12 gap-6">
                 <div class="col-span-12 lg:col-span-4">
-                  <div class="card-perspective" id="card-container">
-    <div class="debit-card p-8 flex flex-col justify-between tier-0" id="game-card" onclick="mintMoney(event)">
-        <div class="card-glare" id="card-glare"></div>
-        <button onclick="toggleCardFullscreen(event)" id="card-max-btn" class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors" title="Toggle Fullscreen">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
-        </button>
+                    <div class="card-perspective" id="card-container">
+                        <div class="debit-card p-8 flex flex-col justify-between tier-0" id="game-card" onclick="mintMoney(event)">
+                            <div class="card-glare" id="card-glare"></div>
+                            <button onclick="toggleCardFullscreen(event)" id="card-max-btn" class="absolute top-6 right-6 z-50 text-white/50 hover:text-white transition-colors" title="Toggle Fullscreen">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
+                            </button>
 
-        <!-- NOTE THE fade-on-fullscreen CLASS ON THESE 3 DIVS -->
-        <div class="flex justify-between items-start relative z-10 fade-on-fullscreen">
-            <div class="card-chip"></div>
-            <svg width="50" viewBox="0 0 76 65" fill="none" class="opacity-50 mr-8"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
-        </div>
-        
-        <div class="relative z-10 fade-on-fullscreen">
-            <div class="flex justify-between items-center mb-1">
-                <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">ACTIVE BALANCE</p>
-                <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
-            </div>
-            <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap" id="balance-display">$0</h2>
-            <div class="flex items-center gap-2 mt-1">
-                <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
-                <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
-            </div>
-        </div>
-        
-        <div class="flex justify-between items-end relative z-10 fade-on-fullscreen">
-            <p class="text-[11px] text-white/30 font-medium tracking-widest uppercase" id="card-name-display">HOLDER NAME</p>
-            <p class="text-[11px] text-white/30 font-bold uppercase tracking-widest">DEBIT</p>
-        </div>
-    </div>
-</div>
+                            <div class="flex justify-between items-start relative z-10">
+                                <div class="card-chip"></div>
+                                <svg width="50" viewBox="0 0 76 65" fill="none" class="opacity-50 mr-8"><path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/></svg>
+                            </div>
+                            <div class="relative z-10">
+                                <div class="flex justify-between items-center mb-1">
+                                    <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">ACTIVE BALANCE</p>
+                                    <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
+                                </div>
+                                <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap" id="balance-display">$0</h2>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
+                                    <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-end relative z-10">
+                                <p class="text-[11px] text-white/30 font-medium tracking-widest uppercase" id="card-name-display">HOLDER NAME</p>
+                                <p class="text-[11px] text-white/30 font-bold uppercase tracking-widest">DEBIT</p>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="glass-card mt-6 p-6">
                         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">QUICK WATCHLIST</p>
@@ -778,6 +746,19 @@
     </div>
 
     <!-- MODALS -->
+    
+    <!-- CARD FULLSCREEN MODAL -->
+    <div id="card-fullscreen-modal" style="display:none; perspective: 1500px;" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md items-center justify-center p-4 md:p-12">
+        <div id="fullscreen-card-visual" style="transform-style: preserve-3d; transition: transform 0.1s ease-out;" class="relative w-full max-w-5xl aspect-[1.58/1] rounded-3xl md:rounded-[3rem] shadow-[0_0_80px_rgba(255,255,255,0.15)]">
+            <button onclick="closeCardFullscreen()" id="fullscreen-close-btn" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white z-50 transition-colors">
+                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+            </button>
+            <div id="fullscreen-card-glare" class="card-glare rounded-3xl md:rounded-[3rem]"></div>
+        </div>
+    </div>
+
     <div id="onboarding-modal">
         <div class="w-full max-w-md glass-card p-12 text-center">
             <svg width="60" height="60" viewBox="0 0 76 65" fill="none" class="mx-auto mb-8">
@@ -1841,29 +1822,40 @@
             updateButtonStates();
 
             const card = document.getElementById('game-card');
-            if (card && !document.getElementById('card-container').classList.contains('card-fullscreen-mode')) {
+            if (card) {
                 card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
                 if(card.mintTimeout) clearTimeout(card.mintTimeout);
                 card.mintTimeout = setTimeout(() => { card.style.transform = ''; }, 100);
             }
         }
 
-       function toggleCardFullscreen(e) {
-    if(e) e.stopPropagation(); 
-    const container = document.getElementById('card-container');
-    const gameCard = document.getElementById('game-card');
-    const btn = document.getElementById('card-max-btn');
+        function toggleCardFullscreen(e) {
+            if(e) e.stopPropagation(); 
+            const modal = document.getElementById('card-fullscreen-modal');
+            const visual = document.getElementById('fullscreen-card-visual');
+            const closeBtn = document.getElementById('fullscreen-close-btn');
 
-    container.classList.toggle('card-fullscreen-mode');
-    if (container.classList.contains('card-fullscreen-mode')) {
-]
-        btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
-        gameCard.style.transform = ''; 
-    } else {
-        
-        btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>`;
-    }
-}
+            const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
+
+            visual.className = `relative w-full max-w-5xl aspect-[1.58/1] rounded-3xl md:rounded-[3rem] shadow-[0_0_80px_rgba(255,255,255,0.15)] ${equipped.class}`;
+            
+            if (['tier-2', 'tier-9', 'tier-14'].includes(equipped.class) || document.body.classList.contains('theme-light')) {
+                closeBtn.className = "absolute top-6 right-6 md:top-10 md:right-10 text-black/50 hover:text-black z-50 transition-colors";
+            } else {
+                closeBtn.className = "absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white z-50 transition-colors";
+            }
+
+            modal.style.display = 'flex';
+        }
+
+        function closeCardFullscreen() {
+            const modal = document.getElementById('card-fullscreen-modal');
+            if (modal) {
+                modal.style.display = 'none';
+                const visual = document.getElementById('fullscreen-card-visual');
+                if (visual) visual.style.transform = 'rotateY(0deg) rotateX(0deg)';
+            }
+        }
 
         function checkLevelUp() {
             const xpReq = 500 * Math.pow(1.12, state.level - 1);
@@ -2596,9 +2588,7 @@
 
             state.cardBalances[state.equippedCardId] = state.balance;
 
-            const fromBal = state.
-            
-cardBalances[fromId] || 0;
+            const fromBal = state.cardBalances[fromId] || 0;
             if (fromBal >= amt) {
                 state.cardBalances[fromId] -= amt;
                 state.cardBalances[toId] = (state.cardBalances[toId] || 0) + amt;
@@ -2983,7 +2973,9 @@ cardBalances[fromId] || 0;
                     </div>
                     <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900 mt-auto flex justify-between items-center">
                         <div>
-                            <p class="text-[8px] text-zinc-500 font-bold uppercase mb-1">YOUR HOLDINGS</p>
+                            <p class="text-[8px] text-zinc-500 font-bold
+
+uppercase mb-1">YOUR HOLDINGS</p>
                             <p class="text-sm font-bold mono" id="owned-val-${s.symbol}">${owned.toFixed(3)} UNITS</p>
                         </div>
                         ${s.type === 'stock' ? `
@@ -3795,14 +3787,37 @@ cardBalances[fromId] || 0;
             });
         }
 
+        const fsModal = document.getElementById('card-fullscreen-modal');
+        const fsCard = document.getElementById('fullscreen-card-visual');
+        const fsGlare = document.getElementById('fullscreen-card-glare');
+        if(fsModal) {
+            let fsReqId = null;
+            fsModal.addEventListener('mousemove', (e) => {
+                if(fsReqId) cancelAnimationFrame(fsReqId);
+                fsReqId = requestAnimationFrame(() => {
+                    const rect = fsCard.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const xc = rect.width / 2;
+                    const yc = rect.height / 2;
+                    fsCard.style.transform = `rotateY(${(x - xc)/25}deg) rotateX(${-(y - yc)/25}deg)`;
+                    if(fsGlare) {
+                        fsGlare.style.setProperty('--x', `${(x / rect.width) * 100}%`);
+                        fsGlare.style.setProperty('--y', `${(y / rect.height) * 100}%`);
+                    }
+                });
+            });
+            fsModal.addEventListener('mouseleave', () => {
+                if(fsCard) fsCard.style.transform = 'rotateY(0deg) rotateX(0deg)';
+            });
+        }
+
         window.addEventListener('keydown', (e) => {
             if(e.key === 'Escape') {
                 closeStockModal();
                 closeResetModal();
                 closeTransferModal();
-                if (document.getElementById('card-container').classList.contains('card-fullscreen-mode')) {
-                    document.getElementById('card-max-btn').click();
-                }
+                closeCardFullscreen();
             }
         });
 
