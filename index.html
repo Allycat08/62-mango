@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -64,6 +63,25 @@
             font-family: 'Helvetica Neue', sans-serif;
         }
         .debit-card:active { transform: scale(0.95) rotateX(10deg); }
+
+        .card-fullscreen-mode {
+            position: fixed !important;
+            inset: 0 !important;
+            z-index: 9999 !important;
+            background: rgba(0,0,0,0.85) !important;
+            backdrop-filter: blur(15px) !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 2rem !important;
+        }
+        .card-fullscreen-mode .debit-card {
+            width: 100% !important;
+            max-width: 900px !important;
+            height: auto !important;
+            aspect-ratio: 1.58 / 1 !important;
+            transform: none !important;
+        }
 
         .card-glare {
             position: absolute;
@@ -747,19 +765,6 @@
     </div>
 
     <!-- MODALS -->
-    
-    <!-- CARD FULLSCREEN MODAL -->
-    <div id="card-fullscreen-modal" style="display:none; perspective: 1500px;" class="fixed inset-0 z-[100] bg-black/90 backdrop-blur-md items-center justify-center p-4 md:p-12">
-        <div id="fullscreen-card-visual" style="transform-style: preserve-3d; transition: transform 0.1s ease-out;" class="relative w-full max-w-5xl aspect-[1.58/1] rounded-3xl md:rounded-[3rem] shadow-[0_0_80px_rgba(255,255,255,0.15)]">
-            <button onclick="closeCardFullscreen()" id="fullscreen-close-btn" class="absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white z-50 transition-colors">
-                <svg class="w-6 h-6 md:w-8 md:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
-            </button>
-            <div id="fullscreen-card-glare" class="card-glare rounded-3xl md:rounded-[3rem]"></div>
-        </div>
-    </div>
-
     <div id="onboarding-modal">
         <div class="w-full max-w-md glass-card p-12 text-center">
             <svg width="60" height="60" viewBox="0 0 76 65" fill="none" class="mx-auto mb-8">
@@ -1556,7 +1561,7 @@
                     
                     const mult = Math.max(0.15, 1 + ((wave1 + wave2 + wave3 + noise) * volatility));
                     const minP = s.basePrice * 0.15;
-                    let calcPrice = parseFloat((s.basePrice * mult).toFixed(4));
+                    let calcPrice = parseFloat((s.basePrice * mult).toFixed(2));
                     if (calcPrice < minP) calcPrice = minP + Math.random() * (s.basePrice * 0.1);
                     
                     if (i === 0) {
@@ -1653,6 +1658,7 @@
         setInterval(fetchRealTimeStocks, 120000);
 
         function saveGame() { 
+            state.lastSaveTime = Date.now();
             state.stockMarket = STOCKS.map(s => ({
                 symbol: s.symbol, price: s.price, trend: s.trend, history: s.history, isRealTime: s.isRealTime, dividend: s.dividend
             }));
@@ -1695,25 +1701,15 @@
             saveGame();
         }
 
-        let pendingAchievements = null;
-        function initAchievements() {
-            pendingAchievements = ACHIEVEMENTS.filter(a => !state.achievements.includes(a.id));
-        }
-
         function checkAchievements() {
-            if (!pendingAchievements) initAchievements();
-            if (pendingAchievements.length === 0) return;
-            
             let newlyUnlocked = false;
-            for (let i = pendingAchievements.length - 1; i >= 0; i--) {
-                const ach = pendingAchievements[i];
-                if (ach.check()) {
+            ACHIEVEMENTS.forEach(ach => {
+                if (!state.achievements.includes(ach.id) && ach.check()) {
                     state.achievements.push(ach.id);
                     logToTerminal(`ACHIEVEMENT UNLOCKED: ${ach.name}`);
                     newlyUnlocked = true;
-                    pendingAchievements.splice(i, 1);
                 }
-            }
+            });
             if (newlyUnlocked) {
                 renderAchievements();
                 saveGame();
@@ -1823,7 +1819,7 @@
             updateButtonStates();
 
             const card = document.getElementById('game-card');
-            if (card) {
+            if (card && !document.getElementById('card-container').classList.contains('card-fullscreen-mode')) {
                 card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
                 if(card.mintTimeout) clearTimeout(card.mintTimeout);
                 card.mintTimeout = setTimeout(() => { card.style.transform = ''; }, 100);
@@ -1831,30 +1827,17 @@
         }
 
         function toggleCardFullscreen(e) {
-            if(e) e.stopPropagation(); 
-            const modal = document.getElementById('card-fullscreen-modal');
-            const visual = document.getElementById('fullscreen-card-visual');
-            const closeBtn = document.getElementById('fullscreen-close-btn');
+            e.stopPropagation(); 
+            const container = document.getElementById('card-container');
+            const gameCard = document.getElementById('game-card');
+            const btn = e.currentTarget;
 
-            const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
-
-            visual.className = `relative w-full max-w-5xl aspect-[1.58/1] rounded-3xl md:rounded-[3rem] shadow-[0_0_80px_rgba(255,255,255,0.15)] ${equipped.class}`;
-            
-            if (['tier-2', 'tier-9', 'tier-14'].includes(equipped.class) || document.body.classList.contains('theme-light')) {
-                closeBtn.className = "absolute top-6 right-6 md:top-10 md:right-10 text-black/50 hover:text-black z-50 transition-colors";
+            container.classList.toggle('card-fullscreen-mode');
+            if (container.classList.contains('card-fullscreen-mode')) {
+                btn.innerHTML = `<svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>`;
+                gameCard.style.transform = ''; 
             } else {
-                closeBtn.className = "absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white z-50 transition-colors";
-            }
-
-            modal.style.display = 'flex';
-        }
-
-        function closeCardFullscreen() {
-            const modal = document.getElementById('card-fullscreen-modal');
-            if (modal) {
-                modal.style.display = 'none';
-                const visual = document.getElementById('fullscreen-card-visual');
-                if (visual) visual.style.transform = 'rotateY(0deg) rotateX(0deg)';
+                btn.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>`;
             }
         }
 
@@ -2556,1188 +2539,8 @@
             if (modal) modal.style.display = 'none';
         }
 
-        function openResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'flex'; }
-        function closeResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'none'; }
-        function confirmReset() { localStorage.removeItem('vercel_empire_v12_favs'); window.location.reload(); }
-
-        function openTransferModal() {
-            document.getElementById('transfer-modal').style.display = 'flex';
-            const fromSel = document.getElementById('transfer-from');
-            const toSel = document.getElementById('transfer-to');
-            fromSel.innerHTML = ''; toSel.innerHTML = '';
-
-            state.cardBalances[state.equippedCardId] = state.balance;
-
-            state.ownedCards.forEach(id => {
-                const card = CARD_TIERS.find(t => t.id === parseInt(id));
-                const bal = state.cardBalances[id] || 0;
-                const optStr = `<option value="${id}">${card.name} ($${formatLargeNumber(bal)})</option>`;
-                fromSel.innerHTML += optStr;
-                toSel.innerHTML += optStr;
-            });
-            document.getElementById('transfer-amt').value = '';
-        }
-
-        function closeTransferModal() { document.getElementById('transfer-modal').style.display = 'none'; }
-
-        function executeTransfer() {
-            const fromId = parseInt(document.getElementById('transfer-from').value);
-            const toId = parseInt(document.getElementById('transfer-to').value);
-            const amt = parseFloat(document.getElementById('transfer-amt').value);
-
-            if (fromId === toId || isNaN(amt) || amt <= 0) return;
-
-            state.cardBalances[state.equippedCardId] = state.balance;
-
-            const fromBal = state.cardBalances[fromId] || 0;
-            if (fromBal >= amt) {
-                state.cardBalances[fromId] -= amt;
-                state.cardBalances[toId] = (state.cardBalances[toId] || 0) + amt;
-
-                if (state.equippedCardId === fromId) state.balance = state.cardBalances[fromId];
-                if (state.equippedCardId === toId) state.balance = state.cardBalances[toId];
-
-                logToTerminal(`TRANSFERRED $${formatLargeNumber(amt)} FROM CARD ${fromId} TO ${toId}`);
-                closeTransferModal();
-                updateUI(true);
-                saveGame();
-            } else {
-                alert('Insufficient funds on the selected origin card.');
-            }
-        }
-
-        function setChartType(t) { chartType = t; if(activeStock) updateModalContent(); }
-
-        function updateModalContent() {
-            if(!activeStock) return;
-            setUI('modal-price', '$' + activeStock.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-            setUI('modal-owned', (state.shares[activeStock.symbol] || 0).toFixed(3));
-            const high = Math.max(...activeStock.history.map(h => h.high));
-            const low = Math.min(...activeStock.history.map(h => h.low));
-            setUI('modal-high', '$' + high.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-            setUI('modal-low', '$' + low.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-            drawGraph('modal-chart', activeStock.history, chartType);
-        }
-
-        function sellCompany(id) {
-            const c = COMPANIES.find(x => x.id === id);
-            if (!c || !state.ownedAssets.includes(id)) return;
-
-            const investment = calcCompanyInvestment(c, id);
-            const compMult = state.level >= 4 ? 0.9 : 0.3;
-            const returnAmount = Math.floor(investment * compMult);
-
-            state.balance += returnAmount;
-            state.totalCompanySellEarnings = (state.totalCompanySellEarnings || 0) + returnAmount;
-            state.ownedAssets = state.ownedAssets.filter(a => a !== id);
-
-            if (c.customFleet) state.taxiFleet = { cars: 1, busses: 0, artBusses: 0 };
-            if (c.customUpgrades) { if (state.compCustomUpgrades && state.compCustomUpgrades[id]) delete state.compCustomUpgrades[id]; }
-
-            delete state.compTiers[id]; delete state.compOutlets[id];
-
-            logToTerminal(`SOLD COMPANY: ${c.name} FOR $${formatLargeNumber(returnAmount)} (${compMult * 100}% OF INVESTMENTS)`);
-            updateUI(true);
-            saveGame();
-        }
-
-        function sellProperty(id) {
-            const re = REAL_ESTATE.find(x => x.id === id);
-            if (!re || !state.ownedAssets.includes(id)) return;
-
-            const investment = calcRealEstateInvestment(re, id);
-            const returnAmount = Math.floor(investment * 0.9);
-
-            state.balance += returnAmount;
-            state.ownedAssets = state.ownedAssets.filter(a => a !== id);
-
-            if (state.renovations[id]) delete state.renovations[id];
-            if (state.renting[id]) delete state.renting[id];
-
-            logToTerminal(`SOLD PROPERTY: ${re.name} FOR $${formatLargeNumber(returnAmount)} (90% OF INVESTMENTS)`);
-            updateUI(true);
-            saveGame();
-        }
-
-        function showBlackMarket() {
-            if (state.ownedThemes && state.ownedThemes.includes('hacker')) {
-                showTab('black-market');
-                logToTerminal("ACCESSING DEEP WEB ONION ROUTER...");
-                logToTerminal("CONNECTION ESTABLISHED.");
-            } else {
-                logToTerminal("ACCESS DENIED. REQUIRED: TERMINAL HACKER PROTOCOLS.");
-            }
-        }
-
-        function renderBlackMarket() {
-            const grid = document.getElementById('bm-grid');
-            if (!grid) return;
-            grid.innerHTML = ASSETS.blackMarket.map(i => {
-                const isOwned = state.ownedAssets.includes(i.id);
-                const btcBalance = state.shares['BTC'] || 0;
-                let actionHtml = '';
-
-                if (!isOwned) {
-                    actionHtml = `<button onclick="buyBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2 !border-red-900/50 !text-red-500 hover:!bg-red-500 hover:!text-white" ${btcBalance < i.priceBtc ? 'disabled' : ''} data-btc-cost="${i.priceBtc}">BUY (₿${i.priceBtc.toFixed(2)})</button>`;
-                } else {
-                    actionHtml = `<button onclick="sellBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2 !bg-zinc-900 !text-white !border-zinc-800 hover:!bg-zinc-800">SELL (₿${i.priceBtc.toFixed(2)})</button>`;
-                }
-
-                return `
-                <div class="glass-card p-4 flex flex-col justify-between border-red-900/20 shadow-[0_0_15px_rgba(239,68,68,0.05)]">
-                    <div>
-                        <img src="${i.img}" class="item-img mb-4 grayscale hover:grayscale-0 transition-all">
-                        <h4 class="text-[10px] font-black uppercase mb-1 text-red-500">${i.name}</h4>
-                        <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">PRICE: ₿${i.priceBtc.toFixed(2)}</p>
-                    </div>
-                    ${actionHtml}
-                </div>`;
-            }).join('');
-        }
-
-        function buyBM(id, priceBtc) {
-            const btcBalance = state.shares['BTC'] || 0;
-            if (btcBalance >= priceBtc && !state.ownedAssets.includes(id)) {
-                state.shares['BTC'] -= priceBtc;
-                state.ownedAssets.push(id);
-                logToTerminal(`CONTRABAND ACQUIRED: ${id.toUpperCase()}`);
-                updateUI(true);
-                saveGame();
-            }
-        }
-
-        function sellBM(id, priceBtc) {
-            if (state.ownedAssets.includes(id)) {
-                state.shares['BTC'] = (state.shares['BTC'] || 0) + priceBtc;
-                state.ownedAssets = state.ownedAssets.filter(a => a !== id);
-                logToTerminal(`CONTRABAND LIQUIDATED: +${priceBtc} BTC`);
-                updateUI(true);
-                saveGame();
-            }
-        }
-
-        function renderTopPerformers() {
-            const container = document.getElementById('top-performers-grid');
-            if (!container) return;
-            if (state.level < 3) {
-                container.innerHTML = `<p class="text-xs text-zinc-600 font-mono">Unlock markets at Level 3</p>`;
-                return;
-            }
-
-            const topStocks = [...STOCKS].filter(s => s.type !== 'crypto').sort((a, b) => b.trend - a.trend).slice(0, 5);
-            container.innerHTML = topStocks.map(s => {
-                return `
-                <div class="min-w-[150px] p-3 bg-zinc-950 border border-zinc-800 rounded-lg shrink-0 cursor-pointer hover:border-zinc-600 transition-colors" onclick="openStockModal('${s.symbol}')">
-                    <div class="flex justify-between items-center mb-1">
-                        <span class="text-[10px] font-black">${s.symbol}</span>
-                        <span class="text-[9px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'}${Math.abs(s.trend).toFixed(2)}%</span>
-                    </div>
-                    <p class="text-xs font-bold mono">$${s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</p>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function renderGrids() {
-            renderTopPerformers();
-
-            const compGrid = document.getElementById('companies-grid');
-            if(compGrid) {
-                compGrid.innerHTML = COMPANIES.map(c => {
-                    const isOwned = state.ownedAssets.includes(c.id);
-                    let itemRev = 0; let itemBill = c.bill || 0;
-
-                    const tierIdx = state.compTiers[c.id] || 0;
-                    const outlets = state.compOutlets[c.id] || 1;
-                    itemRev += (c.rev * Math.pow(3, tierIdx)) * outlets;
-                    itemBill = (c.bill * Math.pow(2.5, tierIdx)) * outlets;
-
-                    if (c.customFleet) {
-                        itemRev += (state.taxiFleet.cars * 17500) + (state.taxiFleet.busses * 140000) + (state.taxiFleet.artBusses * 475000);
-                        itemBill += (state.taxiFleet.cars * 500) + (state.taxiFleet.busses * 4000) + (state.taxiFleet.artBusses * 15000);
-                    } 
-
-                    if (c.customUpgrades) {
-                        c.customUpgrades.forEach(u => {
-                            const count = (state.compCustomUpgrades[c.id] || {})[u.id] || 0;
-                            itemRev += count * u.rev;
-                            itemBill += count * (u.bill || 0);
-                        });
-                    }
-
-                    const profit = itemRev - itemBill;
-                    let actionsHtml = '';
-                    if (!isOwned) {
-                        actionsHtml = `<div class="flex flex-col mt-auto pt-4 flex-1 justify-end"><button onclick="buyAsset('${c.id}', ${c.price})" class="btn-buy" ${state.balance < c.price ? 'disabled' : ''} data-cost="${c.price}">ACQUIRE BUSINESS</button></div>`;
-                    } else {
-                        const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
-                        const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
-
-                        let baseActions = `
-                        <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
-                            <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''} ${tierIdx >= 4 ? '' : `data-cost="${nextTierPrice}"`}>
-                                <span class="mb-0.5">${tierIdx >= 4 ? 'MAX TIER' : 'EVOLVE'}</span>
-                                <span class="text-[8px] opacity-60">${tierIdx >= 4 ? '' : '$' + formatLargeNumber(nextTierPrice)}</span>
-                            </button>
-                            <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextOutletPrice || outlets >= 60 ? 'disabled' : ''} ${outlets >= 60 ? '' : `data-cost="${nextOutletPrice}"`}>
-                                <span class="mb-0.5">${outlets >= 60 ? 'MAX OUTLETS' : '+1 OUTLET'}</span>
-                                <span class="text-[8px] opacity-60">${outlets >= 60 ? '' : '$' + formatLargeNumber(nextOutletPrice)}</span>
-                            </button>
-                        </div>`;
-
-                        let fleetActions = '';
-                        if (c.customFleet) {
-                            const fleet = state.taxiFleet;
-                            fleetActions = `
-                            <div class="space-y-1 mb-2 shrink-0">
-                                <button onclick="buyTaxiAsset('cars', 150000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 150000 || fleet.cars >= 70 ? 'disabled' : ''} ${fleet.cars >= 70 ? '' : `data-cost="150000"`}>
-                                    <span>+1 CAR ($150K)</span>
-                                    <span class="opacity-40">${fleet.cars}/70</span>
-                                </button>
-                                <button onclick="buyTaxiAsset('busses', 1200000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 1200000 || fleet.busses >= 50 ? 'disabled' : ''} ${fleet.busses >= 50 ? '' : `data-cost="1200000"`}>
-                                    <span>+1 BUS ($1.2M)</span>
-                                    <span class="opacity-40">${fleet.busses}/50</span>
-                                </button>
-                                <button onclick="buyTaxiAsset('artBusses', 3500000)" class="btn-buy flex justify-between px-3 py-2 text-[9px]" ${state.balance < 3500000 || fleet.artBusses >= 40 ? 'disabled' : ''} ${fleet.artBusses >= 40 ? '' : `data-cost="3500000"`}>
-                                    <span>+1 ART. BUS ($3.5M)</span>
-                                    <span class="opacity-40">${fleet.artBusses}/40</span>
-                                </button>
-                            </div>`;
-                        } 
-
-                        let complexUpgradesHtml = '';
-                        if (c.customUpgrades) {
-                            complexUpgradesHtml = `
-                            <div id="tech-tree-${c.id}" class="flex-1 overflow-y-auto pr-1 space-y-1 max-h-40 scrollbar-thin shrink-0 border-t border-zinc-900 pt-2 mt-1">
-                                <p class="text-[8px] text-zinc-500 font-bold tracking-widest uppercase mb-1">Company Tech Tree</p>
-                                ${c.customUpgrades.map(u => {
-                                    const count = (state.compCustomUpgrades[c.id] || {})[u.id] || 0;
-                                    const isLocked = u.req && ((state.compCustomUpgrades[c.id] || {})[u.req.id] || 0) < u.req.count;
-                                    
-                                    if (isLocked) {
-                                        const reqUpgrade = c.customUpgrades.find(x => x.id === u.req.id);
-                                        return `<button disabled class="btn-buy opacity-30 text-left px-3 py-2 flex justify-between items-center bg-black/20">
-                                            <span class="text-[9px]">LOCKED</span>
-                                            <span class="text-[8px] opacity-70">Req: ${reqUpgrade.name} Lvl ${u.req.count}</span>
-                                        </button>`;
-                                    }
-                                    
-                                    const currentPrice = Math.floor(u.price * Math.pow(u.priceMult, count));
-                                    return `<button onclick="buyCustomUpgrade('${c.id}', '${u.id}')" class="btn-buy text-left px-3 py-2 relative overflow-hidden group" ${state.balance < currentPrice || count >= u.max ? 'disabled' : ''} ${count >= u.max ? '' : `data-cost="${currentPrice}"`}>
-                                        <div class="flex justify-between items-center mb-0.5 relative z-10">
-                                            <span class="text-[9px] font-bold text-white group-hover:text-black transition-colors">${u.name} <span class="text-zinc-500 font-normal">(${count}/${u.max})</span></span>
-                                            <span class="text-[9px] font-mono ${count >= u.max ? 'text-emerald-500' : ''}">${count >= u.max ? 'MAXED' : '$' + formatLargeNumber(currentPrice)}</span>
-                                        </div>
-                                        <div class="text-[8px] text-emerald-500 relative z-10 group-hover:text-emerald-700 transition-colors">+ $${formatLargeNumber(u.rev)}/hr</div>
-                                        <div class="absolute bottom-0 left-0 h-[2px] bg-emerald-500 transition-all z-0" style="width: ${(count/u.max)*100}%"></div>
-                                    </button>`;
-                                }).join('')}
-                            </div>`;
-                        }
-
-                        actionsHtml = `
-                        <div class="flex flex-col mt-auto pt-4 flex-1">
-                            ${baseActions}
-                            ${fleetActions}
-                            ${complexUpgradesHtml}
-                        </div>`;
-                    }
-
-                    let sellHtml = isOwned ? `<button onclick="sellCompany('${c.id}')" class="btn-buy mt-2 !bg-red-950/30 !text-red-500 !border-red-900/50 hover:!bg-red-500 hover:!text-white transition-colors shrink-0">SELL COMPANY</button>` : '';
-
-                    return `
-                    <div class="glass-card p-6 flex flex-col h-full">
-                        <div class="shrink-0">
-                            <img src="${c.img}" class="item-img mb-4">
-                            <div class="flex justify-between items-start mb-2">
-                                <div>
-                                    <h3 class="font-black uppercase text-xs tracking-tight">${COMPANY_TIERS[tierIdx] + ' '}${c.name}</h3>
-                                    <p class="text-[10px] font-bold ${profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">${profit >= 0 ? '+' : ''}$${formatLargeNumber(Math.floor(profit))}/HR PROFIT</p>
-                                    <p class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">REV: $${formatLargeNumber(Math.floor(itemRev))} | BILLS: $${formatLargeNumber(Math.floor(itemBill))}</p>
-                                </div>
-                                <span class="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">${outlets} OUTLETS</span>
-                            </div>
-                            <div class="flex justify-between items-center mb-1">
-                                <p class="text-[11px] font-mono text-zinc-400">$${formatLargeNumber(c.price)}</p>
-                                ${isOwned ? `<span class="text-[9px] text-zinc-500 font-bold px-2 py-0.5 bg-zinc-900 border border-zinc-800 rounded">PORTFOLIO</span>` : ''}
-                            </div>
-                        </div>
-                        ${actionsHtml}
-                        ${sellHtml}
-                    </div>`;
-                }).join('');
-            }
-
-            const reGrid = document.getElementById('re-grid');
-            if(reGrid) {
-                const filteredRE = REAL_ESTATE.filter(r => r.type === currentRECat);
-                reGrid.innerHTML = filteredRE.map(re => {
-                    const isOwned = state.ownedAssets.includes(re.id);
-                    const isRenting = state.renting[re.id];
-                    const renLevel = state.renovations[re.id] || 0;
-                    const renCost = Math.floor(re.price * 0.15 * (renLevel + 1));
-                    return `
-                    <div class="glass-card p-4 flex flex-col">
-                        <img src="${re.img}" class="item-img mb-4">
-                        <div class="flex justify-between items-start mb-2">
-                            <div>
-                                <h3 class="font-black uppercase text-[11px]">${re.name}</h3>
-                                <p class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mb-2">REAL ESTATE ${renLevel > 0 ? `• Lvl ${renLevel}` : ''}</p>
-                            </div>
-                        </div>
-                        <p class="text-[12px] font-mono text-white mb-4">$${formatLargeNumber(re.price)}</p>
-                        ${!isOwned ? `<button onclick="buyAsset('${re.id}', ${re.price})" class="btn-buy mt-auto" ${state.balance < re.price ? 'disabled' : ''} data-cost="${re.price}">PURCHASE PROPERTY</button>` : `
-                            <div class="space-y-2 mt-auto">
-                                <button onclick="toggleRental('${re.id}')" class="btn-buy ${isRenting ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-zinc-800 text-white'}">${isRenting ? 'STOP RENTAL' : 'LIST FOR RENT'}</button>
-                                <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy bg-zinc-900 border border-zinc-800" ${state.balance < renCost ? 'disabled' : ''} data-cost="${renCost}">RENOVATE ($${formatLargeNumber(renCost)})</button>
-                                <button onclick="sellProperty('${re.id}')" class="btn-buy !bg-red-950/30 !text-red-500 !border-red-900/50 hover:!bg-red-500 hover:!text-white transition-colors">SELL PROPERTY</button>
-                            </div>
-                        `}
-                    </div>`;
-                }).join('');
-            }
-
-            const bankGrid = document.getElementById('bank-grid');
-            if(bankGrid) {
-                bankGrid.innerHTML = CARD_TIERS.map(t => {
-                    const isOwned = state.ownedCards && state.ownedCards.includes(t.id);
-                    const isEquipped = state.equippedCardId === t.id;
-
-                    let btnStr = '';
-                    if (isEquipped) {
-                        btnStr = `<button class="btn-buy opacity-50 cursor-not-allowed" disabled>EQUIPPED</button>`;
-                    } else if (isOwned) {
-                        btnStr = `<button onclick="equipCard(${t.id})" class="btn-buy bg-zinc-800 text-white">EQUIP CARD</button>`;
-                    } else {
-                        btnStr = `<button onclick="buyCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">$${formatLargeNumber(t.price)}</button>`;
-                    }
-
-                    return `
-                        <div class="glass-card p-8 border-white/5">
-                            <div class="h-40 rounded-xl mb-6 ${t.class}"></div>
-                            <h3 class="text-2xl font-black uppercase mb-1">${t.name}</h3>
-                            <p class="text-xs text-zinc-500 font-bold mb-8">${t.mult}x MULTIPLIER</p>
-                            ${btnStr}
-                        </div>`;
-                }).join('');
-            }
-
-            const collGrid = document.getElementById('coll-grid');
-            if (collGrid) {
-                const items = ASSETS[currentCollectionCat] ||[];
-                collGrid.innerHTML = items.map(i => {
-                    const isOwned = state.ownedAssets.includes(i.id);
-                    let actionHtml = '';
-                    if (!isOwned) {
-                        actionHtml = `<button onclick="buyCollectionAsset('${i.id}', ${i.price})" class="btn-buy mt-2" ${state.balance < i.price ? 'disabled' : ''} data-cost="${i.price}">BUY</button>`;
-                    } else {
-                        actionHtml = `<button class="btn-buy mt-2 opacity-50 cursor-not-allowed" disabled>OWNED</button>`;
-                    }
-
-                    return `
-                    <div class="glass-card p-4 flex flex-col justify-between">
-                        <div>
-                            <img src="${i.img}" class="item-img mb-4">
-                            <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
-                            <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${formatLargeNumber(i.price)}</p>
-                        </div>
-                        ${actionHtml}
-                    </div>`;
-                }).join('');
-            }
-
-            const renderStockCard = (s) => {
-                const owned = state.shares[s.symbol] || 0;
-                const isFav = state.favorites.includes(s.symbol);
-                const priceFormatted = s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                const trendAbs = Math.abs(s.trend).toFixed(2);
-                return `
-                <div class="glass-card p-6 relative flex flex-col">
-                    <button onclick="toggleFavorite('${s.symbol}', event)" class="favorite-btn ${isFav ? 'active' : ''}">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 .587l3.668 7.568 8.332 1.151-6.064 5.828 1.48 8.279-7.416-3.967-7.417 3.967 1.481-8.279-6.064-5.828 8.332-1.151z"/></svg>
-                    </button>
-                    <div class="flex justify-between items-start mb-4">
-                        <div class="flex items-center gap-3">
-                            <img src="${s.logo}" class="w-10 h-10 rounded bg-white p-1" onerror="this.src='https://ui-avatars.com/api/?name=${s.symbol}&background=1a1a1a&color=fff'">
-                            <div>
-                                <h3 class="text-xl font-black tracking-tighter">${s.symbol}</h3>
-                                <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <p class="text-lg font-bold mono" id="price-val-${s.symbol}">$${priceFormatted}</p>
-                            <p id="trend-val-${s.symbol}" class="text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold">${s.trend > 0 ? '▲' : '▼'} ${trendAbs}%</p>
-                        </div>
-                    </div>
-                    <div class="chart-container" onclick="openStockModal('${s.symbol}')">
-                        <canvas id="chart-${s.symbol}" class="w-full h-full"></canvas>
-                    </div>
-                    <div class="bg-zinc-950 p-4 rounded mb-6 border border-zinc-900 mt-auto flex justify-between items-center">
-                        <div>
-                            <p class="text-[8px] text-zinc-500 font-bold
-}
-
-        function mintMoney(e) {
-            const now = Date.now();
-            if (now - (state.lastMintTime || 0) < 60) return;
-
-            const tier = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
-            const amount = 5 * tier.mult * state.level * getDegreeMult();
-
-            state.balance += amount;
-            const clickXp = 3 + (state.level * 0.2); 
-            state.xp += Math.min(clickXp, 15);
-            state.lastMintTime = now;
-            state.cardClicks++;
-
-            checkLevelUp();
-
-            setUI('balance-display', '$' + formatLargeNumber(state.balance));
-            setUI('top-balance-display', '$' + formatLargeNumber(state.balance));
-            setUI('profile-balance', '$' + formatLargeNumber(state.balance));
-
-            const xpReq = 500 * Math.pow(1.12, state.level - 1);
-            setUI('xp-val', Math.floor(state.xp));
-            const xpBar = document.getElementById('xp-bar');
-            if(xpBar) xpBar.style.width = (state.xp / xpReq * 100) + '%';
-
-            updateButtonStates();
-
-            const card = document.getElementById('game-card');
-            if (card) {
-                card.style.transform = `scale(0.95) rotateX(${Math.random()*10}deg) rotateY(${Math.random()*10}deg)`;
-                if(card.mintTimeout) clearTimeout(card.mintTimeout);
-                card.mintTimeout = setTimeout(() => { card.style.transform = ''; }, 100);
-            }
-        }
-
-        function toggleCardFullscreen(e) {
-            if(e) e.stopPropagation(); 
-            const modal = document.getElementById('card-fullscreen-modal');
-            const visual = document.getElementById('fullscreen-card-visual');
-            const closeBtn = document.getElementById('fullscreen-close-btn');
-
-            const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
-
-            visual.className = `relative w-full max-w-5xl aspect-[1.58/1] rounded-3xl md:rounded-[3rem] shadow-[0_0_80px_rgba(255,255,255,0.15)] ${equipped.class}`;
-            
-            if (['tier-2', 'tier-9', 'tier-14'].includes(equipped.class) || document.body.classList.contains('theme-light')) {
-                closeBtn.className = "absolute top-6 right-6 md:top-10 md:right-10 text-black/50 hover:text-black z-50 transition-colors";
-            } else {
-                closeBtn.className = "absolute top-6 right-6 md:top-10 md:right-10 text-white/50 hover:text-white z-50 transition-colors";
-            }
-
-            modal.style.display = 'flex';
-        }
-
-        function closeCardFullscreen() {
-            const modal = document.getElementById('card-fullscreen-modal');
-            if (modal) {
-                modal.style.display = 'none';
-                const visual = document.getElementById('fullscreen-card-visual');
-                if (visual) visual.style.transform = 'rotateY(0deg) rotateX(0deg)';
-            }
-        }
-
-        function checkLevelUp() {
-            const xpReq = 500 * Math.pow(1.12, state.level - 1);
-            if (state.xp >= xpReq) {
-                state.xp -= xpReq;
-                state.level++;
-                logToTerminal(`LEVEL UP: REACHED LEVEL ${state.level}`);
-                updateUI(true);
-                checkLevelUp(); 
-            }
-        }
-
-        function getCollectionSellPrice(id, basePrice) {
-            const boughtAt = state.collectionOwnedTime[id] || Date.now();
-            const elapsed = (Date.now() - boughtAt) / 1000;
-            let mult = 0.7 + (elapsed / 300) * 0.4;
-            if (mult > 1.1) mult = 1.1;
-            return Math.floor(basePrice * mult);
-        }
-
-        function calcCompanyInvestment(c, id) {
-            let inv = c.price;
-            const tierIdx = state.compTiers[id] || 0;
-            const outlets = state.compOutlets[id] || 1;
-            for(let i = 1; i <= tierIdx; i++) inv += c.price * Math.pow(5, i);
-            for(let i = 1; i < outlets; i++) inv += Math.floor(c.price * 0.8 * Math.pow(1.1, i));
-
-            if (c.customFleet) {
-                inv += (state.taxiFleet.cars - 1) * 150000;
-                inv += state.taxiFleet.busses * 1200000;
-                inv += state.taxiFleet.artBusses * 3500000;
-            } 
-
-            if (c.customUpgrades) {
-                c.customUpgrades.forEach(u => {
-                    const count = (state.compCustomUpgrades[id] || {})[u.id] || 0;
-                    for(let i=0; i<count; i++) inv += Math.floor(u.price * Math.pow(u.priceMult || 1, i));
-                });
-            }
-            return inv;
-        }
-
-        function calcRealEstateInvestment(re, id) {
-            let inv = re.price;
-            const renLevel = state.renovations[id] || 0;
-            if (renLevel > 0) {
-                inv += re.price * 0.15 * (renLevel * (renLevel + 1)) / 2;
-            }
-            return Math.floor(inv);
-        }
-
-        function calculateNetWorth() {
-            state.cardBalances[state.equippedCardId] = state.balance;
-            let totalValue = 0;
-            Object.values(state.cardBalances).forEach(bal => totalValue += bal);
-
-            state.ownedAssets.forEach(assetId => {
-                const c = COMPANIES.find(i => i.id === assetId);
-                const re = REAL_ESTATE.find(i => i.id === assetId);
-                const j = ASSETS.jewelry.find(i => i.id === assetId);
-                const car = ASSETS.cars.find(i => i.id === assetId);
-                const f = ASSETS.furniture.find(i => i.id === assetId);
-                const nft = NFTS.find(i => i.id === assetId);
-                const bm = ASSETS.blackMarket.find(i => i.id === assetId);
-
-                if (nft) {
-                    const cryptoStock = STOCKS.find(s => s.symbol === nft.currency);
-                    totalValue += nft.price * (cryptoStock ? cryptoStock.price : 0);
-                } else if (c) {
-                    const compMult = state.level >= 4 ? 0.9 : 0.3;
-                    totalValue += Math.floor(calcCompanyInvestment(c, assetId) * compMult);
-                } else if (re) {
-                    totalValue += Math.floor(calcRealEstateInvestment(re, assetId) * 0.9);
-                } else if (j || car || f) {
-                    let item = j || car || f;
-                    totalValue += getCollectionSellPrice(assetId, item.price);
-                } else if (bm) {
-                    const btcPrice = STOCKS.find(s => s.symbol === 'BTC').price;
-                    totalValue += bm.priceBtc * btcPrice;
-                }
-            });
-            Object.entries(state.shares).forEach(([symbol, amount]) => {
-                const stock = STOCKS.find(s => s.symbol === symbol);
-                if (stock) totalValue += (stock.price * amount);
-            });
-            state.netWorth = totalValue;
-        }
-
-        function setUI(id, val) {
-            const el = document.getElementById(id);
-            if (el) el.innerText = val;
-        }
-
-        let draggedWatchlistIndex = null;
-        function wlDragStart(e, index) { draggedWatchlistIndex = index; e.dataTransfer.effectAllowed = 'move'; }
-        function wlDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
-        function wlDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
-        function wlDrop(e, index) {
-            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-            if(draggedWatchlistIndex === null || draggedWatchlistIndex === index) return;
-            const favs = [...state.favorites];
-            const movedItem = favs.splice(draggedWatchlistIndex, 1)[0];
-            favs.splice(index, 0, movedItem);
-            state.favorites = favs;
-            saveGame();
-            updateUI(true);
-        }
-
-        let draggedWidgetIndex = null;
-        function widgetDragStart(e, index) { draggedWidgetIndex = index; e.dataTransfer.effectAllowed = 'move'; }
-        function widgetDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
-        function widgetDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
-        function widgetDrop(e, index) {
-            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-            if(draggedWidgetIndex === null || draggedWidgetIndex === index) return;
-            const active = [...state.activeStats];
-            const movedItem = active.splice(draggedWidgetIndex, 1)[0];
-            active.splice(index, 0, movedItem);
-            state.activeStats = active;
-            saveGame();
-            updateUI(true);
-        }
-
-        let draggedWalletIndex = null;
-        function walletDragStart(e, index) { draggedWalletIndex = index; e.dataTransfer.effectAllowed = 'move'; }
-        function walletDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
-        function walletDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
-        function walletDrop(e, index) {
-            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-            if(draggedWalletIndex === null || draggedWalletIndex === index) return;
-            const cards = [...state.ownedCards];
-            const movedItem = cards.splice(draggedWalletIndex, 1)[0];
-            cards.splice(index, 0, movedItem);
-            state.ownedCards = cards;
-            saveGame();
-            updateUI(true);
-        }
-
-        function toggleStatWidget(id) {
-            if (state.activeStats.includes(id)) {
-                state.activeStats = state.activeStats.filter(s => s !== id);
-            } else {
-                if (state.activeStats.length < 8) state.activeStats.push(id);
-            }
-            saveGame();
-            updateUI(true);
-        }
-
-        function resizeWidget(id, event) {
-            if (event) event.stopPropagation();
-            const currentSize = state.widgetSizes[id] || 1;
-            let nextSize = currentSize + 1;
-            if (nextSize > 4) nextSize = 1;
-            state.widgetSizes[id] = nextSize;
-            saveGame();
-            updateUI(true);
-        }
-
-        function renderEmpireStats() {
-            const grid = document.getElementById('empire-stats-grid');
-            if(!grid) return;
-            const spanClasses = { 1: "col-span-1 md:col-span-1", 2: "col-span-2 md:col-span-2", 3: "col-span-2 md:col-span-3", 4: "col-span-2 md:col-span-4" };
-
-            grid.innerHTML = state.activeStats.map((statId, index) => {
-                const statDef = AVAILABLE_STATS.find(s => s.id === statId);
-                if(!statDef) return '';
-                const val = statDef.getValue();
-                const colSpanDesktop = state.widgetSizes[statId] || 1;
-                const spanClass = spanClasses[colSpanDesktop];
-
-                return `
-                <div class="bg-zinc-900/50 p-6 rounded-lg border border-zinc-800 transition-colors hover:border-zinc-500 relative cursor-move ${spanClass}"
-                     draggable="true" ondragstart="widgetDragStart(event, ${index})" ondragover="widgetDragOver(event)" ondragleave="widgetDragLeave(event)" ondrop="widgetDrop(event, ${index})">
-                    <button onclick="resizeWidget('${statId}', event)" class="absolute top-3 right-3 text-zinc-600 hover:text-white transition-colors" title="Resize Widget">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path></svg>
-                    </button>
-                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-2 pr-6 pointer-events-none">${statDef.label}</p>
-                    <p class="text-xl font-bold uppercase tracking-tighter truncate pointer-events-none ${statDef.isMono ? 'mono' : ''}">${val}</p>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function renderWidgetManager() {
-            const container = document.getElementById('widget-manager-container');
-            const countEl = document.getElementById('widget-count');
-            if(!container) return;
-
-            if (countEl) {
-                countEl.innerText = `${state.activeStats.length}/8 ACTIVE`;
-                countEl.className = `text-[10px] font-bold uppercase tracking-widest ${state.activeStats.length >= 8 ? 'text-amber-500' : 'text-zinc-400'}`;
-            }
-
-            container.innerHTML = AVAILABLE_STATS.map(stat => {
-                const isActive = state.activeStats.includes(stat.id);
-                return `
-                <div class="flex justify-between items-center bg-zinc-950 p-3 rounded border border-zinc-900">
-                    <span class="text-[10px] font-bold uppercase text-zinc-300">${stat.label}</span>
-                    <button onclick="toggleStatWidget('${stat.id}')" class="text-[9px] font-bold px-3 py-1 rounded transition-colors ${isActive ? 'bg-red-500/20 text-red-500 hover:bg-red-500/30' : 'bg-emerald-500/20 text-emerald-500 hover:bg-emerald-500/30'} ${!isActive && state.activeStats.length >= 8 ? 'opacity-30 cursor-not-allowed' : ''}" ${!isActive && state.activeStats.length >= 8 ? 'disabled' : ''}>
-                        ${isActive ? 'REMOVE' : 'ADD'}
-                    </button>
-                </div>
-                `;
-            }).join('');
-        }
-
-        function updateButtonStates() {
-            document.querySelectorAll('button[data-cost]').forEach(btn => {
-                const cost = parseFloat(btn.dataset.cost);
-                if (state.balance >= cost) btn.removeAttribute('disabled');
-                else btn.setAttribute('disabled', 'true');
-            });
-
-            document.querySelectorAll('button[data-crypto-cost]').forEach(btn => {
-                const cost = parseFloat(btn.dataset.cryptoCost);
-                const cur = btn.dataset.currency;
-                const bal = state.shares[cur] || 0;
-                if (bal >= cost) btn.removeAttribute('disabled');
-                else btn.setAttribute('disabled', 'true');
-            });
-
-            document.querySelectorAll('button[data-btc-cost]').forEach(btn => {
-                const cost = parseFloat(btn.dataset.btcCost);
-                const bal = state.shares['BTC'] || 0;
-                if (bal >= cost) btn.removeAttribute('disabled');
-                else btn.setAttribute('disabled', 'true');
-            });
-
-            document.querySelectorAll('button[data-stock-buy]').forEach(btn => {
-                const sym = btn.dataset.stockBuy;
-                const stock = STOCKS.find(x => x.symbol === sym);
-                if (stock && state.balance >= stock.price * 0.001) btn.removeAttribute('disabled');
-                else btn.setAttribute('disabled', 'true');
-            });
-
-            document.querySelectorAll('button[data-stock-sell]').forEach(btn => {
-                const sym = btn.dataset.stockSell;
-                if ((state.shares[sym] || 0) > 0) btn.removeAttribute('disabled');
-                else btn.setAttribute('disabled', 'true');
-            });
-        }
-
-        function tickStocksUI() {
-            STOCKS.forEach(s => {
-                const pEl = document.getElementById(`price-val-${s.symbol}`);
-                if(pEl) pEl.innerText = '$' + s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-
-                const tEl = document.getElementById(`trend-val-${s.symbol}`);
-                if(tEl) {
-                    tEl.innerText = `${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend).toFixed(2)}%`;
-                    tEl.className = `text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold`;
-                }
-
-                const oEl = document.getElementById(`owned-val-${s.symbol}`);
-                if(oEl) oEl.innerText = (state.shares[s.symbol] || 0).toFixed(3) + ' UNITS';
-
-                if (currentTab === 'stocks') {
-                    if ((currentMarketTab === 'regular' && s.type === 'stock') || 
-                        (currentMarketTab === 'crypto' && s.type === 'crypto')) {
-                        drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
-                    }
-                }
-            });
-
-            STOCKS.filter(s => state.favorites.includes(s.symbol)).forEach(s => {
-                const pEl = document.getElementById(`wl-price-${s.symbol}`);
-                if (pEl) pEl.innerText = '$' + s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
-                const tEl = document.getElementById(`wl-trend-${s.symbol}`);
-                if (tEl) {
-                    tEl.innerText = `${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend).toFixed(2)}%`;
-                    tEl.className = `text-[8px] mono ${s.trend > 0 ? 'text-emerald-400' : 'text-red-400'}`;
-                }
-            });
-
-            if (state.level >= 19) {
-                const dashWidget = document.getElementById('dashboard-stock-widget');
-                if (dashWidget) dashWidget.classList.remove('hidden');
-
-                const dashSymbol = state.dashboardStock;
-                const s = STOCKS.find(x => x.symbol === dashSymbol);
-                if (s) {
-                    setUI('dash-stock-symbol', s.symbol);
-                    setUI('dash-stock-price', '$' + s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}));
-                    const tEl = document.getElementById('dash-stock-trend');
-                    if (tEl) {
-                        tEl.innerText = `${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend).toFixed(2)}%`;
-                        tEl.className = `text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold`;
-                    }
-                    if (currentTab === 'dashboard') {
-                        drawGraph('dash-stock-chart', s.history, 'line');
-                    }
-                }
-            } else {
-                const dashWidget = document.getElementById('dashboard-stock-widget');
-                if (dashWidget) dashWidget.classList.add('hidden');
-            }
-        }
-
-        let isAssetMapsInit = false;
-        let cMap = new Map();
-        let rMap = new Map();
-
-        function fastTickUpdate() {
-            if (!isAssetMapsInit) {
-                COMPANIES.forEach(c => cMap.set(c.id, c));
-                REAL_ESTATE.forEach(r => rMap.set(r.id, r));
-                isAssetMapsInit = true;
-            }
-            
-            calculateNetWorth();
-
-            let rev = 0; let bills = 0;
-            const tFleet = state.taxiFleet;
-            const multP3 = [1, 3, 9, 27, 81];
-            const multP2_5 = [1, 2.5, 6.25, 15.625, 39.0625];
-
-            for (let i = 0; i < state.ownedAssets.length; i++) {
-                const id = state.ownedAssets[i];
-                const c = cMap.get(id);
-                if (c) {
-                    let itemRev = 0; let itemBill = c.bill || 0;
-                    const tierIdx = state.compTiers[id] || 0;
-                    const outlets = state.compOutlets[id] || 1;
-                    
-                    itemRev += (c.rev * (multP3[tierIdx] || Math.pow(3, tierIdx))) * outlets;
-                    itemBill = (c.bill * (multP2_5[tierIdx] || Math.pow(2.5, tierIdx))) * outlets;
-                    
-                    if (c.customFleet) {
-                        itemRev += (tFleet.cars * 17500) + (tFleet.busses * 140000) + (tFleet.artBusses * 475000);
-                        itemBill += (tFleet.cars * 500) + (tFleet.busses * 4000) + (tFleet.artBusses * 15000);
-                    } 
-                    if (c.customUpgrades && state.compCustomUpgrades[id]) {
-                        const upgs = state.compCustomUpgrades[id];
-                        for (let j = 0; j < c.customUpgrades.length; j++) {
-                            const u = c.customUpgrades[j];
-                            const count = upgs[u.id] || 0;
-                            if (count > 0) {
-                                itemRev += count * u.rev;
-                                itemBill += count * (u.bill || 0);
-                            }
-                        }
-                    }
-                    rev += itemRev; bills += itemBill;
-                } else {
-                    const re = rMap.get(id);
-                    if (re && state.renting[id]) {
-                        let inv = re.price;
-                        const renLevel = state.renovations[id] || 0;
-                        if (renLevel > 0) {
-                            inv += re.price * 0.15 * (renLevel * (renLevel + 1)) / 2;
-                        }
-                        rev += Math.floor(inv) * 0.05; 
-                    }
-                }
-            }
-
-            state.revenue = (rev - bills) * getDegreeMult();
-
-            setUI('balance-display', formatLargeNumber(state.balance));
-            const bbDisp = document.getElementById('balance-display');
-            if(bbDisp && !bbDisp.innerText.startsWith('$')) bbDisp.innerText = '$' + bbDisp.innerText;
-            
-            setUI('top-balance-display', '$' + formatLargeNumber(state.balance));
-            setUI('profile-balance', '$' + formatLargeNumber(state.balance));
-            setUI('nw-display', '$' + formatLargeNumber(state.netWorth));
-            setUI('profile-nw', '$' + formatLargeNumber(state.netWorth));
-            setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + formatLargeNumber(state.revenue) + '/hr');
-
-            tickStocksUI();
-            updateButtonStates();
-
-            if (activeStock) updateModalContent();
-            if (activeAuction) updateAuctionUI();
-
-            checkAchievements();
-        }
-
-        function renderDashboardStockSelect() {
-            const sel = document.getElementById('dashboard-stock-select');
-            if (!sel) return;
-            if (sel.children.length === 0) {
-                sel.innerHTML = STOCKS.map(s => `<option value="${s.symbol}">${s.symbol}</option>`).join('');
-            }
-            sel.value = state.dashboardStock;
-        }
-
-        function changeDashboardStock() {
-            const sel = document.getElementById('dashboard-stock-select');
-            if (sel) {
-                state.dashboardStock = sel.value;
-                saveGame();
-                updateUI(true);
-            }
-        }
-
-        function updateUI(full = true) {
-            if (!full) {
-                fastTickUpdate();
-                return;
-            }
-
-            fastTickUpdate();
-
-            const activeElement = document.activeElement;
-            const activeId = activeElement ? activeElement.id : null;
-            let cursorStart = null, cursorEnd = null;
-            if (activeElement && activeElement.tagName === 'INPUT') {
-                try { cursorStart = activeElement.selectionStart; cursorEnd = activeElement.selectionEnd; } catch(e){}
-            }
-
-            const scrollStates = {};
-            document.querySelectorAll('[id]').forEach(el => {
-                if (el.scrollTop > 0 || el.scrollLeft > 0) scrollStates[el.id] = { top: el.scrollTop, left: el.scrollLeft };
-            });
-            const mainScrollTop = window.scrollY || document.documentElement.scrollTop || document.body.scrollTop;
-
-            const inputStates = {};
-            document.querySelectorAll('input[id]').forEach(el => { inputStates[el.id] = el.value; });
-
-            if (state.userName) document.getElementById('onboarding-modal').style.display = 'none';
-
-            setUI('lvl-display', state.level);
-            setUI('card-name-display', state.userName || "HOLDER NAME");
-
-            const rankIndex = Math.min(Math.floor(state.level / 5), RANKS.length - 1);
-            const rankStr = RANKS[rankIndex];
-            setUI('rank-display', rankStr);
-            setUI('profile-name', state.userName);
-            setUI('profile-rank', rankStr);
-
-            const equipped = CARD_TIERS.find(t => t.id === state.equippedCardId) || CARD_TIERS[0];
-            const xpReq = 500 * Math.pow(1.12, state.level - 1);
-            setUI('xp-val', Math.floor(state.xp));
-            setUI('xp-req', Math.floor(xpReq));
-            setUI('next-lvl-val', state.level + 1);
-
-            const xpBar = document.getElementById('xp-bar');
-            if(xpBar) xpBar.style.width = (state.xp / xpReq * 100) + '%';
-
-            const gCard = document.getElementById('game-card');
-            if(gCard) gCard.className = `debit-card p-8 flex flex-col justify-between ${equipped.class}`;
-            setUI('card-tier-label', equipped.name);
-            setUI('card-mult-display', equipped.mult + 'x');
-
-            const tradeMaxToggle = document.getElementById('toggle-trade-max');
-            if(tradeMaxToggle) tradeMaxToggle.checked = state.tradeMax;
-
-            const compMultText = state.level >= 4 ? "90" : "30";
-            setUI('comp-sell-desc', `BUILD, UPGRADE & SELL FOR ${compMultText}% OF INVESTMENTS`);
-
-            renderEmpireStats();
-            renderWidgetManager();
-            renderWatchlist();
-            renderGrids();
-            renderTradingGrid();
-            renderBlackMarket();
-            renderEducation();
-            renderProfilePortfolio();
-            renderDashboardStockSelect();
-            renderAchievements();
-            renderThemes();
-            applyTheme();
-
-            updateButtonStates();
-
-            Object.keys(inputStates).forEach(id => {
-                const el = document.getElementById(id);
-                if (el && el.type !== 'checkbox' && el.type !== 'radio') el.value = inputStates[id];
-            });
-
-            Object.keys(scrollStates).forEach(id => {
-                const el = document.getElementById(id);
-                if (el) { el.scrollTop = scrollStates[id].top; el.scrollLeft = scrollStates[id].left; }
-            });
-
-            if (activeId) {
-                const el = document.getElementById(activeId);
-                if (el) {
-                    el.focus();
-                    if (el.tagName === 'INPUT' && cursorStart !== null) {
-                        try { el.setSelectionRange(cursorStart, cursorEnd); } catch(e){}
-                    }
-                }
-            }
-
-            if (document.body.classList.contains('mobile-mode')) {
-                document.body.scrollTop = mainScrollTop;
-            } else {
-                window.scrollTo({ top: mainScrollTop, behavior: 'instant' });
-            }
-        }
-
-        function renderThemes() {
-            const grid = document.getElementById('themes-grid');
-            if (!grid) return;
-
-            const filteredThemes = THEMES.filter(t => t.type === currentThemeTab);
-
-            grid.innerHTML = filteredThemes.map(t => {
-                const isOwned = state.ownedThemes.includes(t.id);
-                const isEquipped = state.activeTheme === t.id;
-
-                let btnStr = '';
-                if (isEquipped) {
-                    btnStr = `<button class="btn-buy opacity-50 cursor-not-allowed" disabled>EQUIPPED</button>`;
-                } else if (isOwned) {
-                    btnStr = `<button onclick="equipTheme('${t.id}')" class="btn-buy border border-zinc-800">EQUIP THEME</button>`;
-                } else {
-                    btnStr = `<button onclick="buyTheme('${t.id}', ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">BUY FOR ${t.price === 0 ? 'FREE' : '$' + t.price.toLocaleString()}</button>`;
-                }
-
-                return `
-                <div class="glass-card p-4 flex flex-col justify-between">
-                    <div class="mb-4">
-                        <h4 class="text-[11px] font-black uppercase mb-1">${t.name}</h4>
-                        <p class="text-[9px] text-zinc-500 font-bold mono uppercase">${t.price === 0 ? 'FREE' : '$' + t.price.toLocaleString()}</p>
-                    </div>
-                    ${btnStr}
-                </div>`;
-            }).join('');
-        }
-
-        function buyTheme(id, price) {
-            if (state.balance >= price && !state.ownedThemes.includes(id)) {
-                state.balance -= price;
-                state.ownedThemes.push(id);
-                state.activeTheme = id;
-                logToTerminal(`THEME ACQUIRED & EQUIPPED: ${id.toUpperCase()}`);
-                updateUI(true);
-                saveGame();
-            }
-        }
-
-        function equipTheme(id) {
-            if (state.ownedThemes.includes(id)) {
-                state.activeTheme = id;
-                logToTerminal(`THEME EQUIPPED: ${id.toUpperCase()}`);
-                updateUI(true);
-                saveGame();
-            }
-        }
-
-        function switchCard(id) {
-            if (state.ownedCards.includes(id) && state.equippedCardId !== id) {
-                state.cardBalances[state.equippedCardId] = state.balance;
-                state.equippedCardId = id;
-                state.balance = state.cardBalances[id] || 0;
-                logToTerminal(`SWITCHED ACTIVE CARD TO: ${CARD_TIERS.find(t=>t.id===id).name}`);
-                updateUI(true);
-                saveGame();
-            }
-        }
-
-        function renderWallet() {
-            const wc = document.getElementById('wallet-container');
-            if(!wc) return;
-
-            state.cardBalances[state.equippedCardId] = state.balance;
-
-            wc.innerHTML = state.ownedCards.map((id, index) => {
-                const card = CARD_TIERS.find(t => t.id === parseInt(id));
-                const bal = state.cardBalances[id] || 0;
-                const isActive = state.equippedCardId === parseInt(id);
-
-                return `
-                <div class="wallet-card-wrapper ${isActive ? 'active-wallet-card' : ''}" style="z-index: ${index};" 
-                     draggable="true" ondragstart="walletDragStart(event, ${index})" ondragover="walletDragOver(event)" ondragleave="walletDragLeave(event)" ondrop="walletDrop(event, ${index})" onclick="switchCard(${id})">
-                    <div class="debit-card p-4 flex flex-col justify-between shadow-xl ${card.class}" style="aspect-ratio: 1.58/1; border-radius: 12px; border-width: 1px;">
-                        <div>
-                            <p class="text-[8px] text-white/50 uppercase font-bold tracking-widest mb-1">${card.name}</p>
-                            <p class="text-sm font-black text-white truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap">$${formatLargeNumber(bal)}</p>
-                        </div>
-                        <div class="flex justify-between items-end">
-                            <div class="card-chip w-6 h-4 rounded"></div>
-                            <span class="text-[8px] text-white/50 font-bold tracking-widest">${isActive ? 'ACTIVE' : ''}</span>
-                        </div>
-                    </div>
-                </div>`;
-            }).join('');
-        }
-
-        function renderProfilePortfolio() {
-            const container = document.getElementById('profile-portfolio-list');
-            if(!container) return;
-
-            const assetCats =[
-                { title: 'Companies', items: state.ownedAssets.filter(id => COMPANIES.some(c => c.id === id)) },
-                { title: 'Properties', items: state.ownedAssets.filter(id => REAL_ESTATE.some(re => re.id === id)) },
-                { title: 'Collections', items: state.ownedAssets.filter(id =>[...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture].some(i => i.id === id)) },
-                { title: 'Contraband', items: state.ownedAssets.filter(id => ASSETS.blackMarket.some(i => i.id === id)) },
-                { title: 'Digital Assets', items: Object.keys(state.shares).filter(s => state.shares[s] > 0) }
-            ];
-
-            container.innerHTML = assetCats.map((cat, idx) => `
-                <div>
-                    <p class="text-[9px] text-zinc-600 font-bold uppercase mb-4 tracking-widest">${cat.title} (${cat.items.length})</p>
-                    <div id="portfolio-cat-scroll-${idx}" class="space-y-2 max-h-48 overflow-y-auto pr-2">
-                        ${cat.items.length === 0 ? '<p class="text-[10px] text-zinc-800 font-mono italic">EMPTY SECTION</p>' : cat.items.map(id => {
-                            const found = COMPANIES.find(c => c.id === id) || REAL_ESTATE.find(r => r.id === id) ||[...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture, ...ASSETS.blackMarket].find(i => i.id === id);
-                            if (found) return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${found.name}</span> <span class="text-[9px] mono text-zinc-600">ID: ${found.id}</span></div>`;
-                            return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${id}</span> <span class="text-[9px] mono text-zinc-600">${state.shares[id].toFixed(3)} UNITS</span></div>`;
-                        }).join('')}
-                    </div>
-                </div>
-            `).join('');
-
-            renderWallet();
-        }
-
-        function drawGraph(canvasId, history, type = 'candlestick') {
-            const canvas = document.getElementById(canvasId);
-            if (!canvas) return;
-            const viewW = canvas.offsetWidth;
-            const viewH = canvas.offsetHeight;
-            if (viewW === 0 || viewH === 0) return; 
-
-            const ctx = canvas.getContext('2d');
-            canvas.width = viewW * 2; 
-            canvas.height = viewH * 2;
-            ctx.scale(2, 2);
-            ctx.clearRect(0, 0, viewW, viewH);
-
-            const padding = 10;
-            const minPrice = Math.min(...history.map(h => h.low)) * 0.98;
-            const maxPrice = Math.max(...history.map(h => h.high)) * 1.02;
-            const priceRange = maxPrice - minPrice;
-            const barWidth = (viewW - padding * 2) / history.length;
-            const getY = (price) => viewH - ((price - minPrice) / priceRange) * viewH;
-
-            if (type === 'candlestick') {
-                history.forEach((h, i) => {
-                    const isBull = h.close >= h.open;
-                    ctx.strokeStyle = isBull ? '#10b981' : '#ef4444';
-                    ctx.fillStyle = isBull ? '#10b981' : '#ef4444';
-                    ctx.lineWidth = 1;
-                    const x = padding + i * barWidth;
-                    const midX = x + barWidth / 2;
-                    const yHigh = getY(h.high);
-                    const yLow = getY(h.low);
-                    const yOpen = getY(h.open);
-                    const yClose = getY(h.close);
-                    ctx.beginPath();
-                    ctx.moveTo(midX, yHigh);
-                    ctx.lineTo(midX, yLow);
-                    ctx.stroke();
-                    const bodyY = Math.min(yOpen, yClose);
-                    const bodyH = Math.max(Math.abs(yOpen - yClose), 1);
-                    ctx.fillRect(x + (barWidth * 0.2), bodyY, barWidth * 0.6, bodyH);
-                });
-            } else if (type === 'line' || type === 'area') {
-                ctx.beginPath();
-                ctx.strokeStyle = '#10b981';
-                ctx.lineWidth = 2;
-                history.forEach((h, i) => {
-                    const x = padding + i * barWidth + barWidth/2;
-                    const y = getY(h.close);
-                    if (i === 0) ctx.moveTo(x, y);
-                    else ctx.lineTo(x, y);
-                });
-                ctx.stroke();
-                if (type === 'area') {
-                    ctx.lineTo(padding + (history.length-1) * barWidth + barWidth/2, viewH);
-                    ctx.lineTo(padding + barWidth/2, viewH);
-                    ctx.closePath();
-                    const grad = ctx.createLinearGradient(0, 0, 0, viewH);
-                    grad.addColorStop(0, 'rgba(16, 185, 129, 0.3)');
-                    grad.addColorStop(1, 'transparent');
-                    ctx.fillStyle = grad;
-                    ctx.fill();
-                }
-            }
-        }
-
-        function toggleFavorite(symbol, event) {
-            if(event) event.stopPropagation();
-            const index = state.favorites.indexOf(symbol);
-            if(index > -1) state.favorites.splice(index, 1);
-            else state.favorites.push(symbol);
-            updateUI(true);
-            saveGame();
-        }
-
-        function openStockModal(symbol) {
-            activeStock = STOCKS.find(s => s.symbol === symbol);
-            const modal = document.getElementById('stock-modal');
-            if (modal) {
-                modal.style.display = 'flex';
-                setUI('modal-symbol', activeStock.symbol);
-                setUI('modal-name', activeStock.name);
-                updateModalContent();
-            }
-        }
-
-        function closeStockModal() {
-            activeStock = null;
-            const modal = document.getElementById('stock-modal');
-            if (modal) modal.style.display = 'none';
-        }
-
-        function openResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'flex'; }
+        function openResetModal
+        () { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'flex'; }
         function closeResetModal() { const m = document.getElementById('reset-modal'); if (m) m.style.display = 'none'; }
         function confirmReset() { localStorage.removeItem('vercel_empire_v12_favs'); window.location.reload(); }
 
@@ -4912,12 +3715,12 @@
                             s.trend = Math.abs(s.trend) + 1.0; 
                         }
                         
-                        s.price = Math.max(0.0001, parseFloat(newPrice.toFixed(4)));
+                        s.price = Math.max(1, parseFloat(newPrice.toFixed(2)));
                     }
                     const open = oldPrice;
                     const close = s.price;
-                    const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(4));
-                    const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(4));
+                    const high = parseFloat((Math.max(open, close) + Math.random() * (open * 0.005)).toFixed(2));
+                    const low = parseFloat((Math.min(open, close) - Math.random() * (open * 0.005)).toFixed(2));
                     s.history.push({ open, close, high, low });
                     if(s.history.length > 50) s.history.shift();
                 });
@@ -4933,10 +3736,8 @@
                 fastTickUpdate(); 
             }
 
-            if (tickCounter % 10 === 0) {
-                state.lastSaveTime = Date.now();
-                saveGame();
-            }
+            state.lastSaveTime = Date.now();
+            saveGame();
         }, 1000);
 
         const cardContainer = document.getElementById('card-container');
@@ -4967,37 +3768,14 @@
             });
         }
 
-        const fsModal = document.getElementById('card-fullscreen-modal');
-        const fsCard = document.getElementById('fullscreen-card-visual');
-        const fsGlare = document.getElementById('fullscreen-card-glare');
-        if(fsModal) {
-            let fsReqId = null;
-            fsModal.addEventListener('mousemove', (e) => {
-                if(fsReqId) cancelAnimationFrame(fsReqId);
-                fsReqId = requestAnimationFrame(() => {
-                    const rect = fsCard.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    const xc = rect.width / 2;
-                    const yc = rect.height / 2;
-                    fsCard.style.transform = `rotateY(${(x - xc)/25}deg) rotateX(${-(y - yc)/25}deg)`;
-                    if(fsGlare) {
-                        fsGlare.style.setProperty('--x', `${(x / rect.width) * 100}%`);
-                        fsGlare.style.setProperty('--y', `${(y / rect.height) * 100}%`);
-                    }
-                });
-            });
-            fsModal.addEventListener('mouseleave', () => {
-                if(fsCard) fsCard.style.transform = 'rotateY(0deg) rotateX(0deg)';
-            });
-        }
-
         window.addEventListener('keydown', (e) => {
             if(e.key === 'Escape') {
                 closeStockModal();
                 closeResetModal();
                 closeTransferModal();
-                closeCardFullscreen();
+                if (document.getElementById('card-container').classList.contains('card-fullscreen-mode')) {
+                    document.getElementById('card-max-btn').click();
+                }
             }
         });
 
