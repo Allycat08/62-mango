@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vercel Empire</title>
+    <title>Vercel Empire - The Ascension</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #050505;
@@ -18,13 +18,14 @@
         body {
             background-color: var(--bg);
             color: #ffffff;
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: 'Inter', 'Helvetica Neue', Helvetica, Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
             transition: background-color 0.3s, color 0.3s;
         }
 
-        .mono { font-family: 'Gotham', sans-serif; }
+        h1, h2, h3, h4, .grotesk { font-family: 'Space Grotesk', sans-serif; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
 
         .nav-link {
             font-size: 0.7rem;
@@ -43,6 +44,7 @@
         .nav-link.active::after {
             content: '';
             position: absolute; bottom: 0; left: 0; width: 100%; height: 2px; background: #ffffff;
+            box-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
 
         .card-perspective {
@@ -55,13 +57,14 @@
             aspect-ratio: 1.58 / 1;
             position: relative;
             cursor: pointer;
-            transition: transform 0.1s ease-out;
+            transition: transform 0.1s ease-out, box-shadow 0.3s;
             transform-style: preserve-3d;
             box-shadow: 0 20px 50px rgba(0,0,0,0.5);
             border: 1px solid rgba(255,255,255,0.1);
             user-select: none;
-            font-family: 'Helvetica Neue', sans-serif;
+            font-family: 'Space Grotesk', sans-serif;
         }
+        .debit-card:hover { box-shadow: 0 25px 60px rgba(0,0,0,0.7); }
         .debit-card:active { transform: scale(0.95) rotateX(10deg); }
 
         .card-fullscreen-mode {
@@ -99,6 +102,7 @@
             overflow: hidden;
         }
 
+        /* Original + Ultra-Endgame Card Tiers */
         .tier-0 { background: linear-gradient(135deg, #1c1c1c, #0a0a0a); }
         .tier-1 { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
         .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; }
@@ -114,12 +118,26 @@
         .tier-12 { background: linear-gradient(135deg, #4c1d95, #000000); border: 1px solid #8b5cf6; }
         .tier-13 { background: linear-gradient(135deg, #020617, #0f172a); border: 1px solid #38bdf8; }
         .tier-14 { background: linear-gradient(135deg, #ffffff, #f8fafc); color: #000000; border: 1px solid #e2e8f0; box-shadow: 0 0 30px rgba(255,255,255,0.5); }
+        .tier-15 { background: linear-gradient(135deg, #4338ca, #312e81); border: 1px solid #818cf8; box-shadow: 0 0 40px rgba(67,56,202,0.6); }
+        .tier-16 { background: linear-gradient(135deg, #000000, #000000); border: 1px solid #ef4444; box-shadow: 0 0 50px rgba(239,68,68,0.7); }
+        .tier-17 { background: linear-gradient(135deg, #fbbf24, #d97706); color: #000; border: 1px solid #fef3c7; box-shadow: 0 0 60px rgba(251,191,36,0.8); }
+        .tier-18 { background: linear-gradient(135deg, #0ed3cf, #0d9488); border: 1px solid #99f6e4; box-shadow: 0 0 70px rgba(14,211,207,0.8); }
+        .tier-19 { background: linear-gradient(135deg, #d946ef, #a21caf); border: 1px solid #f0abfc; box-shadow: 0 0 80px rgba(217,70,239,0.9); }
+        .tier-20 { background: linear-gradient(135deg, #020617, #ffffff); color: #000; border: 2px solid #ffffff; box-shadow: 0 0 100px rgba(255,255,255,1); }
+        .tier-21 { background: radial-gradient(circle, #3b82f6, #000000); border: 2px solid #60a5fa; box-shadow: 0 0 120px rgba(59,130,246,1); }
+        .tier-22 { background: linear-gradient(45deg, #000000, #111111, #000000); border: 2px solid #22d3ee; box-shadow: 0 0 150px rgba(34,211,238,1); animation: ultimatePulse 3s infinite alternate; }
+
+        @keyframes ultimatePulse {
+            0% { box-shadow: 0 0 80px rgba(34,211,238,0.5); border-color: #22d3ee; }
+            100% { box-shadow: 0 0 200px rgba(34,211,238,1); border-color: #ffffff; }
+        }
 
         .progress-bg { background: #1a1a1a; height: 4px; border-radius: 2px; }
         .progress-fill { background: #ffffff; height: 100%; border-radius: 2px; transition: width 0.3s; }
 
-        .tab-content { display: none; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .tab-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
         .market-sub-content { display: none; }
         .market-sub-content.active { display: block; }
@@ -128,8 +146,9 @@
             background: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 12px;
-            transition: background 0.3s, border-color 0.3s;
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
         }
+        .glass-card:hover { border-color: #333; }
 
         .btn-buy {
             background: #1a1a1a;
@@ -143,7 +162,7 @@
             transition: all 0.2s;
             border: 1px solid #333;
         }
-        .btn-buy:hover:not(:disabled) { background: #ffffff; color: #000000; }
+        .btn-buy:hover:not(:disabled) { background: #ffffff; color: #000000; transform: translateY(-1px); }
         .btn-buy:disabled { opacity: 0.3; cursor: not-allowed; }
 
         .chart-container {
@@ -224,6 +243,7 @@
 
         .mobile-mode #stock-modal, .mobile-mode #reset-modal, .mobile-mode #onboarding-modal, .mobile-mode #auction-modal, .mobile-mode #transfer-modal { position: absolute; border-radius: inherit; }
 
+        /* Massive Theme Additions */
         body.theme-light { --bg: #fafafa; --card-bg: #ffffff; --border: #e4e4e7; color: #09090b; }
         body.theme-light .bg-zinc-950, body.theme-light .bg-zinc-900 { background-color: #f4f4f5 !important; }
         body.theme-light .bg-black { background-color: #ffffff !important; }
@@ -241,146 +261,61 @@
         body.theme-light input, body.theme-light select { background-color: #ffffff !important; border-color: #e4e4e7 !important; color: #09090b !important; }
         body.theme-light .chart-container { background: #ffffff !important; border-color: #e4e4e7 !important; }
 
-        body.theme-corporate { --bg: #f8fafc; --card-bg: #ffffff; --border: #e2e8f0; color: #0f172a; }
-        body.theme-corporate .glass-card { box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
-        body.theme-corporate .bg-zinc-950, body.theme-corporate .bg-zinc-900 { background-color: #f1f5f9 !important; }
-        body.theme-corporate .bg-black { background-color: #ffffff !important; }
-        body.theme-corporate .border-zinc-900, body.theme-corporate .border-zinc-800 { border-color: #e2e8f0 !important; }
-        body.theme-corporate .text-white { color: #0f172a !important; }
-        body.theme-corporate .text-zinc-500 { color: #64748b !important; }
-        body.theme-corporate .nav-link.active::after { background: #3b82f6; }
-        body.theme-corporate .progress-fill { background: #3b82f6; }
+        body.theme-synthwave { --bg: #10061e; --card-bg: #1c0b32; --border: #ff007f; color: #00ffff; }
+        body.theme-synthwave .glass-card { box-shadow: 0 0 15px rgba(255, 0, 127, 0.1); }
+        body.theme-synthwave .bg-zinc-950, body.theme-synthwave .bg-zinc-900 { background-color: #240a45 !important; }
+        body.theme-synthwave .border-zinc-900, body.theme-synthwave .border-zinc-800 { border-color: #ff007f !important; }
+        body.theme-synthwave .text-white { color: #00ffff !important; }
+        body.theme-synthwave .text-zinc-500 { color: #ff007f !important; }
+        body.theme-synthwave .nav-link.active::after { background: #00ffff; box-shadow: 0 0 8px #00ffff; }
+        body.theme-synthwave .progress-fill { background: #ff007f; box-shadow: 0 0 10px #ff007f; }
 
-        body.theme-arctic { --bg: #f0f9ff; --card-bg: #ffffff; --border: #bae6fd; color: #0c4a6e; }
-        body.theme-arctic .glass-card { box-shadow: 0 4px 10px rgba(186,230,253,0.3); }
-        body.theme-arctic .bg-zinc-950, body.theme-arctic .bg-zinc-900 { background-color: #e0f2fe !important; }
-        body.theme-arctic .bg-black { background-color: #ffffff !important; }
-        body.theme-arctic .border-zinc-900, body.theme-arctic .border-zinc-800 { border-color: #bae6fd !important; }
-        body.theme-arctic .text-white { color: #0c4a6e !important; }
-        body.theme-arctic .text-zinc-500 { color: #0284c7 !important; }
-        body.theme-arctic .nav-link.active::after { background: #0284c7; }
-        body.theme-arctic .progress-fill { background: #0284c7; }
+        body.theme-void { --bg: #000000; --card-bg: #020202; --border: #111111; color: #e5e5e5; }
+        body.theme-void .glass-card { border: 1px solid #111; border-radius: 0; box-shadow: none; }
+        body.theme-void .bg-zinc-950, body.theme-void .bg-zinc-900 { background-color: #030303 !important; }
+        body.theme-void .border-zinc-900, body.theme-void .border-zinc-800 { border-color: #222 !important; }
+        body.theme-void .text-white { color: #ffffff !important; }
+        body.theme-void .text-zinc-500 { color: #666 !important; }
+        body.theme-void .nav-link.active::after { background: #fff; }
+        body.theme-void .progress-fill { background: #fff; }
 
-        body.theme-pastel { --bg: #fffbf0; --card-bg: #ffffff; --border: #fef08a; color: #854d0e; }
-        body.theme-pastel .glass-card { box-shadow: 0 4px 12px rgba(254,240,138,0.2); }
-        body.theme-pastel .bg-zinc-950, body.theme-pastel .bg-zinc-900 { background-color: #fef9c3 !important; }
-        body.theme-pastel .bg-black { background-color: #ffffff !important; }
-        body.theme-pastel .border-zinc-900, body.theme-pastel .border-zinc-800 { border-color: #fef08a !important; }
-        body.theme-pastel .text-white { color: #854d0e !important; }
-        body.theme-pastel .text-zinc-500 { color: #ca8a04 !important; }
-        body.theme-pastel .nav-link.active::after { background: #eab308; }
-        body.theme-pastel .progress-fill { background: #ca8a04; }
+        body.theme-matrix { --bg: #000b00; --card-bg: #001200; --border: #00ff41; color: #00ff41; font-family: 'JetBrains Mono', monospace; }
+        body.theme-matrix * { font-family: 'JetBrains Mono', monospace !important; }
+        body.theme-matrix .glass-card { box-shadow: 0 0 10px rgba(0,255,65,0.05); }
+        body.theme-matrix .bg-zinc-950, body.theme-matrix .bg-zinc-900 { background-color: #001a00 !important; }
+        body.theme-matrix .border-zinc-900, body.theme-matrix .border-zinc-800 { border-color: #00ff41 !important; }
+        body.theme-matrix .text-white { color: #00ff41 !important; }
+        body.theme-matrix .text-zinc-500 { color: #008f11 !important; }
+        body.theme-matrix .nav-link.active::after { background: #00ff41; }
+        body.theme-matrix .progress-fill { background: #00ff41; }
 
-        body.theme-hacker { --bg: #000000; --card-bg: #000000; --border: #004400; color: #00ff00; font-family: 'JetBrains Mono', monospace; }
-        body.theme-hacker * { font-family: 'JetBrains Mono', monospace !important; }
-        body.theme-hacker .glass-card { box-shadow: 0 0 10px rgba(0,255,0,0.05); }
-        body.theme-hacker .bg-zinc-950, body.theme-hacker .bg-zinc-900 { background-color: #001100 !important; }
-        body.theme-hacker .bg-black { background-color: #000000 !important; }
-        body.theme-hacker .border-zinc-900, body.theme-hacker .border-zinc-800 { border-color: #004400 !important; }
-        body.theme-hacker .text-white { color: #00ff00 !important; }
-        body.theme-hacker .text-zinc-500 { color: #00aa00 !important; }
-        body.theme-hacker .nav-link.active::after { background: #00ff00; }
-        body.theme-hacker .progress-fill { background: #00ff00; }
+        body.theme-aurora { --bg: #021a22; --card-bg: #042f3c; --border: #2dd4bf; color: #a7f3d0; }
+        body.theme-aurora .glass-card { box-shadow: 0 0 20px rgba(45,212,191,0.1); }
+        body.theme-aurora .bg-zinc-950, body.theme-aurora .bg-zinc-900 { background-color: #064e3b !important; }
+        body.theme-aurora .border-zinc-900, body.theme-aurora .border-zinc-800 { border-color: #34d399 !important; }
+        body.theme-aurora .text-white { color: #6ee7b7 !important; }
+        body.theme-aurora .text-zinc-500 { color: #3b82f6 !important; }
+        body.theme-aurora .nav-link.active::after { background: #34d399; }
+        body.theme-aurora .progress-fill { background: #34d399; box-shadow: 0 0 10px #34d399; }
 
-        body.theme-gold { --bg: #050500; --card-bg: #0a0a00; --border: #554400; color: #d4af37; }
-        body.theme-gold .bg-zinc-950, body.theme-gold .bg-zinc-900 { background-color: #111100 !important; }
-        body.theme-gold .bg-black { background-color: #050500 !important; }
-        body.theme-gold .border-zinc-900, body.theme-gold .border-zinc-800 { border-color: #554400 !important; }
-        body.theme-gold .text-white { color: #d4af37 !important; }
-        body.theme-gold .text-zinc-500 { color: #aa9955 !important; }
-        body.theme-gold .nav-link.active::after { background: #d4af37; }
-        body.theme-gold .progress-fill { background: #d4af37; }
-
-        body.theme-neon { --bg: #090014; --card-bg: #12002b; --border: #4a0072; color: #e0b3ff; }
-        body.theme-neon .glass-card { box-shadow: 0 0 15px rgba(188, 19, 254, 0.05); }
-        body.theme-neon .bg-zinc-950, body.theme-neon .bg-zinc-900 { background-color: #1a0033 !important; }
-        body.theme-neon .bg-black { background-color: #090014 !important; }
-        body.theme-neon .border-zinc-900, body.theme-neon .border-zinc-800 { border-color: #4a0072 !important; }
-        body.theme-neon .text-white { color: #00ffff !important; }
-        body.theme-neon .text-zinc-500 { color: #bc13fe !important; }
-        body.theme-neon .nav-link.active::after { background: #00ffff; box-shadow: 0 0 5px #00ffff; }
-        body.theme-neon .progress-fill { background: #00ffff; box-shadow: 0 0 8px #00ffff; }
-
-        body.theme-cyberpunk { --bg: #0d0221; --card-bg: #1a0b2e; --border: #00ffcc; color: #fcee0a; }
-        body.theme-cyberpunk .bg-zinc-950, body.theme-cyberpunk .bg-zinc-900 { background-color: #120124 !important; }
-        body.theme-cyberpunk .bg-black { background-color: #0d0221 !important; }
-        body.theme-cyberpunk .border-zinc-900, body.theme-cyberpunk .border-zinc-800 { border-color: #00ffcc !important; }
-        body.theme-cyberpunk .text-white { color: #fcee0a !important; }
-        body.theme-cyberpunk .text-zinc-500 { color: #ff0055 !important; }
-        body.theme-cyberpunk .nav-link.active::after { background: #00ffcc; box-shadow: 0 0 5px #00ffcc; }
-        body.theme-cyberpunk .progress-fill { background: #ff0055; box-shadow: 0 0 8px #ff0055; }
-
-        body.theme-abyss { --bg: #050000; --card-bg: #0a0000; --border: #330000; color: #ff3333; }
-        body.theme-abyss .bg-zinc-950, body.theme-abyss .bg-zinc-900 { background-color: #080000 !important; }
-        body.theme-abyss .bg-black { background-color: #050000 !important; }
-        body.theme-abyss .border-zinc-900, body.theme-abyss .border-zinc-800 { border-color: #330000 !important; }
-        body.theme-abyss .text-white { color: #ff0000 !important; }
-        body.theme-abyss .text-zinc-500 { color: #990000 !important; }
-        body.theme-abyss .nav-link.active::after { background: #ff0000; box-shadow: 0 0 5px #ff0000; }
-        body.theme-abyss .progress-fill { background: #ff0000; box-shadow: 0 0 8px #ff0000; }
-
-        body.theme-midnight { --bg: #08001a; --card-bg: #11002b; --border: #330066; color: #d9b3ff; }
-        body.theme-midnight .glass-card { box-shadow: 0 4px 15px rgba(51, 0, 102, 0.2); }
-        body.theme-midnight .bg-zinc-950, body.theme-midnight .bg-zinc-900 { background-color: #1a0040 !important; }
-        body.theme-midnight .bg-black { background-color: #08001a !important; }
-        body.theme-midnight .border-zinc-900, body.theme-midnight .border-zinc-800 { border-color: #330066 !important; }
-        body.theme-midnight .text-white { color: #ffffff !important; }
-        body.theme-midnight .text-zinc-500 { color: #b366ff !important; }
-        body.theme-midnight .nav-link.active::after { background: #b366ff; }
-        body.theme-midnight .progress-fill { background: #b366ff; }
-
-        body.theme-blood { --bg: #140000; --card-bg: #240000; --border: #660000; color: #ff9999; }
-        body.theme-blood .bg-zinc-950, body.theme-blood .bg-zinc-900 { background-color: #330000 !important; }
-        body.theme-blood .bg-black { background-color: #140000 !important; }
-        body.theme-blood .border-zinc-900, body.theme-blood .border-zinc-800 { border-color: #660000 !important; }
-        body.theme-blood .text-white { color: #ffcccc !important; }
-        body.theme-blood .text-zinc-500 { color: #cc0000 !important; }
-        body.theme-blood .nav-link.active::after { background: #ff3333; }
-        body.theme-blood .progress-fill { background: #ff3333; }
-
-        body.theme-deepspace { --bg: #00020d; --card-bg: #00051a; --border: #001a4d; color: #99bbff; }
-        body.theme-deepspace .bg-zinc-950, body.theme-deepspace .bg-zinc-900 { background-color: #000a33 !important; }
-        body.theme-deepspace .bg-black { background-color: #00020d !important; }
-        body.theme-deepspace .border-zinc-900, body.theme-deepspace .border-zinc-800 { border-color: #001a4d !important; }
-        body.theme-deepspace .text-white { color: #e6f0ff !important; }
-        body.theme-deepspace .text-zinc-500 { color: #3366cc !important; }
-        body.theme-deepspace .nav-link.active::after { background: #6699ff; }
-        body.theme-deepspace .progress-fill { background: #6699ff; }
-
-        body.theme-solar { --bg: #fffbf0; --card-bg: #fff5d6; --border: #ffd666; color: #8c5900; }
-        body.theme-solar .bg-zinc-950, body.theme-solar .bg-zinc-900 { background-color: #ffebad !important; }
-        body.theme-solar .bg-black { background-color: #fffbf0 !important; }
-        body.theme-solar .border-zinc-900, body.theme-solar .border-zinc-800 { border-color: #ffd666 !important; }
-        body.theme-solar .text-white { color: #593900 !important; }
-        body.theme-solar .text-zinc-500 { color: #d48806 !important; }
-        body.theme-solar .nav-link.active::after { background: #faad14; }
-        body.theme-solar .progress-fill { background: #faad14; }
-
-        body.theme-mint { --bg: #f0fff5; --card-bg: #e6ffed; --border: #99ffbb; color: #006622; }
-        body.theme-mint .bg-zinc-950, body.theme-mint .bg-zinc-900 { background-color: #ccffdd !important; }
-        body.theme-mint .bg-black { background-color: #f0fff5 !important; }
-        body.theme-mint .border-zinc-900, body.theme-mint .border-zinc-800 { border-color: #99ffbb !important; }
-        body.theme-mint .text-white { color: #003311 !important; }
-        body.theme-mint .text-zinc-500 { color: #00cc44 !important; }
-        body.theme-mint .nav-link.active::after { background: #00e64d; }
-        body.theme-mint .progress-fill { background: #00e64d; }
-
-        body.theme-cotton { --bg: #fff0f5; --card-bg: #ffe6f2; --border: #ffb3d9; color: #99004d; }
-        body.theme-cotton .bg-zinc-950, body.theme-cotton .bg-zinc-900 { background-color: #ffcce6 !important; }
-        body.theme-cotton .bg-black { background-color: #fff0f5 !important; }
-        body.theme-cotton .border-zinc-900, body.theme-cotton .border-zinc-800 { border-color: #ffb3d9 !important; }
-        body.theme-cotton .text-white { color: #4d0026 !important; }
-        body.theme-cotton .text-zinc-500 { color: #ff3399 !important; }
-        body.theme-cotton .nav-link.active::after { background: #ff66b3; }
-        body.theme-cotton .progress-fill { background: #ff66b3; }
+        body.theme-inferno { --bg: #1a0000; --card-bg: #330000; --border: #ff3300; color: #ff9933; }
+        body.theme-inferno .glass-card { box-shadow: 0 0 15px rgba(255,51,0,0.15); }
+        body.theme-inferno .bg-zinc-950, body.theme-inferno .bg-zinc-900 { background-color: #4d0000 !important; }
+        body.theme-inferno .border-zinc-900, body.theme-inferno .border-zinc-800 { border-color: #ff3300 !important; }
+        body.theme-inferno .text-white { color: #ffcc00 !important; }
+        body.theme-inferno .text-zinc-500 { color: #cc0000 !important; }
+        body.theme-inferno .nav-link.active::after { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; }
+        body.theme-inferno .progress-fill { background: #ff3300; box-shadow: 0 0 10px #ff3300; }
 
         .drag-over { border-style: dashed !important; border-color: #ffffff !important; opacity: 0.5; }
 
-        html body .debit-card, html body .debit-card * { font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif !important; }
+        html body .debit-card, html body .debit-card * { font-family: 'Space Grotesk', Helvetica, Arial, sans-serif !important; }
         html body .debit-card { color: #ffffff !important; }
         html body .debit-card.tier-2 { color: #000000 !important; }
         html body .debit-card.tier-9 { color: #0f172a !important; }
         html body .debit-card.tier-14 { color: #000000 !important; }
+        html body .debit-card.tier-17 { color: #000000 !important; }
+        html body .debit-card.tier-20 { color: #000000 !important; }
         html body .debit-card .text-white { color: currentColor !important; }
         html body .debit-card .text-white\/40 { color: color-mix(in srgb, currentColor 40%, transparent) !important; }
         html body .debit-card .text-white\/60 { color: color-mix(in srgb, currentColor 60%, transparent) !important; }
@@ -388,6 +323,8 @@
         html body .debit-card .text-white\/30 { color: color-mix(in srgb, currentColor 30%, transparent) !important; }
         html body .debit-card .bg-white\/20 { background-color: color-mix(in srgb, currentColor 20%, transparent) !important; }
         html body .debit-card path[fill="white"] { fill: currentColor !important; }
+        
+        .glow-text { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
     </style>
 </head>
 <body class="max-w-[1400px] mx-auto">
@@ -396,10 +333,10 @@
         <header class="flex justify-between items-start mb-8">
             <div class="flex items-center gap-4">
                 <svg onclick="showBlackMarket()" class="cursor-pointer transition-transform hover:scale-110" width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
+                    <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor"/>
                 </svg>
                 <div>
-                    <h1 class="text-3xl font-black tracking-tighter leading-none">VERCEL <span class="text-zinc-500">EMPIRE</span></h1>
+                    <h1 class="text-3xl font-black tracking-tighter leading-none grotesk glow-text">VERCEL <span class="text-zinc-500" style="text-shadow: none;">EMPIRE</span></h1>
                     <p class="text-[10px] text-zinc-500 font-bold mt-1 uppercase tracking-widest">LVL <span id="lvl-display">1</span> <span id="rank-display">ENTREPRENEUR</span></p>
                 </div>
             </div>
@@ -422,7 +359,7 @@
             </div>
         </header>
 
-        <nav class="flex gap-8 border-b border-zinc-900 pb-2 overflow-x-auto whitespace-nowrap">
+        <nav class="flex gap-8 border-b border-zinc-900 pb-2 overflow-x-auto whitespace-nowrap scrollbar-thin">
             <button onclick="showTab('dashboard')" class="nav-link active" id="btn-dashboard">Dashboard</button>
             <button onclick="showTab('companies')" class="nav-link" id="btn-companies">Companies</button>
             <button onclick="showTab('real-estate')" class="nav-link" id="btn-real-estate">Real Estate</button>
@@ -456,7 +393,7 @@
                                     <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">ACTIVE BALANCE</p>
                                     <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
                                 </div>
-                                <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap" id="balance-display">$0</h2>
+                                <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap grotesk" id="balance-display">$0</h2>
                                 <div class="flex items-center gap-2 mt-1">
                                     <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
                                     <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
@@ -486,7 +423,7 @@
                         </div>
                         <div class="flex justify-between items-end mb-2" onclick="openStockModal(state.dashboardStock)" style="cursor: pointer;">
                             <div>
-                                <h3 class="text-2xl font-black tracking-tighter" id="dash-stock-symbol">AAPL</h3>
+                                <h3 class="text-2xl font-black tracking-tighter grotesk" id="dash-stock-symbol">AAPL</h3>
                             </div>
                             <div class="text-right">
                                 <p class="text-lg font-bold mono" id="dash-stock-price">$0.00</p>
@@ -515,9 +452,9 @@
                         <div id="empire-stats-grid" class="grid grid-cols-2 md:grid-cols-4 gap-4 grid-flow-row-dense"></div>
                     </div>
 
-                    <div class="glass-card p-6 h-48 overflow-y-auto font-mono text-[10px] text-zinc-600 space-y-1" id="terminal">
-                        <p class="text-zinc-400">> Vercel Empire v41.1.2</p>
-                        <p class="text-emerald-500">> Welcome Back.</p>
+                    <div class="glass-card p-6 h-48 overflow-y-auto font-mono text-[10px] text-zinc-600 space-y-1 scrollbar-thin" id="terminal">
+                        <p class="text-emerald-500">> Vercel Empire v50.0.0 (The Ascension Update)</p>
+                        <p class="text-zinc-400">> System Initialized. Welcome Back.</p>
                     </div>
                 </div>
             </div>
@@ -527,7 +464,7 @@
         <div id="companies" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight">ENTERPRISE INFRASTRUCTURE</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">ENTERPRISE INFRASTRUCTURE</h2>
                     <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1" id="comp-sell-desc">BUILD, UPGRADE & SELL FOR 30% OF INVESTMENTS</p>
                 </div>
             </div>
@@ -538,7 +475,7 @@
         <div id="real-estate" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight">GLOBAL PROPERTY PORTFOLIO</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">GLOBAL PROPERTY PORTFOLIO</h2>
                     <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">RENT, RENOVATE & SELL FOR 90% OF INVESTMENTS</p>
                 </div>
                 <div class="flex gap-2">
@@ -557,7 +494,7 @@
             </div>
 
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 border-b border-zinc-900 pb-2">
-                <nav class="flex gap-8 overflow-x-auto whitespace-nowrap">
+                <nav class="flex gap-8 overflow-x-auto whitespace-nowrap scrollbar-thin">
                     <button onclick="showMarketSubTab('regular')" class="nav-link market-nav-link active" id="btn-market-regular">Regular Stocks</button>
                     <button onclick="showMarketSubTab('crypto')" class="nav-link market-nav-link" id="btn-market-crypto">Crypto</button>
                     <button onclick="showMarketSubTab('nft')" class="nav-link market-nav-link" id="btn-market-nft">NFTs</button>
@@ -577,13 +514,13 @@
             </div>
 
             <div id="market-regular" class="market-sub-content active">
-                <h2 class="text-xl font-black uppercase tracking-tight mb-8">GLOBAL EQUITY MARKET</h2>
+                <h2 class="text-xl font-black uppercase tracking-tight mb-8 grotesk">GLOBAL EQUITY MARKET</h2>
                 <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </div>
             
             <div id="market-crypto" class="market-sub-content">
                 <div class="flex items-center gap-4 mb-8">
-                    <h2 class="text-xl font-black uppercase tracking-tight">CRYPTO EXCHANGE</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">CRYPTO EXCHANGE</h2>
                     <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded">REAL-TIME TRADING</span>
                 </div>
                 <div id="crypto-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
@@ -592,7 +529,7 @@
             <div id="market-nft" class="market-sub-content">
                 <div class="flex items-center justify-between mb-8">
                     <div class="flex items-center gap-4">
-                        <h2 class="text-xl font-black uppercase tracking-tight">DIGITAL COLLECTIBLES (NFTs)</h2>
+                        <h2 class="text-xl font-black uppercase tracking-tight grotesk">DIGITAL COLLECTIBLES (NFTs)</h2>
                         <span class="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-[10px] font-bold rounded">TRADE WITH CRYPTO</span>
                     </div>
                     <div id="nft-status" class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest"></div>
@@ -605,7 +542,7 @@
         <div id="collection" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight">LUXURY ASSETS</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">LUXURY ASSETS</h2>
                     <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">ACQUIRE HIGH VALUE ASSETS • SELL & AUCTION IN TRADING TAB</p>
                 </div>
                 <div class="flex gap-2">
@@ -621,7 +558,7 @@
         <div id="trading" class="tab-content">
             <div class="glass-card p-6 mb-8 border-emerald-900/50 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div>
-                    <h3 class="text-xl font-black uppercase text-emerald-500 tracking-tight">PEER-TO-PEER EXCHANGE</h3>
+                    <h3 class="text-xl font-black uppercase text-emerald-500 tracking-tight grotesk">PEER-TO-PEER EXCHANGE</h3>
                     <p class="text-[10px] text-zinc-400 font-bold tracking-widest mt-1">TRADE ASSETS WITH OTHER PLAYERS</p>
                 </div>
                 <div class="flex gap-2 w-full md:w-auto">
@@ -631,7 +568,7 @@
             </div>
             
             <div class="flex justify-between items-center mb-8">
-                <h2 class="text-xl font-black uppercase tracking-tight text-amber-500">VBAY MARKETPLACE</h2>
+                <h2 class="text-xl font-black uppercase tracking-tight text-amber-500 grotesk">VBAY MARKETPLACE</h2>
                 <p class="text-[10px] text-zinc-500 font-bold tracking-widest">YOUR LISTINGS</p>
             </div>
             <div id="trading-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -641,7 +578,7 @@
         <div id="black-market" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight text-red-500" style="text-shadow: 0 0 10px rgba(239,68,68,0.5);">THE DARK WEB</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight text-red-500 grotesk" style="text-shadow: 0 0 10px rgba(239,68,68,0.5);">THE DARK WEB</h2>
                     <p class="text-[10px] text-red-900 font-bold tracking-widest mt-1">UNTRACEABLE TRANSACTIONS • BTC ONLY</p>
                 </div>
             </div>
@@ -650,7 +587,7 @@
 
         <!-- BANK TAB -->
         <div id="bank" class="tab-content relative pb-24">
-            <h2 class="text-xl font-black uppercase tracking-tight mb-8">CARD UPGRADES</h2>
+            <h2 class="text-xl font-black uppercase tracking-tight mb-8 grotesk">CARD UPGRADES</h2>
             <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
 
@@ -670,7 +607,7 @@
                                 <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white" class="opacity-20"/>
                             </svg>
                         </div>
-                        <h2 class="text-3xl font-black tracking-tighter uppercase" id="profile-name">NAME</h2>
+                        <h2 class="text-3xl font-black tracking-tighter uppercase grotesk" id="profile-name">NAME</h2>
                         <p class="text-[10px] text-emerald-500 font-bold tracking-[0.2em] mb-8" id="profile-rank">STARTUP</p>
 
                         <div class="text-left space-y-4 border-t border-zinc-900 pt-8 mb-8">
@@ -689,7 +626,7 @@
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">DIGITAL WALLET</p>
                                 <button onclick="openTransferModal()" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors uppercase tracking-widest">TRANSFER</button>
                             </div>
-                            <div class="wallet-container flex overflow-x-auto pb-8 -mx-4 px-4 pt-4" id="wallet-container"></div>
+                            <div class="wallet-container flex overflow-x-auto pb-8 -mx-4 px-4 pt-4 scrollbar-thin" id="wallet-container"></div>
                         </div>
                     </div>
 
@@ -727,9 +664,10 @@
                     <div class="glass-card p-8">
                         <div class="flex justify-between items-center mb-6">
                             <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">UI THEMES</p>
-                            <div class="flex gap-2">
+                            <div class="flex gap-2 overflow-x-auto whitespace-nowrap scrollbar-thin">
                                 <button onclick="setThemeTab('light')" id="btn-theme-light" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest">LIGHT</button>
                                 <button onclick="setThemeTab('dark')" id="btn-theme-dark" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-white text-black transition-colors uppercase tracking-widest">DARK</button>
+                                <button onclick="setThemeTab('premium')" id="btn-theme-premium" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest">PREMIUM</button>
                             </div>
                         </div>
                         <div id="themes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
@@ -760,7 +698,7 @@
     </div>
 
     <!-- BOUNCING WATERMARK -->
-    <div id="illegitimate-watermark" style="display:none; position:fixed; z-index:9999; font-weight:900; color:rgba(239, 68, 68, 0.4); font-size:2rem; pointer-events:none; white-space:nowrap; user-select:none;">
+    <div id="illegitimate-watermark" style="display:none; position:fixed; z-index:9999; font-weight:900; color:rgba(239, 68, 68, 0.4); font-size:2rem; pointer-events:none; white-space:nowrap; user-select:none; font-family:'Space Grotesk',sans-serif;">
         (ILLEGITIMATE)
     </div>
 
@@ -770,7 +708,7 @@
             <svg width="60" height="60" viewBox="0 0 76 65" fill="none" class="mx-auto mb-8">
                 <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
             </svg>
-            <h2 class="text-3xl font-black tracking-tighter mb-2 uppercase">Welcome to Vercel</h2>
+            <h2 class="text-3xl font-black tracking-tighter mb-2 uppercase grotesk">Welcome to Vercel</h2>
             <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-10">Initialize your empire credentials</p>
             <input type="text" id="name-input" placeholder="ENTER YOUR NAME" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-6 py-4 text-center font-black uppercase text-sm mb-6 focus:outline-none focus:border-white transition-colors">
             <div class="grid grid-cols-2 gap-4">
@@ -785,7 +723,7 @@
             <button onclick="closeStockModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white font-black">CLOSE[ESC]</button>
             <div class="flex justify-between items-end mb-8">
                 <div>
-                    <h2 class="text-4xl font-black tracking-tighter" id="modal-symbol">SYMB</h2>
+                    <h2 class="text-4xl font-black tracking-tighter grotesk" id="modal-symbol">SYMB</h2>
                     <p class="text-zinc-500 font-bold uppercase tracking-widest" id="modal-name">Company Name</p>
                 </div>
                 <div class="flex gap-2">
@@ -822,7 +760,7 @@
     <div id="auction-modal">
         <div class="w-full max-w-xl glass-card p-8 text-center relative border border-amber-900/50">
             <p class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-2">LIVE AUCTION</p>
-            <h2 class="text-2xl font-black uppercase mb-6" id="auction-item-name">ITEM NAME</h2>
+            <h2 class="text-2xl font-black uppercase mb-6 grotesk" id="auction-item-name">ITEM NAME</h2>
 
             <div class="flex justify-between items-center mb-8 px-8 py-4 bg-zinc-950 rounded-lg border border-zinc-900">
                 <div>
@@ -835,7 +773,7 @@
                 </div>
             </div>
 
-            <div class="h-40 overflow-y-auto bg-black border border-zinc-900 rounded p-4 mb-6 text-left space-y-1" id="auction-log">
+            <div class="h-40 overflow-y-auto bg-black border border-zinc-900 rounded p-4 mb-6 text-left space-y-1 scrollbar-thin" id="auction-log">
                 <p class="text-[10px] mono text-zinc-500 italic">Waiting for bids...</p>
             </div>
 
@@ -846,7 +784,7 @@
     <!-- TRANSFER FUNDS MODAL -->
     <div id="transfer-modal">
         <div class="w-full max-w-sm glass-card p-8">
-            <h3 class="text-xl font-black uppercase mb-6 tracking-tight">TRANSFER FUNDS</h3>
+            <h3 class="text-xl font-black uppercase mb-6 tracking-tight grotesk">TRANSFER FUNDS</h3>
             <div class="space-y-4 mb-6">
                 <div>
                     <label class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1 block">FROM CARD</label>
@@ -870,7 +808,7 @@
 
     <div id="reset-modal">
         <div class="w-full max-w-md glass-card p-10 text-center">
-            <h2 class="text-3xl font-black tracking-tighter mb-4 uppercase">Wipe Data?</h2>
+            <h2 class="text-3xl font-black tracking-tighter mb-4 uppercase grotesk">Wipe Data?</h2>
             <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-10 leading-relaxed">Do you really want to delete all of your assets, including your net worth and levels? This action is permanent and CANNOT be undone.</p>
             <div class="space-y-3">
                 <button onclick="confirmReset()" class="w-full py-4 bg-red-600 text-white font-black text-xs uppercase tracking-widest rounded hover:bg-red-500 transition-colors">Oh yeah. Wipe it</button>
@@ -887,10 +825,12 @@
         };
 
         function formatLargeNumber(num) {
-            if (num > 999999999999999) {
-                return Math.floor(num / 1000000000000).toLocaleString() + "T...";
-            }
-            return Math.floor(num).toLocaleString();
+            if (num < 1000) return Math.floor(num).toString();
+            if (num >= 1e66) return num.toExponential(2); // Fallback for absurdly huge numbers beyond Vigintillion
+            const suffixes = ["", "K", "M", "B", "T", "Qa", "Qi", "Sx", "Sp", "Oc", "No", "Dc", "Ud", "Dd", "Td", "Qad", "Qid", "Sxd", "Spd", "Ocd", "Nod", "Vig"];
+            const tier = Math.floor(Math.log10(num) / 3);
+            const scaled = num / Math.pow(10, tier * 3);
+            return scaled.toFixed(scaled >= 100 ? 0 : 1).replace(/\.0$/, '') + suffixes[tier];
         }
 
         const THEMES =[
@@ -909,10 +849,17 @@
             { id: 'deepspace', name: 'Deep Space', price: 10000000, class: 'theme-deepspace', type: 'dark' },
             { id: 'solar', name: 'Solar Flare', price: 2000000, class: 'theme-solar', type: 'light' },
             { id: 'mint', name: 'Mint Breeze', price: 5000000, class: 'theme-mint', type: 'light' },
-            { id: 'cotton', name: 'Cotton Candy', price: 10000000, class: 'theme-cotton', type: 'light' }
+            { id: 'cotton', name: 'Cotton Candy', price: 10000000, class: 'theme-cotton', type: 'light' },
+            
+            // Ascension Update Premium Themes
+            { id: 'synthwave', name: 'Synthwave 80s', price: 50000000000, class: 'theme-synthwave', type: 'premium' }, // 50B
+            { id: 'void', name: 'Absolute Void', price: 1000000000000, class: 'theme-void', type: 'premium' }, // 1T
+            { id: 'matrix', name: 'Matrix Root', price: 10000000000000, class: 'theme-matrix', type: 'premium' }, // 10T
+            { id: 'aurora', name: 'Boreal Aurora', price: 50000000000000, class: 'theme-aurora', type: 'premium' }, // 50T
+            { id: 'inferno', name: 'Cosmic Inferno', price: 100000000000000, class: 'theme-inferno', type: 'premium' }, // 100T
         ];
 
-        const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign"];
+        const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign", "Planetary Ruler", "Stellar Overlord", "Galactic Emperor", "Universal Architect", "Omniversal Entity"];
 
         const CARD_TIERS =[
             { id: 0, name: "DEFAULT CARD", price: 0, mult: 1, class: "tier-0" },
@@ -929,7 +876,16 @@
             { id: 11, name: "VERCEL BLACK", price: 100000000, mult: 250, class: "tier-11" },
             { id: 12, name: "NEBULA INFINITE", price: 250000000, mult: 400, class: "tier-12" },
             { id: 13, name: "ANTIMATTER EXCLUSIVE", price: 1000000000, mult: 1000, class: "tier-13" },
-            { id: 14, name: "GALACTIC SOVEREIGN", price: 5000000000, mult: 2500, class: "tier-14" }
+            { id: 14, name: "GALACTIC SOVEREIGN", price: 5000000000, mult: 2500, class: "tier-14" },
+            // Ascension Update Cards
+            { id: 15, name: "OMNIVERSAL PRIME", price: 100000000000, mult: 5000, class: "tier-15" },           // 100B
+            { id: 16, name: "SINGULARITY CORE", price: 5000000000000, mult: 15000, class: "tier-16" },          // 5T
+            { id: 17, name: "CHRONO VANGUARD", price: 250000000000000, mult: 50000, class: "tier-17" },         // 250T
+            { id: 18, name: "CELESTIAL AEGIS", price: 10000000000000000, mult: 200000, class: "tier-18" },      // 10Qa
+            { id: 19, name: "ETHEREAL MONARCH", price: 500000000000000000, mult: 1000000, class: "tier-19" },   // 500Qa
+            { id: 20, name: "ASTRAL DOMINION", price: 25000000000000000000, mult: 5000000, class: "tier-20" },  // 25Qi
+            { id: 21, name: "THE ARCHITECT", price: 1000000000000000000000, mult: 25000000, class: "tier-21" }, // 1Sx
+            { id: 22, name: "VERCEL ABSOLUTE", price: 50000000000000000000000, mult: 100000000, class: "tier-22" } // 50Sx
         ];
 
         const COLLEGES =[
@@ -940,7 +896,10 @@
             { id: 'uni5', name: "Medical Institute", tuition: 300000, acc: 25, req: 65, maxDeg: 8 },
             { id: 'uni6', name: "Ivy League", tuition: 500000, acc: 15, req: 80, maxDeg: 10 },
             { id: 'uni7', name: "Sovereign Institute", tuition: 1000000, acc: 8, req: 90, maxDeg: 11 },
-            { id: 'uni8', name: "Vercel University", tuition: 2500000, acc: 2, req: 100, maxDeg: 12 }
+            { id: 'uni8', name: "Vercel University", tuition: 2500000, acc: 2, req: 100, maxDeg: 12 },
+            // Ascension Update Colleges
+            { id: 'uni9', name: "Galactic Academy", tuition: 100000000, acc: 1, req: 150, maxDeg: 14 },
+            { id: 'uni10', name: "Omniversal Nexus", tuition: 50000000000, acc: 0.1, req: 250, maxDeg: 16 }
         ];
 
         const DEGREES =[
@@ -955,7 +914,12 @@
             { id: 'deg9', name: "Juris Doctor (JD)", mult: 1.05 },
             { id: 'deg10', name: "Doctor of Medicine (MD)", mult: 1.05 },
             { id: 'deg11', name: "Doctor of Philosophy (PhD)", mult: 1.08 },
-            { id: 'deg12', name: "Vercel Laureate", mult: 1.10 }
+            { id: 'deg12', name: "Vercel Laureate", mult: 1.10 },
+            // Ascension Update Degrees
+            { id: 'deg13', name: "Galactic Scholar", mult: 1.50 },
+            { id: 'deg14', name: "Universal Theorist", mult: 2.00 },
+            { id: 'deg15', name: "Multiversal Doctorate", mult: 5.00 },
+            { id: 'deg16', name: "The Prime Architect", mult: 10.00 }
         ];
 
         const STOCKS =[
@@ -1015,7 +979,6 @@
             { symbol: "SQ", name: "Block", price: 80.00, trend: 1.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/squareup.com' },
             { symbol: "PYPL", name: "PayPal", price: 65.00, trend: -0.5, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/paypal.com' },
             { symbol: "SHOP", name: "Shopify", price: 75.00, trend: 2.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/shopify.com' },
-            { symbol: "COIN", name: "Coinbase", price: 250.00, trend: 4.5, history:[], type: 'crypto', isRealTime: false, logo: 'https://cryptoicons.org/api/icon/btc/200' },
             { symbol: "HOOD", name: "Robinhood", price: 18.00, trend: 1.8, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/robinhood.com' },
             { symbol: "PLTR", name: "Palantir", price: 25.00, trend: 3.2, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/palantir.com' },
             { symbol: "RBLX", name: "Roblox", price: 40.00, trend: 1.4, history:[], type: 'stock', isRealTime: false, logo: 'https://logo.clearbit.com/roblox.com' },
@@ -1112,7 +1075,7 @@
             });
         })();
 
-        const COMPANY_TIERS =["Local", "Small Chain", "Large Chain", "Regional Giant", "Global Conglomerate"];
+        const COMPANY_TIERS =["Local", "Small Chain", "Large Chain", "Regional Giant", "Global Conglomerate", "Planetary Corp", "Stellar Syndicate", "Galactic Monopoly", "Universal Titan", "Omniversal Entity"];
 
         const COMPANIES =[
             { id: 'c1', name: "Corner Shop", price: 25000, rev: 4000, bill: 150, img: "https://images.unsplash.com/photo-1534723452862-4c874018d66d?w=400" },
@@ -1138,7 +1101,16 @@
             { id: 'c21', name: "AI Research Lab", price: 3000000000, rev: 425000000, bill: 35000000, img: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400" },
             { id: 'c22', name: "Space Tourism", price: 6500000000, rev: 950000000, bill: 85000000, img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400" },
             { id: 'c23', name: "Quantum Computing", price: 12000000000, rev: 1900000000, bill: 180000000, img: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=400" },
-            { id: 'c24', name: "Deep Sea Mining", price: 25000000000, rev: 4250000000, bill: 420000000, img: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400" }
+            { id: 'c24', name: "Deep Sea Mining", price: 25000000000, rev: 4250000000, bill: 420000000, img: "https://images.unsplash.com/photo-1682687220742-aba13b6e50ba?w=400" },
+            // Ascension Update Companies
+            { id: 'c25', name: "Dyson Sphere Forge", price: 250000000000, rev: 45000000000, bill: 5000000000, img: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400" },
+            { id: 'c26', name: "Wormhole Transit", price: 5000000000000, rev: 950000000000, bill: 100000000000, img: "https://images.unsplash.com/photo-1454789548928-9efd52dc4031?w=400" },
+            { id: 'c27', name: "Stellar Extractor", price: 150000000000000, rev: 30000000000000, bill: 3000000000000, img: "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?w=400" },
+            { id: 'c28', name: "Dark Matter Reactor", price: 5000000000000000, rev: 1100000000000000, bill: 150000000000000, img: "https://images.unsplash.com/photo-1475274047050-1d0c0975c63e?w=400" },
+            { id: 'c29', name: "Galactic Real Estate", price: 200000000000000000, rev: 45000000000000000, bill: 5000000000000000, img: "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=400" },
+            { id: 'c30', name: "Time Manipulation", price: 10000000000000000000, rev: 2500000000000000000, bill: 300000000000000000, img: "https://images.unsplash.com/photo-1501139083538-0139583c060f?w=400" },
+            { id: 'c31', name: "Multiverse Syndicate", price: 500000000000000000000, rev: 150000000000000000000, bill: 20000000000000000000, img: "https://images.unsplash.com/photo-1436891620584-47fd0e565afb?w=400" },
+            { id: 'c32', name: "Vercel Sim Core", price: 50000000000000000000000, rev: 18000000000000000000000, bill: 2000000000000000000000, img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" }
         ];
 
         const COMPLEX_UPGRADE_TREES = {
@@ -1165,7 +1137,15 @@
             'c21': ['Academic Papers', 'Data Siphon', 'Quantum Node', 'Turing Awardees', 'AGI Breakthrough', 'Tech Singularity'],
             'c22': ['Billionaire PR', 'Zero-G Hotel', 'Star Cruiser', 'Aerospace Elites', 'Autonomous Piloting', 'Interplanetary Monopoly'],
             'c23': ['Science Summits', 'Cryo-Chamber', 'Qubit Matrix', 'Quantum Physicists', 'Multiverse Processing', 'Universal Compute'],
-            'c24': ['Maritime Expos', 'Abyssal Rig', 'Leviathan Sub', 'Deep Sea Commanders', 'Autonomous Drones', 'Oceanic Dominion']
+            'c24': ['Maritime Expos', 'Abyssal Rig', 'Leviathan Sub', 'Deep Sea Commanders', 'Autonomous Drones', 'Oceanic Dominion'],
+            'c25': ['Orbital Mirrors', 'Solar Sails', 'Plasma Harvesters', 'Energy Beaming', 'Stellar Engulfment', 'Absolute Power'],
+            'c26': ['Tachyon Comm.', 'Spacetime Folders', 'Gravity Wells', 'Hyperlanes', 'Galactic Gates', 'Universal Network'],
+            'c27': ['Core Drills', 'Mantle Siphons', 'Star Squeezers', 'Nebula Scoops', 'Void Mining', 'Cosmic Extraction'],
+            'c28': ['Antimatter Fields', 'Boson Stabilizers', 'Singularity Core', 'Null Reactors', 'Dark Energy Tap', 'Infinite Energy'],
+            'c29': ['Lunar Deeds', 'Martian Contracts', 'Solar Systems', 'Galactic Clusters', 'Superclusters', 'Universe Monopoly'],
+            'c30': ['Micro-Jumps', 'Causality Loops', 'Timeline Branching', 'Paradox Resolvers', 'Chrono Engines', 'Eternity Control'],
+            'c31': ['Dimension Gates', 'Alt-Reality Trades', 'Void Commerce', 'Omni-Currency', 'Multiverse Hub', 'Everything Monopoly'],
+            'c32': ['Physics Engine', 'Consciousness Upload', 'Reality Overrides', 'God Mode API', 'Source Code Access', 'Vercel Supremacy']
         };
 
         COMPANIES.forEach(c => {
@@ -1192,7 +1172,16 @@
             { id: 're3', name: "Luxury Villa", price: 15000000, type: 'house', img: "https://loremflickr.com/400/225/villa?lock=5" },
             { id: 're4', name: "Glass Beach Mansion", price: 85000000, type: 'house', img: "https://loremflickr.com/400/225/beach,mansion?lock=6" },
             { id: 're5', name: "City Center Penthouse", price: 42000000, type: 'apartment', img: "https://loremflickr.com/400/225/penthouse?lock=7" },
-            { id: 're6', name: "Private Island Villa", price: 250000000, type: 'house', img: "https://loremflickr.com/400/225/private,island?lock=8" }
+            { id: 're6', name: "Private Island Villa", price: 250000000, type: 'house', img: "https://loremflickr.com/400/225/private,island?lock=8" },
+            // Ascension Update Real Estate
+            { id: 're7', name: "Orbital Ring", price: 10000000000, type: 'apartment', img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400" },
+            { id: 're8', name: "Lunar Outpost", price: 250000000000, type: 'house', img: "https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=400" },
+            { id: 're9', name: "Martian Metropolis", price: 5000000000000, type: 'apartment', img: "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=400" },
+            { id: 're10', name: "Floating Venusian City", price: 100000000000000, type: 'house', img: "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?w=400" },
+            { id: 're11', name: "Terraformed Exoplanet", price: 5000000000000000, type: 'house', img: "https://images.unsplash.com/photo-1614728263952-84ea256f9679?w=400" },
+            { id: 're12', name: "Private Solar System", price: 250000000000000000, type: 'house', img: "https://images.unsplash.com/photo-1464802686167-b939a6910659?w=400" },
+            { id: 're13', name: "Custom Galaxy", price: 10000000000000000000, type: 'house', img: "https://images.unsplash.com/photo-1436891620584-47fd0e565afb?w=400" },
+            { id: 're14', name: "Pocket Dimension", price: 1000000000000000000000, type: 'house', img: "https://images.unsplash.com/photo-1550684848-fac1c5b4e853?w=400" }
         ];
 
         const houseNames =["Log Cabin", "Farmhouse", "Ranch Style", "Colonial", "Townhouse", "Victorian", "Georgian", "Tudor", "Mediterranean", "Craftsman", "Mid-Century", "Prairie", "Contemporary", "Bungalow", "Cape Cod", "Cottage", "French Country", "Spanish Style", "Tudor Revival", "Greek Revival", "Italianate", "Art Deco", "Modernist", "Postmodern", "Minimalist", "A-Frame", "Saltbox", "Shotgun", "Split-Level", "Desert Dome", "Eco House"];
@@ -1217,7 +1206,9 @@
                 { id: 'j7', name: "Platinum Signet Ring", price: 1250000, img: "" },
                 { id: 'j8', name: "Ruby Teardrop Pendant", price: 2500000, img: "" },
                 { id: 'j9', name: "Vercel Sovereign Crown", price: 10000000, img: "" },
-                { id: 'j10', name: "Obsidian Cufflinks", price: 500000, img: "" }
+                { id: 'j10', name: "Obsidian Cufflinks", price: 500000, img: "" },
+                { id: 'j11', name: "Heart of the Multiverse", price: 1000000000000000, img: "" }, 
+                { id: 'j12', name: "Vercel Singularity Ring", price: 50000000000000000, img: "" }
             ],
             cars:[
                 { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "" },
@@ -1229,7 +1220,9 @@
                 { id: 'car7', name: "Rolls Royce Phantom", price: 450000, img: "" },
                 { id: 'car8', name: "Koenigsegg Jesko", price: 3500000, img: "" },
                 { id: 'car9', name: "Pagani Huayra", price: 2800000, img: "" },
-                { id: 'car10', name: "Bentley Continental", price: 250000, img: "" }
+                { id: 'car10', name: "Bentley Continental", price: 250000, img: "" },
+                { id: 'car11', name: "FTL Cruiser", price: 500000000000000, img: "" },
+                { id: 'car12', name: "Dimensional Skimmer", price: 10000000000000000, img: "" }
             ],
             furniture:[
                 { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "" },
@@ -1241,7 +1234,9 @@
                 { id: 'f7', name: "Antique Grand Piano", price: 120000, img: "" },
                 { id: 'f8', name: "Gold-leaf Mirror", price: 45000, img: "" },
                 { id: 'f9', name: "Persian Silk Rug", price: 85000, img: "" },
-                { id: 'f10', name: "Crystal Dining Set", price: 25000, img: "" }
+                { id: 'f10', name: "Crystal Dining Set", price: 25000, img: "" },
+                { id: 'f11', name: "Neutron Star Desk", price: 50000000000000, img: "" },
+                { id: 'f12', name: "Dark Matter Throne", price: 2000000000000000, img: "" }
             ],
             blackMarket:[
                 { id: 'bm1', name: "Ghost Gun Cache", priceBtc: 0.15, img: "" },
@@ -1255,7 +1250,9 @@
                 { id: 'bm9', name: "Cyber-Warfare Suite", priceBtc: 25.0, img: "" },
                 { id: 'bm10', name: "Classified Govt Docs", priceBtc: 55.0, img: "" },
                 { id: 'bm11', name: "Orbital Strike Code", priceBtc: 150.0, img: "" },
-                { id: 'bm12', name: "Synthetic Virus Strain", priceBtc: 300.0, img: "" }
+                { id: 'bm12', name: "Synthetic Virus Strain", priceBtc: 300.0, img: "" },
+                { id: 'bm13', name: "Simulation Root Access", priceBtc: 50000.0, img: "" },
+                { id: 'bm14', name: "Vercel Master Key", priceBtc: 1000000.0, img: "" }
             ]
         };
 
@@ -1291,6 +1288,7 @@
             { id: 'ach_nw_16', name: 'OCTILLIONAIRE', desc: 'Reach $1 Octillion Net Worth', check: () => state.netWorth >= 1e27 },
             { id: 'ach_nw_17', name: 'NONILLIONAIRE', desc: 'Reach $1 Nonillion Net Worth', check: () => state.netWorth >= 1e30 },
             { id: 'ach_nw_18', name: 'DECILLIONAIRE', desc: 'Reach $1 Decillion Net Worth', check: () => state.netWorth >= 1e33 },
+            { id: 'ach_nw_19', name: 'ASCENDED ONE', desc: 'Reach $1 Undecillion Net Worth', check: () => state.netWorth >= 1e36 },
 
             { id: 'ach_co_1', name: 'Startup Founder', desc: 'Buy 1 Company', check: () => getCompCount() >= 1 },
             { id: 'ach_co_2', name: 'Growing Enterprise', desc: 'Buy 2 Companies', check: () => getCompCount() >= 2 },
@@ -1357,7 +1355,7 @@
             { id: 'ach_out_20_60', name: 'National Conglomerate', desc: '60 outlets (Max) in 20 companies', check: () => getOutletCounts().filter(o => o >= 60).length >= 20 },
             { id: 'ach_out_all_60', name: 'Global Megacorp', desc: '60 outlets (Max) in ALL companies', check: () => getOutletCounts().filter(o => o >= 60).length >= COMPANIES.length },
 
-            { id: 'ach_card_inf', name: 'Infinite Liquidity', desc: 'Balance of over 1,000,000,000,000 on EACH card', check: () => state.ownedCards.length === CARD_TIERS.length && getCardBals().length === CARD_TIERS.length && getCardBals().every(b => b >= 1000000000000) },
+            { id: 'ach_card_inf', name: 'Infinite Liquidity', desc: 'Balance of over 1 Trillion on EACH basic card', check: () => state.ownedCards.length >= 15 && getCardBals().filter(b => b >= 1000000000000).length >= 15 },
 
             { id: 'ach_sec_whoops', name: 'Whoops', desc: 'Go Bankrupt (Balance < $1 after level 3)', check: () => state.level >= 3 && state.balance < 1 },
             { id: 'ach_sec_hacker', name: 'Hacker Man', desc: 'Use the Dev Console', check: () => state.isCheater },
@@ -1413,6 +1411,21 @@
         let currentTab = 'dashboard';
         let currentMarketTab = 'regular';
         let currentThemeTab = 'dark';
+
+        // DOM Element Caching for performance
+        let cachedBuyButtons = null;
+        let cachedCryptoButtons = null;
+        let cachedBtcButtons = null;
+        let cachedStockBuyButtons = null;
+        let cachedStockSellButtons = null;
+
+        function clearButtonCache() {
+            cachedBuyButtons = null;
+            cachedCryptoButtons = null;
+            cachedBtcButtons = null;
+            cachedStockBuyButtons = null;
+            cachedStockSellButtons = null;
+        }
 
         const saved = localStorage.getItem('vercel_empire_v12_favs');
         if (saved) state = { ...state, ...JSON.parse(saved) };
@@ -1648,7 +1661,7 @@
                             stock.isRealTime = true;
                         }
                     });
-                    updateUI(false); 
+                    tickStocksUI(true); 
                 }
             } catch (e) {
                 console.warn("Real-time stocks fetch error - proceeding with simulated market data.");
@@ -1745,13 +1758,16 @@
             currentThemeTab = tab;
             const btnLight = document.getElementById('btn-theme-light');
             const btnDark = document.getElementById('btn-theme-dark');
-            if(tab === 'light') {
-                btnLight.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-white text-black transition-colors uppercase tracking-widest";
-                btnDark.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest";
-            } else {
-                btnDark.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-white text-black transition-colors uppercase tracking-widest";
-                btnLight.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest";
-            }
+            const btnPremium = document.getElementById('btn-theme-premium');
+            
+            [btnLight, btnDark, btnPremium].forEach(btn => {
+                if(btn) btn.className = "text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest";
+            });
+
+            if(tab === 'light' && btnLight) btnLight.classList.add('bg-white', 'text-black');
+            else if(tab === 'dark' && btnDark) btnDark.classList.add('bg-white', 'text-black');
+            else if(tab === 'premium' && btnPremium) btnPremium.classList.add('bg-white', 'text-black');
+            
             renderThemes();
         }
 
@@ -2047,13 +2063,19 @@
         }
 
         function updateButtonStates() {
-            document.querySelectorAll('button[data-cost]').forEach(btn => {
+            if (!cachedBuyButtons) cachedBuyButtons = document.querySelectorAll('button[data-cost]');
+            if (!cachedCryptoButtons) cachedCryptoButtons = document.querySelectorAll('button[data-crypto-cost]');
+            if (!cachedBtcButtons) cachedBtcButtons = document.querySelectorAll('button[data-btc-cost]');
+            if (!cachedStockBuyButtons) cachedStockBuyButtons = document.querySelectorAll('button[data-stock-buy]');
+            if (!cachedStockSellButtons) cachedStockSellButtons = document.querySelectorAll('button[data-stock-sell]');
+
+            cachedBuyButtons.forEach(btn => {
                 const cost = parseFloat(btn.dataset.cost);
                 if (state.balance >= cost) btn.removeAttribute('disabled');
                 else btn.setAttribute('disabled', 'true');
             });
 
-            document.querySelectorAll('button[data-crypto-cost]').forEach(btn => {
+            cachedCryptoButtons.forEach(btn => {
                 const cost = parseFloat(btn.dataset.cryptoCost);
                 const cur = btn.dataset.currency;
                 const bal = state.shares[cur] || 0;
@@ -2061,28 +2083,28 @@
                 else btn.setAttribute('disabled', 'true');
             });
 
-            document.querySelectorAll('button[data-btc-cost]').forEach(btn => {
+            cachedBtcButtons.forEach(btn => {
                 const cost = parseFloat(btn.dataset.btcCost);
                 const bal = state.shares['BTC'] || 0;
                 if (bal >= cost) btn.removeAttribute('disabled');
                 else btn.setAttribute('disabled', 'true');
             });
 
-            document.querySelectorAll('button[data-stock-buy]').forEach(btn => {
+            cachedStockBuyButtons.forEach(btn => {
                 const sym = btn.dataset.stockBuy;
                 const stock = STOCKS.find(x => x.symbol === sym);
                 if (stock && state.balance >= stock.price * 0.001) btn.removeAttribute('disabled');
                 else btn.setAttribute('disabled', 'true');
             });
 
-            document.querySelectorAll('button[data-stock-sell]').forEach(btn => {
+            cachedStockSellButtons.forEach(btn => {
                 const sym = btn.dataset.stockSell;
                 if ((state.shares[sym] || 0) > 0) btn.removeAttribute('disabled');
                 else btn.setAttribute('disabled', 'true');
             });
         }
 
-        function tickStocksUI() {
+        function tickStocksUI(redrawCharts = false) {
             STOCKS.forEach(s => {
                 const pEl = document.getElementById(`price-val-${s.symbol}`);
                 if(pEl) pEl.innerText = '$' + s.price.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
@@ -2096,7 +2118,7 @@
                 const oEl = document.getElementById(`owned-val-${s.symbol}`);
                 if(oEl) oEl.innerText = (state.shares[s.symbol] || 0).toFixed(3) + ' UNITS';
 
-                if (currentTab === 'stocks') {
+                if (redrawCharts && currentTab === 'stocks') {
                     if ((currentMarketTab === 'regular' && s.type === 'stock') || 
                         (currentMarketTab === 'crypto' && s.type === 'crypto')) {
                         drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
@@ -2128,7 +2150,7 @@
                         tEl.innerText = `${s.trend > 0 ? '▲' : '▼'} ${Math.abs(s.trend).toFixed(2)}%`;
                         tEl.className = `text-[10px] mono ${s.trend > 0 ? 'text-emerald-500' : 'text-red-500'} font-bold`;
                     }
-                    if (currentTab === 'dashboard') {
+                    if (redrawCharts && currentTab === 'dashboard') {
                         drawGraph('dash-stock-chart', s.history, 'line');
                     }
                 }
@@ -2153,8 +2175,8 @@
 
             let rev = 0; let bills = 0;
             const tFleet = state.taxiFleet;
-            const multP3 = [1, 3, 9, 27, 81];
-            const multP2_5 = [1, 2.5, 6.25, 15.625, 39.0625];
+            const multP3 = [1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683];
+            const multP2_5 = [1, 2.5, 6.25, 15.625, 39.0625, 97.65, 244.14, 610.35, 1525.87, 3814.69];
 
             for (let i = 0; i < state.ownedAssets.length; i++) {
                 const id = state.ownedAssets[i];
@@ -2208,7 +2230,7 @@
             setUI('profile-nw', '$' + formatLargeNumber(state.netWorth));
             setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + formatLargeNumber(state.revenue) + '/hr');
 
-            tickStocksUI();
+            tickStocksUI(false); // DO NOT redraw charts on fast tick
             updateButtonStates();
 
             if (activeStock) updateModalContent();
@@ -2240,6 +2262,8 @@
                 fastTickUpdate();
                 return;
             }
+
+            clearButtonCache(); // Purge cache before rebuilding DOM
 
             fastTickUpdate();
 
@@ -2304,6 +2328,7 @@
             applyTheme();
 
             updateButtonStates();
+            tickStocksUI(true); // Force redraw charts since we just rebuilt DOM
 
             Object.keys(inputStates).forEach(id => {
                 const el = document.getElementById(id);
@@ -2348,14 +2373,14 @@
                 } else if (isOwned) {
                     btnStr = `<button onclick="equipTheme('${t.id}')" class="btn-buy border border-zinc-800">EQUIP THEME</button>`;
                 } else {
-                    btnStr = `<button onclick="buyTheme('${t.id}', ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">BUY FOR ${t.price === 0 ? 'FREE' : '$' + t.price.toLocaleString()}</button>`;
+                    btnStr = `<button onclick="buyTheme('${t.id}', ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">BUY FOR ${t.price === 0 ? 'FREE' : '$' + formatLargeNumber(t.price)}</button>`;
                 }
 
                 return `
                 <div class="glass-card p-4 flex flex-col justify-between">
                     <div class="mb-4">
                         <h4 class="text-[11px] font-black uppercase mb-1">${t.name}</h4>
-                        <p class="text-[9px] text-zinc-500 font-bold mono uppercase">${t.price === 0 ? 'FREE' : '$' + t.price.toLocaleString()}</p>
+                        <p class="text-[9px] text-zinc-500 font-bold mono uppercase">${t.price === 0 ? 'FREE' : '$' + formatLargeNumber(t.price)}</p>
                     </div>
                     ${btnStr}
                 </div>`;
@@ -2410,7 +2435,7 @@
                     <div class="debit-card p-4 flex flex-col justify-between shadow-xl ${card.class}" style="aspect-ratio: 1.58/1; border-radius: 12px; border-width: 1px;">
                         <div>
                             <p class="text-[8px] text-white/50 uppercase font-bold tracking-widest mb-1">${card.name}</p>
-                            <p class="text-sm font-black text-white truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap">$${formatLargeNumber(bal)}</p>
+                            <p class="text-sm font-black text-white truncate max-w-full overflow-hidden text-ellipsis whitespace-nowrap grotesk">$${formatLargeNumber(bal)}</p>
                         </div>
                         <div class="flex justify-between items-end">
                             <div class="card-chip w-6 h-4 rounded"></div>
@@ -2436,7 +2461,7 @@
             container.innerHTML = assetCats.map((cat, idx) => `
                 <div>
                     <p class="text-[9px] text-zinc-600 font-bold uppercase mb-4 tracking-widest">${cat.title} (${cat.items.length})</p>
-                    <div id="portfolio-cat-scroll-${idx}" class="space-y-2 max-h-48 overflow-y-auto pr-2">
+                    <div id="portfolio-cat-scroll-${idx}" class="space-y-2 max-h-48 overflow-y-auto pr-2 scrollbar-thin">
                         ${cat.items.length === 0 ? '<p class="text-[10px] text-zinc-800 font-mono italic">EMPTY SECTION</p>' : cat.items.map(id => {
                             const found = COMPANIES.find(c => c.id === id) || REAL_ESTATE.find(r => r.id === id) ||[...ASSETS.jewelry, ...ASSETS.cars, ...ASSETS.furniture, ...ASSETS.blackMarket].find(i => i.id === id);
                             if (found) return `<div class="bg-zinc-950 p-3 rounded flex justify-between items-center"><span class="text-[10px] font-bold uppercase">${found.name}</span> <span class="text-[9px] mono text-zinc-600">ID: ${found.id}</span></div>`;
@@ -2693,7 +2718,7 @@
         function sellBM(id, priceBtc) {
             if (state.ownedAssets.includes(id)) {
                 state.shares['BTC'] = (state.shares['BTC'] || 0) + priceBtc;
-                state.ownedAssets = state.ownedAssets.filter(a => a !== id);
+state.ownedAssets = state.ownedAssets.filter(a => a !== id);
                 logToTerminal(`CONTRABAND LIQUIDATED: +${priceBtc} BTC`);
                 updateUI(true);
                 saveGame();
@@ -2727,14 +2752,18 @@
 
             const compGrid = document.getElementById('companies-grid');
             if(compGrid) {
+                const multP3 = [1, 3, 9, 27, 81, 243, 729, 2187, 6561, 19683];
+                const multP2_5 = [1, 2.5, 6.25, 15.625, 39.0625, 97.65, 244.14, 610.35, 1525.87, 3814.69];
+
                 compGrid.innerHTML = COMPANIES.map(c => {
                     const isOwned = state.ownedAssets.includes(c.id);
                     let itemRev = 0; let itemBill = c.bill || 0;
 
                     const tierIdx = state.compTiers[c.id] || 0;
                     const outlets = state.compOutlets[c.id] || 1;
-                    itemRev += (c.rev * Math.pow(3, tierIdx)) * outlets;
-                    itemBill = (c.bill * Math.pow(2.5, tierIdx)) * outlets;
+                    
+                    itemRev += (c.rev * (multP3[tierIdx] || Math.pow(3, tierIdx))) * outlets;
+                    itemBill = (c.bill * (multP2_5[tierIdx] || Math.pow(2.5, tierIdx))) * outlets;
 
                     if (c.customFleet) {
                         itemRev += (state.taxiFleet.cars * 17500) + (state.taxiFleet.busses * 140000) + (state.taxiFleet.artBusses * 475000);
@@ -2756,16 +2785,17 @@
                     } else {
                         const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
                         const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
+                        const maxTierLimit = COMPANY_TIERS.length - 1; // 9
 
                         let baseActions = `
                         <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
-                            <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextTierPrice || tierIdx >= 4 ? 'disabled' : ''} ${tierIdx >= 4 ? '' : `data-cost="${nextTierPrice}"`}>
-                                <span class="mb-0.5">${tierIdx >= 4 ? 'MAX TIER' : 'EVOLVE'}</span>
-                                <span class="text-[8px] opacity-60">${tierIdx >= 4 ? '' : '$' + formatLargeNumber(nextTierPrice)}</span>
+                            <button onclick="evolveCompany('${c.id}', ${nextTierPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextTierPrice || tierIdx >= maxTierLimit ? 'disabled' : ''} ${tierIdx >= maxTierLimit ? '' : `data-cost="${nextTierPrice}"`}>
+                                <span class="mb-0.5">${tierIdx >= maxTierLimit ? 'MAX TIER' : 'EVOLVE'}</span>
+                                <span class="text-[8px] opacity-60">${tierIdx >= maxTierLimit ? '' : '$' + formatLargeNumber(nextTierPrice)}</span>
                             </button>
-                            <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextOutletPrice || outlets >= 60 ? 'disabled' : ''} ${outlets >= 60 ? '' : `data-cost="${nextOutletPrice}"`}>
-                                <span class="mb-0.5">${outlets >= 60 ? 'MAX OUTLETS' : '+1 OUTLET'}</span>
-                                <span class="text-[8px] opacity-60">${outlets >= 60 ? '' : '$' + formatLargeNumber(nextOutletPrice)}</span>
+                            <button onclick="addOutlet('${c.id}', ${nextOutletPrice})" class="btn-buy flex flex-col items-center justify-center h-12" ${state.balance < nextOutletPrice || outlets >= 100 ? 'disabled' : ''} ${outlets >= 100 ? '' : `data-cost="${nextOutletPrice}"`}>
+                                <span class="mb-0.5">${outlets >= 100 ? 'MAX OUTLETS' : '+1 OUTLET'}</span>
+                                <span class="text-[8px] opacity-60">${outlets >= 100 ? '' : '$' + formatLargeNumber(nextOutletPrice)}</span>
                             </button>
                         </div>`;
 
@@ -2865,7 +2895,7 @@
                         <img src="${re.img}" class="item-img mb-4">
                         <div class="flex justify-between items-start mb-2">
                             <div>
-                                <h3 class="font-black uppercase text-[11px]">${re.name}</h3>
+                                <h3 class="font-black uppercase text-[11px] grotesk">${re.name}</h3>
                                 <p class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mb-2">REAL ESTATE ${renLevel > 0 ? `• Lvl ${renLevel}` : ''}</p>
                             </div>
                         </div>
@@ -2897,10 +2927,12 @@
                     }
 
                     return `
-                        <div class="glass-card p-8 border-white/5">
-                            <div class="h-40 rounded-xl mb-6 ${t.class}"></div>
-                            <h3 class="text-2xl font-black uppercase mb-1">${t.name}</h3>
-                            <p class="text-xs text-zinc-500 font-bold mb-8">${t.mult}x MULTIPLIER</p>
+                        <div class="glass-card p-8 border-white/5 flex flex-col justify-between">
+                            <div>
+                                <div class="h-40 rounded-xl mb-6 shadow-2xl ${t.class}" style="border: ${t.class.includes('border') ? '' : '1px solid rgba(255,255,255,0.1)'}"></div>
+                                <h3 class="text-2xl font-black uppercase mb-1 grotesk ${t.id >= 15 ? 'glow-text' : ''}">${t.name}</h3>
+                                <p class="text-xs text-zinc-500 font-bold mb-8">${t.mult.toLocaleString()}x MULTIPLIER</p>
+                            </div>
                             ${btnStr}
                         </div>`;
                 }).join('');
@@ -2922,7 +2954,7 @@
                     <div class="glass-card p-4 flex flex-col justify-between">
                         <div>
                             <img src="${i.img}" class="item-img mb-4">
-                            <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
+                            <h4 class="text-[10px] font-black uppercase mb-1 grotesk">${i.name}</h4>
                             <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${formatLargeNumber(i.price)}</p>
                         </div>
                         ${actionHtml}
@@ -2944,7 +2976,7 @@
                         <div class="flex items-center gap-3">
                             <img src="${s.logo}" class="w-10 h-10 rounded bg-white p-1" onerror="this.src='https://ui-avatars.com/api/?name=${s.symbol}&background=1a1a1a&color=fff'">
                             <div>
-                                <h3 class="text-xl font-black tracking-tighter">${s.symbol}</h3>
+                                <h3 class="text-xl font-black tracking-tighter grotesk">${s.symbol}</h3>
                                 <p class="text-[9px] text-zinc-500 font-bold uppercase">${s.name}</p>
                             </div>
                         </div>
@@ -3025,7 +3057,7 @@
                         return `
                         <div class="glass-card p-6 border-purple-900/20">
                             <img src="${n.img}" class="item-img mb-4 border border-zinc-900">
-                            <h3 class="font-black uppercase text-xs tracking-tight mb-1">${n.name}</h3>
+                            <h3 class="font-black uppercase text-xs tracking-tight mb-1 grotesk">${n.name}</h3>
                             <p class="text-[12px] font-mono text-purple-400 mb-6">${n.price} ${n.currency}</p>
                             ${isOwned ? 
                                 `<button onclick="sellNFT('${n.id}', ${n.price}, '${n.currency}')" class="btn-buy bg-purple-600/20 border-purple-600/50 hover:bg-purple-600 text-white">LIST FOR SALE</button>` : 
@@ -3034,15 +3066,6 @@
                         </div>`;
                     }).join('');
                 }
-            }
-
-            if (currentTab === 'stocks') {
-                STOCKS.forEach(s => {
-                    if ((currentMarketTab === 'regular' && s.type === 'stock') || 
-                        (currentMarketTab === 'crypto' && s.type === 'crypto')) {
-                        drawGraph(`chart-${s.symbol}`, s.history, 'candlestick');
-                    }
-                });
             }
         }
 
@@ -3124,7 +3147,7 @@
                     <div class="glass-card p-4 flex flex-col justify-between border-amber-900/20">
                         <div>
                             <img src="${i.img}" class="item-img mb-4">
-                            <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
+                            <h4 class="text-[10px] font-black uppercase mb-1 grotesk">${i.name}</h4>
                             <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">MSRP: $${formatLargeNumber(i.price)}</p>
                         </div>
                         <div class="flex flex-col gap-2 mt-2">
@@ -3156,7 +3179,7 @@
 
             header.innerHTML = `
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight">GLOBAL ACADEMICS</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">GLOBAL ACADEMICS</h2>
                     <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">EARN DEGREES TO MULTIPLY YOUR INCOME</p>
                 </div>
                 <div class="text-right">
@@ -3171,15 +3194,15 @@
 
             if (isMaxed && !state.education.enrolledCollegeId) {
                 container.innerHTML = `
-                    <div class="py-20 text-center glass-card border-emerald-900/50 mb-8">
-                        <p class="text-emerald-500 font-black uppercase text-xl tracking-tight mb-2">MAXIMUM DEGREES REACHED</p>
-                        <p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">YOU HAVE CONQUERED THE ACADEMIC WORLD</p>
+                    <div class="py-20 text-center glass-card border-emerald-900/50 mb-8 shadow-[0_0_30px_rgba(16,185,129,0.15)]">
+                        <p class="text-emerald-500 font-black uppercase text-2xl tracking-tight mb-2 grotesk glow-text">OMNIVERSAL ENLIGHTENMENT ACHIEVED</p>
+                        <p class="text-emerald-800 font-bold uppercase text-[10px] tracking-widest">YOU HAVE CONQUERED THE ACADEMIC WORLD</p>
                     </div>
                     <div id="edu-degrees-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                         ${DEGREES.map(d => `
                             <div class="glass-card p-4 border border-emerald-500/50">
                                 <h4 class="text-[11px] font-black uppercase mb-1">${d.name}</h4>
-                                <p class="text-[9px] text-emerald-500 font-bold mb-0 mono">${d.mult}x MULTIPLIER</p>
+                                <p class="text-[9px] text-emerald-500 font-bold mb-0 mono">${d.mult.toFixed(2)}x MULTIPLIER</p>
                             </div>
                         `).join('')}
                     </div>
@@ -3196,7 +3219,7 @@
                 let html = `
                     <div class="glass-card p-8 mb-8 text-center border-emerald-900/50">
                         <p class="text-[10px] font-bold text-emerald-500 uppercase tracking-widest mb-2">CURRENTLY ENROLLED</p>
-                        <h2 class="text-3xl font-black uppercase mb-6">${college.name}</h2>
+                        <h2 class="text-3xl font-black uppercase mb-6 grotesk">${college.name}</h2>
                         
                         <div class="progress-bg mb-6 max-w-xl mx-auto">
                             <div class="progress-fill bg-emerald-500" style="width: ${(taken/req)*100}%"></div>
@@ -3209,14 +3232,14 @@
 
                 if (canGraduate) {
                     html += `
-                        <h3 class="text-lg font-black uppercase tracking-tight mb-4 text-amber-500">GRADUATION - SELECT YOUR DEGREE</h3>
+                        <h3 class="text-lg font-black uppercase tracking-tight mb-4 text-amber-500 grotesk">GRADUATION - SELECT YOUR DEGREE</h3>
                         <div id="edu-degrees-grid" class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
                             ${DEGREES.map(d => {
                                 const hasDegree = state.education.degrees.includes(d.id);
                                 return `
                                     <div class="glass-card p-4 border ${hasDegree ? 'border-amber-500/50 opacity-50' : 'border-zinc-800'}">
                                         <h4 class="text-[11px] font-black uppercase mb-1">${d.name}</h4>
-                                        <p class="text-[9px] text-amber-500 font-bold mb-4 mono">${d.mult}x MULTIPLIER</p>
+                                        <p class="text-[9px] text-amber-500 font-bold mb-4 mono">${d.mult.toFixed(2)}x MULTIPLIER</p>
                                         <button onclick="graduate('${d.id}')" class="btn-buy" ${hasDegree ? 'disabled' : ''}>${hasDegree ? 'EARNED' : 'GRADUATE'}</button>
                                     </div>
                                 `
@@ -3237,7 +3260,7 @@
                             return `
                             <div class="glass-card p-6 flex flex-col justify-between">
                                 <div>
-                                    <h3 class="font-black uppercase text-xs tracking-tight mb-2">${c.name}</h3>
+                                    <h3 class="font-black uppercase text-xs tracking-tight mb-2 grotesk">${c.name}</h3>
                                     <div class="flex justify-between text-[9px] text-zinc-500 font-bold mb-1 uppercase">
                                         <span>Acceptance</span>
                                         <span class="${acc >= 50 ? 'text-emerald-500' : 'text-amber-500'}">${acc}%</span>
@@ -3543,7 +3566,7 @@
 
         function evolveCompany(id, price) {
             const currentIdx = state.compTiers[id] || 0;
-            if (state.balance >= price && currentIdx < 4) {
+            if (state.balance >= price && currentIdx < COMPANY_TIERS.length - 1) {
                 state.balance -= price;
                 state.compTiers[id] = currentIdx + 1;
                 logToTerminal(`${id.toUpperCase()} EVOLVED TO ${COMPANY_TIERS[currentIdx+1]} STATUS`);
@@ -3554,7 +3577,7 @@
 
         function addOutlet(id, price) {
             const count = state.compOutlets[id] || 1;
-            if (state.balance >= price && count < 60) {
+            if (state.balance >= price && count < 100) {
                 state.balance -= price;
                 state.compOutlets[id] = count + 1;
                 logToTerminal(`${id.toUpperCase()} OPENED OUTLET #${count+1}`);
