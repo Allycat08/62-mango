@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vercel Empire - Ascension</title>
+    <title>Vercel Empire - The Ascension</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&family=JetBrains+Mono:wght@500;700&family=Space+Grotesk:wght@500;700;900&display=swap" rel="stylesheet">
     <style>
@@ -47,7 +47,10 @@
             box-shadow: 0 0 10px rgba(255,255,255,0.5);
         }
 
-        .card-perspective { perspective: 1000px; width: 100%; }
+        .card-perspective {
+            perspective: 1000px;
+            width: 100%;
+        }
         .debit-card {
             background: linear-gradient(135deg, #1c1c1c 0%, #0a0a0a 100%);
             border-radius: 20px;
@@ -76,23 +79,30 @@
             padding: 2rem !important;
         }
         .card-fullscreen-mode .debit-card {
-            width: 100% !important; max-width: 900px !important; height: auto !important;
-            aspect-ratio: 1.58 / 1 !important; transform: none !important;
+            width: 100% !important;
+            max-width: 900px !important;
+            height: auto !important;
+            aspect-ratio: 1.58 / 1 !important;
+            transform: none !important;
         }
 
         .card-glare {
-            position: absolute; inset: 0;
+            position: absolute;
+            inset: 0;
             background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.15) 0%, transparent 60%);
-            border-radius: 20px; pointer-events: none;
+            border-radius: 20px;
+            pointer-events: none;
         }
 
         .card-chip {
             width: 45px; height: 35px;
             background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-            border-radius: 6px; position: relative; overflow: hidden;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Card Tiers */
+        /* Original + Ultra-Endgame Card Tiers */
         .tier-0 { background: linear-gradient(135deg, #1c1c1c, #0a0a0a); }
         .tier-1 { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
         .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; }
@@ -125,31 +135,69 @@
         .progress-bg { background: #1a1a1a; height: 4px; border-radius: 2px; }
         .progress-fill { background: #ffffff; height: 100%; border-radius: 2px; transition: width 0.3s; }
 
-        .tab-content, .market-sub-content { display: none; animation: fadeIn 0.3s ease; }
-        .tab-content.active, .market-sub-content.active { display: block; }
+        .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        .glass-card { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; transition: background 0.3s, border-color 0.3s, transform 0.2s; }
+        .market-sub-content { display: none; }
+        .market-sub-content.active { display: block; }
+
+        .glass-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            transition: background 0.3s, border-color 0.3s, transform 0.2s;
+        }
         .glass-card:hover { border-color: #333; }
 
         .btn-buy {
-            background: #1a1a1a; color: #ffffff; font-size: 0.65rem; font-weight: 700;
-            text-transform: uppercase; padding: 10px; border-radius: 6px; width: 100%;
-            transition: all 0.2s; border: 1px solid #333; cursor: pointer;
+            background: #1a1a1a;
+            color: #ffffff;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 10px;
+            border-radius: 6px;
+            width: 100%;
+            transition: all 0.2s;
+            border: 1px solid #333;
         }
         .btn-buy:hover:not(:disabled) { background: #ffffff; color: #000000; transform: translateY(-1px); }
         .btn-buy:disabled { opacity: 0.3; cursor: not-allowed; }
 
-        .chart-container { width: 100%; height: 120px; background: #000; margin: 12px 0; border-radius: 4px; position: relative; overflow: hidden; cursor: zoom-in; border: 1px solid #111; }
-        .item-img { width: 100%; aspect-ratio: 16/9; object-fit: cover; border-radius: 8px; background: #111; }
+        .chart-container {
+            width: 100%;
+            height: 120px;
+            background: #000;
+            margin: 12px 0;
+            border-radius: 4px;
+            position: relative;
+            overflow: hidden;
+            cursor: zoom-in;
+            border: 1px solid #111;
+        }
+        .chart-container:hover { border-color: #333; }
+
+        .item-img {
+            width: 100%; aspect-ratio: 16/9;
+            object-fit: cover; border-radius: 8px;
+            background: #111;
+        }
 
         #stock-modal, #reset-modal, #onboarding-modal, #auction-modal, #transfer-modal {
-            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 100;
-            backdrop-filter: blur(10px); padding: 2rem; align-items: center; justify-content: center;
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            padding: 2rem;
+            align-items: center;
+            justify-content: center;
         }
         #onboarding-modal { display: flex; }
 
-        .favorite-btn { position: absolute; top: 1rem; right: 1rem; color: #333; transition: color 0.2s; z-index: 10; cursor: pointer;}
+        .favorite-btn { position: absolute; top: 1rem; right: 1rem; color: #333; transition: color 0.2s; z-index: 10; }
         .favorite-btn.active { color: #fbbf24; }
 
         .switch { position: relative; display: inline-block; width: 40px; height: 20px; }
@@ -170,336 +218,232 @@
         .scrollbar-thin::-webkit-scrollbar-thumb:hover { background: #555; }
 
         .mobile-mode {
-            max-width: min(100vw, calc(100vh * (9 / 16))) !important; height: 100vh; max-height: 100vh; margin: 0 auto;
-            border-left: 1px solid #1a1a1a; border-right: 1px solid #1a1a1a; padding: 0 !important; overflow-y: auto;
-            overflow-x: hidden; border-radius: 0; background-color: var(--bg); position: relative; transform: translateZ(0);
+            max-width: min(100vw, calc(100vh * (9 / 16))) !important;
+            height: 100vh; max-height: 100vh; margin: 0 auto;
+            border-left: 1px solid #1a1a1a; border-right: 1px solid #1a1a1a;
+            padding: 0 !important; overflow-y: auto; overflow-x: hidden;
+            border-radius: 0; background-color: var(--bg); position: relative; transform: translateZ(0);
         }
-        @media (min-width: 600px) { .mobile-mode { height: 90vh; max-height: 90vh; margin: 5vh auto; border: 2px solid #222; border-radius: 40px; box-shadow: 0 20px 80px rgba(0,0,0,0.9); padding: 0 !important; } }
+        @media (min-width: 600px) {
+            .mobile-mode { height: 90vh; max-height: 90vh; margin: 5vh auto; border: 2px solid #222; border-radius: 40px; box-shadow: 0 20px 80px rgba(0,0,0,0.9); padding: 0 !important; }
+        }
         .mobile-mode::-webkit-scrollbar, .mobile-mode nav::-webkit-scrollbar { display: none; }
         .mobile-mode, .mobile-mode nav { -ms-overflow-style: none; scrollbar-width: none; }
+
         .mobile-mode header { flex-direction: column; gap: 1rem; }
         .mobile-mode .stats-badge { width: 100%; justify-content: space-between; padding: 1rem; gap: 0; }
         .mobile-mode .stats-badge > div { flex: 1; }
         .mobile-mode .col-span-12 { grid-column: span 12 / span 12 !important; }
-        .mobile-mode #companies-grid, .mobile-mode #re-grid, .mobile-mode #stocks-full-grid, .mobile-mode #crypto-grid, .mobile-mode #nft-grid, .mobile-mode #coll-grid, .mobile-mode #trading-grid, .mobile-mode #bank-grid, .mobile-mode #profile-portfolio-list, .mobile-mode #themes-grid, .mobile-mode #edu-colleges-grid, .mobile-mode #edu-degrees-grid, .mobile-mode #bm-grid, .mobile-mode #board-grid, .mobile-mode #mega-grid { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+
+        .mobile-mode #companies-grid, .mobile-mode #re-grid, .mobile-mode #stocks-full-grid, .mobile-mode #crypto-grid,
+        .mobile-mode #nft-grid, .mobile-mode #coll-grid, .mobile-mode #trading-grid, .mobile-mode #bank-grid,
+        .mobile-mode #profile-portfolio-list, .mobile-mode #themes-grid, .mobile-mode #edu-colleges-grid,
+        .mobile-mode #edu-degrees-grid, .mobile-mode #bm-grid, .mobile-mode #board-grid, .mobile-mode #mega-grid { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
         .mobile-mode #dashboard .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+
         .mobile-mode #stock-modal, .mobile-mode #reset-modal, .mobile-mode #onboarding-modal, .mobile-mode #auction-modal, .mobile-mode #transfer-modal { position: absolute; border-radius: inherit; }
 
-        /* =========================================
-           MASSIVE CSS THEME OVERRIDE SYSTEM
-           Uses !important to squash ALL tailwind utility clashes
-           ========================================= */
-
-        /* 1. LIGHT */
+        /* Massive Theme Additions */
         body.theme-light { --bg: #fafafa; --card-bg: #ffffff; --border: #e4e4e7; color: #09090b; }
-        body.theme-light .glass-card { box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         body.theme-light .bg-zinc-950, body.theme-light .bg-zinc-900 { background-color: #f4f4f5 !important; }
         body.theme-light .bg-black { background-color: #ffffff !important; }
         body.theme-light .border-zinc-900, body.theme-light .border-zinc-800 { border-color: #e4e4e7 !important; }
         body.theme-light .text-white { color: #09090b !important; }
         body.theme-light .text-zinc-500, body.theme-light .text-zinc-600, body.theme-light .text-zinc-400 { color: #71717a !important; }
-        body.theme-light .nav-link { color: #a1a1aa; } body.theme-light .nav-link.active { color: #09090b; } body.theme-light .nav-link.active::after { background: #09090b; }
-        body.theme-light .btn-buy { background: #ffffff !important; color: #09090b !important; border-color: #e4e4e7 !important; }
-        body.theme-light .btn-buy:hover:not(:disabled) { background: #09090b !important; color: #ffffff !important; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
-        body.theme-light .progress-bg { background: #e4e4e7 !important; } body.theme-light .progress-fill { background: #09090b !important; }
-        body.theme-light path[fill="white"] { fill: #09090b !important; }
+        body.theme-light .nav-link { color: #a1a1aa; }
+        body.theme-light .nav-link.active { color: #09090b; }
+        body.theme-light .nav-link.active::after { background: #09090b; }
+        body.theme-light .btn-buy { background: #ffffff; color: #09090b; border-color: #e4e4e7; }
+        body.theme-light .btn-buy:hover:not(:disabled) { background: #09090b; color: #ffffff; }
+        body.theme-light .progress-bg { background: #e4e4e7; }
+        body.theme-light .progress-fill { background: #09090b; }
+        body.theme-light path[fill="white"] { fill: #09090b; }
         body.theme-light input, body.theme-light select { background-color: #ffffff !important; border-color: #e4e4e7 !important; color: #09090b !important; }
         body.theme-light .chart-container { background: #ffffff !important; border-color: #e4e4e7 !important; }
-        body.theme-light #stock-modal, body.theme-light #reset-modal, body.theme-light #onboarding-modal, body.theme-light #auction-modal, body.theme-light #transfer-modal { background: rgba(255,255,255,0.9) !important; }
 
-        /* 2. CORPORATE */
+        body.theme-synthwave { --bg: #10061e; --card-bg: #1c0b32; --border: #ff007f; color: #00ffff; }
+        body.theme-synthwave .glass-card { box-shadow: 0 0 15px rgba(255, 0, 127, 0.1); }
+        body.theme-synthwave .bg-zinc-950, body.theme-synthwave .bg-zinc-900 { background-color: #240a45 !important; }
+        body.theme-synthwave .border-zinc-900, body.theme-synthwave .border-zinc-800 { border-color: #ff007f !important; }
+        body.theme-synthwave .text-white { color: #00ffff !important; }
+        body.theme-synthwave .text-zinc-500 { color: #ff007f !important; }
+        body.theme-synthwave .nav-link.active::after { background: #00ffff; box-shadow: 0 0 8px #00ffff; }
+        body.theme-synthwave .progress-fill { background: #ff007f; box-shadow: 0 0 10px #ff007f; }
+
+        body.theme-void { --bg: #000000; --card-bg: #020202; --border: #111111; color: #e5e5e5; }
+        body.theme-void .glass-card { border: 1px solid #111; border-radius: 0; box-shadow: none; }
+        body.theme-void .bg-zinc-950, body.theme-void .bg-zinc-900 { background-color: #030303 !important; }
+        body.theme-void .border-zinc-900, body.theme-void .border-zinc-800 { border-color: #222 !important; }
+        body.theme-void .text-white { color: #ffffff !important; }
+        body.theme-void .text-zinc-500 { color: #666 !important; }
+        body.theme-void .nav-link.active::after { background: #fff; }
+        body.theme-void .progress-fill { background: #fff; }
+
+        body.theme-matrix { --bg: #000b00; --card-bg: #001200; --border: #00ff41; color: #00ff41; font-family: 'JetBrains Mono', monospace; }
+        body.theme-matrix * { font-family: 'JetBrains Mono', monospace !important; }
+        body.theme-matrix .glass-card { box-shadow: 0 0 10px rgba(0,255,65,0.05); }
+        body.theme-matrix .bg-zinc-950, body.theme-matrix .bg-zinc-900 { background-color: #001a00 !important; }
+        body.theme-matrix .border-zinc-900, body.theme-matrix .border-zinc-800 { border-color: #00ff41 !important; }
+        body.theme-matrix .text-white { color: #00ff41 !important; }
+        body.theme-matrix .text-zinc-500 { color: #008f11 !important; }
+        body.theme-matrix .nav-link.active::after { background: #00ff41; }
+        body.theme-matrix .progress-fill { background: #00ff41; }
+
+        body.theme-aurora { --bg: #021a22; --card-bg: #042f3c; --border: #2dd4bf; color: #a7f3d0; }
+        body.theme-aurora .glass-card { box-shadow: 0 0 20px rgba(45,212,191,0.1); }
+        body.theme-aurora .bg-zinc-950, body.theme-aurora .bg-zinc-900 { background-color: #064e3b !important; }
+        body.theme-aurora .border-zinc-900, body.theme-aurora .border-zinc-800 { border-color: #34d399 !important; }
+        body.theme-aurora .text-white { color: #6ee7b7 !important; }
+        body.theme-aurora .text-zinc-500 { color: #3b82f6 !important; }
+        body.theme-aurora .nav-link.active::after { background: #34d399; }
+        body.theme-aurora .progress-fill { background: #34d399; box-shadow: 0 0 10px #34d399; }
+
+        body.theme-inferno { --bg: #1a0000; --card-bg: #330000; --border: #ff3300; color: #ff9933; }
+        body.theme-inferno .glass-card { box-shadow: 0 0 15px rgba(255,51,0,0.15); }
+        body.theme-inferno .bg-zinc-950, body.theme-inferno .bg-zinc-900 { background-color: #4d0000 !important; }
+        body.theme-inferno .border-zinc-900, body.theme-inferno .border-zinc-800 { border-color: #ff3300 !important; }
+        body.theme-inferno .text-white { color: #ffcc00 !important; }
+        body.theme-inferno .text-zinc-500 { color: #cc0000 !important; }
+        body.theme-inferno .nav-link.active::after { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; }
+        body.theme-inferno .progress-fill { background: #ff3300; box-shadow: 0 0 10px #ff3300; }
+
+        /* The Missing Themes Configurations */
         body.theme-corporate { --bg: #f8fafc; --card-bg: #ffffff; --border: #cbd5e1; color: #0f172a; }
         body.theme-corporate .glass-card { box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         body.theme-corporate .bg-zinc-950, body.theme-corporate .bg-zinc-900 { background-color: #f1f5f9 !important; }
-        body.theme-corporate .bg-black { background-color: #ffffff !important; }
         body.theme-corporate .border-zinc-900, body.theme-corporate .border-zinc-800 { border-color: #cbd5e1 !important; }
         body.theme-corporate .text-white { color: #0f172a !important; }
         body.theme-corporate .text-zinc-500, body.theme-corporate .text-zinc-600, body.theme-corporate .text-zinc-400 { color: #64748b !important; }
-        body.theme-corporate .nav-link { color: #64748b; } body.theme-corporate .nav-link.active { color: #0f172a; } body.theme-corporate .nav-link.active::after { background: #0f172a; }
-        body.theme-corporate .btn-buy { background: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
-        body.theme-corporate .btn-buy:hover:not(:disabled) { background: #0f172a !important; color: #ffffff !important; }
-        body.theme-corporate .progress-bg { background: #cbd5e1 !important; } body.theme-corporate .progress-fill { background: #0f172a !important; }
-        body.theme-corporate path[fill="white"] { fill: #0f172a !important; }
-        body.theme-corporate input, body.theme-corporate select { background-color: #ffffff !important; border-color: #cbd5e1 !important; color: #0f172a !important; }
-        body.theme-corporate .chart-container { background: #ffffff !important; border-color: #cbd5e1 !important; }
-        body.theme-corporate #stock-modal, body.theme-corporate #reset-modal, body.theme-corporate #onboarding-modal, body.theme-corporate #auction-modal, body.theme-corporate #transfer-modal { background: rgba(248,250,252,0.95) !important; }
+        body.theme-corporate .nav-link { color: #64748b; }
+        body.theme-corporate .nav-link.active { color: #0f172a; }
+        body.theme-corporate .nav-link.active::after { background: #0f172a; }
 
-        /* 3. ARCTIC */
         body.theme-arctic { --bg: #f0f9ff; --card-bg: #ffffff; --border: #bae6fd; color: #0369a1; }
         body.theme-arctic .bg-zinc-950, body.theme-arctic .bg-zinc-900 { background-color: #e0f2fe !important; }
-        body.theme-arctic .bg-black { background-color: #f0f9ff !important; }
         body.theme-arctic .border-zinc-900, body.theme-arctic .border-zinc-800 { border-color: #bae6fd !important; }
         body.theme-arctic .text-white { color: #0369a1 !important; }
-        body.theme-arctic .text-zinc-500, body.theme-arctic .text-zinc-600, body.theme-arctic .text-zinc-400 { color: #38bdf8 !important; }
-        body.theme-arctic .nav-link { color: #7dd3fc; } body.theme-arctic .nav-link.active { color: #0369a1; } body.theme-arctic .nav-link.active::after { background: #0369a1; }
-        body.theme-arctic .btn-buy { background: #ffffff !important; color: #0284c7 !important; border-color: #bae6fd !important; }
-        body.theme-arctic .btn-buy:hover:not(:disabled) { background: #0284c7 !important; color: #ffffff !important; }
-        body.theme-arctic .progress-bg { background: #bae6fd !important; } body.theme-arctic .progress-fill { background: #0284c7 !important; }
-        body.theme-arctic path[fill="white"] { fill: #0284c7 !important; }
-        body.theme-arctic input, body.theme-arctic select { background-color: #ffffff !important; border-color: #bae6fd !important; color: #0369a1 !important; }
-        body.theme-arctic .chart-container { background: #f0f9ff !important; border-color: #bae6fd !important; }
+        body.theme-arctic .text-zinc-500 { color: #38bdf8 !important; }
+        body.theme-arctic .nav-link { color: #7dd3fc; }
+        body.theme-arctic .nav-link.active { color: #0369a1; }
+        body.theme-arctic .nav-link.active::after { background: #0369a1; }
 
-        /* 4. PASTEL */
         body.theme-pastel { --bg: #fdf4ff; --card-bg: #ffffff; --border: #fbcfe8; color: #86198f; }
         body.theme-pastel .bg-zinc-950, body.theme-pastel .bg-zinc-900 { background-color: #fae8ff !important; }
-        body.theme-pastel .bg-black { background-color: #fdf4ff !important; }
         body.theme-pastel .border-zinc-900, body.theme-pastel .border-zinc-800 { border-color: #fbcfe8 !important; }
         body.theme-pastel .text-white { color: #86198f !important; }
-        body.theme-pastel .text-zinc-500, body.theme-pastel .text-zinc-600, body.theme-pastel .text-zinc-400 { color: #d946ef !important; }
-        body.theme-pastel .nav-link { color: #e879f9; } body.theme-pastel .nav-link.active { color: #86198f; } body.theme-pastel .nav-link.active::after { background: #86198f; }
-        body.theme-pastel .btn-buy { background: #ffffff !important; color: #c026d3 !important; border-color: #fbcfe8 !important; }
-        body.theme-pastel .btn-buy:hover:not(:disabled) { background: #c026d3 !important; color: #ffffff !important; }
-        body.theme-pastel .progress-bg { background: #fbcfe8 !important; } body.theme-pastel .progress-fill { background: #c026d3 !important; }
-        body.theme-pastel path[fill="white"] { fill: #c026d3 !important; }
-        body.theme-pastel input, body.theme-pastel select { background-color: #ffffff !important; border-color: #fbcfe8 !important; color: #86198f !important; }
-        body.theme-pastel .chart-container { background: #fdf4ff !important; border-color: #fbcfe8 !important; }
+        body.theme-pastel .text-zinc-500 { color: #d946ef !important; }
+        body.theme-pastel .nav-link { color: #e879f9; }
+        body.theme-pastel .nav-link.active { color: #86198f; }
+        body.theme-pastel .nav-link.active::after { background: #86198f; }
 
-        /* 5. HACKER */
-        body.theme-hacker { --bg: #000000; --card-bg: #000000; --border: #004400; color: #00ff00; font-family: 'JetBrains Mono', monospace; }
+        body.theme-hacker { --bg: #000000; --card-bg: #000000; --border: #00ff00; color: #00ff00; font-family: 'JetBrains Mono', monospace; }
         body.theme-hacker * { font-family: 'JetBrains Mono', monospace !important; }
-        body.theme-hacker .glass-card { box-shadow: 0 0 10px rgba(0,255,0,0.05); }
         body.theme-hacker .bg-zinc-950, body.theme-hacker .bg-zinc-900 { background-color: #001100 !important; }
-        body.theme-hacker .bg-black { background-color: #000000 !important; }
-        body.theme-hacker .border-zinc-900, body.theme-hacker .border-zinc-800 { border-color: #004400 !important; }
+        body.theme-hacker .border-zinc-900, body.theme-hacker .border-zinc-800 { border-color: #00ff00 !important; }
         body.theme-hacker .text-white { color: #00ff00 !important; }
-        body.theme-hacker .text-zinc-500, body.theme-hacker .text-zinc-600, body.theme-hacker .text-zinc-400 { color: #00aa00 !important; }
-        body.theme-hacker .nav-link { color: #00aa00; } body.theme-hacker .nav-link.active { color: #00ff00; } body.theme-hacker .nav-link.active::after { background: #00ff00; }
-        body.theme-hacker .btn-buy { background: #001100 !important; color: #00ff00 !important; border-color: #004400 !important; }
-        body.theme-hacker .btn-buy:hover:not(:disabled) { background: #00ff00 !important; color: #000000 !important; box-shadow: 0 0 10px #00ff00; }
-        body.theme-hacker .progress-bg { background: #003300 !important; } body.theme-hacker .progress-fill { background: #00ff00 !important; box-shadow: 0 0 8px #00ff00; }
-        body.theme-hacker path[fill="white"] { fill: #00ff00 !important; }
-        body.theme-hacker input, body.theme-hacker select { background-color: #001100 !important; border-color: #004400 !important; color: #00ff00 !important; }
-        body.theme-hacker .chart-container { background: #000000 !important; border-color: #004400 !important; }
+        body.theme-hacker .text-zinc-500 { color: #00aa00 !important; }
+        body.theme-hacker .nav-link { color: #00aa00; }
+        body.theme-hacker .nav-link.active { color: #00ff00; }
+        body.theme-hacker .nav-link.active::after { background: #00ff00; }
 
-        /* 6. NEON */
-        body.theme-neon { --bg: #090014; --card-bg: #12002b; --border: #4a0072; color: #e0b3ff; }
-        body.theme-neon .glass-card { box-shadow: 0 0 15px rgba(188, 19, 254, 0.05); }
-        body.theme-neon .bg-zinc-950, body.theme-neon .bg-zinc-900 { background-color: #1a0033 !important; }
-        body.theme-neon .bg-black { background-color: #090014 !important; }
-        body.theme-neon .border-zinc-900, body.theme-neon .border-zinc-800 { border-color: #4a0072 !important; }
-        body.theme-neon .text-white { color: #00ffff !important; }
-        body.theme-neon .text-zinc-500, body.theme-neon .text-zinc-600, body.theme-neon .text-zinc-400 { color: #bc13fe !important; }
-        body.theme-neon .nav-link { color: #bc13fe; } body.theme-neon .nav-link.active { color: #00ffff; text-shadow: 0 0 5px rgba(0,255,255,0.5); } body.theme-neon .nav-link.active::after { background: #00ffff; box-shadow: 0 0 5px #00ffff; }
-        body.theme-neon .btn-buy { background: #1a0033 !important; color: #00ffff !important; border-color: #4a0072 !important; }
-        body.theme-neon .btn-buy:hover:not(:disabled) { background: #00ffff !important; color: #090014 !important; box-shadow: 0 0 10px #00ffff; }
-        body.theme-neon .progress-bg { background: #330066 !important; } body.theme-neon .progress-fill { background: #00ffff !important; box-shadow: 0 0 8px #00ffff; }
-        body.theme-neon path[fill="white"] { fill: #00ffff !important; }
-        body.theme-neon input, body.theme-neon select { background-color: #1a0033 !important; border-color: #4a0072 !important; color: #00ffff !important; }
-        body.theme-neon .chart-container { background: #090014 !important; border-color: #4a0072 !important; }
+        body.theme-neon { --bg: #09090b; --card-bg: #18181b; --border: #06b6d4; color: #c084fc; }
+        body.theme-neon .glass-card { box-shadow: 0 0 8px rgba(6, 182, 212, 0.2); }
+        body.theme-neon .bg-zinc-950, body.theme-neon .bg-zinc-900 { background-color: #27272a !important; }
+        body.theme-neon .border-zinc-900, body.theme-neon .border-zinc-800 { border-color: #a855f7 !important; }
+        body.theme-neon .text-white { color: #22d3ee !important; }
+        body.theme-neon .text-zinc-500 { color: #a855f7 !important; }
+        body.theme-neon .nav-link.active::after { background: #22d3ee; }
 
-        /* 7. GOLD */
-        body.theme-gold { --bg: #050500; --card-bg: #0a0a00; --border: #554400; color: #d4af37; }
-        body.theme-gold .bg-zinc-950, body.theme-gold .bg-zinc-900 { background-color: #111100 !important; }
-        body.theme-gold .bg-black { background-color: #050500 !important; }
-        body.theme-gold .border-zinc-900, body.theme-gold .border-zinc-800 { border-color: #554400 !important; }
-        body.theme-gold .text-white { color: #d4af37 !important; }
-        body.theme-gold .text-zinc-500, body.theme-gold .text-zinc-600, body.theme-gold .text-zinc-400 { color: #aa9955 !important; }
-        body.theme-gold .nav-link { color: #aa9955; } body.theme-gold .nav-link.active { color: #d4af37; } body.theme-gold .nav-link.active::after { background: #d4af37; }
-        body.theme-gold .btn-buy { background: #111100 !important; color: #d4af37 !important; border-color: #554400 !important; }
-        body.theme-gold .btn-buy:hover:not(:disabled) { background: #d4af37 !important; color: #000000 !important; box-shadow: 0 0 10px rgba(212,175,55,0.5); }
-        body.theme-gold .progress-bg { background: #332200 !important; } body.theme-gold .progress-fill { background: #d4af37 !important; }
-        body.theme-gold path[fill="white"] { fill: #d4af37 !important; }
-        body.theme-gold input, body.theme-gold select { background-color: #111100 !important; border-color: #554400 !important; color: #d4af37 !important; }
-        body.theme-gold .chart-container { background: #0a0a00 !important; border-color: #554400 !important; }
+        body.theme-gold { --bg: #111111; --card-bg: #1c1917; --border: #fbbf24; color: #fbbf24; }
+        body.theme-gold .bg-zinc-950, body.theme-gold .bg-zinc-900 { background-color: #292524 !important; }
+        body.theme-gold .border-zinc-900, body.theme-gold .border-zinc-800 { border-color: #d97706 !important; }
+        body.theme-gold .text-white { color: #fef3c7 !important; }
+        body.theme-gold .text-zinc-500 { color: #b45309 !important; }
+        body.theme-gold .nav-link.active::after { background: #fef3c7; }
 
-        /* 8. CYBERPUNK */
-        body.theme-cyberpunk { --bg: #0d0221; --card-bg: #1a0b2e; --border: #00ffcc; color: #fcee0a; }
+        body.theme-cyberpunk { --bg: #0f0f0f; --card-bg: #fde047; --border: #ef4444; color: #000000; }
         body.theme-cyberpunk .glass-card { border-width: 2px; }
-        body.theme-cyberpunk .bg-zinc-950, body.theme-cyberpunk .bg-zinc-900 { background-color: #120124 !important; }
-        body.theme-cyberpunk .bg-black { background-color: #0d0221 !important; }
-        body.theme-cyberpunk .border-zinc-900, body.theme-cyberpunk .border-zinc-800 { border-color: #00ffcc !important; }
-        body.theme-cyberpunk .text-white { color: #fcee0a !important; }
-        body.theme-cyberpunk .text-zinc-500, body.theme-cyberpunk .text-zinc-600, body.theme-cyberpunk .text-zinc-400 { color: #ff0055 !important; }
-        body.theme-cyberpunk .nav-link { color: #ff0055; } body.theme-cyberpunk .nav-link.active { color: #00ffcc; text-shadow: 0 0 5px rgba(0,255,204,0.5); } body.theme-cyberpunk .nav-link.active::after { background: #00ffcc; box-shadow: 0 0 5px #00ffcc; }
-        body.theme-cyberpunk .btn-buy { background: #120124 !important; color: #00ffcc !important; border-color: #00ffcc !important; }
-        body.theme-cyberpunk .btn-buy:hover:not(:disabled) { background: #00ffcc !important; color: #0d0221 !important; box-shadow: 0 0 10px #00ffcc; }
-        body.theme-cyberpunk .progress-bg { background: #1a0b2e !important; } body.theme-cyberpunk .progress-fill { background: #ff0055 !important; box-shadow: 0 0 8px #ff0055; }
-        body.theme-cyberpunk path[fill="white"] { fill: #fcee0a !important; }
-        body.theme-cyberpunk input, body.theme-cyberpunk select { background-color: #120124 !important; border-color: #00ffcc !important; color: #fcee0a !important; }
-        body.theme-cyberpunk .chart-container { background: #0d0221 !important; border-color: #00ffcc !important; }
+        body.theme-cyberpunk .bg-zinc-950, body.theme-cyberpunk .bg-zinc-900 { background-color: #fef08a !important; }
+        body.theme-cyberpunk .border-zinc-900, body.theme-cyberpunk .border-zinc-800 { border-color: #ef4444 !important; }
+        body.theme-cyberpunk .text-white { color: #000000 !important; }
+        body.theme-cyberpunk .text-zinc-500 { color: #7f1d1d !important; }
+        body.theme-cyberpunk .nav-link { color: #b91c1c; }
+        body.theme-cyberpunk .nav-link.active { color: #ef4444; }
+        body.theme-cyberpunk .nav-link.active::after { background: #ef4444; }
 
-        /* 9. ABYSS */
-        body.theme-abyss { --bg: #050000; --card-bg: #0a0000; --border: #330000; color: #ff3333; }
-        body.theme-abyss .bg-zinc-950, body.theme-abyss .bg-zinc-900 { background-color: #080000 !important; }
-        body.theme-abyss .bg-black { background-color: #050000 !important; }
-        body.theme-abyss .border-zinc-900, body.theme-abyss .border-zinc-800 { border-color: #330000 !important; }
-        body.theme-abyss .text-white { color: #ff0000 !important; }
-        body.theme-abyss .text-zinc-500, body.theme-abyss .text-zinc-600, body.theme-abyss .text-zinc-400 { color: #990000 !important; }
-        body.theme-abyss .nav-link { color: #990000; } body.theme-abyss .nav-link.active { color: #ff0000; text-shadow: 0 0 5px rgba(255,0,0,0.5); } body.theme-abyss .nav-link.active::after { background: #ff0000; box-shadow: 0 0 5px #ff0000; }
-        body.theme-abyss .btn-buy { background: #080000 !important; color: #ff3333 !important; border-color: #330000 !important; }
-        body.theme-abyss .btn-buy:hover:not(:disabled) { background: #ff0000 !important; color: #000000 !important; box-shadow: 0 0 10px #ff0000; }
-        body.theme-abyss .progress-bg { background: #110000 !important; } body.theme-abyss .progress-fill { background: #ff0000 !important; box-shadow: 0 0 8px #ff0000; }
-        body.theme-abyss path[fill="white"] { fill: #ff0000 !important; }
-        body.theme-abyss input, body.theme-abyss select { background-color: #080000 !important; border-color: #330000 !important; color: #ff3333 !important; }
-        body.theme-abyss .chart-container { background: #050000 !important; border-color: #330000 !important; }
+        body.theme-abyss { --bg: #020617; --card-bg: #000000; --border: #1e1b4b; color: #6366f1; }
+        body.theme-abyss .bg-zinc-950, body.theme-abyss .bg-zinc-900 { background-color: #0f172a !important; }
+        body.theme-abyss .border-zinc-900, body.theme-abyss .border-zinc-800 { border-color: #312e81 !important; }
+        body.theme-abyss .text-white { color: #818cf8 !important; }
+        body.theme-abyss .text-zinc-500 { color: #4338ca !important; }
+        body.theme-abyss .nav-link.active::after { background: #818cf8; }
 
-        /* 10. MIDNIGHT */
-        body.theme-midnight { --bg: #0a0a2a; --card-bg: #10103a; --border: #3b0764; color: #f3e8ff; }
+        body.theme-midnight { --bg: #0a0a2a; --card-bg: #10103a; --border: #3b0764; color: #d8b4fe; }
         body.theme-midnight .bg-zinc-950, body.theme-midnight .bg-zinc-900 { background-color: #1e1e4a !important; }
-        body.theme-midnight .bg-black { background-color: #0a0a2a !important; }
         body.theme-midnight .border-zinc-900, body.theme-midnight .border-zinc-800 { border-color: #581c87 !important; }
         body.theme-midnight .text-white { color: #f3e8ff !important; }
-        body.theme-midnight .text-zinc-500, body.theme-midnight .text-zinc-600, body.theme-midnight .text-zinc-400 { color: #a855f7 !important; }
-        body.theme-midnight .nav-link { color: #a855f7; } body.theme-midnight .nav-link.active { color: #f3e8ff; } body.theme-midnight .nav-link.active::after { background: #f3e8ff; }
-        body.theme-midnight .btn-buy { background: #1e1e4a !important; color: #f3e8ff !important; border-color: #581c87 !important; }
-        body.theme-midnight .btn-buy:hover:not(:disabled) { background: #f3e8ff !important; color: #0a0a2a !important; }
-        body.theme-midnight .progress-bg { background: #3b0764 !important; } body.theme-midnight .progress-fill { background: #f3e8ff !important; }
-        body.theme-midnight path[fill="white"] { fill: #f3e8ff !important; }
-        body.theme-midnight input, body.theme-midnight select { background-color: #1e1e4a !important; border-color: #581c87 !important; color: #f3e8ff !important; }
-        body.theme-midnight .chart-container { background: #0a0a2a !important; border-color: #3b0764 !important; }
+        body.theme-midnight .text-zinc-500 { color: #a855f7 !important; }
+        body.theme-midnight .nav-link.active::after { background: #f3e8ff; }
 
-        /* 11. BLOOD */
-        body.theme-blood { --bg: #1a0505; --card-bg: #2a0808; --border: #7f1d1d; color: #fecaca; }
+        body.theme-blood { --bg: #1a0505; --card-bg: #2a0808; --border: #7f1d1d; color: #fca5a5; }
         body.theme-blood .bg-zinc-950, body.theme-blood .bg-zinc-900 { background-color: #450a0a !important; }
-        body.theme-blood .bg-black { background-color: #1a0505 !important; }
         body.theme-blood .border-zinc-900, body.theme-blood .border-zinc-800 { border-color: #991b1b !important; }
         body.theme-blood .text-white { color: #fecaca !important; }
-        body.theme-blood .text-zinc-500, body.theme-blood .text-zinc-600, body.theme-blood .text-zinc-400 { color: #dc2626 !important; }
-        body.theme-blood .nav-link { color: #dc2626; } body.theme-blood .nav-link.active { color: #fecaca; } body.theme-blood .nav-link.active::after { background: #fecaca; }
-        body.theme-blood .btn-buy { background: #450a0a !important; color: #fecaca !important; border-color: #991b1b !important; }
-        body.theme-blood .btn-buy:hover:not(:disabled) { background: #fecaca !important; color: #1a0505 !important; }
-        body.theme-blood .progress-bg { background: #7f1d1d !important; } body.theme-blood .progress-fill { background: #fecaca !important; }
-        body.theme-blood path[fill="white"] { fill: #fecaca !important; }
-        body.theme-blood input, body.theme-blood select { background-color: #450a0a !important; border-color: #991b1b !important; color: #fecaca !important; }
-        body.theme-blood .chart-container { background: #1a0505 !important; border-color: #7f1d1d !important; }
+        body.theme-blood .text-zinc-500 { color: #dc2626 !important; }
+        body.theme-blood .nav-link.active::after { background: #fecaca; }
 
-        /* 12. DEEPSPACE */
-        body.theme-deepspace { --bg: #000000; --card-bg: #09090b; --border: #27272a; color: #fafafa; background-image: radial-gradient(circle at 50% 50%, #111 0%, #000 100%); }
+        body.theme-deepspace { --bg: #000000; --card-bg: #09090b; --border: #27272a; color: #e4e4e7; background-image: radial-gradient(circle at 50% 50%, #111 0%, #000 100%); }
         body.theme-deepspace .bg-zinc-950, body.theme-deepspace .bg-zinc-900 { background-color: #18181b !important; }
-        body.theme-deepspace .bg-black { background-color: #000000 !important; }
         body.theme-deepspace .border-zinc-900, body.theme-deepspace .border-zinc-800 { border-color: #3f3f46 !important; }
         body.theme-deepspace .text-white { color: #fafafa !important; }
-        body.theme-deepspace .text-zinc-500, body.theme-deepspace .text-zinc-600, body.theme-deepspace .text-zinc-400 { color: #a1a1aa !important; }
-        body.theme-deepspace .nav-link { color: #a1a1aa; } body.theme-deepspace .nav-link.active { color: #fafafa; } body.theme-deepspace .nav-link.active::after { background: #fafafa; }
-        body.theme-deepspace .btn-buy { background: #18181b !important; color: #fafafa !important; border-color: #3f3f46 !important; }
-        body.theme-deepspace .btn-buy:hover:not(:disabled) { background: #fafafa !important; color: #000000 !important; }
-        body.theme-deepspace .progress-bg { background: #27272a !important; } body.theme-deepspace .progress-fill { background: #fafafa !important; }
-        body.theme-deepspace path[fill="white"] { fill: #fafafa !important; }
-        body.theme-deepspace input, body.theme-deepspace select { background-color: #18181b !important; border-color: #3f3f46 !important; color: #fafafa !important; }
-        body.theme-deepspace .chart-container { background: #000000 !important; border-color: #27272a !important; }
+        body.theme-deepspace .text-zinc-500 { color: #a1a1aa !important; }
+        body.theme-deepspace .nav-link.active::after { background: #fafafa; }
 
-        /* 13. SOLAR */
-        body.theme-solar { --bg: #fffbeb; --card-bg: #ffffff; --border: #fde68a; color: #78350f; }
+        body.theme-solar { --bg: #fffbeb; --card-bg: #ffffff; --border: #fde68a; color: #92400e; }
         body.theme-solar .bg-zinc-950, body.theme-solar .bg-zinc-900 { background-color: #fef3c7 !important; }
-        body.theme-solar .bg-black { background-color: #ffffff !important; }
         body.theme-solar .border-zinc-900, body.theme-solar .border-zinc-800 { border-color: #fcd34d !important; }
         body.theme-solar .text-white { color: #78350f !important; }
-        body.theme-solar .text-zinc-500, body.theme-solar .text-zinc-600, body.theme-solar .text-zinc-400 { color: #d97706 !important; }
-        body.theme-solar .nav-link { color: #d97706; } body.theme-solar .nav-link.active { color: #78350f; } body.theme-solar .nav-link.active::after { background: #78350f; }
-        body.theme-solar .btn-buy { background: #fef3c7 !important; color: #78350f !important; border-color: #fcd34d !important; }
-        body.theme-solar .btn-buy:hover:not(:disabled) { background: #78350f !important; color: #ffffff !important; }
-        body.theme-solar .progress-bg { background: #fde68a !important; } body.theme-solar .progress-fill { background: #78350f !important; }
-        body.theme-solar path[fill="white"] { fill: #78350f !important; }
-        body.theme-solar input, body.theme-solar select { background-color: #fef3c7 !important; border-color: #fcd34d !important; color: #78350f !important; }
-        body.theme-solar .chart-container { background: #ffffff !important; border-color: #fde68a !important; }
+        body.theme-solar .text-zinc-500 { color: #d97706 !important; }
+        body.theme-solar .nav-link { color: #f59e0b; }
+        body.theme-solar .nav-link.active { color: #78350f; }
+        body.theme-solar .nav-link.active::after { background: #78350f; }
 
-        /* 14. MINT */
-        body.theme-mint { --bg: #f0fdf4; --card-bg: #ffffff; --border: #bbf7d0; color: #14532d; }
+        body.theme-mint { --bg: #f0fdf4; --card-bg: #ffffff; --border: #bbf7d0; color: #166534; }
         body.theme-mint .bg-zinc-950, body.theme-mint .bg-zinc-900 { background-color: #dcfce7 !important; }
-        body.theme-mint .bg-black { background-color: #ffffff !important; }
         body.theme-mint .border-zinc-900, body.theme-mint .border-zinc-800 { border-color: #86efac !important; }
         body.theme-mint .text-white { color: #14532d !important; }
-        body.theme-mint .text-zinc-500, body.theme-mint .text-zinc-600, body.theme-mint .text-zinc-400 { color: #22c55e !important; }
-        body.theme-mint .nav-link { color: #22c55e; } body.theme-mint .nav-link.active { color: #14532d; } body.theme-mint .nav-link.active::after { background: #14532d; }
-        body.theme-mint .btn-buy { background: #dcfce7 !important; color: #14532d !important; border-color: #86efac !important; }
-        body.theme-mint .btn-buy:hover:not(:disabled) { background: #14532d !important; color: #ffffff !important; }
-        body.theme-mint .progress-bg { background: #bbf7d0 !important; } body.theme-mint .progress-fill { background: #14532d !important; }
-        body.theme-mint path[fill="white"] { fill: #14532d !important; }
-        body.theme-mint input, body.theme-mint select { background-color: #dcfce7 !important; border-color: #86efac !important; color: #14532d !important; }
-        body.theme-mint .chart-container { background: #ffffff !important; border-color: #bbf7d0 !important; }
+        body.theme-mint .text-zinc-500 { color: #22c55e !important; }
+        body.theme-mint .nav-link { color: #4ade80; }
+        body.theme-mint .nav-link.active { color: #14532d; }
+        body.theme-mint .nav-link.active::after { background: #14532d; }
 
-        /* 15. COTTON */
-        body.theme-cotton { --bg: #faf5ff; --card-bg: #ffffff; --border: #e9d5ff; color: #581c87; }
+        body.theme-cotton { --bg: #faf5ff; --card-bg: #ffffff; --border: #e9d5ff; color: #6b21a8; }
         body.theme-cotton .bg-zinc-950, body.theme-cotton .bg-zinc-900 { background-color: #f3e8ff !important; }
-        body.theme-cotton .bg-black { background-color: #ffffff !important; }
         body.theme-cotton .border-zinc-900, body.theme-cotton .border-zinc-800 { border-color: #d8b4fe !important; }
         body.theme-cotton .text-white { color: #581c87 !important; }
-        body.theme-cotton .text-zinc-500, body.theme-cotton .text-zinc-600, body.theme-cotton .text-zinc-400 { color: #a855f7 !important; }
-        body.theme-cotton .nav-link { color: #a855f7; } body.theme-cotton .nav-link.active { color: #581c87; } body.theme-cotton .nav-link.active::after { background: #581c87; }
-        body.theme-cotton .btn-buy { background: #f3e8ff !important; color: #581c87 !important; border-color: #d8b4fe !important; }
-        body.theme-cotton .btn-buy:hover:not(:disabled) { background: #581c87 !important; color: #ffffff !important; }
-        body.theme-cotton .progress-bg { background: #e9d5ff !important; } body.theme-cotton .progress-fill { background: #581c87 !important; }
-        body.theme-cotton path[fill="white"] { fill: #581c87 !important; }
-        body.theme-cotton input, body.theme-cotton select { background-color: #f3e8ff !important; border-color: #d8b4fe !important; color: #581c87 !important; }
-        body.theme-cotton .chart-container { background: #ffffff !important; border-color: #e9d5ff !important; }
+        body.theme-cotton .text-zinc-500 { color: #a855f7 !important; }
+        body.theme-cotton .nav-link { color: #c084fc; }
+        body.theme-cotton .nav-link.active { color: #581c87; }
+        body.theme-cotton .nav-link.active::after { background: #581c87; }
 
-        /* 16. SYNTHWAVE */
-        body.theme-synthwave { --bg: #10061e; --card-bg: #1c0b32; --border: #ff007f; color: #00ffff; }
-        body.theme-synthwave .bg-zinc-950, body.theme-synthwave .bg-zinc-900 { background-color: #240a45 !important; }
-        body.theme-synthwave .bg-black { background-color: #10061e !important; }
-        body.theme-synthwave .border-zinc-900, body.theme-synthwave .border-zinc-800 { border-color: #ff007f !important; }
-        body.theme-synthwave .text-white { color: #00ffff !important; }
-        body.theme-synthwave .text-zinc-500, body.theme-synthwave .text-zinc-600, body.theme-synthwave .text-zinc-400 { color: #ff007f !important; }
-        body.theme-synthwave .nav-link { color: #ff007f; } body.theme-synthwave .nav-link.active { color: #00ffff; text-shadow: 0 0 5px rgba(0,255,255,0.5); } body.theme-synthwave .nav-link.active::after { background: #00ffff; box-shadow: 0 0 5px #00ffff; }
-        body.theme-synthwave .btn-buy { background: #240a45 !important; color: #00ffff !important; border-color: #ff007f !important; }
-        body.theme-synthwave .btn-buy:hover:not(:disabled) { background: #00ffff !important; color: #10061e !important; box-shadow: 0 0 10px #00ffff; }
-        body.theme-synthwave .progress-bg { background: #1c0b32 !important; } body.theme-synthwave .progress-fill { background: #ff007f !important; box-shadow: 0 0 8px #ff007f; }
-        body.theme-synthwave path[fill="white"] { fill: #00ffff !important; }
-        body.theme-synthwave input, body.theme-synthwave select { background-color: #240a45 !important; border-color: #ff007f !important; color: #00ffff !important; }
-        body.theme-synthwave .chart-container { background: #10061e !important; border-color: #ff007f !important; }
+        .drag-over { border-style: dashed !important; border-color: #ffffff !important; opacity: 0.5; }
 
-        /* 17. VOID */
-        body.theme-void { --bg: #000000; --card-bg: #020202; --border: #111111; color: #e5e5e5; }
-        body.theme-void .bg-zinc-950, body.theme-void .bg-zinc-900 { background-color: #030303 !important; }
-        body.theme-void .bg-black { background-color: #000000 !important; }
-        body.theme-void .border-zinc-900, body.theme-void .border-zinc-800 { border-color: #222222 !important; }
-        body.theme-void .text-white { color: #ffffff !important; }
-        body.theme-void .text-zinc-500, body.theme-void .text-zinc-600, body.theme-void .text-zinc-400 { color: #666666 !important; }
-        body.theme-void .nav-link { color: #666666; } body.theme-void .nav-link.active { color: #ffffff; } body.theme-void .nav-link.active::after { background: #ffffff; }
-        body.theme-void .btn-buy { background: #030303 !important; color: #ffffff !important; border-color: #222222 !important; }
-        body.theme-void .btn-buy:hover:not(:disabled) { background: #ffffff !important; color: #000000 !important; }
-        body.theme-void .progress-bg { background: #111111 !important; } body.theme-void .progress-fill { background: #ffffff !important; }
-        body.theme-void path[fill="white"] { fill: #ffffff !important; }
-        body.theme-void input, body.theme-void select { background-color: #030303 !important; border-color: #222222 !important; color: #ffffff !important; }
-        body.theme-void .chart-container { background: #000000 !important; border-color: #222222 !important; }
-
-        /* 18. MATRIX */
-        body.theme-matrix { --bg: #000b00; --card-bg: #001200; --border: #00ff41; color: #00ff41; font-family: 'JetBrains Mono', monospace; }
-        body.theme-matrix * { font-family: 'JetBrains Mono', monospace !important; }
-        body.theme-matrix .bg-zinc-950, body.theme-matrix .bg-zinc-900 { background-color: #001a00 !important; }
-        body.theme-matrix .bg-black { background-color: #000b00 !important; }
-        body.theme-matrix .border-zinc-900, body.theme-matrix .border-zinc-800 { border-color: #008f11 !important; }
-        body.theme-matrix .text-white { color: #00ff41 !important; }
-        body.theme-matrix .text-zinc-500, body.theme-matrix .text-zinc-600, body.theme-matrix .text-zinc-400 { color: #008f11 !important; }
-        body.theme-matrix .nav-link { color: #008f11; } body.theme-matrix .nav-link.active { color: #00ff41; } body.theme-matrix .nav-link.active::after { background: #00ff41; }
-        body.theme-matrix .btn-buy { background: #001a00 !important; color: #00ff41 !important; border-color: #008f11 !important; }
-        body.theme-matrix .btn-buy:hover:not(:disabled) { background: #00ff41 !important; color: #000b00 !important; box-shadow: 0 0 10px #00ff41; }
-        body.theme-matrix .progress-bg { background: #001200 !important; } body.theme-matrix .progress-fill { background: #00ff41 !important; }
-        body.theme-matrix path[fill="white"] { fill: #00ff41 !important; }
-        body.theme-matrix input, body.theme-matrix select { background-color: #001a00 !important; border-color: #008f11 !important; color: #00ff41 !important; }
-        body.theme-matrix .chart-container { background: #000b00 !important; border-color: #008f11 !important; }
-
-        /* 19. AURORA */
-        body.theme-aurora { --bg: #021a22; --card-bg: #042f3c; --border: #2dd4bf; color: #a7f3d0; }
-        body.theme-aurora .bg-zinc-950, body.theme-aurora .bg-zinc-900 { background-color: #064e3b !important; }
-        body.theme-aurora .bg-black { background-color: #021a22 !important; }
-        body.theme-aurora .border-zinc-900, body.theme-aurora .border-zinc-800 { border-color: #34d399 !important; }
-        body.theme-aurora .text-white { color: #34d399 !important; }
-        body.theme-aurora .text-zinc-500, body.theme-aurora .text-zinc-600, body.theme-aurora .text-zinc-400 { color: #3b82f6 !important; }
-        body.theme-aurora .nav-link { color: #3b82f6; } body.theme-aurora .nav-link.active { color: #34d399; } body.theme-aurora .nav-link.active::after { background: #34d399; }
-        body.theme-aurora .btn-buy { background: #064e3b !important; color: #34d399 !important; border-color: #34d399 !important; }
-        body.theme-aurora .btn-buy:hover:not(:disabled) { background: #34d399 !important; color: #021a22 !important; box-shadow: 0 0 10px #34d399; }
-        body.theme-aurora .progress-bg { background: #042f3c !important; } body.theme-aurora .progress-fill { background: #34d399 !important; }
-        body.theme-aurora path[fill="white"] { fill: #34d399 !important; }
-        body.theme-aurora input, body.theme-aurora select { background-color: #064e3b !important; border-color: #34d399 !important; color: #34d399 !important; }
-        body.theme-aurora .chart-container { background: #021a22 !important; border-color: #34d399 !important; }
-
-        /* 20. INFERNO */
-        body.theme-inferno { --bg: #1a0000; --card-bg: #330000; --border: #ff3300; color: #ffcc00; }
-        body.theme-inferno .bg-zinc-950, body.theme-inferno .bg-zinc-900 { background-color: #4d0000 !important; }
-        body.theme-inferno .bg-black { background-color: #1a0000 !important; }
-        body.theme-inferno .border-zinc-900, body.theme-inferno .border-zinc-800 { border-color: #ff3300 !important; }
-        body.theme-inferno .text-white { color: #ffcc00 !important; }
-        body.theme-inferno .text-zinc-500, body.theme-inferno .text-zinc-600, body.theme-inferno .text-zinc-400 { color: #cc0000 !important; }
-        body.theme-inferno .nav-link { color: #cc0000; } body.theme-inferno .nav-link.active { color: #ffcc00; } body.theme-inferno .nav-link.active::after { background: #ffcc00; }
-        body.theme-inferno .btn-buy { background: #4d0000 !important; color: #ffcc00 !important; border-color: #ff3300 !important; }
-        body.theme-inferno .btn-buy:hover:not(:disabled) { background: #ffcc00 !important; color: #1a0000 !important; box-shadow: 0 0 10px #ffcc00; }
-        body.theme-inferno .progress-bg { background: #330000 !important; } body.theme-inferno .progress-fill { background: #ff3300 !important; }
-        body.theme-inferno path[fill="white"] { fill: #ffcc00 !important; }
-        body.theme-inferno input, body.theme-inferno select { background-color: #4d0000 !important; border-color: #ff3300 !important; color: #ffcc00 !important; }
-        body.theme-inferno .chart-container { background: #1a0000 !important; border-color: #ff3300 !important; }
+        html body .debit-card, html body .debit-card * { font-family: 'Space Grotesk', Helvetica, Arial, sans-serif !important; }
+        html body .debit-card { color: #ffffff !important; }
+        html body .debit-card.tier-2 { color: #000000 !important; }
+        html body .debit-card.tier-9 { color: #0f172a !important; }
+        html body .debit-card.tier-14 { color: #000000 !important; }
+        html body .debit-card.tier-17 { color: #000000 !important; }
+        html body .debit-card.tier-20 { color: #000000 !important; }
+        html body .debit-card .text-white { color: currentColor !important; }
+        html body .debit-card .text-white\/40 { color: color-mix(in srgb, currentColor 40%, transparent) !important; }
+        html body .debit-card .text-white\/60 { color: color-mix(in srgb, currentColor 60%, transparent) !important; }
+        html body .debit-card .text-white\/50 { color: color-mix(in srgb, currentColor 50%, transparent) !important; }
+        html body .debit-card .text-white\/30 { color: color-mix(in srgb, currentColor 30%, transparent) !important; }
+        html body .debit-card .bg-white\/20 { background-color: color-mix(in srgb, currentColor 20%, transparent) !important; }
+        html body .debit-card path[fill="white"] { fill: currentColor !important; }
         
-        /* ------------------------------------------- */
+        .glow-text { text-shadow: 0 0 10px rgba(255,255,255,0.5); }
     </style>
 </head>
 <body class="max-w-[1400px] mx-auto">
@@ -508,7 +452,7 @@
         <header class="flex justify-between items-start mb-8">
             <div class="flex items-center gap-4">
                 <svg onclick="showBlackMarket()" class="cursor-pointer transition-transform hover:scale-110" width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
+                    <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor"/>
                 </svg>
                 <div>
                     <h1 class="text-3xl font-black tracking-tighter leading-none grotesk glow-text">VERCEL <span class="text-zinc-500" style="text-shadow: none;">EMPIRE</span></h1>
@@ -520,15 +464,15 @@
                 <div class="stats-badge flex gap-8 bg-zinc-950 border border-zinc-900 rounded-xl p-4 px-8 shadow-sm">
                     <div class="text-center hidden" id="top-bar-balance-container">
                         <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">ACTIVE BALANCE</p>
-                        <p class="text-xl font-bold mono max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap text-white" id="top-balance-display">$0</p>
+                        <p class="text-xl font-bold mono max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="top-balance-display">$0</p>
                     </div>
                     <div class="text-center">
                         <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">NET WORTH</p>
-                        <p class="text-xl font-bold mono max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap text-white" id="nw-display">$0</p>
+                        <p class="text-xl font-bold mono max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="nw-display">$0</p>
                     </div>
                     <div class="text-center border-l border-zinc-800 pl-8">
                         <p class="text-[9px] text-zinc-500 uppercase font-bold mb-1 tracking-widest">HOURLY REVENUE</p>
-                        <p class="text-xl font-bold mono text-white" id="hr-display">+$0/hr</p>
+                        <p class="text-xl font-bold mono text-emerald-400 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="hr-display">+$0/hr</p>
                     </div>
                 </div>
             </div>
@@ -541,7 +485,7 @@
             <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Market</button>
             <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
             <button onclick="showTab('trading')" class="nav-link" id="btn-trading">Trading</button>
-            <button onclick="showTab('hq')" class="nav-link" id="btn-hq" style="color: #10b981;">HQ (NEW)</button>
+            <button onclick="showTab('hq')" class="nav-link text-amber-500" id="btn-hq">HQ (NEW)</button>
             <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
             <button onclick="showTab('academics')" class="nav-link" id="btn-academics">Academics</button>
             <button onclick="showTab('profile')" class="nav-link" id="btn-profile">Profile</button>
@@ -569,7 +513,7 @@
                                     <p class="text-[10px] text-white/40 uppercase font-bold tracking-widest">ACTIVE BALANCE</p>
                                     <p class="text-[10px] font-bold tracking-widest uppercase" id="mint-cooldown"></p>
                                 </div>
-                                <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap grotesk text-white" id="balance-display">$0</h2>
+                                <h2 class="text-4xl font-black mb-1 tracking-tighter max-w-[100%] overflow-hidden text-ellipsis whitespace-nowrap grotesk" id="balance-display">$0</h2>
                                 <div class="flex items-center gap-2 mt-1">
                                     <p class="text-[10px] text-white/60 font-bold uppercase tracking-widest" id="card-tier-label">DEFAULT CARD</p>
                                     <span class="text-[9px] font-bold bg-white/20 text-white px-1.5 py-0.5 rounded" id="card-mult-display">1x</span>
@@ -593,19 +537,20 @@
                         <div class="flex justify-between items-center mb-4">
                             <div class="flex items-center gap-2">
                                 <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest">LIVE MARKET TRACKER</p>
+                                <span class="px-2 py-0.5 bg-amber-500/10 text-amber-500 text-[8px] font-bold rounded">chicken sandwich</span>
                             </div>
-                            <select id="dashboard-stock-select" onchange="changeDashboardStock()" class="bg-zinc-900 border border-zinc-800 text-xs text-white font-mono rounded px-2 py-1 focus:outline-none"></select>
+                            <select id="dashboard-stock-select" onchange="changeDashboardStock()" class="bg-zinc-900 border border-zinc-800 text-xs text-white font-mono rounded px-2 py-1 focus:outline-none focus:border-emerald-500"></select>
                         </div>
                         <div class="flex justify-between items-end mb-2" onclick="openStockModal(state.dashboardStock)" style="cursor: pointer;">
                             <div>
-                                <h3 class="text-2xl font-black tracking-tighter grotesk text-white" id="dash-stock-symbol">AAPL</h3>
+                                <h3 class="text-2xl font-black tracking-tighter grotesk" id="dash-stock-symbol">AAPL</h3>
                             </div>
                             <div class="text-right">
-                                <p class="text-lg font-bold mono text-white" id="dash-stock-price">$0.00</p>
-                                <p class="text-[10px] mono font-bold text-white" id="dash-stock-trend">+0.00%</p>
+                                <p class="text-lg font-bold mono" id="dash-stock-price">$0.00</p>
+                                <p class="text-[10px] mono font-bold" id="dash-stock-trend">+0.00%</p>
                             </div>
                         </div>
-                        <div class="chart-container cursor-default" onclick="openStockModal(state.dashboardStock)">
+                        <div class="chart-container h-[100px] cursor-default" onclick="openStockModal(state.dashboardStock)">
                             <canvas id="dash-stock-chart" class="w-full h-full"></canvas>
                         </div>
                     </div>
@@ -619,7 +564,7 @@
                         </div>
                         <div class="flex justify-between text-[10px] font-bold mb-2">
                             <span class="text-zinc-400 uppercase tracking-widest">XP TO LVL <span id="next-lvl-val">2</span></span>
-                            <span class="mono text-white"><span id="xp-val">0</span> / <span id="xp-req">500</span></span>
+                            <span class="mono"><span id="xp-val">0</span> / <span id="xp-req">500</span></span>
                         </div>
                         <div class="progress-bg mb-8">
                             <div class="progress-fill" id="xp-bar" style="width: 0%"></div>
@@ -628,7 +573,7 @@
                     </div>
 
                     <div class="glass-card p-6 h-48 overflow-y-auto font-mono text-[10px] text-zinc-600 space-y-1 scrollbar-thin" id="terminal">
-                        <p class="text-white">> Vercel Empire v50.0.0 (The Ascension Update)</p>
+                        <p class="text-emerald-500">> Vercel Empire v50.0.0 (The Ascension Update)</p>
                         <p class="text-zinc-400">> System Initialized. Welcome Back.</p>
                     </div>
                 </div>
@@ -639,7 +584,7 @@
         <div id="companies" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight grotesk text-white">ENTERPRISE INFRASTRUCTURE</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">ENTERPRISE INFRASTRUCTURE</h2>
                     <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1" id="comp-sell-desc">BUILD, UPGRADE & SELL FOR 30% OF INVESTMENTS</p>
                 </div>
             </div>
@@ -650,12 +595,12 @@
         <div id="real-estate" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight grotesk text-white">GLOBAL PROPERTY PORTFOLIO</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">GLOBAL PROPERTY PORTFOLIO</h2>
                     <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">RENT, RENOVATE & SELL FOR 90% OF INVESTMENTS</p>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="filterRealEstate('house')" class="re-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active text-white" data-cat="house">Houses</button>
-                    <button onclick="filterRealEstate('apartment')" class="re-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 text-white" data-cat="apartment">Apartments</button>
+                    <button onclick="filterRealEstate('house')" class="re-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active" data-cat="house">Houses</button>
+                    <button onclick="filterRealEstate('apartment')" class="re-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900" data-cat="apartment">Apartments</button>
                 </div>
             </div>
             <div id="re-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
@@ -676,7 +621,7 @@
                 </nav>
                 <div class="flex items-center gap-2 w-full md:w-auto" id="market-filters-container">
                     <span class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">SORT BY:</span>
-                    <select id="market-sort" onchange="updateUI(true)" class="bg-zinc-900 border border-zinc-800 text-xs text-white font-mono rounded px-2 py-1 focus:outline-none">
+                    <select id="market-sort" onchange="updateUI(true)" class="bg-zinc-900 border border-zinc-800 text-xs text-white font-mono rounded px-2 py-1 focus:outline-none focus:border-emerald-500">
                         <option value="trend-desc">Top Trending</option>
                         <option value="name-asc">A-Z</option>
                         <option value="name-desc">Z-A</option>
@@ -689,14 +634,14 @@
             </div>
 
             <div id="market-regular" class="market-sub-content active">
-                <h2 class="text-xl font-black uppercase tracking-tight mb-8 grotesk text-white">GLOBAL EQUITY MARKET</h2>
+                <h2 class="text-xl font-black uppercase tracking-tight mb-8 grotesk">GLOBAL EQUITY MARKET</h2>
                 <div id="stocks-full-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </div>
             
             <div id="market-crypto" class="market-sub-content">
                 <div class="flex items-center gap-4 mb-8">
-                    <h2 class="text-xl font-black uppercase tracking-tight grotesk text-white">CRYPTO EXCHANGE</h2>
-                    <span class="px-2 py-0.5 bg-zinc-900 border border-zinc-800 text-white text-[10px] font-bold rounded">REAL-TIME TRADING</span>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">CRYPTO EXCHANGE</h2>
+                    <span class="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 text-[10px] font-bold rounded">REAL-TIME TRADING</span>
                 </div>
                 <div id="crypto-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"></div>
             </div>
@@ -704,7 +649,8 @@
             <div id="market-nft" class="market-sub-content">
                 <div class="flex items-center justify-between mb-8">
                     <div class="flex items-center gap-4">
-                        <h2 class="text-xl font-black uppercase tracking-tight grotesk text-white">DIGITAL COLLECTIBLES (NFTs)</h2>
+                        <h2 class="text-xl font-black uppercase tracking-tight grotesk">DIGITAL COLLECTIBLES (NFTs)</h2>
+                        <span class="px-2 py-0.5 bg-purple-500/10 text-purple-500 text-[10px] font-bold rounded">TRADE WITH CRYPTO</span>
                     </div>
                     <div id="nft-status" class="text-[10px] font-bold text-zinc-600 uppercase tracking-widest"></div>
                 </div>
@@ -716,13 +662,13 @@
         <div id="collection" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight grotesk text-white">LUXURY ASSETS</h2>
+                    <h2 class="text-xl font-black uppercase tracking-tight grotesk">LUXURY ASSETS</h2>
                     <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">ACQUIRE HIGH VALUE ASSETS • SELL & AUCTION IN TRADING TAB</p>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="filterCollection('jewelry')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active text-white" data-cat="jewelry">Jewelry</button>
-                    <button onclick="filterCollection('cars')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 text-white" data-cat="cars">Cars</button>
-                    <button onclick="filterCollection('furniture')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 text-white" data-cat="furniture">Furniture</button>
+                    <button onclick="filterCollection('jewelry')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900 active" data-cat="jewelry">Jewelry</button>
+                    <button onclick="filterCollection('cars')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900" data-cat="cars">Cars</button>
+                    <button onclick="filterCollection('furniture')" class="coll-filter-btn text-[10px] font-bold uppercase px-4 py-1 border border-zinc-800 rounded bg-zinc-900" data-cat="furniture">Furniture</button>
                 </div>
             </div>
             <div id="coll-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -730,19 +676,19 @@
 
         <!-- TRADING TAB -->
         <div id="trading" class="tab-content">
-            <div class="glass-card p-6 mb-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <div class="glass-card p-6 mb-8 border-emerald-900/50 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div>
-                    <h3 class="text-xl font-black uppercase text-white tracking-tight grotesk">PEER-TO-PEER EXCHANGE</h3>
+                    <h3 class="text-xl font-black uppercase text-emerald-500 tracking-tight grotesk">PEER-TO-PEER EXCHANGE</h3>
                     <p class="text-[10px] text-zinc-400 font-bold tracking-widest mt-1">TRADE ASSETS WITH OTHER PLAYERS</p>
                 </div>
                 <div class="flex gap-2 w-full md:w-auto">
-                    <input type="text" id="p2p-import-code" placeholder="PASTE TRADE CODE" class="bg-zinc-900 border border-zinc-800 rounded px-4 py-2 text-xs font-mono text-white focus:outline-none w-full md:w-64">
-                    <button onclick="importP2PTrade()" class="btn-buy !w-auto px-6 shrink-0">RECEIVE</button>
+                    <input type="text" id="p2p-import-code" placeholder="PASTE TRADE CODE" class="bg-zinc-900 border border-zinc-800 rounded px-4 py-2 text-xs font-mono text-white focus:outline-none focus:border-emerald-500 w-full md:w-64">
+                    <button onclick="importP2PTrade()" class="btn-buy !w-auto px-6 bg-emerald-600/20 text-emerald-500 border-emerald-600/50 hover:bg-emerald-500 hover:text-white shrink-0">RECEIVE</button>
                 </div>
             </div>
             
             <div class="flex justify-between items-center mb-8">
-                <h2 class="text-xl font-black uppercase tracking-tight text-white grotesk">VBAY MARKETPLACE</h2>
+                <h2 class="text-xl font-black uppercase tracking-tight text-amber-500 grotesk">VBAY MARKETPLACE</h2>
                 <p class="text-[10px] text-zinc-500 font-bold tracking-widest">YOUR LISTINGS</p>
             </div>
             <div id="trading-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -751,13 +697,13 @@
         <!-- HQ TAB -->
         <div id="hq" class="tab-content">
             <div class="mb-8">
-                <h2 class="text-xl font-black uppercase tracking-tight grotesk text-white">EXECUTIVE BOARD</h2>
+                <h2 class="text-xl font-black uppercase tracking-tight grotesk text-emerald-500">EXECUTIVE BOARD</h2>
                 <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">HIRE C-SUITE EXECUTIVES FOR EMPIRE-WIDE BUFFS</p>
             </div>
             <div id="board-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12"></div>
 
             <div class="mb-8">
-                <h2 class="text-xl font-black uppercase tracking-tight grotesk text-white">MEGAPROJECTS</h2>
+                <h2 class="text-xl font-black uppercase tracking-tight grotesk text-purple-500">MEGAPROJECTS</h2>
                 <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">FUND IMPOSSIBLE PROJECTS TO ACHIEVE GODHOOD</p>
             </div>
             <div id="mega-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
@@ -767,8 +713,8 @@
         <div id="black-market" class="tab-content">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                 <div>
-                    <h2 class="text-xl font-black uppercase tracking-tight text-white grotesk" style="text-shadow: 0 0 10px currentColor;">THE DARK WEB</h2>
-                    <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">UNTRACEABLE TRANSACTIONS • BTC ONLY</p>
+                    <h2 class="text-xl font-black uppercase tracking-tight text-red-500 grotesk" style="text-shadow: 0 0 10px rgba(239,68,68,0.5);">THE DARK WEB</h2>
+                    <p class="text-[10px] text-red-900 font-bold tracking-widest mt-1">UNTRACEABLE TRANSACTIONS • BTC ONLY</p>
                 </div>
             </div>
             <div id="bm-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"></div>
@@ -776,7 +722,7 @@
 
         <!-- BANK TAB -->
         <div id="bank" class="tab-content relative pb-24">
-            <h2 class="text-xl font-black uppercase tracking-tight mb-8 grotesk text-white">CARD UPGRADES</h2>
+            <h2 class="text-xl font-black uppercase tracking-tight mb-8 grotesk">CARD UPGRADES</h2>
             <div id="bank-grid" class="grid grid-cols-1 md:grid-cols-3 gap-6"></div>
         </div>
 
@@ -796,13 +742,13 @@
                                 <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white" class="opacity-20"/>
                             </svg>
                         </div>
-                        <h2 class="text-3xl font-black tracking-tighter uppercase grotesk text-white" id="profile-name">NAME</h2>
-                        <p class="text-[10px] text-white font-bold tracking-[0.2em] mb-8" id="profile-rank">STARTUP</p>
+                        <h2 class="text-3xl font-black tracking-tighter uppercase grotesk" id="profile-name">NAME</h2>
+                        <p class="text-[10px] text-emerald-500 font-bold tracking-[0.2em] mb-8" id="profile-rank">STARTUP</p>
 
                         <div class="text-left space-y-4 border-t border-zinc-900 pt-8 mb-8">
                             <div>
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">TOTAL NET WORTH</p>
-                                <p class="text-2xl font-black mono max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-white" id="profile-nw">$0</p>
+                                <p class="text-2xl font-black mono max-w-full overflow-hidden text-ellipsis whitespace-nowrap" id="profile-nw">$0</p>
                             </div>
                             <div>
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">CASH ON ACTIVE CARD</p>
@@ -813,7 +759,7 @@
                         <div class="border-t border-zinc-900 pt-8 text-left">
                             <div class="flex justify-between items-center mb-6">
                                 <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest">DIGITAL WALLET</p>
-                                <button onclick="openTransferModal()" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors uppercase tracking-widest text-white">TRANSFER</button>
+                                <button onclick="openTransferModal()" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors uppercase tracking-widest">TRANSFER</button>
                             </div>
                             <div class="wallet-container flex overflow-x-auto pb-8 -mx-4 px-4 pt-4 scrollbar-thin" id="wallet-container"></div>
                         </div>
@@ -823,7 +769,7 @@
                         <p class="text-[10px] text-zinc-500 font-bold uppercase tracking-widest mb-6">GLOBAL SETTINGS</p>
                         <div class="flex items-center justify-between mb-4">
                             <div>
-                                <p class="text-xs font-bold uppercase text-white">Buy/Sell All</p>
+                                <p class="text-xs font-bold uppercase">Buy/Sell All</p>
                                 <p class="text-[9px] text-zinc-600 font-medium">Trade max possible amounts</p>
                             </div>
                             <label class="switch">
@@ -832,10 +778,10 @@
                             </label>
                         </div>
                         <div class="grid grid-cols-2 gap-2 mt-6">
-                            <button onclick="exportSave()" class="btn-buy border border-zinc-800 bg-zinc-900">EXPORT SAVE</button>
-                            <button onclick="importSave()" class="btn-buy border border-zinc-800 bg-zinc-900">IMPORT SAVE</button>
+                            <button onclick="exportSave()" class="btn-buy border border-zinc-800 bg-zinc-900 hover:bg-white hover:text-black">EXPORT SAVE</button>
+                            <button onclick="importSave()" class="btn-buy border border-zinc-800 bg-zinc-900 hover:bg-white hover:text-black">IMPORT SAVE</button>
                         </div>
-                        <button onclick="openResetModal()" class="btn-buy mt-4">
+                        <button onclick="openResetModal()" class="w-full mt-4 py-3 border border-red-900/30 bg-red-950/20 text-red-500 text-[10px] font-bold uppercase tracking-widest rounded hover:bg-red-500 hover:text-white transition-all">
                             Reset Empire Data
                         </button>
                     </div>
@@ -876,18 +822,33 @@
         </div>
     </main>
 
+    <!-- CHEAT PANEL -->
+    <div id="cheat-panel" style="display:none;" class="fixed left-4 top-1/2 -translate-y-1/2 glass-card p-4 z-[90] flex-col gap-3 border-red-900/50 bg-black/90 backdrop-blur">
+        <p class="text-[10px] text-red-500 font-bold uppercase tracking-widest">DEV CONSOLE</p>
+        <input type="number" id="cheat-input" placeholder="CASH AMOUNT" class="bg-zinc-900 border border-zinc-800 text-white text-xs px-3 py-2 rounded w-32 focus:outline-none focus:border-red-500 transition-colors">
+        <button onclick="applyCheat()" class="bg-red-900/30 border border-red-900/50 text-red-500 text-[10px] font-bold py-2 rounded hover:bg-red-600 hover:text-white transition-colors uppercase tracking-widest">Inject Cash</button>
+        <div class="border-t border-red-900/30 w-full my-1"></div>
+        <input type="number" id="cheat-level-input" placeholder="SET SET LEVEL" class="bg-zinc-900 border border-zinc-800 text-white text-xs px-3 py-2 rounded w-32 focus:outline-none focus:border-red-500 transition-colors">
+        <button onclick="applyLevelCheat()" class="bg-red-900/30 border border-red-900/50 text-red-500 text-[10px] font-bold py-2 rounded hover:bg-red-600 hover:text-white transition-colors uppercase tracking-widest">Set Level</button>
+    </div>
+
+    <!-- BOUNCING WATERMARK -->
+    <div id="illegitimate-watermark" style="display:none; position:fixed; z-index:9999; font-weight:900; color:rgba(239, 68, 68, 0.4); font-size:2rem; pointer-events:none; white-space:nowrap; user-select:none; font-family:'Space Grotesk',sans-serif;">
+        (ILLEGITIMATE)
+    </div>
+
     <!-- MODALS -->
     <div id="onboarding-modal">
         <div class="w-full max-w-md glass-card p-12 text-center">
             <svg width="60" height="60" viewBox="0 0 76 65" fill="none" class="mx-auto mb-8">
                 <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="white"/>
             </svg>
-            <h2 class="text-3xl font-black tracking-tighter mb-2 uppercase grotesk text-white">Welcome to Vercel</h2>
+            <h2 class="text-3xl font-black tracking-tighter mb-2 uppercase grotesk">Welcome to Vercel</h2>
             <p class="text-zinc-500 text-[10px] font-bold uppercase tracking-widest mb-10">Initialize your empire credentials</p>
-            <input type="text" id="name-input" placeholder="ENTER YOUR NAME" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-6 py-4 text-center font-black uppercase text-sm mb-6 focus:outline-none text-white">
+            <input type="text" id="name-input" placeholder="ENTER YOUR NAME" class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-6 py-4 text-center font-black uppercase text-sm mb-6 focus:outline-none focus:border-white transition-colors">
             <div class="grid grid-cols-2 gap-4">
-                <button onclick="finishOnboarding(false)" class="btn-buy py-4 text-[10px] md:text-xs">Desktop UI</button>
-                <button onclick="finishOnboarding(true)" class="btn-buy py-4 text-[10px] md:text-xs bg-zinc-900">Mobile (9:16)</button>
+                <button onclick="finishOnboarding(false)" class="w-full py-4 bg-white text-black font-black text-[10px] md:text-xs uppercase tracking-widest rounded hover:bg-zinc-200 transition-colors">Desktop UI</button>
+                <button onclick="finishOnboarding(true)" class="w-full py-4 bg-zinc-900 text-zinc-400 border border-zinc-800 font-black text-[10px] md:text-xs uppercase tracking-widest rounded hover:text-white transition-colors">Mobile (9:16)</button>
             </div>
         </div>
     </div>
@@ -897,13 +858,13 @@
             <button onclick="closeStockModal()" class="absolute top-4 right-4 text-zinc-500 hover:text-white font-black">CLOSE[ESC]</button>
             <div class="flex justify-between items-end mb-8">
                 <div>
-                    <h2 class="text-4xl font-black tracking-tighter grotesk text-white" id="modal-symbol">SYMB</h2>
+                    <h2 class="text-4xl font-black tracking-tighter grotesk" id="modal-symbol">SYMB</h2>
                     <p class="text-zinc-500 font-bold uppercase tracking-widest" id="modal-name">Company Name</p>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="setChartType('candlestick')" class="btn-buy w-auto px-3 py-1">CANDLE</button>
-                    <button onclick="setChartType('line')" class="btn-buy w-auto px-3 py-1">LINE</button>
-                    <button onclick="setChartType('area')" class="btn-buy w-auto px-3 py-1">AREA</button>
+                    <button onclick="setChartType('candlestick')" class="text-[10px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors">CANDLE</button>
+                    <button onclick="setChartType('line')" class="text-[10px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors">LINE</button>
+                    <button onclick="setChartType('area')" class="text-[10px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 hover:bg-white hover:text-black transition-colors">AREA</button>
                 </div>
             </div>
             <div class="w-full h-[400px] bg-black rounded-lg border border-zinc-900 relative">
@@ -912,19 +873,19 @@
             <div class="mt-8 grid grid-cols-4 gap-4">
                 <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
                     <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Price</p>
-                    <p class="mono text-xl font-bold text-white" id="modal-price">$0</p>
+                    <p class="mono text-xl font-bold" id="modal-price">$0</p>
                 </div>
                 <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
                     <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Daily High</p>
-                    <p class="mono text-xl font-bold text-white" id="modal-high">$0</p>
+                    <p class="mono text-xl font-bold text-emerald-500" id="modal-high">$0</p>
                 </div>
                 <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
                     <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Daily Low</p>
-                    <p class="mono text-xl font-bold text-white" id="modal-low">$0</p>
+                    <p class="mono text-xl font-bold text-red-500" id="modal-low">$0</p>
                 </div>
                 <div class="bg-zinc-950 p-4 border border-zinc-900 rounded">
                     <p class="text-[8px] text-zinc-600 font-bold mb-1 uppercase">Owned</p>
-                    <p class="mono text-xl font-bold text-white" id="modal-owned">0</p>
+                    <p class="mono text-xl font-bold" id="modal-owned">0</p>
                 </div>
             </div>
         </div>
@@ -932,9 +893,9 @@
 
     <!-- AUCTION MODAL -->
     <div id="auction-modal">
-        <div class="w-full max-w-xl glass-card p-8 text-center relative border border-zinc-900">
-            <p class="text-[10px] font-bold text-white uppercase tracking-widest mb-2">LIVE AUCTION</p>
-            <h2 class="text-2xl font-black uppercase mb-6 grotesk text-white" id="auction-item-name">ITEM NAME</h2>
+        <div class="w-full max-w-xl glass-card p-8 text-center relative border border-amber-900/50">
+            <p class="text-[10px] font-bold text-amber-500 uppercase tracking-widest mb-2">LIVE AUCTION</p>
+            <h2 class="text-2xl font-black uppercase mb-6 grotesk" id="auction-item-name">ITEM NAME</h2>
 
             <div class="flex justify-between items-center mb-8 px-8 py-4 bg-zinc-950 rounded-lg border border-zinc-900">
                 <div>
@@ -943,7 +904,7 @@
                 </div>
                 <div class="text-right">
                     <p class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1">CURRENT BID</p>
-                    <p class="text-3xl font-black mono text-white max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="auction-price">$0</p>
+                    <p class="text-3xl font-black mono text-emerald-400 max-w-[150px] overflow-hidden text-ellipsis whitespace-nowrap" id="auction-price">$0</p>
                 </div>
             </div>
 
@@ -951,14 +912,14 @@
                 <p class="text-[10px] mono text-zinc-500 italic">Waiting for bids...</p>
             </div>
 
-            <button onclick="finishAuction()" class="btn-buy py-4 w-full">Accept Current Bid</button>
+            <button onclick="finishAuction()" class="w-full py-4 bg-amber-600 text-white font-black text-xs uppercase tracking-widest rounded hover:bg-amber-500 transition-colors">Accept Current Bid</button>
         </div>
     </div>
 
     <!-- TRANSFER FUNDS MODAL -->
     <div id="transfer-modal">
         <div class="w-full max-w-sm glass-card p-8">
-            <h3 class="text-xl font-black uppercase mb-6 tracking-tight grotesk text-white">TRANSFER FUNDS</h3>
+            <h3 class="text-xl font-black uppercase mb-6 tracking-tight grotesk">TRANSFER FUNDS</h3>
             <div class="space-y-4 mb-6">
                 <div>
                     <label class="text-[9px] text-zinc-600 font-bold uppercase tracking-widest mb-1 block">FROM CARD</label>
@@ -974,24 +935,25 @@
                 </div>
             </div>
             <div class="grid grid-cols-2 gap-2">
-                <button onclick="executeTransfer()" class="btn-buy">SEND</button>
-                <button onclick="closeTransferModal()" class="btn-buy">CANCEL</button>
+                <button onclick="executeTransfer()" class="btn-buy bg-emerald-600/20 border-emerald-600/50 text-emerald-500 hover:bg-emerald-500 hover:text-white">SEND</button>
+                <button onclick="closeTransferModal()" class="btn-buy border-zinc-800">CANCEL</button>
             </div>
         </div>
     </div>
 
     <div id="reset-modal">
         <div class="w-full max-w-md glass-card p-10 text-center">
-            <h2 class="text-3xl font-black tracking-tighter mb-4 uppercase grotesk text-white">Wipe Data?</h2>
+            <h2 class="text-3xl font-black tracking-tighter mb-4 uppercase grotesk">Wipe Data?</h2>
             <p class="text-zinc-500 text-xs font-bold uppercase tracking-widest mb-10 leading-relaxed">Do you really want to delete all of your assets, including your net worth and levels? This action is permanent and CANNOT be undone.</p>
             <div class="space-y-3">
-                <button onclick="confirmReset()" class="btn-buy py-4 w-full">Oh yeah. Wipe it</button>
-                <button onclick="closeResetModal()" class="btn-buy py-4 w-full bg-zinc-900">Cancel</button>
+                <button onclick="confirmReset()" class="w-full py-4 bg-red-600 text-white font-black text-xs uppercase tracking-widest rounded hover:bg-red-500 transition-colors">Oh yeah. Wipe it</button>
+                <button onclick="closeResetModal()" class="w-full py-4 bg-zinc-900 text-zinc-500 font-black text-xs uppercase tracking-widest rounded hover:text-white transition-colors">Cancel</button>
             </div>
         </div>
     </div>
 
     <script>
+        // GLOBAL MARKET CONFIGURATION
         const GLOBAL_MARKET_CONFIG = {
             apiUrl: "", 
             useAlgorithmicGlobalSync: true 
@@ -1041,7 +1003,7 @@
             { id: 5, name: "ROSÉ EXECUTIVE", price: 1000000, mult: 10, class: "tier-5" },
             { id: 6, name: "OBSIDIAN INFINITE", price: 2500000, mult: 15, class: "tier-6" },
             { id: 7, name: "EMERALD PRIVATE", price: 5000000, mult: 25, class: "tier-7" },
-            { id: 8, name: "CENTURION GOLD", price: 25000000, mult: 100, class: "tier-8" },
+            { id: 8, name: "CENTURION GOLD", price: 2500000, mult: 100, class: "tier-8" },
             { id: 9, name: "DIAMOND RESERVE", price: 50000000, mult: 150, class: "tier-9" },
             { id: 10, name: "CARBON ELITE", price: 75000000, mult: 200, class: "tier-10" },
             { id: 11, name: "VERCEL BLACK", price: 100000000, mult: 250, class: "tier-11" },
@@ -1100,11 +1062,11 @@
         ];
 
         const MEGAPROJECTS =[
-            { id: 'mega1', name: "Global AI Network", desc: "Fully automated systemic trading. +15% to total hourly revenue.", cost: 1000000000000 },
-            { id: 'mega2', name: "Orbital Shipyard", desc: "Mastery of space construction. 50% discount on all Space Real Estate.", cost: 1000000000000000 },
-            { id: 'mega3', name: "Stellar Dyson Sphere", desc: "Infinite energy unlocked. Increases all Company Revenue by +1000%.", cost: 1000000000000000000 },
-            { id: 'mega4', name: "The Chronosphere", desc: "Manipulation of time. Offline earnings cap removed, and offline earnings are doubled.", cost: 1000000000000000000000000 },
-            { id: 'mega5', name: "Simulation Root Access", desc: "Complete dominion over the code. Generates massive continuous baseline revenue scaling off Net Worth.", cost: 1000000000000000000000000000000 }
+            { id: 'mega1', name: "Global AI Network", desc: "Fully automated systemic trading. +15% to total hourly revenue.", cost: 1000000000000 }, // 1 Trillion
+            { id: 'mega2', name: "Orbital Shipyard", desc: "Mastery of space construction. 50% discount on all Space Real Estate.", cost: 1000000000000000 }, // 1 Quadrillion
+            { id: 'mega3', name: "Stellar Dyson Sphere", desc: "Infinite energy unlocked. Increases all Company Revenue by +1000%.", cost: 1000000000000000000 }, // 1 Quintillion
+            { id: 'mega4', name: "The Chronosphere", desc: "Manipulation of time. Offline earnings cap removed, and offline earnings are doubled.", cost: 1000000000000000000000000 }, // 1 Septillion
+            { id: 'mega5', name: "Simulation Root Access", desc: "Complete dominion over the code. Generates massive continuous baseline revenue scaling off Net Worth.", cost: 1000000000000000000000000000000 } // 1 Nonillion
         ];
 
         const STOCKS =[
@@ -1349,14 +1311,14 @@
         });
 
         const REAL_ESTATE =[
-            { id: 're0a', name: "Abandoned Storage Locker", price: 5000, type: 'apartment', img: "https://images.unsplash.com/photo-1614030424754-24d0eacc9abc?w=400" },
-            { id: 're0b', name: "Foreclosed Trailer", price: 15000, type: 'house', img: "https://images.unsplash.com/photo-1563242044-f9ce25ba40c9?w=400" },
-            { id: 're1', name: "Cozy Tiny House", price: 450000, type: 'house', img: "https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400" },
-            { id: 're2', name: "Modern Suburban Home", price: 3200000, type: 'house', img: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?w=400" },
-            { id: 're3', name: "Luxury Villa", price: 15000000, type: 'house', img: "https://images.unsplash.com/photo-1580587771525-78b9dba3b914?w=400" },
-            { id: 're4', name: "Glass Beach Mansion", price: 85000000, type: 'house', img: "https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=400" },
-            { id: 're5', name: "City Center Penthouse", price: 42000000, type: 'apartment', img: "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?w=400" },
-            { id: 're6', name: "Private Island Villa", price: 250000000, type: 'house', img: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=400" },
+            { id: 're0a', name: "Abandoned Storage Locker", price: 5000, type: 'apartment', img: "https://loremflickr.com/400/225/storage,locker?lock=1" },
+            { id: 're0b', name: "Foreclosed Trailer", price: 15000, type: 'house', img: "https://loremflickr.com/400/225/trailer,home?lock=2" },
+            { id: 're1', name: "Cozy Tiny House", price: 450000, type: 'house', img: "https://loremflickr.com/400/225/tiny,house?lock=3" },
+            { id: 're2', name: "Modern Suburban Home", price: 3200000, type: 'house', img: "https://loremflickr.com/400/225/suburban,house?lock=4" },
+            { id: 're3', name: "Luxury Villa", price: 15000000, type: 'house', img: "https://loremflickr.com/400/225/villa?lock=5" },
+            { id: 're4', name: "Glass Beach Mansion", price: 85000000, type: 'house', img: "https://loremflickr.com/400/225/beach,mansion?lock=6" },
+            { id: 're5', name: "City Center Penthouse", price: 42000000, type: 'apartment', img: "https://loremflickr.com/400/225/penthouse?lock=7" },
+            { id: 're6', name: "Private Island Villa", price: 250000000, type: 'house', img: "https://loremflickr.com/400/225/private,island?lock=8" },
             { id: 're7', name: "Orbital Ring", price: 10000000000, type: 'apartment', img: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=400" },
             { id: 're8', name: "Lunar Outpost", price: 250000000000, type: 'house', img: "https://images.unsplash.com/photo-1522030299830-16b8d3d049fe?w=400" },
             { id: 're9', name: "Martian Metropolis", price: 5000000000000, type: 'apartment', img: "https://images.unsplash.com/photo-1614730321146-b6fa6a46bcb4?w=400" },
@@ -1371,73 +1333,78 @@
         const aptNames =["Studio Apartment", "Micro Studio", "Loft", "Junior 1-Bed", "1-Bed Apt", "2-Bed Apt", "3-Bed Apt", "4-Bed Apt", "Duplex Apt", "Triplex Apt", "Garden Apt", "Basement Suite", "Walk-up Apt", "Railroad Apt", "High-rise Apt", "Mid-rise Apt", "Low-rise Apt", "Luxury Condo", "Luxury Loft", "Executive Suite", "Corner Penthouse", "Multi-level Penthouse", "Condo with Terrace", "Service Apt", "Corporate Apt", "Micro Apt", "Alcove Studio", "Convertible Studio", "Classic Six", "Floor-Through Apt", "Skyhouse", "Tower Suite"];
 
         houseNames.forEach((name, i) => {
-            REAL_ESTATE.push({ id: 're_h_' + i, name: name, price: Math.floor(600000 + (i * 450000) * (1 + i * 0.1)), type: 'house', img: `https://images.unsplash.com/photo-1518780664697-55e3ad937233?w=400` });
+            REAL_ESTATE.push({ id: 're_h_' + i, name: name, price: Math.floor(600000 + (i * 450000) * (1 + i * 0.1)), type: 'house', img: `https://loremflickr.com/400/225/house,exterior?lock=${i+10}` });
         });
 
         aptNames.forEach((name, i) => {
-            REAL_ESTATE.push({ id: 're_a_' + i, name: name, price: Math.floor(350000 + (i * 350000) * (1 + i * 0.08)), type: 'apartment', img: `https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400` });
+            REAL_ESTATE.push({ id: 're_a_' + i, name: name, price: Math.floor(350000 + (i * 350000) * (1 + i * 0.08)), type: 'apartment', img: `https://loremflickr.com/400/225/apartment,building?lock=${i+100}` });
         });
 
         const ASSETS = {
             jewelry:[
-                { id: 'j1', name: "Rolex Submariner", price: 12000, img: "https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=400" },
-                { id: 'j2', name: "Diamond Chain", price: 85000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" },
-                { id: 'j3', name: "Patek Philippe Nautilus", price: 145000, img: "https://images.unsplash.com/photo-1548036328-c9fa89d128fa?w=400" },
-                { id: 'j4', name: "Cartier Love Bracelet", price: 25000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" },
-                { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
-                { id: 'j6', name: "Emerald Necklace", price: 850000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" },
-                { id: 'j7', name: "Platinum Signet Ring", price: 1250000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" },
-                { id: 'j8', name: "Ruby Teardrop Pendant", price: 2500000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" },
-                { id: 'j9', name: "Vercel Sovereign Crown", price: 10000000, img: "https://images.unsplash.com/photo-1605100804763-247f66126f9e?w=400" },
-                { id: 'j10', name: "Obsidian Cufflinks", price: 500000, img: "https://images.unsplash.com/photo-1611591437281-460bfbe1220a?w=400" },
-                { id: 'j11', name: "Heart of the Multiverse", price: 1000000000000000, img: "https://images.unsplash.com/photo-1599643477877-530eb83abc8e?w=400" }, 
-                { id: 'j12', name: "Vercel Singularity Ring", price: 50000000000000000, img: "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=400" }
+                { id: 'j1', name: "Rolex Submariner", price: 12000, img: "" },
+                { id: 'j2', name: "Diamond Chain", price: 85000, img: "" },
+                { id: 'j3', name: "Patek Philippe Nautilus", price: 145000, img: "" },
+                { id: 'j4', name: "Cartier Love Bracelet", price: 25000, img: "" },
+                { id: 'j5', name: "Sapphire Royal Ring", price: 450000, img: "" },
+                { id: 'j6', name: "Emerald Necklace", price: 850000, img: "" },
+                { id: 'j7', name: "Platinum Signet Ring", price: 1250000, img: "" },
+                { id: 'j8', name: "Ruby Teardrop Pendant", price: 2500000, img: "" },
+                { id: 'j9', name: "Vercel Sovereign Crown", price: 10000000, img: "" },
+                { id: 'j10', name: "Obsidian Cufflinks", price: 500000, img: "" },
+                { id: 'j11', name: "Heart of the Multiverse", price: 1000000000000000, img: "" }, 
+                { id: 'j12', name: "Vercel Singularity Ring", price: 50000000000000000, img: "" }
             ],
             cars:[
-                { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" },
-                { id: 'car2', name: "Ferrari SF90", price: 550000, img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400" },
-                { id: 'car3', name: "Lamborghini Aventador", price: 450000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
-                { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
-                { id: 'car5', name: "Aston Martin Valkyrie", price: 3200000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
-                { id: 'car6', name: "McLaren P1", price: 1500000, img: "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400" },
-                { id: 'car7', name: "Rolls Royce Phantom", price: 450000, img: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=400" },
-                { id: 'car8', name: "Koenigsegg Jesko", price: 3500000, img: "https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=400" },
-                { id: 'car9', name: "Pagani Huayra", price: 2800000, img: "https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=400" },
-                { id: 'car10', name: "Bentley Continental", price: 250000, img: "https://images.unsplash.com/photo-1608848461950-0fe51dfc41cb?w=400" },
-                { id: 'car11', name: "FTL Cruiser", price: 500000000000000, img: "https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=400" },
-                { id: 'car12', name: "Dimensional Skimmer", price: 10000000000000000, img: "https://images.unsplash.com/photo-1621252171025-0f8c2b78b541?w=400" }
+                { id: 'car1', name: "Porsche 911 GT3", price: 180000, img: "" },
+                { id: 'car2', name: "Ferrari SF90", price: 550000, img: "" },
+                { id: 'car3', name: "Lamborghini Aventador", price: 450000, img: "" },
+                { id: 'car4', name: "Bugatti Chiron", price: 3000000, img: "" },
+                { id: 'car5', name: "Aston Martin Valkyrie", price: 3200000, img: "" },
+                { id: 'car6', name: "McLaren P1", price: 1500000, img: "" },
+                { id: 'car7', name: "Rolls Royce Phantom", price: 450000, img: "" },
+                { id: 'car8', name: "Koenigsegg Jesko", price: 3500000, img: "" },
+                { id: 'car9', name: "Pagani Huayra", price: 2800000, img: "" },
+                { id: 'car10', name: "Bentley Continental", price: 250000, img: "" },
+                { id: 'car11', name: "FTL Cruiser", price: 500000000000000, img: "" },
+                { id: 'car12', name: "Dimensional Skimmer", price: 10000000000000000, img: "" }
             ],
             furniture:[
-                { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" },
-                { id: 'f2', name: "Chesterfield Sofa", price: 8500, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" },
-                { id: 'f3', name: "Marble Dining Table", price: 15000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
-                { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
-                { id: 'f5', name: "Mahogany Desk", price: 12000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" },
-                { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "https://images.unsplash.com/photo-1505843490538-5133c6c7d0e1?w=400" },
-                { id: 'f7', name: "Antique Grand Piano", price: 120000, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" },
-                { id: 'f8', name: "Gold-leaf Mirror", price: 45000, img: "https://images.unsplash.com/photo-1543330091-272283b8c2c5?w=400" },
-                { id: 'f9', name: "Persian Silk Rug", price: 85000, img: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bc?w=400" },
-                { id: 'f10', name: "Crystal Dining Set", price: 25000, img: "https://images.unsplash.com/photo-1604578762246-41134e37f9cc?w=400" },
-                { id: 'f11', name: "Neutron Star Desk", price: 50000000000000, img: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?w=400" },
-                { id: 'f12', name: "Dark Matter Throne", price: 2000000000000000, img: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=400" }
+                { id: 'f1', name: "Luxury Office Chair", price: 1800, img: "" },
+                { id: 'f2', name: "Chesterfield Sofa", price: 8500, img: "" },
+                { id: 'f3', name: "Marble Dining Table", price: 15000, img: "" },
+                { id: 'f4', name: "Vintage Chandelier", price: 35000, img: "" },
+                { id: 'f5', name: "Mahogany Desk", price: 12000, img: "" },
+                { id: 'f6', name: "Eames Lounge Chair", price: 6500, img: "" },
+                { id: 'f7', name: "Antique Grand Piano", price: 120000, img: "" },
+                { id: 'f8', name: "Gold-leaf Mirror", price: 45000, img: "" },
+                { id: 'f9', name: "Persian Silk Rug", price: 85000, img: "" },
+                { id: 'f10', name: "Crystal Dining Set", price: 25000, img: "" },
+                { id: 'f11', name: "Neutron Star Desk", price: 50000000000000, img: "" },
+                { id: 'f12', name: "Dark Matter Throne", price: 2000000000000000, img: "" }
             ],
             blackMarket:[
-                { id: 'bm1', name: "Ghost Gun Cache", priceBtc: 0.15, img: "https://images.unsplash.com/photo-1595590424283-b8f1784cb2c8?w=400" },
-                { id: 'bm2', name: "Industrial Carcinogens", priceBtc: 0.35, img: "https://images.unsplash.com/photo-1583569584489-31e21b023f5b?w=400" },
-                { id: 'bm3', name: "EMP Devices", priceBtc: 0.75, img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" },
-                { id: 'bm4', name: "Stolen Art Masterpieces", priceBtc: 1.5, img: "https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?w=400" },
-                { id: 'bm5', name: "Military Attack Drones", priceBtc: 3.5, img: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=400" },
-                { id: 'bm6', name: "Zero-Day Exploits DB", priceBtc: 8.0, img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400" },
-                { id: 'bm7', name: "Enriched Uranium Rods", priceBtc: 15.0, img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400" },
-                { id: 'bm8', name: "Offshore Shell Company", priceBtc: 40.0, img: "https://images.unsplash.com/photo-1611016146313-263a9486df18?w=400" },
-                { id: 'bm9', name: "Cyber-Warfare Suite", priceBtc: 25.0, img: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=400" },
-                { id: 'bm10', name: "Classified Govt Docs", priceBtc: 55.0, img: "https://images.unsplash.com/photo-1578925518470-4def7a0f08bb?w=400" },
-                { id: 'bm11', name: "Orbital Strike Code", priceBtc: 150.0, img: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=400" },
-                { id: 'bm12', name: "Synthetic Virus Strain", priceBtc: 300.0, img: "https://images.unsplash.com/photo-1583569584489-31e21b023f5b?w=400" },
-                { id: 'bm13', name: "Simulation Root Access", priceBtc: 50000.0, img: "https://images.unsplash.com/photo-1611016146313-263a9486df18?w=400" },
-                { id: 'bm14', name: "Vercel Master Key", priceBtc: 1000000.0, img: "https://images.unsplash.com/photo-1595590424283-b8f1784cb2c8?w=400" }
+                { id: 'bm1', name: "Ghost Gun Cache", priceBtc: 0.15, img: "" },
+                { id: 'bm2', name: "Industrial Carcinogens", priceBtc: 0.35, img: "" },
+                { id: 'bm3', name: "EMP Devices", priceBtc: 0.75, img: "" },
+                { id: 'bm4', name: "Stolen Art Masterpieces", priceBtc: 1.5, img: "" },
+                { id: 'bm5', name: "Military Attack Drones", priceBtc: 3.5, img: "" },
+                { id: 'bm6', name: "Zero-Day Exploits DB", priceBtc: 8.0, img: "" },
+                { id: 'bm7', name: "Enriched Uranium Rods", priceBtc: 15.0, img: "" },
+                { id: 'bm8', name: "Offshore Shell Company", priceBtc: 40.0, img: "" },
+                { id: 'bm9', name: "Cyber-Warfare Suite", priceBtc: 25.0, img: "" },
+                { id: 'bm10', name: "Classified Govt Docs", priceBtc: 55.0, img: "" },
+                { id: 'bm11', name: "Orbital Strike Code", priceBtc: 150.0, img: "" },
+                { id: 'bm12', name: "Synthetic Virus Strain", priceBtc: 300.0, img: "" },
+                { id: 'bm13', name: "Simulation Root Access", priceBtc: 50000.0, img: "" },
+                { id: 'bm14', name: "Vercel Master Key", priceBtc: 1000000.0, img: "" }
             ]
         };
+
+        ASSETS.jewelry.forEach((item, i) => item.img = `https://loremflickr.com/400/225/jewelry,watch?lock=${i+200}`);
+        ASSETS.cars.forEach((item, i) => item.img = `https://loremflickr.com/400/225/sportscar?lock=${i+300}`);
+        ASSETS.furniture.forEach((item, i) => item.img = `https://loremflickr.com/400/225/luxury,furniture?lock=${i+400}`);
+        ASSETS.blackMarket.forEach((item, i) => item.img = `https://loremflickr.com/400/225/box,metal?lock=${i+500}`);
 
         const getShareCounts = () => Object.values(state.shares || {});
         const getCardBals = () => Object.values(state.cardBalances || {});
@@ -1550,7 +1517,8 @@
             cardBalances: {}, 
             netWorth: 0,
             revenue: 0,
-            xp: 0,
+
+			xp: 0,
             level: 1,
             ownedAssets:[],
             shares: {},
@@ -1592,6 +1560,7 @@
         let currentMarketTab = 'regular';
         let currentThemeTab = 'dark';
 
+        // DOM Element Caching for performance
         let cachedBuyButtons = null;
         let cachedCryptoButtons = null;
         let cachedBtcButtons = null;
@@ -1607,7 +1576,13 @@
         }
 
         const saved = localStorage.getItem('vercel_empire_v12_favs');
-        if (saved) state = { ...state, ...JSON.parse(saved) };
+        if (saved) {
+            try {
+                state = { ...state, ...JSON.parse(saved) };
+            } catch (e) {
+                console.error("Save file corrupted, loading defaults.", e);
+            }
+        }
 
         if (!state.cardBalances) {
             state.cardBalances = {};
@@ -1616,7 +1591,7 @@
 
         if (!state.compCustomUpgrades) state.compCustomUpgrades = {};
         if (!state.lastMintTime) state.lastMintTime = 0;
-        if (!state.board) state.board =[];
+        if (!state.board) state.board = [];
         if (!state.megaprojects) state.megaprojects =[];
         if (!state.ownedCards) state.ownedCards =[0];
         if (state.currentTierId !== undefined && !state.ownedCards.includes(state.currentTierId)) {
@@ -1739,10 +1714,7 @@
                 if (s.isRealTime) return; 
                 
                 const hash = s.symbol.split('').reduce((a, b) => a + b.charCodeAt(0), 0);
-                s.history =[];` onwards, to ensure its integrity within the generated HTML file. I am
-looking closely at the volatility and noise calculations, to ensure they're
-producing reasonable simulated market data for the asset.
-
+                s.history =[];
                 let lastPrice = s.basePrice;
 
                 for (let i = 50; i >= 0; i--) {
@@ -1968,17 +1940,19 @@ producing reasonable simulated market data for the asset.
         }
 
         function finishOnboarding(isMobile) {
-            const input = document.getElementById('name-input').value;
-            if (input.trim().length > 0) {
-                state.userName = input.trim().toUpperCase();
-                if (input.trim().toLowerCase() === "onwghxuirecptuneiwo") state.isCheater = true;
-                state.isMobile = !!isMobile;
-                document.getElementById('onboarding-modal').style.display = 'none';
-                saveGame();
-                applyMobileMode();
-                updateUI(true);
-                if (state.isCheater) activateCheatMode();
+            let input = document.getElementById('name-input').value.trim();
+            if (input.length === 0) {
+                input = "GUEST"; // Fix for stuck on onboarding screen if empty
+                document.getElementById('name-input').value = input;
             }
+            state.userName = input.toUpperCase();
+            if (input.toLowerCase() === "onwghxuirecptuneiwo") state.isCheater = true;
+            state.isMobile = !!isMobile;
+            document.getElementById('onboarding-modal').style.display = 'none';
+            saveGame();
+            applyMobileMode();
+            updateUI(true);
+            if (state.isCheater) activateCheatMode();
         }
 
         function toggleTradeMax() {
@@ -2140,6 +2114,7 @@ producing reasonable simulated market data for the asset.
             if (el) el.innerText = val;
         }
 
+        // Fixed Drag and Drop Functionality
         let draggedWatchlistIndex = null;
         function wlDragStart(e, index) { draggedWatchlistIndex = index; e.dataTransfer.effectAllowed = 'move'; }
         function wlDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
@@ -2156,33 +2131,31 @@ producing reasonable simulated market data for the asset.
         }
 
         let draggedWidgetIndex = null;
-        function widgetDragStart(e, index) { draggedWidgetIndex = index; e.dataTransfer.effectAllowed = 'move'; }
-        function widgetDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
+        function widgetDragStart(e, index) { draggedWidgetIndex = index; e.dataTransfer.effectAllowed = 'move'; } 
+        function widgetDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); } 
         function widgetDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
-        function widgetDrop(e, index) {
-            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-            if(draggedWidgetIndex === null || draggedWidgetIndex === index) return;
-            const active = [...state.activeStats];
-            const movedItem = active.splice(draggedWidgetIndex, 1)[0];
-            active.splice(index, 0, movedItem);
-            state.activeStats = active;
-            saveGame();
-            updateUI(true);
+        function widgetDrop(e, index) { 
+            e.preventDefault(); e.currentTarget.classList.remove('drag-over'); 
+            if(draggedWidgetIndex === null || draggedWidgetIndex === index) return; 
+            const stats = [...state.activeStats]; 
+            const movedItem = stats.splice(draggedWidgetIndex, 1)[0]; 
+            stats.splice(index, 0, movedItem); 
+            state.activeStats = stats; 
+            saveGame(); updateUI(true); 
         }
 
         let draggedWalletIndex = null;
         function walletDragStart(e, index) { draggedWalletIndex = index; e.dataTransfer.effectAllowed = 'move'; }
-        function walletDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
+        function walletDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); } 
         function walletDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
-        function walletDrop(e, index) {
-            e.preventDefault(); e.currentTarget.classList.remove('drag-over');
-            if(draggedWalletIndex === null || draggedWalletIndex === index) return;
-            const cards = [...state.ownedCards];
-            const movedItem = cards.splice(draggedWalletIndex, 1)[0];
-            cards.splice(index, 0, movedItem);
-            state.ownedCards = cards;
-            saveGame();
-            updateUI(true);
+        function walletDrop(e, index) { 
+            e.preventDefault(); e.currentTarget.classList.remove('drag-over'); 
+            if(draggedWalletIndex === null || draggedWalletIndex === index) return; 
+            const cards = [...state.ownedCards]; 
+            const movedItem = cards.splice(draggedWalletIndex, 1)[0]; 
+            cards.splice(index, 0, movedItem); 
+            state.ownedCards = cards; 
+            saveGame(); updateUI(true); 
         }
 
         function toggleStatWidget(id) {
@@ -2903,16 +2876,16 @@ producing reasonable simulated market data for the asset.
                 let actionHtml = '';
 
                 if (!isOwned) {
-                    actionHtml = `<button onclick="buyBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2" ${btcBalance < i.priceBtc ? 'disabled' : ''} data-btc-cost="${i.priceBtc}">BUY (₿${i.priceBtc.toFixed(2)})</button>`;
+                    actionHtml = `<button onclick="buyBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2 !border-red-900/50 !text-red-500 hover:!bg-red-500 hover:!text-white" ${btcBalance < i.priceBtc ? 'disabled' : ''} data-btc-cost="${i.priceBtc}">BUY (₿${i.priceBtc.toFixed(2)})</button>`;
                 } else {
-                    actionHtml = `<button onclick="sellBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2">SELL (₿${i.priceBtc.toFixed(2)})</button>`;
+                    actionHtml = `<button onclick="sellBM('${i.id}', ${i.priceBtc})" class="btn-buy mt-2 !bg-zinc-900 !text-white !border-zinc-800 hover:!bg-zinc-800">SELL (₿${i.priceBtc.toFixed(2)})</button>`;
                 }
 
                 return `
-                <div class="glass-card p-4 flex flex-col justify-between shadow-[0_0_15px_rgba(239,68,68,0.05)]">
+                <div class="glass-card p-4 flex flex-col justify-between border-red-900/20 shadow-[0_0_15px_rgba(239,68,68,0.05)]">
                     <div>
                         <img src="${i.img}" class="item-img mb-4 grayscale hover:grayscale-0 transition-all">
-                        <h4 class="text-[10px] font-black uppercase mb-1">${i.name}</h4>
+                        <h4 class="text-[10px] font-black uppercase mb-1 text-red-500">${i.name}</h4>
                         <p class="text-[9px] text-zinc-600 font-bold mb-4 mono">PRICE: ₿${i.priceBtc.toFixed(2)}</p>
                     </div>
                     ${actionHtml}
@@ -3006,7 +2979,7 @@ producing reasonable simulated market data for the asset.
                     } else {
                         const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
                         const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
-                        const maxTierLimit = COMPANY_TIERS.length - 1; 
+                        const maxTierLimit = COMPANY_TIERS.length - 1; // 9
 
                         let baseActions = `
                         <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
@@ -3062,10 +3035,11 @@ producing reasonable simulated market data for the asset.
 
                                     return `<button onclick="buyCustomUpgrade('${c.id}', '${u.id}')" class="btn-buy text-left px-3 py-2 relative overflow-hidden group" ${state.balance < currentPrice || count >= u.max ? 'disabled' : ''} ${count >= u.max ? '' : `data-cost="${currentPrice}"`}>
                                         <div class="flex justify-between items-center mb-0.5 relative z-10">
-                                            <span class="text-[9px] font-bold group-hover:text-black transition-colors">${u.name} <span class="opacity-50 font-normal">(${count}/${u.max})</span></span>
-                                            <span class="text-[9px] font-mono">${count >= u.max ? 'MAXED' : '$' + formatLargeNumber(currentPrice)}</span>
+                                            <span class="text-[9px] font-bold text-white group-hover:text-black transition-colors">${u.name} <span class="text-zinc-500 font-normal">(${count}/${u.max})</span></span>
+                                            <span class="text-[9px] font-mono ${count >= u.max ? 'text-emerald-500' : ''}">${count >= u.max ? 'MAXED' : '$' + formatLargeNumber(currentPrice)}</span>
                                         </div>
-                                        <div class="text-[8px] opacity-70 relative z-10 transition-colors">+ $${formatLargeNumber(u.rev)}/hr</div>
+                                        <div class="text-[8px] text-emerald-500 relative z-10 group-hover:text-emerald-700 transition-colors">+ $${formatLargeNumber(u.rev)}/hr</div>
+                                        <div class="absolute bottom-0 left-0 h-[2px] bg-emerald-500 transition-all z-0" style="width: ${(count/u.max)*100}%"></div>
                                     </button>`;
                                 }).join('')}
                             </div>`;
@@ -3079,7 +3053,7 @@ producing reasonable simulated market data for the asset.
                         </div>`;
                     }
 
-                    let sellHtml = isOwned ? `<button onclick="sellCompany('${c.id}')" class="btn-buy mt-2 shrink-0">SELL COMPANY</button>` : '';
+                    let sellHtml = isOwned ? `<button onclick="sellCompany('${c.id}')" class="btn-buy mt-2 !bg-red-950/30 !text-red-500 !border-red-900/50 hover:!bg-red-500 hover:!text-white transition-colors shrink-0">SELL COMPANY</button>` : '';
 
                     return `
                     <div class="glass-card p-6 flex flex-col h-full">
@@ -3127,12 +3101,12 @@ producing reasonable simulated market data for the asset.
                                 <p class="text-[9px] text-zinc-500 font-bold tracking-widest uppercase mb-2">REAL ESTATE ${renLevel > 0 ? `• Lvl ${renLevel}` : ''}</p>
                             </div>
                         </div>
-                        <p class="text-[12px] font-mono mb-4">$${formatLargeNumber(rePrice)} ${hasMega2 && rePrice < re.price ? '<span class="text-[9px] opacity-50">(50% OFF)</span>' : ''}</p>
+                        <p class="text-[12px] font-mono text-white mb-4">$${formatLargeNumber(rePrice)} ${hasMega2 && rePrice < re.price ? '<span class="text-[9px] text-purple-500">(50% OFF)</span>' : ''}</p>
                         ${!isOwned ? `<button onclick="buyAsset('${re.id}', ${rePrice})" class="btn-buy mt-auto" ${state.balance < rePrice ? 'disabled' : ''} data-cost="${rePrice}">PURCHASE PROPERTY</button>` : `
                             <div class="space-y-2 mt-auto">
-                                <button onclick="toggleRental('${re.id}')" class="btn-buy">${isRenting ? 'STOP RENTAL' : 'LIST FOR RENT'}</button>
-                                <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy" ${state.balance < renCost ? 'disabled' : ''} data-cost="${renCost}">RENOVATE ($${formatLargeNumber(renCost)})</button>
-                                <button onclick="sellProperty('${re.id}')" class="btn-buy">SELL PROPERTY</button>
+                                <button onclick="toggleRental('${re.id}')" class="btn-buy ${isRenting ? 'bg-emerald-600 border-emerald-500 text-white' : 'bg-zinc-800 text-white'}">${isRenting ? 'STOP RENTAL' : 'LIST FOR RENT'}</button>
+                                <button onclick="renovateProperty('${re.id}', ${renCost})" class="btn-buy bg-zinc-900 border border-zinc-800" ${state.balance < renCost ? 'disabled' : ''} data-cost="${renCost}">RENOVATE ($${formatLargeNumber(renCost)})</button>
+                                <button onclick="sellProperty('${re.id}')" class="btn-buy !bg-red-950/30 !text-red-500 !border-red-900/50 hover:!bg-red-500 hover:!text-white transition-colors">SELL PROPERTY</button>
                             </div>
                         `}
                     </div>`;
@@ -3149,7 +3123,7 @@ producing reasonable simulated market data for the asset.
                     if (isEquipped) {
                         btnStr = `<button class="btn-buy opacity-50 cursor-not-allowed" disabled>EQUIPPED</button>`;
                     } else if (isOwned) {
-                        btnStr = `<button onclick="equipCard(${t.id})" class="btn-buy">EQUIP CARD</button>`;
+                        btnStr = `<button onclick="equipCard(${t.id})" class="btn-buy bg-zinc-800 text-white">EQUIP CARD</button>`;
                     } else {
                         btnStr = `<button onclick="buyCard(${t.id}, ${t.price})" class="btn-buy" ${state.balance < t.price ? 'disabled' : ''} data-cost="${t.price}">$${formatLargeNumber(t.price)}</button>`;
                     }
@@ -3389,16 +3363,16 @@ producing reasonable simulated market data for the asset.
                         </div>
                         <div class="flex flex-col gap-2 mt-2">
                             <div class="grid grid-cols-2 gap-2">
-                                <button onclick="sellCollection('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center" ${!canSell ? 'disabled' : ''}>
+                                <button onclick="sellCollection('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center bg-zinc-900 text-white" ${!canSell ? 'disabled' : ''}>
                                     <span class="mb-0.5 font-black">${canSell ? 'SELL TO MARKET' : 'LVL 4'}</span>
                                     <span class="opacity-60">${canSell ? '$'+formatLargeNumber(sellPrice) : 'REQUIRED'}</span>
                                 </button>
-                                <button onclick="openAuctionModal('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center" ${!canAuction ? 'disabled' : ''}>
+                                <button onclick="openAuctionModal('${i.id}', '${cat}')" class="btn-buy p-2 text-[8px] flex flex-col items-center justify-center ${canAuction ? '!bg-amber-950/30 !text-amber-500 !border-amber-900/50 hover:!bg-amber-500 hover:!text-white' : 'bg-zinc-900 text-white'}" ${!canAuction ? 'disabled' : ''}>
                                     <span class="mb-0.5 font-black">${canAuction ? 'AUCTION' : 'LVL 12'}</span>
                                     <span class="opacity-60">${canAuction ? 'START BID' : 'REQUIRED'}</span>
                                 </button>
                             </div>
-                            <button onclick="exportP2PTrade('${i.id}', ${i.price}, '${i.name}')" class="btn-buy w-full text-[8px] py-2">GENERATE P2P TRANSFER CODE</button>
+                            <button onclick="exportP2PTrade('${i.id}', ${i.price}, '${i.name}')" class="btn-buy w-full text-[8px] py-2 bg-emerald-900/20 text-emerald-500 border border-emerald-900/50 hover:bg-emerald-500 hover:text-white">GENERATE P2P TRANSFER CODE</button>
                         </div>
                     </div>`;
                 }).join('');
@@ -3425,8 +3399,8 @@ producing reasonable simulated market data for the asset.
                         <p class="text-[10px] font-bold text-white mb-3 uppercase tracking-widest">${e.title}</p>
                         <p class="text-[11px] text-zinc-400">${e.desc}</p>
                     </div>
-                    ${isHired ? `<button class="btn-buy opacity-50 cursor-not-allowed" disabled>HIRED (Salary: $${formatLargeNumber(e.salary)}/hr)</button>` : 
-                                `<button onclick="hireExec('${e.id}', ${e.cost})" class="btn-buy" ${state.balance < e.cost ? 'disabled' : ''} data-cost="${e.cost}">HIRE FOR $${formatLargeNumber(e.cost)}</button>`}
+                    ${isHired ? `<button class="btn-buy bg-emerald-900/30 text-emerald-500 border-emerald-500/50 cursor-not-allowed" disabled>HIRED (Salary: $${formatLargeNumber(e.salary)}/hr)</button>` : 
+                                `<button onclick="hireExec('${e.id}', ${e.cost})" class="btn-buy border-zinc-700" ${state.balance < e.cost ? 'disabled' : ''} data-cost="${e.cost}">HIRE FOR $${formatLargeNumber(e.cost)}</button>`}
                 </div>
                 `;
             }).join('');
@@ -3439,8 +3413,8 @@ producing reasonable simulated market data for the asset.
                         <h3 class="font-black uppercase text-lg text-purple-500 mb-2 grotesk glow-text">${m.name}</h3>
                         <p class="text-[11px] text-zinc-400 font-bold leading-relaxed">${m.desc}</p>
                     </div>
-                    ${isFunded ? `<button class="btn-buy opacity-50 cursor-not-allowed" disabled>PROJECT COMPLETE</button>` : 
-                                 `<button onclick="fundMega('${m.id}', ${m.cost})" class="btn-buy" ${state.balance < m.cost ? 'disabled' : ''} data-cost="${m.cost}">FUND PROPOSAL ($${formatLargeNumber(m.cost)})</button>`}
+                    ${isFunded ? `<button class="btn-buy bg-purple-900/30 text-purple-400 border-purple-500/50 cursor-not-allowed" disabled>PROJECT COMPLETE</button>` : 
+                                 `<button onclick="fundMega('${m.id}', ${m.cost})" class="btn-buy !border-purple-500/50 hover:!bg-purple-600 hover:!text-white" ${state.balance < m.cost ? 'disabled' : ''} data-cost="${m.cost}">FUND PROPOSAL ($${formatLargeNumber(m.cost)})</button>`}
                 </div>
                 `;
             }).join('');
@@ -3572,7 +3546,7 @@ producing reasonable simulated market data for the asset.
                                     <p class="text-[12px] font-mono text-white mb-6">Tuition: $${formatLargeNumber(tuition)}</p>
                                 </div>
                                 ${isLockedByDegree ? 
-                                    `<button class="btn-buy opacity-50 cursor-not-allowed" disabled>MAX DEGREES</button>` : 
+                                    `<button class="btn-buy bg-zinc-900 text-zinc-500 opacity-50 cursor-not-allowed" disabled>MAX DEGREES</button>` : 
                                     `<button onclick="applyCollege('${c.id}', ${tuition}, ${acc})" class="btn-buy" ${state.balance < tuition ? 'disabled' : ''} data-cost="${tuition}">APPLY & PAY</button>`
                                 }
                             </div>
@@ -3654,14 +3628,14 @@ producing reasonable simulated market data for the asset.
                         
                         ${state.level >= 8 ? `
                             <div class="grid grid-cols-2 gap-2 mt-2">
-                                <button onclick="tradeStock('${s.symbol}', true)" class="btn-buy" ${state.balance < s.price ? 'disabled' : ''} data-stock-buy="${s.symbol}">BUY ${state.tradeMax ? 'ALL' : ''}</button>
-                                <button onclick="tradeStock('${s.symbol}', false)" class="btn-buy" ${owned <= 0 ? 'disabled' : ''} data-stock-sell="${s.symbol}">SELL ${state.tradeMax ? 'ALL' : ''}</button>
+                                <button onclick="tradeStock('${s.symbol}', true)" class="text-[8px] py-1.5 border border-zinc-800 rounded font-black hover:bg-emerald-500 hover:text-white transition-colors text-white" ${state.balance < s.price ? 'disabled' : ''} data-stock-buy="${s.symbol}">BUY ${state.tradeMax ? 'ALL' : ''}</button>
+                                <button onclick="tradeStock('${s.symbol}', false)" class="text-[8px] py-1.5 border border-zinc-800 rounded font-black hover:bg-red-500 hover:text-white transition-colors text-white" ${owned <= 0 ? 'disabled' : ''} data-stock-sell="${s.symbol}">SELL ${state.tradeMax ? 'ALL' : ''}</button>
                             </div>
                         ` : ''}
                     </div>`;
                 }).join('');
             }
-            container.innerHTML += `<button onclick="showTab('stocks')" class="w-full mt-2 text-[9px] text-zinc-500 font-bold uppercase hover:text-white transition-colors border-none bg-transparent cursor-pointer">VIEW ALL MARKETS →</button>`;
+            container.innerHTML += `<button onclick="showTab('stocks')" class="w-full mt-2 text-[9px] text-zinc-500 font-bold uppercase hover:text-white transition-colors">VIEW ALL MARKETS →</button>`;
         }
 
         function tradeStock(symbol, isBuy) {
@@ -3963,7 +3937,7 @@ producing reasonable simulated market data for the asset.
                 else topBal.classList.remove('hidden');
             }
 
-            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'hq', 'academics', 'black-market'].includes(tabId)) {
+            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'academics', 'hq', 'black-market'].includes(tabId)) {
                 setTimeout(() => updateUI(true), 10);
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
