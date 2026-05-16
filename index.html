@@ -13,6 +13,7 @@
             --border: #1a1a1a;
             --accent: #10b981;
             --text-muted: #71717a;
+            --topbar-bg: rgba(5,5,5,0.85);
         }
 
         body {
@@ -39,6 +40,7 @@
             background: none;
             border: none;
             cursor: pointer;
+            white-space: nowrap;
         }
         .nav-link.active { color: #ffffff; }
         .nav-link.active::after {
@@ -102,7 +104,7 @@
             overflow: hidden;
         }
 
-        /* Original + Ultra-Endgame Card Tiers */
+        /* Card Tiers */
         .tier-0 { background: linear-gradient(135deg, #1c1c1c, #0a0a0a); }
         .tier-1 { background: linear-gradient(135deg, #2563eb, #1e3a8a); }
         .tier-2 { background: linear-gradient(135deg, #9ca3af, #4b5563); color: black; }
@@ -238,7 +240,7 @@
         .mobile-mode #companies-grid, .mobile-mode #re-grid, .mobile-mode #stocks-full-grid, .mobile-mode #crypto-grid,
         .mobile-mode #nft-grid, .mobile-mode #coll-grid, .mobile-mode #trading-grid, .mobile-mode #bank-grid,
         .mobile-mode #profile-portfolio-list, .mobile-mode #themes-grid, .mobile-mode #edu-colleges-grid,
-        .mobile-mode #edu-degrees-grid, .mobile-mode #bm-grid, .mobile-mode #board-grid, .mobile-mode #mega-grid { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
+        .mobile-mode #edu-degrees-grid, .mobile-mode #bm-grid, .mobile-mode #board-grid, .mobile-mode #mega-grid, .mobile-mode #ventures-grid { grid-template-columns: repeat(1, minmax(0, 1fr)) !important; }
         .mobile-mode #dashboard .grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
 
         .mobile-mode #stock-modal, .mobile-mode #reset-modal, .mobile-mode #onboarding-modal, .mobile-mode #auction-modal, .mobile-mode #transfer-modal { position: absolute; border-radius: inherit; }
@@ -260,6 +262,33 @@
         body.theme-light path[fill="white"] { fill: #09090b; }
         body.theme-light input, body.theme-light select { background-color: #ffffff !important; border-color: #e4e4e7 !important; color: #09090b !important; }
         body.theme-light .chart-container { background: #ffffff !important; border-color: #e4e4e7 !important; }
+
+        /* New Light Themes */
+        body.theme-sakura { --bg: #fff1f2; --card-bg: #ffffff; --border: #fecdd3; color: #881337; }
+        body.theme-sakura .bg-zinc-950, body.theme-sakura .bg-zinc-900 { background-color: #ffe4e6 !important; }
+        body.theme-sakura .bg-black { background-color: #ffffff !important; }
+        body.theme-sakura .border-zinc-900, body.theme-sakura .border-zinc-800 { border-color: #fecdd3 !important; }
+        body.theme-sakura .text-white { color: #881337 !important; }
+        body.theme-sakura .text-zinc-500 { color: #f43f5e !important; }
+        body.theme-sakura .nav-link { color: #fda4af; }
+        body.theme-sakura .nav-link.active { color: #881337; }
+        body.theme-sakura .nav-link.active::after { background: #881337; }
+        body.theme-sakura .btn-buy { background: #ffffff; color: #881337; border-color: #fecdd3; }
+        body.theme-sakura .btn-buy:hover:not(:disabled) { background: #881337; color: #ffffff; }
+        body.theme-sakura .progress-fill { background: #e11d48; box-shadow: 0 0 10px #e11d48; }
+
+        body.theme-dune { --bg: #fffbeb; --card-bg: #fef3c7; --border: #fcd34d; color: #78350f; }
+        body.theme-dune .bg-zinc-950, body.theme-dune .bg-zinc-900 { background-color: #fde68a !important; }
+        body.theme-dune .bg-black { background-color: #fffbeb !important; }
+        body.theme-dune .border-zinc-900, body.theme-dune .border-zinc-800 { border-color: #fcd34d !important; }
+        body.theme-dune .text-white { color: #78350f !important; }
+        body.theme-dune .text-zinc-500 { color: #d97706 !important; }
+        body.theme-dune .nav-link { color: #fbbf24; }
+        body.theme-dune .nav-link.active { color: #78350f; }
+        body.theme-dune .nav-link.active::after { background: #78350f; }
+        body.theme-dune .btn-buy { background: #fffbeb; color: #78350f; border-color: #fcd34d; }
+        body.theme-dune .btn-buy:hover:not(:disabled) { background: #78350f; color: #ffffff; }
+        body.theme-dune .progress-fill { background: #d97706; box-shadow: 0 0 10px #d97706; }
 
         body.theme-synthwave { --bg: #10061e; --card-bg: #1c0b32; --border: #ff007f; color: #00ffff; }
         body.theme-synthwave .glass-card { box-shadow: 0 0 15px rgba(255, 0, 127, 0.1); }
@@ -307,7 +336,6 @@
         body.theme-inferno .nav-link.active::after { background: #ffcc00; box-shadow: 0 0 8px #ffcc00; }
         body.theme-inferno .progress-fill { background: #ff3300; box-shadow: 0 0 10px #ff3300; }
 
-        /* The Missing Themes Configurations */
         body.theme-corporate { --bg: #f8fafc; --card-bg: #ffffff; --border: #cbd5e1; color: #0f172a; }
         body.theme-corporate .glass-card { box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
         body.theme-corporate .bg-zinc-950, body.theme-corporate .bg-zinc-900 { background-color: #f1f5f9 !important; }
@@ -335,16 +363,6 @@
         body.theme-pastel .nav-link { color: #e879f9; }
         body.theme-pastel .nav-link.active { color: #86198f; }
         body.theme-pastel .nav-link.active::after { background: #86198f; }
-
-        body.theme-hacker { --bg: #000000; --card-bg: #000000; --border: #00ff00; color: #00ff00; font-family: 'JetBrains Mono', monospace; }
-        body.theme-hacker * { font-family: 'JetBrains Mono', monospace !important; }
-        body.theme-hacker .bg-zinc-950, body.theme-hacker .bg-zinc-900 { background-color: #001100 !important; }
-        body.theme-hacker .border-zinc-900, body.theme-hacker .border-zinc-800 { border-color: #00ff00 !important; }
-        body.theme-hacker .text-white { color: #00ff00 !important; }
-        body.theme-hacker .text-zinc-500 { color: #00aa00 !important; }
-        body.theme-hacker .nav-link { color: #00aa00; }
-        body.theme-hacker .nav-link.active { color: #00ff00; }
-        body.theme-hacker .nav-link.active::after { background: #00ff00; }
 
         body.theme-neon { --bg: #09090b; --card-bg: #18181b; --border: #06b6d4; color: #c084fc; }
         body.theme-neon .glass-card { box-shadow: 0 0 8px rgba(6, 182, 212, 0.2); }
@@ -448,7 +466,7 @@
 </head>
 <body class="max-w-[1400px] mx-auto">
 
-    <div id="top-bar" class="sticky top-0 z-50 px-6 pt-6 transition-colors duration-300" style="background-color: var(--bg);">
+    <div id="top-bar" class="sticky top-0 z-50 px-6 pt-6 transition-colors duration-300" style="background-color: var(--topbar-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);">
         <header class="flex justify-between items-start mb-8">
             <div class="flex items-center gap-4">
                 <svg onclick="showBlackMarket()" class="cursor-pointer transition-transform hover:scale-110" width="40" height="40" viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -485,7 +503,8 @@
             <button onclick="showTab('stocks')" class="nav-link" id="btn-stocks">Market</button>
             <button onclick="showTab('collection')" class="nav-link" id="btn-collection">Collection</button>
             <button onclick="showTab('trading')" class="nav-link" id="btn-trading">Trading</button>
-            <button onclick="showTab('hq')" class="nav-link id="btn-hq">HQ</button>
+            <button onclick="showTab('hq')" class="nav-link" id="btn-hq">HQ</button>
+            <button onclick="showTab('ventures')" class="nav-link text-blue-400 font-black tracking-widest" style="letter-spacing:0.15em;" id="btn-ventures">Ventures</button>
             <button onclick="showTab('bank')" class="nav-link" id="btn-bank">Bank</button>
             <button onclick="showTab('academics')" class="nav-link" id="btn-academics">Academics</button>
             <button onclick="showTab('profile')" class="nav-link" id="btn-profile">Profile</button>
@@ -573,7 +592,7 @@
                     </div>
 
                     <div class="glass-card p-6 h-48 overflow-y-auto font-mono text-[10px] text-zinc-600 space-y-1 scrollbar-thin" id="terminal">
-                        <p class="text-emerald-500">> Vercel Empire v50.0.5</p>
+                        <p class="text-emerald-500">> Vercel Empire v56.0 (The Singularity Update)</p>
                         <p class="text-zinc-400">> System Initialized. Welcome Back.</p>
                     </div>
                 </div>
@@ -696,7 +715,9 @@
 
         <!-- HQ TAB -->
         <div id="hq" class="tab-content">
-            <div class="mb-8">
+            <div id="hq-evolution-container"></div>
+
+            <div class="mb-8 mt-12">
                 <h2 class="text-xl font-black uppercase tracking-tight grotesk text-emerald-500">EXECUTIVE BOARD</h2>
                 <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">HIRE C-SUITE EXECUTIVES FOR EMPIRE-WIDE BUFFS</p>
             </div>
@@ -707,6 +728,16 @@
                 <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">FUND IMPOSSIBLE PROJECTS TO ACHIEVE GODHOOD</p>
             </div>
             <div id="mega-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+        </div>
+
+        <!-- VENTURES TAB -->
+        <div id="ventures" class="tab-content">
+            <div class="mb-8">
+                <h2 class="text-xl font-black uppercase tracking-tight grotesk text-blue-400" style="text-shadow: 0 0 10px rgba(96,165,250,0.5);">QUANTUM VENTURES</h2>
+                <p class="text-[10px] text-zinc-500 font-bold tracking-widest mt-1">FUND EXPERIMENTAL TIMELINES. HIGH RISK, ASTRONOMICAL REWARD.</p>
+            </div>
+            <div id="active-ventures" class="mb-8 space-y-4"></div>
+            <div id="ventures-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
         </div>
 
         <!-- BLACK MARKET TAB -->
@@ -805,7 +836,7 @@
                                 <button onclick="setThemeTab('premium')" id="btn-theme-premium" class="text-[9px] font-bold border border-zinc-800 px-3 py-1 rounded bg-zinc-900 text-zinc-500 hover:text-white transition-colors uppercase tracking-widest">PREMIUM</button>
                             </div>
                         </div>
-                        <div id="themes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+                        <div id="themes-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[300px] overflow-y-auto pr-2 scrollbar-thin"></div>
                     </div>
 
                     <div class="glass-card p-8">
@@ -969,27 +1000,29 @@
         }
 
         const THEMES =[
-            { id: 'dark', name: 'Dark Mode', price: 0, class: 'theme-dark', type: 'dark' },
-            { id: 'light', name: 'Light Mode', price: 0, class: 'theme-light', type: 'light' },
-            { id: 'corporate', name: 'Corporate White', price: 500000, class: 'theme-corporate', type: 'light' },
-            { id: 'arctic', name: 'Arctic Ice', price: 2000000, class: 'theme-arctic', type: 'light' },
-            { id: 'pastel', name: 'Soft Pastel', price: 2000000, class: 'theme-pastel', type: 'light' },
-            { id: 'hacker', name: 'Terminal Hacker', price: 1000000, class: 'theme-hacker', type: 'dark' },
-            { id: 'neon', name: 'Neon Cyber', price: 5000000, class: 'theme-neon', type: 'dark' },
-            { id: 'gold', name: 'Billionaire Gold', price: 50000000, class: 'theme-gold', type: 'dark' },
-            { id: 'cyberpunk', name: 'Cyberpunk 2067', price: 250000000, class: 'theme-cyberpunk', type: 'dark' },
-            { id: 'abyss', name: 'The Abyss', price: 1000000000, class: 'theme-abyss', type: 'dark' },
-            { id: 'midnight', name: 'Midnight Purple', price: 2000000, class: 'theme-midnight', type: 'dark' },
-            { id: 'blood', name: 'Crimson Blood', price: 5000000, class: 'theme-blood', type: 'dark' },
-            { id: 'deepspace', name: 'Deep Space', price: 10000000, class: 'theme-deepspace', type: 'dark' },
-            { id: 'solar', name: 'Solar Flare', price: 2000000, class: 'theme-solar', type: 'light' },
-            { id: 'mint', name: 'Mint Breeze', price: 5000000, class: 'theme-mint', type: 'light' },
-            { id: 'cotton', name: 'Cotton Candy', price: 10000000, class: 'theme-cotton', type: 'light' },
-            { id: 'synthwave', name: 'Synthwave 80s', price: 50000000000, class: 'theme-synthwave', type: 'premium' },
-            { id: 'void', name: 'Absolute Void', price: 1000000000000, class: 'theme-void', type: 'premium' },
-            { id: 'matrix', name: 'Matrix Root', price: 10000000000000, class: 'theme-matrix', type: 'premium' },
-            { id: 'aurora', name: 'Boreal Aurora', price: 50000000000000, class: 'theme-aurora', type: 'premium' },
-            { id: 'inferno', name: 'Cosmic Inferno', price: 100000000000000, class: 'theme-inferno', type: 'premium' },
+            { id: 'dark', name: 'Dark Mode', price: 0, class: 'theme-dark', type: 'dark', topbarBg: 'rgba(5,5,5,0.85)' },
+            { id: 'light', name: 'Light Mode', price: 0, class: 'theme-light', type: 'light', topbarBg: 'rgba(250,250,250,0.85)' },
+            { id: 'corporate', name: 'Corporate White', price: 500000, class: 'theme-corporate', type: 'light', topbarBg: 'rgba(248,250,252,0.85)' },
+            { id: 'arctic', name: 'Arctic Ice', price: 2000000, class: 'theme-arctic', type: 'light', topbarBg: 'rgba(240,249,255,0.85)' },
+            { id: 'pastel', name: 'Soft Pastel', price: 2000000, class: 'theme-pastel', type: 'light', topbarBg: 'rgba(253,244,255,0.85)' },
+            { id: 'sakura', name: 'Sakura Blossom', price: 20000000, class: 'theme-sakura', type: 'light', topbarBg: 'rgba(255,241,242,0.85)' },
+            { id: 'dune', name: 'Desert Dune', price: 20000000, class: 'theme-dune', type: 'light', topbarBg: 'rgba(255,251,235,0.85)' },
+            { id: 'solar', name: 'Solar Flare', price: 2000000, class: 'theme-solar', type: 'light', topbarBg: 'rgba(255,251,235,0.85)' },
+            { id: 'mint', name: 'Mint Breeze', price: 5000000, class: 'theme-mint', type: 'light', topbarBg: 'rgba(240,253,244,0.85)' },
+            { id: 'cotton', name: 'Cotton Candy', price: 10000000, class: 'theme-cotton', type: 'light', topbarBg: 'rgba(250,245,255,0.85)' },
+            { id: 'hacker', name: 'Terminal Hacker', price: 1000000, class: 'theme-hacker', type: 'dark', topbarBg: 'rgba(0,0,0,0.85)' },
+            { id: 'neon', name: 'Neon Cyber', price: 5000000, class: 'theme-neon', type: 'dark', topbarBg: 'rgba(9,9,11,0.85)' },
+            { id: 'gold', name: 'Billionaire Gold', price: 50000000, class: 'theme-gold', type: 'dark', topbarBg: 'rgba(17,17,17,0.85)' },
+            { id: 'cyberpunk', name: 'Cyberpunk 2067', price: 250000000, class: 'theme-cyberpunk', type: 'dark', topbarBg: 'rgba(15,15,15,0.85)' },
+            { id: 'abyss', name: 'The Abyss', price: 1000000000, class: 'theme-abyss', type: 'dark', topbarBg: 'rgba(2,6,23,0.85)' },
+            { id: 'midnight', name: 'Midnight Purple', price: 2000000, class: 'theme-midnight', type: 'dark', topbarBg: 'rgba(10,10,42,0.85)' },
+            { id: 'blood', name: 'Crimson Blood', price: 5000000, class: 'theme-blood', type: 'dark', topbarBg: 'rgba(26,5,5,0.85)' },
+            { id: 'deepspace', name: 'Deep Space', price: 10000000, class: 'theme-deepspace', type: 'dark', topbarBg: 'rgba(0,0,0,0.5)' },
+            { id: 'synthwave', name: 'Synthwave 80s', price: 50000000000, class: 'theme-synthwave', type: 'premium', topbarBg: 'rgba(16,6,30,0.85)' },
+            { id: 'void', name: 'Absolute Void', price: 1000000000000, class: 'theme-void', type: 'premium', topbarBg: 'rgba(0,0,0,0.85)' },
+            { id: 'matrix', name: 'Matrix Root', price: 10000000000000, class: 'theme-matrix', type: 'premium', topbarBg: 'rgba(0,11,0,0.85)' },
+            { id: 'aurora', name: 'Boreal Aurora', price: 50000000000000, class: 'theme-aurora', type: 'premium', topbarBg: 'rgba(2,26,34,0.85)' },
+            { id: 'inferno', name: 'Cosmic Inferno', price: 100000000000000, class: 'theme-inferno', type: 'premium', topbarBg: 'rgba(26,0,0,0.85)' },
         ];
 
         const RANKS =["Startup", "Freelancer", "Agency", "Corporation", "Conglomerate", "Monopoly", "Sovereign", "Planetary Ruler", "Stellar Overlord", "Galactic Emperor", "Universal Architect", "Omniversal Entity"];
@@ -1062,11 +1095,24 @@
         ];
 
         const MEGAPROJECTS =[
-            { id: 'mega1', name: "Global AI Network", desc: "Fully automated systemic trading. +15% to total hourly revenue.", cost: 1000000000000 }, // 1 Trillion
-            { id: 'mega2', name: "Orbital Shipyard", desc: "Mastery of space construction. 50% discount on all Space Real Estate.", cost: 1000000000000000 }, // 1 Quadrillion
-            { id: 'mega3', name: "Stellar Dyson Sphere", desc: "Infinite energy unlocked. Increases all Company Revenue by +1000%.", cost: 1000000000000000000 }, // 1 Quintillion
-            { id: 'mega4', name: "The Chronosphere", desc: "Manipulation of time. Offline earnings cap removed, and offline earnings are doubled.", cost: 1000000000000000000000000 }, // 1 Septillion
-            { id: 'mega5', name: "Simulation Root Access", desc: "Complete dominion over the code. Generates massive continuous baseline revenue scaling off Net Worth.", cost: 1000000000000000000000000000000 } // 1 Nonillion
+            { id: 'mega1', name: "Global AI Network", desc: "Fully automated systemic trading. +15% to total hourly revenue.", cost: 1000000000000 }, 
+            { id: 'mega2', name: "Orbital Shipyard", desc: "Mastery of space construction. 50% discount on all Space Real Estate.", cost: 1000000000000000 }, 
+            { id: 'mega3', name: "Stellar Dyson Sphere", desc: "Infinite energy unlocked. Increases all Company Revenue by +1000%.", cost: 1000000000000000000 }, 
+            { id: 'mega4', name: "The Chronosphere", desc: "Manipulation of time. Offline earnings cap removed, and offline earnings are doubled.", cost: 1000000000000000000000000 }, 
+            { id: 'mega5', name: "Simulation Root Access", desc: "Complete dominion over the code. Generates massive continuous baseline revenue scaling off Net Worth.", cost: 1000000000000000000000000000000 } 
+        ];
+
+        const HQ_MULTS = [1, 2, 5, 25, 100, 1000, 25000, 1000000, 50000000, 10000000000];
+        const HQ_COSTS = [0, 1e11, 5e13, 1e16, 5e18, 1e21, 1e24, 1e27, 1e30, 1e33];
+        const HQ_NAMES = ["Basement Office", "Corporate Highrise", "Global Citadel", "Orbital Command", "Lunar Bastion", "Solar Hub", "Galactic Nexus", "Universal Core", "Multiversal Panopticon", "The Absolute Axis"];
+
+        const VENTURES = [
+            { id: 'v1', name: "Neural Link Startup", cost: 50000000, time: 60, chance: 0.60, mult: 3 }, 
+            { id: 'v2', name: "Asteroid Mining Corp", cost: 10000000000, time: 300, chance: 0.40, mult: 10 }, 
+            { id: 'v3', name: "Dyson Swarm Init.", cost: 5000000000000, time: 900, chance: 0.25, mult: 50 }, 
+            { id: 'v4', name: "Wormhole Logistics", cost: 1000000000000000, time: 1800, chance: 0.15, mult: 200 }, 
+            { id: 'v5', name: "Multiverse Gateway", cost: 500000000000000000, time: 3600, chance: 0.05, mult: 2000 }, 
+            { id: 'v6', name: "The Singularity", cost: 1000000000000000000000, time: 7200, chance: 0.01, mult: 50000 } 
         ];
 
         const STOCKS =[
@@ -1517,7 +1563,6 @@
             cardBalances: {}, 
             netWorth: 0,
             revenue: 0,
-
 			xp: 0,
             level: 1,
             ownedAssets:[],
@@ -1538,8 +1583,10 @@
             lastMintTime: 0,
             lastSaveTime: 0,
             education: { enrolledCollegeId: null, classesTaken: 0, degrees:[] },
+            hqLevel: 1,
             board: [],
             megaprojects:[],
+            activeVentures: [],
             ownedThemes:['dark', 'light'],
             activeTheme: 'dark',
             activeStats:['rank', 'assets', 'eth', 'multiplier'],
@@ -1591,8 +1638,10 @@
 
         if (!state.compCustomUpgrades) state.compCustomUpgrades = {};
         if (!state.lastMintTime) state.lastMintTime = 0;
+        if (!state.hqLevel) state.hqLevel = 1;
         if (!state.board) state.board = [];
         if (!state.megaprojects) state.megaprojects =[];
+        if (!state.activeVentures) state.activeVentures =[];
         if (!state.ownedCards) state.ownedCards =[0];
         if (state.currentTierId !== undefined && !state.ownedCards.includes(state.currentTierId)) {
             state.ownedCards =[];
@@ -1658,7 +1707,12 @@
             { id: 'cash', label: 'Cash Balance', isMono: true, getValue: () => '$' + formatLargeNumber(state.balance) },
             { id: 'revenue', label: 'Hourly Rev', isMono: true, getValue: () => '$' + formatLargeNumber(state.revenue) },
             { id: 'level', label: 'Empire Level', isMono: true, getValue: () => state.level },
-            { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length }
+            { id: 'degrees', label: 'Degrees', isMono: true, getValue: () => state.education.degrees.length },
+            { id: 'hqLevel', label: 'HQ Level', isMono: true, getValue: () => state.hqLevel },
+            { id: 'execCount', label: 'Board Size', isMono: true, getValue: () => state.board.length },
+            { id: 'cardClicks', label: 'Total Clicks', isMono: true, getValue: () => formatLargeNumber(state.cardClicks) },
+            { id: 'rentedProps', label: 'Properties Rented', isMono: true, getValue: () => Object.values(state.renting).filter(Boolean).length },
+            { id: 'ventureCount', label: 'Active Ventures', isMono: true, getValue: () => state.activeVentures.length }
         ];
 
         let sysAudioCtx = null;
@@ -1909,6 +1963,9 @@
             THEMES.forEach(t => document.body.classList.remove(t.class));
             const currentTheme = THEMES.find(t => t.id === state.activeTheme) || THEMES[0];
             document.body.classList.add(currentTheme.class);
+            if (currentTheme.topbarBg) {
+                document.documentElement.style.setProperty('--topbar-bg', currentTheme.topbarBg);
+            }
             if (!state.isMobile) {
                 document.documentElement.style.backgroundColor = ""; 
             } else {
@@ -1942,7 +1999,7 @@
         function finishOnboarding(isMobile) {
             let input = document.getElementById('name-input').value.trim();
             if (input.length === 0) {
-                input = "GUEST"; // Fix for stuck on onboarding screen if empty
+                input = "GUEST"; 
                 document.getElementById('name-input').value = input;
             }
             state.userName = input.toUpperCase();
@@ -2114,7 +2171,6 @@
             if (el) el.innerText = val;
         }
 
-        // Fixed Drag and Drop Functionality
         let draggedWatchlistIndex = null;
         function wlDragStart(e, index) { draggedWatchlistIndex = index; e.dataTransfer.effectAllowed = 'move'; }
         function wlDragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; e.currentTarget.classList.add('drag-over'); }
@@ -2324,6 +2380,83 @@
             }
         }
 
+        function tickVenturesUI() {
+            if (currentTab !== 'ventures') return;
+            const container = document.getElementById('active-ventures');
+            if (!container) return;
+
+            if (!state.activeVentures || state.activeVentures.length === 0) {
+                container.innerHTML = '<p class="text-[10px] text-zinc-600 font-bold uppercase tracking-widest text-center py-4 border border-dashed border-zinc-800 rounded">NO ACTIVE VENTURES</p>';
+                return;
+            }
+
+            const now = Date.now();
+            let needsStateSave = false;
+
+            container.innerHTML = state.activeVentures.map((v, index) => {
+                const elapsed = Math.floor((now - v.startTime) / 1000);
+                const remaining = v.duration - elapsed;
+
+                if (remaining <= 0) {
+                    needsStateSave = true;
+                    if (v.success) {
+                        const payout = v.cost * v.mult;
+                        state.balance += payout;
+                        logToTerminal(`VENTURE SUCCESS: ${v.name} PAYS OUT $${formatLargeNumber(payout)}`);
+                        return `
+                        <div class="glass-card p-4 border-emerald-900/50 bg-emerald-950/20">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="text-[10px] font-black uppercase text-emerald-500">${v.name}</h4>
+                                    <p class="text-[9px] font-bold text-emerald-400 mt-1">SUCCESS: +$${formatLargeNumber(payout)}</p>
+                                </div>
+                                <button onclick="clearVenture(${index})" class="text-[9px] font-bold px-3 py-1 border border-emerald-800 rounded bg-emerald-900 text-white hover:bg-emerald-700">CLEAR</button>
+                            </div>
+                        </div>`;
+                    } else {
+                        logToTerminal(`VENTURE FAILED: ${v.name} COLLAPSED. LOSS: $${formatLargeNumber(v.cost)}`);
+                        return `
+                        <div class="glass-card p-4 border-red-900/50 bg-red-950/20">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h4 class="text-[10px] font-black uppercase text-red-500">${v.name}</h4>
+                                    <p class="text-[9px] font-bold text-red-400 mt-1">FAILED: TOTAL LOSS</p>
+                                </div>
+                                <button onclick="clearVenture(${index})" class="text-[9px] font-bold px-3 py-1 border border-red-800 rounded bg-red-900 text-white hover:bg-red-700">CLEAR</button>
+                            </div>
+                        </div>`;
+                    }
+                }
+
+                const progress = (elapsed / v.duration) * 100;
+                const m = Math.floor(remaining / 60);
+                const s = remaining % 60;
+
+                return `
+                <div class="glass-card p-4 border-blue-900/30 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 h-1 bg-blue-500 transition-all duration-1000" style="width: ${progress}%"></div>
+                    <div class="flex justify-between items-center mt-2">
+                        <div>
+                            <h4 class="text-[10px] font-black uppercase text-white">${v.name}</h4>
+                            <p class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest mt-1">INVESTED: $${formatLargeNumber(v.cost)}</p>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-[10px] font-bold mono text-blue-400">${m}:${s.toString().padStart(2, '0')} REMAINING</p>
+                            <p class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest mt-1">${v.mult}x POTENTIAL</p>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+
+            if (needsStateSave) saveGame();
+        }
+
+        function clearVenture(index) {
+            state.activeVentures.splice(index, 1);
+            saveGame();
+            updateUI(true);
+        }
+
         let isAssetMapsInit = false;
         let cMap = new Map();
         let rMap = new Map();
@@ -2348,6 +2481,7 @@
             const hasMega1 = state.megaprojects && state.megaprojects.includes('mega1');
             const hasMega3 = state.megaprojects && state.megaprojects.includes('mega3');
             const hasMega5 = state.megaprojects && state.megaprojects.includes('mega5');
+            const hqMult = HQ_MULTS[state.hqLevel - 1] || 1;
 
             for (let i = 0; i < state.ownedAssets.length; i++) {
                 const id = state.ownedAssets[i];
@@ -2381,7 +2515,7 @@
                     if (hasXylar && tierIdx >= 8) itemRev *= 3;
                     if (hasCFO) itemBill *= 0.75;
 
-                    rev += itemRev; bills += itemBill;
+                    rev += (itemRev * hqMult); bills += itemBill;
                 } else {
                     const re = rMap.get(id);
                     if (re && state.renting[id]) {
@@ -2390,7 +2524,7 @@
                         if (renLevel > 0) {
                             inv += re.price * 0.15 * (renLevel * (renLevel + 1)) / 2;
                         }
-                        rev += Math.floor(inv) * 0.05; 
+                        rev += Math.floor(inv) * 0.05 * hqMult; 
                     }
                 }
             }
@@ -2420,6 +2554,7 @@
             setUI('hr-display', (state.revenue >= 0 ? '+' : '') + '$' + formatLargeNumber(state.revenue) + '/hr');
 
             tickStocksUI(false); 
+            tickVenturesUI();
             updateButtonStates();
 
             if (activeStock) updateModalContent();
@@ -2509,6 +2644,7 @@
             renderGrids();
             renderTradingGrid();
             renderHQ();
+            renderVentures();
             renderBlackMarket();
             renderEducation();
             renderProfilePortfolio();
@@ -2971,15 +3107,17 @@
                     if (state.board && state.board.includes('exec2')) itemBill *= 0.75;
                     if (state.megaprojects && state.megaprojects.includes('mega3')) itemRev *= 11;
                     if (state.board && state.board.includes('exec6') && tierIdx >= 8) itemRev *= 3;
-
-                    const profit = itemRev - itemBill;
+                    
+                    const hqMult = HQ_MULTS[state.hqLevel - 1] || 1;
+                    const profit = (itemRev * hqMult) - itemBill;
+                    
                     let actionsHtml = '';
                     if (!isOwned) {
                         actionsHtml = `<div class="flex flex-col mt-auto pt-4 flex-1 justify-end"><button onclick="buyAsset('${c.id}', ${c.price})" class="btn-buy" ${state.balance < c.price ? 'disabled' : ''} data-cost="${c.price}">ACQUIRE BUSINESS</button></div>`;
                     } else {
                         const nextTierPrice = c.price * Math.pow(5, tierIdx + 1);
                         const nextOutletPrice = Math.floor(c.price * 0.8 * Math.pow(1.1, outlets));
-                        const maxTierLimit = COMPANY_TIERS.length - 1; // 9
+                        const maxTierLimit = COMPANY_TIERS.length - 1;
 
                         let baseActions = `
                         <div class="grid grid-cols-2 gap-2 mb-2 shrink-0">
@@ -3038,7 +3176,7 @@
                                             <span class="text-[9px] font-bold text-white group-hover:text-black transition-colors">${u.name} <span class="text-zinc-500 font-normal">(${count}/${u.max})</span></span>
                                             <span class="text-[9px] font-mono ${count >= u.max ? 'text-emerald-500' : ''}">${count >= u.max ? 'MAXED' : '$' + formatLargeNumber(currentPrice)}</span>
                                         </div>
-                                        <div class="text-[8px] text-emerald-500 relative z-10 group-hover:text-emerald-700 transition-colors">+ $${formatLargeNumber(u.rev)}/hr</div>
+                                        <div class="text-[8px] text-emerald-500 relative z-10 group-hover:text-emerald-700 transition-colors">+ $${formatLargeNumber(u.rev * hqMult)}/hr</div>
                                         <div class="absolute bottom-0 left-0 h-[2px] bg-emerald-500 transition-all z-0" style="width: ${(count/u.max)*100}%"></div>
                                     </button>`;
                                 }).join('')}
@@ -3063,7 +3201,7 @@
                                 <div>
                                     <h3 class="font-black uppercase text-xs tracking-tight">${COMPANY_TIERS[tierIdx] + ' '}${c.name}</h3>
                                     <p class="text-[10px] font-bold ${profit >= 0 ? 'text-emerald-400' : 'text-red-400'}">${profit >= 0 ? '+' : ''}$${formatLargeNumber(Math.floor(profit))}/HR PROFIT</p>
-                                    <p class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">REV: $${formatLargeNumber(Math.floor(itemRev))} | BILLS: $${formatLargeNumber(Math.floor(itemBill))}</p>
+                                    <p class="text-[8px] text-zinc-500 font-bold uppercase tracking-widest mt-0.5">REV: $${formatLargeNumber(Math.floor(itemRev * hqMult))} | BILLS: $${formatLargeNumber(Math.floor(itemBill))}</p>
                                 </div>
                                 <span class="text-[8px] font-bold text-zinc-600 uppercase tracking-widest">${outlets} OUTLETS</span>
                             </div>
@@ -3380,15 +3518,45 @@
         }
 
         function renderHQ() {
+            const hqEvol = document.getElementById('hq-evolution-container');
             const boardGrid = document.getElementById('board-grid');
             const megaGrid = document.getElementById('mega-grid');
-            if (!boardGrid || !megaGrid) return;
+            
+            if (!hqEvol || !boardGrid || !megaGrid) return;
 
             if (state.level < 20) {
-                boardGrid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">HQ UNLOCKS AT LEVEL 20</p></div>`;
+                hqEvol.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">HQ UNLOCKS AT LEVEL 20</p></div>`;
+                boardGrid.innerHTML = ``;
                 megaGrid.innerHTML = ``;
                 return;
             }
+
+            const currentLvl = state.hqLevel || 1;
+            const hqName = HQ_NAMES[currentLvl - 1] || "HQ";
+            const currentMult = HQ_MULTS[currentLvl - 1] || 1;
+            
+            let evolveHtml = '';
+            if (currentLvl < 10) {
+                const nextCost = HQ_COSTS[currentLvl];
+                const nextMult = HQ_MULTS[currentLvl];
+                evolveHtml = `
+                    <button onclick="evolveHQ(${nextCost})" class="btn-buy !w-auto px-8" ${state.balance < nextCost ? 'disabled' : ''} data-cost="${nextCost}">
+                        EVOLVE HQ TO LEVEL ${currentLvl + 1} ($${formatLargeNumber(nextCost)})<br>
+                        <span class="text-[8px] opacity-70">Upgrades Global Revenue Multiplier to ${nextMult}x</span>
+                    </button>
+                `;
+            } else {
+                evolveHtml = `<button class="btn-buy !w-auto px-8 !bg-emerald-900/30 !text-emerald-500 !border-emerald-500/50 cursor-not-allowed" disabled>MAXIMUM HQ LEVEL ACHIEVED</button>`;
+            }
+
+            hqEvol.innerHTML = `
+                <div class="glass-card p-8 border-emerald-900/50 relative overflow-hidden">
+                    <div class="absolute right-0 top-0 w-64 h-64 bg-emerald-500/5 rounded-full blur-3xl -mr-20 -mt-20 pointer-events-none"></div>
+                    <h2 class="text-3xl font-black uppercase tracking-tight grotesk mb-2 text-white">${hqName}</h2>
+                    <p class="text-xs font-bold mono text-emerald-400 mb-6">GLOBAL REVENUE MULTIPLIER: ${currentMult.toLocaleString()}x</p>
+                    ${evolveHtml}
+                </div>
+            `;
 
             boardGrid.innerHTML = EXECUTIVES.map(e => {
                 const isHired = state.board && state.board.includes(e.id);
@@ -3418,6 +3586,80 @@
                 </div>
                 `;
             }).join('');
+        }
+
+        function evolveHQ(cost) {
+            if (state.balance >= cost && state.hqLevel < 10) {
+                state.balance -= cost;
+                state.hqLevel++;
+                logToTerminal(`HQ EVOLVED TO LEVEL ${state.hqLevel}`);
+                updateUI(true);
+                saveGame();
+            }
+        }
+
+        function renderVentures() {
+            const grid = document.getElementById('ventures-grid');
+            if (!grid) return;
+
+            if (state.level < 25) {
+                grid.innerHTML = `<div class="col-span-full py-20 text-center glass-card"><p class="text-zinc-500 font-bold uppercase text-[10px] tracking-widest">VENTURES UNLOCK AT LEVEL 25</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = VENTURES.map(v => {
+                return `
+                <div class="glass-card p-6 flex flex-col justify-between border-blue-900/20 shadow-[0_0_15px_rgba(59,130,246,0.05)]">
+                    <div class="mb-6">
+                        <h3 class="font-black uppercase text-sm text-blue-400 mb-1 grotesk">${v.name}</h3>
+                        <div class="flex justify-between items-center text-[9px] font-bold text-zinc-400 mt-4 mb-1 uppercase tracking-widest">
+                            <span>Cost to Fund</span>
+                            <span class="text-white">$${formatLargeNumber(v.cost)}</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[9px] font-bold text-zinc-400 mb-1 uppercase tracking-widest">
+                            <span>Success Chance</span>
+                            <span class="text-emerald-400">${(v.chance * 100).toFixed(0)}%</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[9px] font-bold text-zinc-400 mb-1 uppercase tracking-widest">
+                            <span>Potential Payout</span>
+                            <span class="text-white">${v.mult}x</span>
+                        </div>
+                        <div class="flex justify-between items-center text-[9px] font-bold text-zinc-400 uppercase tracking-widest">
+                            <span>Time to Resolve</span>
+                            <span class="text-blue-400">${v.time / 60}m</span>
+                        </div>
+                    </div>
+                    <button onclick="startVenture('${v.id}', ${v.cost})" class="btn-buy !border-blue-900/50 !text-blue-400 hover:!bg-blue-600 hover:!text-white" ${state.balance < v.cost ? 'disabled' : ''} data-cost="${v.cost}">FUND VENTURE</button>
+                </div>
+                `;
+            }).join('');
+
+            tickVenturesUI();
+        }
+
+        function startVenture(id, cost) {
+            if (state.balance >= cost) {
+                const ventureDef = VENTURES.find(v => v.id === id);
+                if (!ventureDef) return;
+
+                state.balance -= cost;
+                
+                const isSuccess = Math.random() < ventureDef.chance;
+                
+                state.activeVentures.push({
+                    id: id,
+                    name: ventureDef.name,
+                    cost: cost,
+                    startTime: Date.now(),
+                    duration: ventureDef.time,
+                    mult: ventureDef.mult,
+                    success: isSuccess
+                });
+
+                logToTerminal(`FUNDED VENTURE: ${ventureDef.name.toUpperCase()} FOR $${formatLargeNumber(cost)}`);
+                updateUI(true);
+                saveGame();
+            }
         }
 
         function hireExec(id, cost) {
@@ -3937,7 +4179,7 @@
                 else topBal.classList.remove('hidden');
             }
 
-            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'academics', 'hq', 'black-market'].includes(tabId)) {
+            if (['stocks', 'profile', 'collection', 'trading', 'companies', 'real-estate', 'academics', 'hq', 'ventures', 'black-market'].includes(tabId)) {
                 setTimeout(() => updateUI(true), 10);
             }
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -4147,9 +4389,10 @@
             updateUI(true);
             filterCollection('jewelry');
             filterRealEstate('house');
-            setThemeTab('dark');
+            setThemeTab(THEMES.find(t => t.id === state.activeTheme)?.type || 'dark');
         };
         document.addEventListener('contextmenu', event => event.preventDefault());
     </script>
 </body>
 </html>
+
